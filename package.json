@@ -1,0 +1,13 @@
+{
+  "name": "fi-resume",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:fronted": "pnpm -F fronted dev",
+    "dev:background": "pnpm -F background start:dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

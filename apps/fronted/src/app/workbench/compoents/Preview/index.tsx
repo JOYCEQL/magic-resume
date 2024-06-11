@@ -1,6 +1,6 @@
 const Preview = () => {
   return (
-    <div>
+    <div className="flex-1 bg-[green]">
       {/* 简历编辑表单 */}
       预览区域
     </div>

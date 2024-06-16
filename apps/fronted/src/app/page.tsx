@@ -5,10 +5,6 @@ import { CircleArrowRight } from "lucide-react";
 import EditButton from "@/components/EditButton";
 import IconLogo from "@/assets/images/logo@2x.svg";
 export default function Home() {
-  const goWorkbench = () => {
-    redirect("/workbench/index");
-  };
-
   return (
     <main className="flex min-h-screen flex-col items-center  p-[24px]">
       <header className="flex justify-between w-[100%]">

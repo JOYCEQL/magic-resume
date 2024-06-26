@@ -6,7 +6,14 @@ import Project from "../Project";
 import Empolyment from "../Empolyment";
 import Education from "../Education";
 import Cert from "../Cert";
-import { UserRound, PencilRuler, FileJson, Network } from "lucide-react";
+import {
+  UserRound,
+  PencilRuler,
+  FileJson,
+  Network,
+  GraduationCap,
+  BookOpen
+} from "lucide-react";
 const Editor = () => {
   const [activeTab, setActiveTab] = useState("basic");
   const tabList = [
@@ -33,12 +40,12 @@ const Editor = () => {
     {
       value: "education",
       label: "教育经历",
-      icon: <UserRound size={16} />
+      icon: <GraduationCap size={16} />
     },
     {
       value: "cert",
       label: "技能证书",
-      icon: <UserRound size={16} />
+      icon: <BookOpen size={16} />
     }
   ];
   return (
@@ -56,7 +63,7 @@ const Editor = () => {
           );
         })}
       </div>
-      <div className="bg-[#fff] p-[12px] rounded-[6px]">
+      <div className="bg-[#fff] p-[12px] rounded-[6px] overflow-auto">
         <div className="text-[24px] mb-[10px]">前端-xx-x年</div>
 
         <div className="mt-[12px]">

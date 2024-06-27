@@ -1,14 +1,19 @@
 import React from "react";
+import { Redo, Undo } from "lucide-react";
+
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
-import { EditorProvider, useCurrentEditor } from "@tiptap/react";
+import { EditorProvider, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import "../styles/tiptap.scss";
 
 const MenuBar = () => {
-  const { editor } = useCurrentEditor();
+  const editor = useEditor({
+    extensions: [StarterKit],
+    autofocus: false
+  });
 
   if (!editor) {
     return null;
@@ -149,18 +154,21 @@ const MenuBar = () => {
         <button onClick={() => editor.chain().focus().setHardBreak().run()}>
           Hard break
         </button>
-        <button
+
+        {/* <button
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().chain().focus().undo().run()}
         >
           Undo
-        </button>
-        <button
+        </button> */}
+        <Undo onClick={() => editor.chain().focus().undo().run()}></Undo>
+        {/* <button
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().chain().focus().redo().run()}
         >
           Redo
-        </button>
+        </button> */}
+        <Redo onClick={() => editor.chain().focus().undo().run()}></Redo>
         <button
           onClick={() => editor.chain().focus().setColor("#958DF1").run()}
           className={

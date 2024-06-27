@@ -95,6 +95,8 @@
 }
 
 .control-group {
+  border: 1px solid #d1d5db;
+  border-bottom: none;
   .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -108,4 +110,7 @@
       }
     }
   }
+}
+[contenteditable]:focus {
+  outline: none;
 }

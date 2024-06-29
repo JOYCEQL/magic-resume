@@ -27,6 +27,11 @@ import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import { EditorProvider, useCurrentEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 
 import "../styles/tiptap.scss";
 
@@ -181,14 +186,19 @@ const MenuBar = () => {
           Redo
         </button> */}
         <Redo onClick={() => editor.chain().focus().undo().run()}></Redo>
-        <Baseline
-          onClick={() => editor.chain().focus().setColor("#958DF1").run()}
-          className={
-            editor.isActive("textStyle", { color: "#958DF1" })
-              ? "is-active"
-              : ""
-          }
-        ></Baseline>
+        <Popover>
+          <PopoverTrigger>
+            <Baseline></Baseline>
+          </PopoverTrigger>
+          <PopoverContent className="w-80">
+            <div onClick={() => editor.chain().focus().setColor("blue").run()}>
+              蓝色
+            </div>
+            <div onClick={() => editor.chain().focus().setColor("red").run()}>
+              红色
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
@@ -196,6 +206,7 @@ const MenuBar = () => {
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
+  TextStyle,
   StarterKit.configure({
     bulletList: {
       keepMarks: true,

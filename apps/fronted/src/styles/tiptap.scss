@@ -3,6 +3,7 @@
   min-height: 300px;
   border: 1px solid #d1d5db;
   padding: 2px;
+  border-radius: 0 0 4px 4px;
   :first-child {
     margin-top: 0;
   }
@@ -97,6 +98,9 @@
 .control-group {
   border: 1px solid #d1d5db;
   border-bottom: none;
+  background-color: #403d39;
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
   .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -105,10 +109,12 @@
     .lucide {
       padding: 4px 6px;
       cursor: pointer;
+      color: #fff;
       width: 28px;
       height: 28px;
       &.is-active {
-        background-color: green;
+        font-weight: 700;
+        color: #2ec4b6;
       }
     }
   }

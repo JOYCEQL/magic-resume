@@ -1,5 +1,8 @@
 import React from "react";
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Baseline,
   Bold,
   CodeXml,
@@ -26,6 +29,8 @@ import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import { EditorProvider, useCurrentEditor } from "@tiptap/react";
+import TextAlign from "@tiptap/extension-text-align";
+
 import StarterKit from "@tiptap/starter-kit";
 import {
   Popover,
@@ -189,6 +194,20 @@ const MenuBar = () => {
           Redo
         </button> */}
         <Redo onClick={() => editor.chain().focus().undo().run()}></Redo>
+        <AlignLeft
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          className={editor.isActive({ textAlign: "left" }) ? "is-active" : ""}
+        ></AlignLeft>
+        <AlignCenter
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          className={
+            editor.isActive({ textAlign: "center" }) ? "is-active" : ""
+          }
+        ></AlignCenter>
+        <AlignRight
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          className={editor.isActive({ textAlign: "right" }) ? "is-active" : ""}
+        ></AlignRight>
         <Popover>
           <PopoverTrigger>
             <Baseline></Baseline>
@@ -211,6 +230,9 @@ const MenuBar = () => {
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
   TextStyle,
+  TextAlign.configure({
+    types: ["heading", "paragraph"]
+  }),
   StarterKit.configure({
     bulletList: {
       keepMarks: true,

@@ -15,6 +15,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@tiptap/extension-color": "^2.4.0",
     "@tiptap/extension-list-item": "^2.4.0",
+    "@tiptap/extension-text-align": "^2.4.0",
     "@tiptap/extension-text-style": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",

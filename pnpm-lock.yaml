@@ -110,6 +110,9 @@ importers:
       '@tiptap/extension-list-item':
         specifier: ^2.4.0
         version: 2.4.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-text-align':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
       '@tiptap/extension-text-style':
         specifier: ^2.4.0
         version: 2.4.0(@tiptap/core@2.4.0)
@@ -2091,6 +2094,14 @@ packages:
 
   /@tiptap/extension-strike@2.4.0(@tiptap/core@2.4.0):
     resolution: {integrity: sha512-pE1uN/fQPOMS3i+zxPYMmPmI3keubnR6ivwM+KdXWOMnBiHl9N4cNpJgq1n2eUUGKLurC2qrQHpnVyGAwBS6Vg==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.4.0(@tiptap/pm@2.4.0)
+    dev: false
+
+  /@tiptap/extension-text-align@2.4.0(@tiptap/core@2.4.0):
+    resolution: {integrity: sha512-wpRe2OiLXTK4kTy4RZEPnPjFbK16kYHPAx1552hLXrOdyxbS7Sdbo+w4x7aGLLZZqZdudCFfkdtnqrc7PDVZdA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:

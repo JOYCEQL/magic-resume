@@ -34,10 +34,13 @@ import {
 } from "@/components/ui/popover";
 
 import "../styles/tiptap.scss";
+import ColorBar from "./ColorBar";
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
-
+  const setCurrentColor = (color: string) => () => {
+    editor?.chain().focus().setColor(color).run();
+  };
   if (!editor) {
     return null;
   }
@@ -191,12 +194,13 @@ const MenuBar = () => {
             <Baseline></Baseline>
           </PopoverTrigger>
           <PopoverContent className="w-80">
-            <div onClick={() => editor.chain().focus().setColor("blue").run()}>
+            {/* <div onClick={() => editor.chain().focus().setColor("blue").run()}>
               蓝色
             </div>
             <div onClick={() => editor.chain().focus().setColor("red").run()}>
               红色
-            </div>
+            </div> */}
+            <ColorBar setCurrentColor={setCurrentColor}></ColorBar>
           </PopoverContent>
         </Popover>
       </div>

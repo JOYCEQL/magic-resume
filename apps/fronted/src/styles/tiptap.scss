@@ -20,7 +20,16 @@
       margin-bottom: 0.25em;
     }
   }
+  ol {
+    list-style-type: decimal;
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
 
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
   /* Heading styles */
   h1,
   h2,

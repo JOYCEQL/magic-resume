@@ -41,7 +41,7 @@ const BasicInfo = () => {
         <Input id="email" className="w-[200px] flex-1" />
       </div>
       <div className="flex items-center flex-[48%]">
-        <Label htmlFor="wechat" className="w-[80px]">
+        <Label htmlFor="birthday" className="w-[80px]">
           出生日期
         </Label>
         <Popover open={isDateOpen}>
@@ -49,6 +49,7 @@ const BasicInfo = () => {
             <div className="relative flex-1 w-[200px]">
               <CalendarIcon className="left-[10px] top-[12px] absolute   h-4 w-4" />
               <Input
+                id="birthday"
                 className="flex-1  pl-[36px] "
                 value={date ? format(date, "PPP") : "Pick a date"}
                 onClick={() => setIsDateOpen(true)}

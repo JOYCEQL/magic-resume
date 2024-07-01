@@ -13,6 +13,7 @@
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "@tiptap/extension-color": "^2.4.0",
     "@tiptap/extension-list-item": "^2.4.0",
     "@tiptap/extension-text-align": "^2.4.0",

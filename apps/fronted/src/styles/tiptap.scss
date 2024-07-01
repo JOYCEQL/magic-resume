@@ -114,6 +114,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
+    padding: 4px;
 
     .lucide {
       padding: 4px 6px;
@@ -124,6 +125,10 @@
       &.is-active {
         font-weight: 700;
         color: #2ec4b6;
+      }
+      &:hover {
+        border-radius: 4px;
+        background-color: #e26d5c;
       }
     }
   }

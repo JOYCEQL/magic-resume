@@ -29,15 +29,14 @@ const ColorBar = ({ setCurrentColor }: IProps) => {
           return (
             <div
               key={index}
-              className="shrink-0"
+              className="shrink-0 cursor-pointer hover:scale-[1.3] transition-all"
               onClick={setCurrentColor(color)}
               style={{
                 width: "20px",
                 height: "20px",
                 backgroundColor: color,
                 margin: "5px",
-                border: "1px solid #000000",
-                borderRadius: "5px"
+                borderRadius: "50%"
               }}
             ></div>
           );

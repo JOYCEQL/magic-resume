@@ -19,6 +19,7 @@ import {
   List,
   ListOrdered,
   MessageSquareQuote,
+  Palette,
   Pilcrow,
   Redo,
   Strikethrough,
@@ -30,16 +31,18 @@ import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import { EditorProvider, useCurrentEditor } from "@tiptap/react";
 import TextAlign from "@tiptap/extension-text-align";
-
 import StarterKit from "@tiptap/starter-kit";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover";
 
-import "../styles/tiptap.scss";
 import ColorBar from "./ColorBar";
+import CustomTooltip from "./CustomTooltip";
+
+import "../styles/tiptap.scss";
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
@@ -53,58 +56,33 @@ const MenuBar = () => {
   return (
     <div className="control-group">
       <div className="button-group">
-        {/* <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          disabled={!editor.can().chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "is-active" : ""}
-        >
-          Bold
-        </button> */}
-        <Bold
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "is-active" : ""}
-        ></Bold>
-        {/* <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          disabled={!editor.can().chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "is-active" : ""}
-        >
-          Italic
-        </button> */}
-        <Italic
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "is-active" : ""}
-        ></Italic>
-        {/* <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          disabled={!editor.can().chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "is-active" : ""}
-        >
-          Strike
-        </button> */}
-        <Strikethrough
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "is-active" : ""}
-        ></Strikethrough>
-        {/* <button
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          disabled={!editor.can().chain().focus().toggleCode().run()}
-          className={editor.isActive("code") ? "is-active" : ""}
-        >
-          Code
-        </button> */}
-        <CodeXml
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          className={editor.isActive("code") ? "is-active" : ""}
-        ></CodeXml>
-        <Eraser
-          onClick={() => editor.chain().focus().clearNodes().run()}
-        ></Eraser>
-        {/* 
-        <Pilcrow
-          onClick={() => editor.chain().focus().setParagraph().run()}
-          className={editor.isActive("paragraph") ? "is-active" : ""}
-        ></Pilcrow> */}
+        <CustomTooltip title="加粗">
+          <Bold
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            className={editor.isActive("bold") ? "is-active" : ""}
+          ></Bold>
+        </CustomTooltip>
+
+        <CustomTooltip title="斜体">
+          <Italic
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            className={editor.isActive("italic") ? "is-active" : ""}
+          ></Italic>
+        </CustomTooltip>
+
+        <CustomTooltip title="中划线">
+          <Strikethrough
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+            className={editor.isActive("strike") ? "is-active" : ""}
+          ></Strikethrough>
+        </CustomTooltip>
+
+        <CustomTooltip title="行内代码">
+          <CodeXml
+            onClick={() => editor.chain().focus().toggleCode().run()}
+            className={editor.isActive("code") ? "is-active" : ""}
+          ></CodeXml>
+        </CustomTooltip>
 
         <Heading1
           onClick={() =>
@@ -165,11 +143,12 @@ const MenuBar = () => {
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive("orderedList") ? "is-active" : ""}
         ></ListOrdered>
-
-        <FileCode2
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive("codeBlock") ? "is-active" : ""}
-        ></FileCode2>
+        <CustomTooltip title="代码块">
+          <FileCode2
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={editor.isActive("codeBlock") ? "is-active" : ""}
+          ></FileCode2>
+        </CustomTooltip>
 
         <MessageSquareQuote
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -194,31 +173,39 @@ const MenuBar = () => {
           Redo
         </button> */}
         <Redo onClick={() => editor.chain().focus().undo().run()}></Redo>
-        <AlignLeft
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-          className={editor.isActive({ textAlign: "left" }) ? "is-active" : ""}
-        ></AlignLeft>
-        <AlignCenter
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-          className={
-            editor.isActive({ textAlign: "center" }) ? "is-active" : ""
-          }
-        ></AlignCenter>
-        <AlignRight
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-          className={editor.isActive({ textAlign: "right" }) ? "is-active" : ""}
-        ></AlignRight>
+        <CustomTooltip title="居左">
+          <AlignLeft
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            className={
+              editor.isActive({ textAlign: "left" }) ? "is-active" : ""
+            }
+          ></AlignLeft>
+        </CustomTooltip>
+
+        <CustomTooltip title="居中">
+          <AlignCenter
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            className={
+              editor.isActive({ textAlign: "center" }) ? "is-active" : ""
+            }
+          ></AlignCenter>
+        </CustomTooltip>
+
+        <CustomTooltip title="居右">
+          <AlignRight
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            className={
+              editor.isActive({ textAlign: "right" }) ? "is-active" : ""
+            }
+          ></AlignRight>
+        </CustomTooltip>
         <Popover>
           <PopoverTrigger>
-            <Baseline></Baseline>
+            <CustomTooltip title="文本颜色">
+              <Palette></Palette>
+            </CustomTooltip>
           </PopoverTrigger>
-          <PopoverContent className="w-80">
-            {/* <div onClick={() => editor.chain().focus().setColor("blue").run()}>
-              蓝色
-            </div>
-            <div onClick={() => editor.chain().focus().setColor("red").run()}>
-              红色
-            </div> */}
+          <PopoverContent className="w-80 bg-[#21242a]">
             <ColorBar setCurrentColor={setCurrentColor}></ColorBar>
           </PopoverContent>
         </Popover>

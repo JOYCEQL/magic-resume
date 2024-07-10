@@ -49,7 +49,7 @@ const Editor = () => {
     }
   ];
   return (
-    <div className="flex flex-1 p-[12px]">
+    <div className="flex flex-1 p-[12px] h-[100vh]">
       <div className="w-[72px] shrink-0 mr-[10px]	bg-[#ecedee]">
         {tabList.map((item, index) => {
           return (
@@ -63,7 +63,10 @@ const Editor = () => {
           );
         })}
       </div>
-      <div className="bg-[#fff] p-[12px] rounded-[6px] overflow-auto">
+      <div
+        className="bg-[#fff] p-[12px] rounded-[6px] overflow-auto "
+        style={{ scrollbarWidth: "none" }}
+      >
         <div className="text-[24px] mb-[10px]">前端-xx-x年</div>
 
         <div className="mt-[12px]">

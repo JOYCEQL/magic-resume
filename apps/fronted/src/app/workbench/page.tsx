@@ -14,7 +14,7 @@ const WorkBench = () => {
         direction="horizontal"
         className="h-[100vh] rounded-lg border "
       >
-        <ResizablePanel>
+        <ResizablePanel defaultSize={50} className="max-w-[60%] min-w-[20%]">
           <Editor></Editor>
         </ResizablePanel>
         <ResizableHandle

@@ -14,6 +14,7 @@ import {
   GraduationCap,
   BookOpen
 } from "lucide-react";
+import useBaseInfoStore from "@/store/useBaseInfoStore";
 const Editor = () => {
   const [activeTab, setActiveTab] = useState("basic");
   const basicRef = useRef(null);
@@ -22,7 +23,6 @@ const Editor = () => {
   const educationRef = useRef(null);
   const certRef = useRef(null);
   const empolymentRef = useRef(null);
-
   const tabList = [
     {
       value: "basic",

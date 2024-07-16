@@ -10,17 +10,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import useBaseInfoStore from "@/store/useBaseInfoStore";
 
 const BasicInfo = () => {
   const [date, setDate] = useState<Date>();
   const [isDateOpen, setIsDateOpen] = useState<boolean>(false);
+  const { name } = useBaseInfoStore();
   return (
     <div className="flex items-center flex-wrap gap-[16px]">
       <div className="flex items-center flex-[48%] ">
         <Label htmlFor="name" className="w-[80px]">
           姓名
         </Label>
-        <Input id="name" className="w-[200px] flex-1" />
+        <Input id="name" value={name} className="w-[200px] flex-1" />
       </div>
       <div className="flex items-center flex-[48%]">
         <Label htmlFor="phone" className="w-[80px]">

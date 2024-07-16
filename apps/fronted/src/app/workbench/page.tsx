@@ -12,12 +12,15 @@ const WorkBench = () => {
     <div className={styles.container}>
       <ResizablePanelGroup
         direction="horizontal"
-        className="h-[100vh] rounded-lg border"
+        className="h-[100vh] rounded-lg border "
       >
         <ResizablePanel>
           <Editor></Editor>
         </ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle
+          withHandle
+          className="hover:w-[2px] hover:bg-[#80ed99]"
+        />
         <ResizablePanel>
           <Preview></Preview>
         </ResizablePanel>

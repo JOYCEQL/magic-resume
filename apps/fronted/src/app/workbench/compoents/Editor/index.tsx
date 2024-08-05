@@ -23,6 +23,8 @@ const Editor = () => {
   const educationRef = useRef(null);
   const certRef = useRef(null);
   const empolymentRef = useRef(null);
+  const { resumeTitle } = useBaseInfoStore();
+
   const tabList = [
     {
       value: "basic",
@@ -87,7 +89,7 @@ const Editor = () => {
         className="bg-[#fff] p-[12px] rounded-[6px] overflow-auto "
         style={{ scrollbarWidth: "none" }}
       >
-        <div className="text-[24px] mb-[10px]">前端-xx-x年</div>
+        <div className="text-[24px] mb-[10px]">{resumeTitle}</div>
 
         <div className="mt-[12px]">
           <div className="text-[20px] mb-[12px]" ref={basicRef}>

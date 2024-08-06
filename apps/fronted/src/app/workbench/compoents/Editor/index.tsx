@@ -12,8 +12,11 @@ import {
   FileJson,
   Network,
   GraduationCap,
-  BookOpen
+  BookOpen,
+  Pencil,
+  PenLine
 } from "lucide-react";
+
 import useBaseInfoStore from "@/store/useBaseInfoStore";
 const Editor = () => {
   const [activeTab, setActiveTab] = useState("basic");
@@ -92,28 +95,47 @@ const Editor = () => {
         <div className="text-[24px] mb-[10px]">{resumeTitle}</div>
 
         <div className="mt-[12px]">
-          <div className="text-[20px] mb-[12px]" ref={basicRef}>
+          <div className="flex text-[20px] mb-[12px]" ref={basicRef}>
             基本信息
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <BasicInfo></BasicInfo>
-          <div className="text-[20px] mb-[12px]" ref={skillsRef}>
+          <div
+            className="flex items-center text-[20px] mb-[12px]"
+            ref={skillsRef}
+            contentEditable={false}
+          >
             专业技能
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <Skills></Skills>
-          <div className="text-[20px] mb-[12px]" ref={projectRef}>
+          <div
+            className="flex items-center text-[20px] mb-[12px]"
+            ref={projectRef}
+          >
             项目经历
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <Project></Project>
-          <div ref={empolymentRef} className="text-[20px] mb-[12px]">
+          <div
+            ref={empolymentRef}
+            className="flex items-center text-[20px] mb-[12px]"
+          >
             工作经历
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <Empolyment></Empolyment>
-          <div ref={educationRef} className="text-[20px] mb-[12px]">
+          <div
+            ref={educationRef}
+            className="flex items-center text-[20px] mb-[12px]"
+          >
             教育经历
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <Education></Education>
-          <div ref={certRef} className="text-[20px]">
+          <div ref={certRef} className="flex items-center text-[20px]">
             技能证书
+            <PenLine className="cursor-pointer ml-[4px] w-[16px] text-[#909399]"></PenLine>
           </div>
           <Cert></Cert>
         </div>

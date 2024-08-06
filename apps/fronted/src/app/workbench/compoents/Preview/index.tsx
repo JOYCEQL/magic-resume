@@ -1,10 +1,14 @@
-import useBaseInfoStore from "@/store/useBaseInfoStore";
 import dayjs from "dayjs";
+import { Separator } from "@/components/ui/separator";
+import useBaseInfoStore from "@/store/useBaseInfoStore";
+import useModelStore from "@/store/useModelStore";
+
 const Preview = () => {
   const { name, phone, wechat, email, birthday, jobName } = useBaseInfoStore();
+  const { skillContent, projectContent } = useModelStore();
   return (
     <div className="flex-1  p-[12px] h-[100vh] ">
-      <div className="p-[12px]   h-[100%] rounded-[6px] bg-[#fff] flex ">
+      <div className="p-[12px]   h-[100%] rounded-[6px] bg-[#fff] flex flex-col ">
         <div className="flex justify-between h-fit w-[100%] ">
           <div className="w-[40%]">
             <div className="text-[30px] font-[500]">{name}</div>
@@ -28,6 +32,16 @@ const Preview = () => {
               {dayjs(birthday).format("YYYY-MM-DD")}
             </div>
           </div>
+        </div>
+        <div className="mt-[12px] ">
+          <div className="text-[20px]">专业技能</div>
+          <Separator className="my-[12px]"></Separator>
+          <div dangerouslySetInnerHTML={{ __html: skillContent }} />
+        </div>
+        <div className="mt-[12px] ">
+          <div className="text-[20px]">项目经历</div>
+          <Separator className="my-[12px]"></Separator>
+          <div dangerouslySetInnerHTML={{ __html: projectContent }} />
         </div>
       </div>
     </div>

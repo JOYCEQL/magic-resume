@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AlignCenter,
   AlignLeft,
@@ -232,14 +232,25 @@ const extensions = [
   })
 ];
 
-const content = ``;
+// const content = ``;
 
-const Tiptap = () => {
+interface IProps {
+  content: string;
+  emitData: (data: string) => void;
+}
+
+const Tiptap = ({ emitData, content }: IProps) => {
+  const updateEditor = ({ editor }) => {
+    const html = editor.getHTML();
+    emitData(html);
+  };
+
   return (
     <EditorProvider
       slotBefore={<MenuBar />}
       extensions={extensions}
       content={content}
+      onUpdate={updateEditor}
     ></EditorProvider>
   );
 };

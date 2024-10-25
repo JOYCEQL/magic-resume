@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,6 +18,7 @@ import {
   Settings
 } from "lucide-react";
 import ScrollToTop from "../components/ScrollToTop";
+import Logo from "@/assets/images/logo@2x.svg";
 
 const features = [
   {
@@ -88,7 +90,7 @@ export default function LandingPage() {
     }
   };
 
-  const TypewriterText = ({ text }) => {
+  const TypewriterText = ({ text }: { text: string }) => {
     const [displayText, setDisplayText] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -126,7 +128,6 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <FileText className="h-6 w-6 text-blue-500" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
               Magic Resume
             </span>

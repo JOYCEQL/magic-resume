@@ -43,6 +43,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
+    "postcss-normalize": "^13.0.1",
     "sass": "^1.77.4",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"

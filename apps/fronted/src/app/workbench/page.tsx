@@ -644,8 +644,6 @@ const ResumeEditor = () => {
                 </div>
               </Card>
             </TabsContent>
-
-            {/* 其他 TabsContent 内容类似 */}
           </div>
         </Tabs>
       </div>

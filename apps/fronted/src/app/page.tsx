@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import ScrollToTop from "../components/ScrollToTop";
 import Logo from "@/assets/images/logo@2x.svg";
-
+import EditButton from "@/components/EditButton";
 const features = [
   {
     icon: <Layout className="h-6 w-6" />,
@@ -145,10 +145,10 @@ export default function LandingPage() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            <Button>
+            <EditButton>
               立即使用
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            </EditButton>
           </div>
         </div>
       </header>

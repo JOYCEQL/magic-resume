@@ -1,0 +1,339 @@
+"use client";
+
+import { motion, Reorder } from "framer-motion";
+import {
+  GripVertical,
+  Eye,
+  EyeOff,
+  Layout,
+  Type,
+  SpaceIcon
+} from "lucide-react";
+import { useResumeStore } from "@/store/useResumeStore";
+import { getThemeConfig } from "@/theme/themeConfig";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+
+const fontOptions = [
+  { value: "sans", label: "无衬线体" },
+  { value: "serif", label: "衬线体" },
+  { value: "mono", label: "等宽体" }
+];
+
+function SettingCard({
+  icon: Icon,
+  title,
+  children
+}: {
+  icon: any;
+  title: string;
+  children: React.ReactNode;
+}) {
+  const { theme } = useResumeStore();
+
+  return (
+    <Card
+      className={cn(
+        "border shadow-sm",
+        theme === "dark"
+          ? "bg-neutral-900 border-neutral-800 shadow-neutral-900/50"
+          : "bg-white border-gray-100 shadow-gray-100/50"
+      )}
+    >
+      <CardHeader className="p-4 pb-0">
+        <CardTitle className="flex items-center gap-2 text-base font-medium">
+          <Icon
+            className={cn(
+              "w-4 h-4",
+              theme === "dark" ? "text-neutral-300" : "text-gray-600"
+            )}
+          />
+          <span
+            className={cn(
+              theme === "dark" ? "text-neutral-200" : "text-gray-700"
+            )}
+          >
+            {title}
+          </span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-4">{children}</CardContent>
+    </Card>
+  );
+}
+
+export function SidePanel() {
+  const {
+    theme,
+    menuSections,
+    reorderSections,
+    toggleSectionVisibility,
+    setActiveSection,
+    globalSettings,
+    updateGlobalSettings
+  } = useResumeStore();
+
+  return (
+    <motion.div
+      className={cn(
+        "w-96 border-r overflow-y-auto",
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-gray-50 border-gray-100"
+      )}
+      initial={{ x: -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+    >
+      <div className="p-4 space-y-4">
+        {/* 布局部分 */}
+        <SettingCard icon={Layout} title="布局">
+          <Reorder.Group
+            axis="y"
+            values={menuSections}
+            onReorder={reorderSections}
+            className="space-y-2 list-none"
+          >
+            {menuSections.map((item) => (
+              <Reorder.Item
+                key={item.id}
+                value={item}
+                className={cn(
+                  "rounded-lg cursor-move group border",
+                  theme === "dark"
+                    ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
+                    : "hover:bg-gray-50 bg-white border-gray-100"
+                )}
+                whileHover={{ scale: 1.01 }}
+                whileDrag={{ scale: 1.02 }}
+              >
+                <div className="flex items-center p-3 space-x-3">
+                  <GripVertical
+                    className={cn(
+                      "w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity",
+                      theme === "dark" ? "text-neutral-400" : "text-gray-400"
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-lg mr-2",
+                      theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                    )}
+                  >
+                    {item.icon}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-sm flex-1 cursor-pointer",
+                      item.enabled
+                        ? theme === "dark"
+                          ? "text-neutral-200"
+                          : "text-gray-700"
+                        : theme === "dark"
+                          ? "text-neutral-500"
+                          : "text-gray-400"
+                    )}
+                    onClick={() => setActiveSection(item.id)}
+                  >
+                    {item.title}
+                  </span>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => toggleSectionVisibility(item.id)}
+                    className={cn(
+                      "p-1.5 rounded-md",
+                      theme === "dark"
+                        ? "hover:bg-neutral-700 text-neutral-300"
+                        : "hover:bg-gray-100 text-gray-600"
+                    )}
+                  >
+                    {item.enabled ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                  </motion.button>
+                </div>
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
+        </SettingCard>
+
+        {/* 排版设置 */}
+        <SettingCard icon={Type} title="排版">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                字体
+              </Label>
+              <Select
+                value={globalSettings?.fontFamily}
+                onValueChange={(value) =>
+                  updateGlobalSettings?.({ fontFamily: value })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "border transition-colors",
+                      theme === "dark"
+                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
+                        : "border-gray-200 bg-white text-gray-700"
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent
+                  className={cn(
+                    theme === "dark"
+                      ? "bg-neutral-900 border-neutral-800"
+                      : "bg-white border-gray-200"
+                  )}
+                >
+                  {fontOptions.map((font) => (
+                    <SelectItem
+                      key={font.value}
+                      value={font.value}
+                      className={cn(
+                        "cursor-pointer",
+                        theme === "dark"
+                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
+                          : "focus:bg-gray-100 hover:bg-gray-100"
+                      )}
+                    >
+                      {font.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                基础字号
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.baseFontSize || 0]}
+                  min={12}
+                  max={100}
+                  step={1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ baseFontSize: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.baseFontSize}px
+                </span>
+              </div>
+            </div>
+          </div>
+        </SettingCard>
+
+        {/* 间距设置 */}
+        <SettingCard icon={SpaceIcon} title="间距">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                页边距
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.pagePadding || 0]}
+                  min={20}
+                  max={100}
+                  step={1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ pagePadding: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.pagePadding}px
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                段落间距
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.paragraphSpacing || 0]}
+                  min={0.8}
+                  max={2}
+                  step={0.1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ paragraphSpacing: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.paragraphSpacing}em
+                </span>
+              </div>
+            </div>
+          </div>
+        </SettingCard>
+      </div>
+    </motion.div>
+  );
+}

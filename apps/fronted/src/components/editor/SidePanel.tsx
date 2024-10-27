@@ -85,7 +85,7 @@ export function SidePanel() {
   return (
     <motion.div
       className={cn(
-        "w-96 border-r overflow-y-auto",
+        "w-[80] border-r overflow-y-auto",
         theme === "dark"
           ? "bg-neutral-950 border-neutral-800"
           : "bg-gray-50 border-gray-100"

@@ -28,7 +28,6 @@ export function PreviewPanel() {
     projects,
     draggingProjectId
   } = useResumeStore();
-  console.log(projects, "projectsprojects");
   const previewRef = React.useRef<HTMLDivElement>(null);
   const [scrollBehavior, setScrollBehavior] =
     React.useState<ScrollBehavior>("smooth");
@@ -147,15 +146,13 @@ export function PreviewPanel() {
                 <div
                   className={cn(
                     "absolute inset-0 rounded-lg",
-                    theme === "dark"
-                      ? "bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border-2 border-indigo-500/20"
-                      : "bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 border-2 border-indigo-500/10"
+                    "bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 border-2 border-indigo-500/10"
                   )}
                 >
                   <div
                     className={cn(
                       "absolute inset-0 animate-pulse",
-                      theme === "dark" ? "bg-white/5" : "bg-black/5",
+                      "bg-black/5",
                       "rounded-lg"
                     )}
                   />
@@ -170,10 +167,7 @@ export function PreviewPanel() {
               <motion.div layout>
                 <motion.h4
                   layout
-                  className={cn(
-                    "font-medium",
-                    theme === "dark" ? "text-neutral-200" : "text-gray-800"
-                  )}
+                  className={cn("font-medium", "text-gray-800")}
                   style={{
                     fontSize: `${globalSettings?.subheaderSize || 16}px`
                   }}
@@ -182,9 +176,7 @@ export function PreviewPanel() {
                 </motion.h4>
                 <motion.p
                   layout
-                  className={cn(
-                    theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                  )}
+                  className={cn("text-gray-600")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`
                   }}
@@ -194,9 +186,7 @@ export function PreviewPanel() {
               </motion.div>
               <motion.span
                 layout
-                className={cn(
-                  theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                )}
+                className={cn("text-gray-600")}
                 style={{
                   fontSize: `${globalSettings?.contentFontSize || 14}px`
                 }}
@@ -209,10 +199,7 @@ export function PreviewPanel() {
             {project.description && (
               <motion.p
                 layout
-                className={cn(
-                  "whitespace-pre-wrap",
-                  theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                )}
+                className={cn("whitespace-pre-wrap", "text-gray-600")}
                 style={{
                   fontSize: `${globalSettings?.contentFontSize || 14}px`,
                   lineHeight: globalSettings?.lineHeight || 1.6
@@ -227,10 +214,7 @@ export function PreviewPanel() {
               <motion.div layout>
                 <motion.p
                   layout
-                  className={cn(
-                    "font-medium",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-800"
-                  )}
+                  className={cn("font-medium", "text-gray-800")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`
                   }}
@@ -239,10 +223,7 @@ export function PreviewPanel() {
                 </motion.p>
                 <motion.p
                   layout
-                  className={cn(
-                    "whitespace-pre-wrap",
-                    theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                  )}
+                  className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
@@ -258,10 +239,7 @@ export function PreviewPanel() {
               <motion.div layout>
                 <motion.p
                   layout
-                  className={cn(
-                    "font-medium",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-800"
-                  )}
+                  className={cn("font-medium", "text-gray-800")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`
                   }}
@@ -270,10 +248,7 @@ export function PreviewPanel() {
                 </motion.p>
                 <motion.p
                   layout
-                  className={cn(
-                    "whitespace-pre-wrap",
-                    theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                  )}
+                  className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
@@ -289,10 +264,7 @@ export function PreviewPanel() {
               <motion.div layout>
                 <motion.p
                   layout
-                  className={cn(
-                    "font-medium",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-800"
-                  )}
+                  className={cn("font-medium", "text-gray-800")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`
                   }}
@@ -301,10 +273,7 @@ export function PreviewPanel() {
                 </motion.p>
                 <motion.p
                   layout
-                  className={cn(
-                    "whitespace-pre-wrap",
-                    theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                  )}
+                  className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
@@ -491,10 +460,7 @@ export function PreviewPanel() {
   return (
     <motion.div
       ref={previewRef}
-      className={cn(
-        "flex-1 overflow-y-auto",
-        theme === "dark" ? "bg-neutral-900" : "bg-gray-100"
-      )}
+      className={cn("flex-1 overflow-y-auto", "bg-gray-100")}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
@@ -522,10 +488,7 @@ export function PreviewPanel() {
               <div className="text-center space-y-4">
                 <motion.h1
                   layout="position"
-                  className={cn(
-                    "font-bold",
-                    theme === "dark" ? "text-neutral-100" : "text-gray-900"
-                  )}
+                  className={cn("font-bold", "text-gray-900")}
                   style={{
                     fontSize: `${(globalSettings?.headerSize || 24) * 1.5}px`
                   }}
@@ -534,9 +497,7 @@ export function PreviewPanel() {
                 </motion.h1>
                 <motion.h2
                   layout="position"
-                  className={
-                    theme === "dark" ? "text-neutral-400" : "text-gray-600"
-                  }
+                  className={"text-gray-600"}
                   style={{
                     fontSize: `${globalSettings?.subheaderSize || 16}px`
                   }}
@@ -548,10 +509,7 @@ export function PreviewPanel() {
                   className="flex justify-center items-center space-x-4 flex-wrap"
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`,
-                    color:
-                      theme === "dark"
-                        ? "rgb(163, 163, 163)"
-                        : "rgb(75, 85, 99)"
+                    color: "rgb(75, 85, 99)"
                   }}
                 >
                   {[

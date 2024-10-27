@@ -85,7 +85,7 @@ export function EditorHeader({ previewRef, isMobile }: EditorHeaderProps) {
               <span>预览</span>
             </motion.button>
 
-            <PdfExport previewRef={previewRef} />
+            <PdfExport />
           </div>
         </div>
       </div>

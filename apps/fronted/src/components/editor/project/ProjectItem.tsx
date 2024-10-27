@@ -136,6 +136,9 @@ const ProjectItem = ({ project }: { project: Project }) => {
       value={project}
       dragListener={false}
       dragControls={dragControls}
+      onDragEnd={() => {
+        useResumeStore.getState().setDraggingProjectId(null);
+      }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
         theme === "dark"
@@ -148,6 +151,13 @@ const ProjectItem = ({ project }: { project: Project }) => {
         onPointerDown={(event) => {
           if (expandedId === project.id) return;
           dragControls.start(event);
+          useResumeStore.getState().setDraggingProjectId(project.id);
+        }}
+        onPointerUp={() => {
+          useResumeStore.getState().setDraggingProjectId(null);
+        }}
+        onPointerCancel={() => {
+          useResumeStore.getState().setDraggingProjectId(null);
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",

@@ -46,9 +46,12 @@ interface ResumeStore {
   projects: Project[];
   updateProjects: (project: Project) => void;
   deleteProject: (id: string) => void;
+  draggingProjectId: string | null;
+  setDraggingProjectId: (id: string | null) => void;
 }
 
 const initialState = {
+  draggingProjectId: null,
   basic: {
     name: "张三",
     title: "高级前端工程师",
@@ -123,6 +126,7 @@ export const useResumeStore = create<ResumeStore>()(
   persist(
     (set) => ({
       ...initialState,
+      setDraggingProjectId: (id) => set({ draggingProjectId: id }),
 
       updateBasicInfo: (data) =>
         set((state) => ({ basic: { ...state.basic, ...data } })),

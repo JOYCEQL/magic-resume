@@ -167,11 +167,15 @@ export const useResumeStore = create<ResumeStore>()(
       setActiveSection: (sectionId) => set({ activeSection: sectionId }),
 
       updateProjects: (project) =>
-        set((state) => ({
-          projects: state.projects.some((p) => p.id === project.id)
-            ? state.projects.map((p) => (p.id === project.id ? project : p))
-            : [...state.projects, project]
-        })),
+        set((state) => {
+          const newProjects = state.projects.some((p) => p.id === project.id)
+            ? state.projects.map((p) =>
+                p.id === project.id ? { ...project } : p
+              )
+            : [...state.projects, { ...project }];
+
+          return { projects: newProjects };
+        }),
 
       deleteProject: (id) =>
         set((state) => ({

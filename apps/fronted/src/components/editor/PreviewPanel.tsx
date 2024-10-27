@@ -1,9 +1,10 @@
 "use client";
 
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
-import React, { useEffect } from "react";
+import { throttle } from "lodash";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -27,14 +28,69 @@ export function PreviewPanel() {
     projects,
     draggingProjectId
   } = useResumeStore();
+  console.log(projects, "projectsprojects");
+  const previewRef = React.useRef<HTMLDivElement>(null);
+  const [scrollBehavior, setScrollBehavior] =
+    React.useState<ScrollBehavior>("smooth");
 
   const fontFamilyClass = getFontFamilyClass(
     globalSettings?.fontFamily || "sans"
   );
 
-  useEffect(() => {
-    console.log(draggingProjectId, "draggingProjectId");
-  }, [draggingProjectId]);
+  // 处理自动滚动
+  const handleScroll = React.useCallback(
+    throttle((offset: number) => {
+      if (previewRef.current) {
+        previewRef.current.scrollBy({
+          top: offset,
+          behavior: scrollBehavior
+        });
+      }
+    }, 100),
+    [scrollBehavior]
+  );
+
+  // 使用 IntersectionObserver 监测拖拽元素
+  React.useEffect(() => {
+    if (!draggingProjectId || !previewRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && previewRef.current) {
+            const element = entry.target;
+            const container = previewRef.current;
+
+            const elementRect = element.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            const offset =
+              elementRect.top -
+              containerRect.top -
+              (containerRect.height - elementRect.height) / 2;
+
+            handleScroll(offset);
+          }
+        });
+      },
+      {
+        root: previewRef.current,
+        threshold: 0.5,
+        rootMargin: "-100px 0px"
+      }
+    );
+
+    const draggingElement = document.querySelector(
+      `[data-project-id="${draggingProjectId}"]`
+    );
+    if (draggingElement) {
+      observer.observe(draggingElement);
+    }
+
+    return () => {
+      observer.disconnect();
+      handleScroll.cancel();
+    };
+  }, [draggingProjectId, handleScroll]);
 
   const renderProjects = () => (
     <motion.div
@@ -56,6 +112,7 @@ export function PreviewPanel() {
         {projects.map((project) => (
           <motion.div
             key={project.id}
+            data-project-id={project.id}
             layout
             initial={{ opacity: 0, y: 20 }}
             animate={{
@@ -78,11 +135,11 @@ export function PreviewPanel() {
               marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
             }}
           >
-            {/* 拖拽时的高光效果 */}
+            {/* 拖拽高亮效果 */}
             {draggingProjectId === project.id && (
               <motion.div
                 layoutId="project-highlight"
-                className="absolute  inset-0 rounded-lg pointer-events-none"
+                className="absolute inset-0 rounded-lg pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -148,6 +205,7 @@ export function PreviewPanel() {
               </motion.span>
             </motion.div>
 
+            {/* 项目详情 */}
             {project.description && (
               <motion.p
                 layout
@@ -164,6 +222,7 @@ export function PreviewPanel() {
               </motion.p>
             )}
 
+            {/* 技术栈 */}
             {project.technologies && (
               <motion.div layout>
                 <motion.p
@@ -194,6 +253,7 @@ export function PreviewPanel() {
               </motion.div>
             )}
 
+            {/* 主要职责 */}
             {project.responsibilities && (
               <motion.div layout>
                 <motion.p
@@ -224,6 +284,7 @@ export function PreviewPanel() {
               </motion.div>
             )}
 
+            {/* 项目成就 */}
             {project.achievements && (
               <motion.div layout>
                 <motion.p
@@ -259,13 +320,169 @@ export function PreviewPanel() {
     </motion.div>
   );
 
-  // 其他 section 的渲染函数保持不变...
+  // ... 其他 section 渲染函数 ...
 
   const renderSection = (sectionId: string) => {
     switch (sectionId) {
+      case "basic":
+        return (
+          <motion.div layout className="space-y-2">
+            <h3
+              className="text-lg font-semibold border-b border-gray-200 pb-2"
+              style={{
+                fontSize: `${globalSettings?.headerSize || 18}px`
+              }}
+            >
+              个人简介
+            </h3>
+            <p
+              className="text-gray-600 whitespace-pre-wrap"
+              style={{
+                fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                lineHeight: globalSettings?.lineHeight || 1.6
+              }}
+            >
+              {basic.summary}
+            </p>
+          </motion.div>
+        );
+
+      case "education":
+        return (
+          <motion.div
+            layout
+            className="space-y-4"
+            style={{
+              marginTop: `${globalSettings?.sectionSpacing || 24}px`
+            }}
+          >
+            <h3
+              className="text-lg font-semibold border-b border-gray-200 pb-2"
+              style={{
+                fontSize: `${globalSettings?.headerSize || 18}px`
+              }}
+            >
+              教育经历
+            </h3>
+            {education.map((edu) => (
+              <div
+                key={edu.id}
+                className="space-y-2"
+                style={{
+                  marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
+                }}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4
+                      className="font-medium text-gray-800"
+                      style={{
+                        fontSize: `${globalSettings?.subheaderSize || 16}px`
+                      }}
+                    >
+                      {edu.school}
+                    </h4>
+                    <p
+                      className="text-gray-600"
+                      style={{
+                        fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      }}
+                    >
+                      {edu.degree}
+                    </p>
+                  </div>
+                  <span
+                    className="text-gray-600"
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    {edu.date}
+                  </span>
+                </div>
+                <p
+                  className="text-gray-600"
+                  style={{
+                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    lineHeight: globalSettings?.lineHeight || 1.6
+                  }}
+                >
+                  {edu.details}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        );
+
+      case "experience":
+        return (
+          <motion.div
+            layout
+            className="space-y-4"
+            style={{
+              marginTop: `${globalSettings?.sectionSpacing || 24}px`
+            }}
+          >
+            <h3
+              className="text-lg font-semibold border-b border-gray-200 pb-2"
+              style={{
+                fontSize: `${globalSettings?.headerSize || 18}px`
+              }}
+            >
+              工作经验
+            </h3>
+            {experience.map((exp) => (
+              <div
+                key={exp.id}
+                className="space-y-2"
+                style={{
+                  marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
+                }}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4
+                      className="font-medium text-gray-800"
+                      style={{
+                        fontSize: `${globalSettings?.subheaderSize || 16}px`
+                      }}
+                    >
+                      {exp.company}
+                    </h4>
+                    <p
+                      className="text-gray-600"
+                      style={{
+                        fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      }}
+                    >
+                      {exp.position}
+                    </p>
+                  </div>
+                  <span
+                    className="text-gray-600"
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    {exp.date}
+                  </span>
+                </div>
+                <p
+                  className="text-gray-600"
+                  style={{
+                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    lineHeight: globalSettings?.lineHeight || 1.6
+                  }}
+                >
+                  {exp.details}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        );
       case "projects":
         return renderProjects();
-      // 其他 case 保持不变...
+      // ... 其他 case
       default:
         return null;
     }
@@ -273,6 +490,7 @@ export function PreviewPanel() {
 
   return (
     <motion.div
+      ref={previewRef}
       className={cn(
         "flex-1 overflow-y-auto",
         theme === "dark" ? "bg-neutral-900" : "bg-gray-100"
@@ -289,7 +507,7 @@ export function PreviewPanel() {
             "shadow-lg",
             "relative mx-auto",
             fontFamilyClass,
-            theme === "dark" && "bg-neutral-900 text-neutral-100"
+            "text-[#000]"
           )}
         >
           <div

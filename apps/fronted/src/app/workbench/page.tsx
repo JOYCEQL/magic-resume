@@ -2,14 +2,21 @@
 
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Eye, Edit2, Menu } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
 import { PreviewPanel } from "@/components/editor/PreviewPanel";
 import { getThemeConfig } from "@/theme/themeConfig";
-import { Eye, Edit2, Menu } from "lucide-react";
 import { useScrollbarTheme } from "@/hooks/useScrollBarTheme";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup
+} from "@/components/ui/resizable";
+import { cn } from "@/lib/utils";
+import CustomHandle from "./compoents/CustomHandle";
 
 export default function Home() {
   const theme = useResumeStore((state) => state.theme);
@@ -19,7 +26,10 @@ export default function Home() {
   // 移动端状态管理
   const [showSidebar, setShowSidebar] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+
   useScrollbarTheme();
+
+  const [defaultLayout] = useState([15, 40, 50]);
 
   // 移动端切换按钮
   const MobileNav = () => (
@@ -75,15 +85,41 @@ export default function Home() {
     >
       <EditorHeader previewRef={previewRef} isMobile={true} />
 
-      {/* 桌面端布局 */}
-      <div className="hidden md:flex h-[calc(100vh-4rem)]">
-        <SidePanel />
-        <EditPanel />
-        <PreviewPanel />
+      <div className="hidden md:block h-[calc(100vh-64px)] overflow-hidden">
+        {/* 桌面端布局 */}
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="h-full  rounded-lg border"
+        >
+          <ResizablePanel
+            defaultSize={defaultLayout[0]}
+            minSize={15}
+            maxSize={30}
+          >
+            <div className="h-full overflow-y-auto">
+              <SidePanel />
+            </div>
+          </ResizablePanel>
+          <CustomHandle />
+          <ResizablePanel
+            minSize={20}
+            maxSize={30}
+            defaultSize={defaultLayout[1]}
+          >
+            <div className="h-full overflow-y-auto">
+              <EditPanel />
+            </div>
+          </ResizablePanel>
+          <CustomHandle />
+          <ResizablePanel defaultSize={defaultLayout[2]}>
+            <div className="h-full overflow-y-auto">
+              <PreviewPanel />
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
-
       {/* 移动端布局 */}
-      <div className="md:hidden h-[calc(100vh-4rem)] overflow-hidden">
+      <div className="md:hidden h-[calc(100vh-64px)] overflow-hidden">
         <AnimatePresence mode="wait">
           {isPreviewMode ? (
             <motion.div

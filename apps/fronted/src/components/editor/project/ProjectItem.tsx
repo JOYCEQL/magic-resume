@@ -10,6 +10,28 @@ import {
 import { ChevronDown, GripVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Field from "../Field";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+
+interface Project {
+  id: string;
+  name: string;
+  role: string;
+  date: string;
+  description: string;
+  technologies: string;
+  responsibilities: string;
+  achievements: string;
+}
 
 interface ProjectEditorProps {
   project: Project;
@@ -17,6 +39,85 @@ interface ProjectEditorProps {
   onDelete: () => void;
   onCancel: () => void;
 }
+
+interface DeleteConfirmDialogProps {
+  projectName: string;
+  onDelete: () => void;
+}
+
+const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
+  projectName,
+  onDelete
+}) => {
+  const theme = useResumeStore((state) => state.theme);
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "text-sm",
+            theme === "dark"
+              ? "hover:bg-red-900/50 text-red-400"
+              : "hover:bg-red-50 text-red-600"
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent
+        className={cn(
+          theme === "dark" ? "bg-neutral-900 border-neutral-800" : "bg-white"
+        )}
+        onClick={(e) => e.stopPropagation()} // 添加这行
+      >
+        <AlertDialogHeader>
+          <AlertDialogTitle
+            className={cn(
+              theme === "dark" ? "text-neutral-200" : "text-gray-900"
+            )}
+          >
+            确认删除项目
+          </AlertDialogTitle>
+          <AlertDialogDescription
+            className={cn(
+              theme === "dark" ? "text-neutral-400" : "text-gray-500"
+            )}
+          >
+            您确定要删除项目 {projectName} 吗？此操作无法撤销。
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            className={cn(
+              theme === "dark"
+                ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border-neutral-700"
+                : ""
+            )}
+          >
+            取消
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={(e: { preventDefault: () => void }) => {
+              e.preventDefault();
+              onDelete();
+            }}
+            className={cn(
+              theme === "dark"
+                ? "bg-red-600 hover:bg-red-700 text-white"
+                : "bg-red-600 hover:bg-red-700 text-white"
+            )}
+          >
+            删除
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({
   project,
@@ -86,23 +187,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   );
 };
 
-// ProjectEditor 组件用于编辑单个项目
-interface Project {
-  id: string;
-  name: string;
-  role: string;
-  date: string;
-  description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
-}
-
 const ProjectItem = ({ project }: { project: Project }) => {
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
   const { theme, updateProjects, deleteProject } = useResumeStore();
+
   return (
     <Reorder.Item
       id={project.id}
@@ -178,22 +267,13 @@ const ProjectItem = ({ project }: { project: Project }) => {
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                "text-sm",
-                theme === "dark"
-                  ? "hover:bg-red-900/50 text-red-400"
-                  : "hover:bg-red-50 text-red-600"
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
+            <DeleteConfirmDialog
+              projectName={project.name}
+              onDelete={() => {
                 deleteProject(project.id);
+                setExpandedId(null);
               }}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            />
             <motion.div
               initial={false}
               animate={{

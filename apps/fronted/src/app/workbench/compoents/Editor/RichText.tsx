@@ -135,7 +135,7 @@ const MenuButton = ({
   );
 };
 
-const TextColorButton = ({ editor, tooltip }) => {
+const TextColorButton = ({ editor }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
 
   React.useEffect(() => {
@@ -411,7 +411,8 @@ const RichTextEditor = ({
           ]
         )
       }
-    }
+    },
+    immediatelyRender: false
   });
 
   if (!editor) {

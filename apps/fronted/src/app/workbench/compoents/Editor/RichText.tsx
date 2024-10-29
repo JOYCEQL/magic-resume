@@ -31,6 +31,8 @@ import {
   Highlighter
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
+import { useResumeStore } from "@/store/useResumeStore";
+import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
   content: string;
@@ -56,23 +58,7 @@ const COLORS = [
   { label: "粉色", value: "#FF00FF" }
 ];
 
-const BG_COLORS = [
-  { label: "黑色", value: "#000000" },
-  { label: "深灰", value: "#333333" },
-  { label: "灰色", value: "#666666" },
-  { label: "红色", value: "#FF0000" },
-  { label: "橙色", value: "#FF4D00" },
-  { label: "橙黄", value: "#FF9900" },
-  { label: "黄色", value: "#FFCC00" },
-  { label: "黄绿", value: "#33CC00" },
-  { label: "绿色", value: "#00CC00" },
-  { label: "青色", value: "#00CCCC" },
-  { label: "浅蓝", value: "#0066FF" },
-  { label: "蓝色", value: "#0000FF" },
-  { label: "紫色", value: "#6600FF" },
-  { label: "紫红", value: "#CC00FF" },
-  { label: "粉色", value: "#FF00FF" }
-];
+const BG_COLORS = COLORS;
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -83,6 +69,19 @@ interface MenuButtonProps {
   tooltip?: string;
 }
 
+interface MenuButtonProps {
+  onClick: () => void;
+  isActive?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
+  className?: string;
+  tooltip?: string;
+}
+
+const handleToolbarClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+};
+
 const MenuButton = ({
   onClick,
   isActive = false,
@@ -90,30 +89,51 @@ const MenuButton = ({
   children,
   className = "",
   tooltip
-}: MenuButtonProps) => (
-  <Button
-    variant={isActive ? "secondary" : "ghost"}
-    size="sm"
-    className={`h-9 w-9 rounded-md transition-all duration-200 hover:scale-105 p-0
-    ${isActive ? "bg-primary/10 text-primary hover:bg-primary/20" : "hover:bg-primary/5"} 
-    ${disabled ? "opacity-50" : ""} 
-    ${className}
-    relative group`}
-    onClick={onClick}
-    disabled={disabled}
-  >
-    {children}
-    {tooltip && (
-      <span
-        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 
-        px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md 
-        opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50"
+}: MenuButtonProps) => {
+  const theme = useResumeStore((state) => state.theme);
+  const [showTooltip, setShowTooltip] = React.useState(false);
+
+  return (
+    <div className="relative">
+      <Button
+        variant={isActive ? "secondary" : "ghost"}
+        size="sm"
+        className={cn(
+          "h-9 w-9 rounded-md transition-all duration-200 hover:scale-105 p-0",
+          isActive
+            ? theme === "dark"
+              ? "bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+              : "bg-primary/10 text-primary hover:bg-primary/20"
+            : theme === "dark"
+              ? "hover:bg-neutral-800"
+              : "hover:bg-primary/5",
+          disabled ? "opacity-50" : "",
+          className
+        )}
+        onClick={onClick}
+        disabled={disabled}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        {tooltip}
-      </span>
-    )}
-  </Button>
-);
+        {children}
+      </Button>
+      {tooltip && showTooltip && (
+        <div
+          className={cn(
+            "absolute -bottom-8 left-1/2 transform -translate-x-1/2",
+            "px-2 py-1 text-xs rounded-md whitespace-nowrap z-50",
+            "transition-opacity duration-200",
+            theme === "dark"
+              ? "bg-neutral-800 text-neutral-200"
+              : "bg-secondary text-secondary-foreground"
+          )}
+        >
+          {tooltip}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const TextColorButton = ({ editor, tooltip }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
@@ -268,74 +288,91 @@ const BackgroundColorButton = ({ editor }) => {
     </Popover>
   );
 };
-const HeadingSelect = ({ editor }) => (
-  <Popover>
-    <PopoverTrigger asChild>
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-9 px-2.5 rounded-md hover:bg-primary/5 flex items-center gap-1.5 min-w-[100px]"
+
+const HeadingSelect = ({ editor }) => {
+  const theme = useResumeStore((state) => state.theme);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "h-9 px-2.5 rounded-md flex items-center gap-1.5 min-w-[100px]",
+            theme === "dark" ? "hover:bg-neutral-800" : "hover:bg-primary/5"
+          )}
+        >
+          <Type className="h-5 w-5" />
+          <span className="text-sm">
+            {editor.isActive("heading", { level: 1 })
+              ? "标题 1"
+              : editor.isActive("heading", { level: 2 })
+                ? "标题 2"
+                : editor.isActive("heading", { level: 3 })
+                  ? "标题 3"
+                  : "正文"}
+          </span>
+          <ChevronDown className="h-4 w-4 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className={cn(
+          "w-40 p-1 rounded-lg",
+          theme === "dark" ? "bg-neutral-900" : "bg-white"
+        )}
       >
-        <Type className="h-5 w-5" />
-        <span className="text-sm">
-          {editor.isActive("heading", { level: 1 })
-            ? "标题 1"
-            : editor.isActive("heading", { level: 2 })
-              ? "标题 2"
-              : editor.isActive("heading", { level: 3 })
-                ? "标题 3"
-                : "正文"}
-        </span>
-        <ChevronDown className="h-4 w-4 opacity-50" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent className="w-40 p-1 rounded-lg">
-      <div className="flex flex-col gap-0.5">
-        {[
-          { label: "正文", value: "p" },
-          { label: "标题 1", value: "1" },
-          { label: "标题 2", value: "2" },
-          { label: "标题 3", value: "3" }
-        ].map((item) => (
-          <Button
-            key={item.value}
-            variant="ghost"
-            className={`w-full justify-start px-2 py-1.5 text-sm rounded-md
-              ${
+        <div className="flex flex-col gap-0.5">
+          {[
+            { label: "正文", value: "p" },
+            { label: "标题 1", value: "1" },
+            { label: "标题 2", value: "2" },
+            { label: "标题 3", value: "3" }
+          ].map((item) => (
+            <Button
+              key={item.value}
+              variant="ghost"
+              className={cn(
+                "w-full justify-start px-2 py-1.5 text-sm rounded-md",
                 editor.isActive(
                   item.value === "p" ? "paragraph" : "heading",
                   item.value === "p"
                     ? undefined
                     : { level: parseInt(item.value) }
                 )
-                  ? "bg-primary/10 text-primary"
+                  ? theme === "dark"
+                    ? "bg-neutral-800 text-neutral-200"
+                    : "bg-primary/10 text-primary"
                   : ""
-              }`}
-            onClick={() => {
-              if (item.value === "p") {
-                editor.chain().focus().setParagraph().run();
-              } else {
-                editor
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: parseInt(item.value) })
-                  .run();
-              }
-            }}
-          >
-            {item.label}
-          </Button>
-        ))}
-      </div>
-    </PopoverContent>
-  </Popover>
-);
+              )}
+              onClick={() => {
+                if (item.value === "p") {
+                  editor.chain().focus().setParagraph().run();
+                } else {
+                  editor
+                    .chain()
+                    .focus()
+                    .toggleHeading({ level: parseInt(item.value) })
+                    .run();
+                }
+              }}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 const RichTextEditor = ({
   content,
   onChange,
   placeholder
 }: RichTextEditorProps) => {
+  const theme = useResumeStore((state) => state.theme);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -358,8 +395,21 @@ const RichTextEditor = ({
     },
     editorProps: {
       attributes: {
-        class:
-          "prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[150px] px-4 py-3"
+        class: cn(
+          "prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[150px] px-4 py-3",
+          theme === "dark" && [
+            "prose-invert",
+            "prose-headings:text-neutral-200",
+            "prose-p:text-neutral-300",
+            "prose-strong:text-neutral-200",
+            "prose-em:text-neutral-200",
+            "prose-blockquote:text-neutral-300",
+            "prose-blockquote:border-neutral-700",
+            "prose-ul:text-neutral-300",
+            "prose-ol:text-neutral-300",
+            "[&_*::selection]:bg-neutral-700/50"
+          ]
+        )
       }
     }
   });
@@ -369,14 +419,34 @@ const RichTextEditor = ({
   }
 
   return (
-    <div className="rounded-lg bg-card overflow-hidden border shadow-sm">
+    <div
+      className={cn(
+        "rounded-lg overflow-hidden border shadow-sm",
+        theme === "dark"
+          ? "bg-neutral-900/30 border-neutral-800"
+          : "bg-card border-gray-100"
+      )}
+    >
       {/* Toolbar */}
-      <div className="border-b px-2 py-1.5 bg-background flex flex-wrap items-center gap-3">
+      <div
+        className={cn(
+          "border-b px-2 py-1.5 flex flex-wrap items-center gap-3",
+          theme === "dark"
+            ? "bg-neutral-900/50 border-neutral-800"
+            : "bg-background"
+        )}
+        onClick={handleToolbarClick}
+      >
         <div className="flex items-center">
           <HeadingSelect editor={editor} />
         </div>
 
-        <div className="h-5 w-px bg-border/60" />
+        <div
+          className={cn(
+            "h-5 w-px",
+            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
+          )}
+        />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -411,7 +481,12 @@ const RichTextEditor = ({
           <BackgroundColorButton editor={editor} />
         </div>
 
-        <div className="h-5 w-px bg-border/60" />
+        <div
+          className={cn(
+            "h-5 w-px",
+            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
+          )}
+        />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -444,7 +519,12 @@ const RichTextEditor = ({
           </MenuButton>
         </div>
 
-        <div className="h-5 w-px bg-border/60" />
+        <div
+          className={cn(
+            "h-5 w-px",
+            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
+          )}
+        />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -470,7 +550,12 @@ const RichTextEditor = ({
           </MenuButton>
         </div>
 
-        <div className="h-5 w-px bg-border/60" />
+        <div
+          className={cn(
+            "h-5 w-px",
+            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
+          )}
+        />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -496,7 +581,12 @@ const RichTextEditor = ({
       {/* Bubble Menu */}
       {editor && (
         <BubbleMenu
-          className="flex items-center gap-0.5 p-1 rounded-md bg-background/80 backdrop-blur border shadow-lg"
+          className={cn(
+            "flex items-center gap-0.5 p-1 rounded-md backdrop-blur border shadow-lg",
+            theme === "dark"
+              ? "bg-neutral-900/80 border-neutral-800"
+              : "bg-background/80 border-gray-100"
+          )}
           tippyOptions={{ duration: 100 }}
           editor={editor}
         >

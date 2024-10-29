@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "魔方简历",
+  title: "魔法简历",
   description: "极度自由的在线简历编辑器"
 };
 

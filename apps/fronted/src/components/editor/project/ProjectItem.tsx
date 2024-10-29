@@ -65,35 +65,8 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
           onChange={(value) =>
             setData((prev) => ({ ...prev, description: value }))
           }
-          type="textarea"
+          type="editor"
           placeholder="简要描述项目的背景和目标..."
-        />
-        <Field
-          label="技术栈"
-          value={data.technologies}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, technologies: value }))
-          }
-          type="textarea"
-          placeholder="使用的主要技术、框架和工具..."
-        />
-        <Field
-          label="主要职责"
-          value={data.responsibilities}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, responsibilities: value }))
-          }
-          type="textarea"
-          placeholder="描述你在项目中的具体职责和工作内容..."
-        />
-        <Field
-          label="项目成就"
-          value={data.achievements}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, achievements: value }))
-          }
-          type="textarea"
-          placeholder="项目取得的成果、解决的问题或改进的指标..."
         />
       </div>
       <div className="flex justify-end gap-2 pt-2">

@@ -5,13 +5,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
+import RichTextEditor from "@/app/workbench/compoents/Editor/RichText";
 
 // 扩展 FieldProps 类型定义
 type FieldProps = {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  type?: "text" | "textarea" | "date";
+  type?: "text" | "textarea" | "date" | "editor";
   placeholder?: string;
   required?: boolean;
 };
@@ -26,6 +27,18 @@ const Field: React.FC<FieldProps> = ({
   required
 }) => {
   const theme = useResumeStore((state) => state.theme);
+
+  const renderLabel = () => (
+    <span
+      className={cn(
+        "text-sm font-medium flex gap-1 items-center",
+        theme === "dark" ? "text-neutral-300" : "text-gray-600"
+      )}
+    >
+      {label}
+      {required && <span className="text-red-500">*</span>}
+    </span>
+  );
 
   const inputStyles = cn(
     "mt-1.5 block w-full transition-all duration-200",
@@ -142,6 +155,20 @@ const Field: React.FC<FieldProps> = ({
           whileTap={{ scale: 0.995 }}
         />
       </label>
+    );
+  }
+  if (type === "editor") {
+    return (
+      <motion.div className="block">
+        {renderLabel()}
+        <div className="mt-1.5">
+          <RichTextEditor
+            content={value}
+            onChange={onChange}
+            placeholder={placeholder}
+          />
+        </div>
+      </motion.div>
     );
   }
 

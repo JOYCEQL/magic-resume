@@ -174,7 +174,7 @@ export function PreviewPanel() {
                 >
                   {project.name || "未命名项目"}
                 </motion.h4>
-                <motion.p
+                <motion.div
                   layout
                   className={cn("text-gray-600")}
                   style={{
@@ -182,7 +182,7 @@ export function PreviewPanel() {
                   }}
                 >
                   {project.role}
-                </motion.p>
+                </motion.div>
               </motion.div>
               <motion.span
                 layout
@@ -197,7 +197,7 @@ export function PreviewPanel() {
 
             {/* 项目详情 */}
             {project.description && (
-              <motion.p
+              <motion.div
                 layout
                 className={cn("whitespace-pre-wrap", "text-gray-600")}
                 style={{
@@ -205,14 +205,16 @@ export function PreviewPanel() {
                   lineHeight: globalSettings?.lineHeight || 1.6
                 }}
               >
-                {project.description}
-              </motion.p>
+                <div
+                  dangerouslySetInnerHTML={{ __html: project.description }}
+                />
+              </motion.div>
             )}
 
             {/* 技术栈 */}
             {project.technologies && (
               <motion.div layout>
-                <motion.p
+                <motion.div
                   layout
                   className={cn("font-medium", "text-gray-800")}
                   style={{
@@ -220,8 +222,8 @@ export function PreviewPanel() {
                   }}
                 >
                   技术栈：
-                </motion.p>
-                <motion.p
+                </motion.div>
+                <motion.div
                   layout
                   className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
@@ -230,14 +232,14 @@ export function PreviewPanel() {
                   }}
                 >
                   {project.technologies}
-                </motion.p>
+                </motion.div>
               </motion.div>
             )}
 
             {/* 主要职责 */}
             {project.responsibilities && (
               <motion.div layout>
-                <motion.p
+                <motion.div
                   layout
                   className={cn("font-medium", "text-gray-800")}
                   style={{
@@ -245,8 +247,8 @@ export function PreviewPanel() {
                   }}
                 >
                   主要职责：
-                </motion.p>
-                <motion.p
+                </motion.div>
+                <motion.div
                   layout
                   className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
@@ -255,14 +257,14 @@ export function PreviewPanel() {
                   }}
                 >
                   {project.responsibilities}
-                </motion.p>
+                </motion.div>
               </motion.div>
             )}
 
             {/* 项目成就 */}
             {project.achievements && (
               <motion.div layout>
-                <motion.p
+                <motion.div
                   layout
                   className={cn("font-medium", "text-gray-800")}
                   style={{
@@ -270,8 +272,8 @@ export function PreviewPanel() {
                   }}
                 >
                   项目成就：
-                </motion.p>
-                <motion.p
+                </motion.div>
+                <motion.div
                   layout
                   className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
@@ -280,7 +282,7 @@ export function PreviewPanel() {
                   }}
                 >
                   {project.achievements}
-                </motion.p>
+                </motion.div>
               </motion.div>
             )}
           </motion.div>

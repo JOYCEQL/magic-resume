@@ -39,6 +39,7 @@ export interface Project {
   technologies: string;
   responsibilities: string;
   achievements: string;
+  visible: boolean;
 }
 
 export interface ResumeSection {

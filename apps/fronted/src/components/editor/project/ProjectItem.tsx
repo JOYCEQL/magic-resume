@@ -7,8 +7,8 @@ import {
   Reorder,
   useDragControls
 } from "framer-motion";
-import { ChevronDown, GripVertical, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
+import { useCallback, useState } from "react";
 import Field from "../Field";
 import {
   AlertDialog,
@@ -31,6 +31,7 @@ interface Project {
   technologies: string;
   responsibilities: string;
   achievements: string;
+  visible: boolean;
 }
 
 interface ProjectEditorProps {
@@ -72,7 +73,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         className={cn(
           theme === "dark" ? "bg-neutral-900 border-neutral-800" : "bg-white"
         )}
-        onClick={(e) => e.stopPropagation()} // 添加这行
+        onClick={(e) => e.stopPropagation()}
       >
         <AlertDialogHeader>
           <AlertDialogTitle
@@ -192,6 +193,26 @@ const ProjectItem = ({ project }: { project: Project }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const { theme, updateProjects, deleteProject } = useResumeStore();
 
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleVisibilityToggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      if (isUpdating) return;
+
+      setIsUpdating(true);
+      setTimeout(() => {
+        updateProjects({
+          ...project,
+          visible: !project.visible
+        });
+        setIsUpdating(false);
+      }, 10);
+    },
+    [project, updateProjects, isUpdating]
+  );
+
   return (
     <Reorder.Item
       id={project.id}
@@ -267,6 +288,28 @@ const ProjectItem = ({ project }: { project: Project }) => {
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={isUpdating}
+              className={cn(
+                "text-sm",
+                theme === "dark"
+                  ? project.visible
+                    ? "hover:bg-neutral-800 text-neutral-400"
+                    : "hover:bg-neutral-800 text-neutral-600"
+                  : project.visible
+                    ? "hover:bg-gray-100 text-gray-500"
+                    : "hover:bg-gray-100 text-gray-400"
+              )}
+              onClick={handleVisibilityToggle}
+            >
+              {project.visible ? (
+                <Eye className="w-4 h-4" />
+              ) : (
+                <EyeOff className="w-4 h-4" />
+              )}
+            </Button>
             <DeleteConfirmDialog
               projectName={project.name}
               onDelete={() => {

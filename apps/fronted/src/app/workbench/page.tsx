@@ -111,7 +111,7 @@ export default function Home() {
             </div>
           </ResizablePanel>
           <CustomHandle />
-          <ResizablePanel defaultSize={defaultLayout[2]}>
+          <ResizablePanel defaultSize={defaultLayout[2]} minSize={50}>
             <div className="h-full overflow-y-auto">
               <PreviewPanel />
             </div>

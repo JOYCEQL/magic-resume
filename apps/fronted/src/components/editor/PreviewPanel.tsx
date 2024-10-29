@@ -108,185 +108,187 @@ export function PreviewPanel() {
         项目经历
       </h3>
       <AnimatePresence mode="popLayout" initial={false}>
-        {projects.map((project) => (
-          <motion.div
-            key={project.id}
-            data-project-id={project.id}
-            layout
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              scale: draggingProjectId === project.id ? 1.01 : 1
-            }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 50,
-              mass: 1
-            }}
-            className={cn(
-              "space-y-2 relative rounded-lg p-4",
-              draggingProjectId === project.id && "z-10"
-            )}
-            style={{
-              marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
-            }}
-          >
-            {/* 拖拽高亮效果 */}
-            {draggingProjectId === project.id && (
-              <motion.div
-                layoutId="project-highlight"
-                className="absolute inset-0 rounded-lg pointer-events-none"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <div
-                  className={cn(
-                    "absolute inset-0 rounded-lg",
-                    "bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 border-2 border-indigo-500/10"
-                  )}
+        {projects
+          .filter((project) => project.visible) // 只显示 visible 为 true 的项目
+          .map((project) => (
+            <motion.div
+              key={project.id}
+              data-project-id={project.id}
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: draggingProjectId === project.id ? 1.01 : 1
+              }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 50,
+                mass: 1
+              }}
+              className={cn(
+                "space-y-2 relative rounded-lg p-4",
+                draggingProjectId === project.id && "z-10"
+              )}
+              style={{
+                marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
+              }}
+            >
+              {/* 拖拽高亮效果 */}
+              {draggingProjectId === project.id && (
+                <motion.div
+                  layoutId="project-highlight"
+                  className="absolute inset-0 rounded-lg pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                 >
                   <div
                     className={cn(
-                      "absolute inset-0 animate-pulse",
-                      "bg-black/5",
-                      "rounded-lg"
+                      "absolute inset-0 rounded-lg",
+                      "bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 border-2 border-indigo-500/10"
                     )}
-                  />
-                </div>
-              </motion.div>
-            )}
+                  >
+                    <div
+                      className={cn(
+                        "absolute inset-0 animate-pulse",
+                        "bg-black/5",
+                        "rounded-lg"
+                      )}
+                    />
+                  </div>
+                </motion.div>
+              )}
 
-            <motion.div
-              layout
-              className="flex justify-between items-start relative z-10"
-            >
-              <motion.div layout>
-                <motion.h4
-                  layout
-                  className={cn("font-medium", "text-gray-800")}
-                  style={{
-                    fontSize: `${globalSettings?.subheaderSize || 16}px`
-                  }}
-                >
-                  {project.name || "未命名项目"}
-                </motion.h4>
-                <motion.div
+              <motion.div
+                layout
+                className="flex justify-between items-start relative z-10"
+              >
+                <motion.div layout>
+                  <motion.h4
+                    layout
+                    className={cn("font-medium", "text-gray-800")}
+                    style={{
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`
+                    }}
+                  >
+                    {project.name || "未命名项目"}
+                  </motion.h4>
+                  <motion.div
+                    layout
+                    className={cn("text-gray-600")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    {project.role}
+                  </motion.div>
+                </motion.div>
+                <motion.span
                   layout
                   className={cn("text-gray-600")}
                   style={{
                     fontSize: `${globalSettings?.contentFontSize || 14}px`
                   }}
                 >
-                  {project.role}
-                </motion.div>
+                  {project.date}
+                </motion.span>
               </motion.div>
-              <motion.span
-                layout
-                className={cn("text-gray-600")}
-                style={{
-                  fontSize: `${globalSettings?.contentFontSize || 14}px`
-                }}
-              >
-                {project.date}
-              </motion.span>
+
+              {/* 项目详情 */}
+              {project.description && (
+                <motion.div
+                  layout
+                  className={cn("whitespace-pre-wrap", "text-gray-600")}
+                  style={{
+                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    lineHeight: globalSettings?.lineHeight || 1.6
+                  }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: project.description }}
+                  />
+                </motion.div>
+              )}
+
+              {/* 技术栈 */}
+              {project.technologies && (
+                <motion.div layout>
+                  <motion.div
+                    layout
+                    className={cn("font-medium", "text-gray-800")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    技术栈：
+                  </motion.div>
+                  <motion.div
+                    layout
+                    className={cn("whitespace-pre-wrap", "text-gray-600")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      lineHeight: globalSettings?.lineHeight || 1.6
+                    }}
+                  >
+                    {project.technologies}
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* 主要职责 */}
+              {project.responsibilities && (
+                <motion.div layout>
+                  <motion.div
+                    layout
+                    className={cn("font-medium", "text-gray-800")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    主要职责：
+                  </motion.div>
+                  <motion.div
+                    layout
+                    className={cn("whitespace-pre-wrap", "text-gray-600")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      lineHeight: globalSettings?.lineHeight || 1.6
+                    }}
+                  >
+                    {project.responsibilities}
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {/* 项目成就 */}
+              {project.achievements && (
+                <motion.div layout>
+                  <motion.div
+                    layout
+                    className={cn("font-medium", "text-gray-800")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    }}
+                  >
+                    项目成就：
+                  </motion.div>
+                  <motion.div
+                    layout
+                    className={cn("whitespace-pre-wrap", "text-gray-600")}
+                    style={{
+                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      lineHeight: globalSettings?.lineHeight || 1.6
+                    }}
+                  >
+                    {project.achievements}
+                  </motion.div>
+                </motion.div>
+              )}
             </motion.div>
-
-            {/* 项目详情 */}
-            {project.description && (
-              <motion.div
-                layout
-                className={cn("whitespace-pre-wrap", "text-gray-600")}
-                style={{
-                  fontSize: `${globalSettings?.contentFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6
-                }}
-              >
-                <div
-                  dangerouslySetInnerHTML={{ __html: project.description }}
-                />
-              </motion.div>
-            )}
-
-            {/* 技术栈 */}
-            {project.technologies && (
-              <motion.div layout>
-                <motion.div
-                  layout
-                  className={cn("font-medium", "text-gray-800")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`
-                  }}
-                >
-                  技术栈：
-                </motion.div>
-                <motion.div
-                  layout
-                  className={cn("whitespace-pre-wrap", "text-gray-600")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  {project.technologies}
-                </motion.div>
-              </motion.div>
-            )}
-
-            {/* 主要职责 */}
-            {project.responsibilities && (
-              <motion.div layout>
-                <motion.div
-                  layout
-                  className={cn("font-medium", "text-gray-800")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`
-                  }}
-                >
-                  主要职责：
-                </motion.div>
-                <motion.div
-                  layout
-                  className={cn("whitespace-pre-wrap", "text-gray-600")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  {project.responsibilities}
-                </motion.div>
-              </motion.div>
-            )}
-
-            {/* 项目成就 */}
-            {project.achievements && (
-              <motion.div layout>
-                <motion.div
-                  layout
-                  className={cn("font-medium", "text-gray-800")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`
-                  }}
-                >
-                  项目成就：
-                </motion.div>
-                <motion.div
-                  layout
-                  className={cn("whitespace-pre-wrap", "text-gray-600")}
-                  style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  {project.achievements}
-                </motion.div>
-              </motion.div>
-            )}
-          </motion.div>
-        ))}
+          ))}
       </AnimatePresence>
     </motion.div>
   );

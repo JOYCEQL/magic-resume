@@ -105,7 +105,8 @@ const initialState = {
       technologies: "React, TypeScript, TailwindCSS, shadcn/ui",
       responsibilities:
         "负责整体技术方案设计和团队管理，把控项目进度和代码质量",
-      achievements: "系统整体性能提升 50%，代码重用率提高到 80%"
+      achievements: "系统整体性能提升 50%，代码重用率提高到 80%",
+      visible: true
     },
     {
       id: "p2",
@@ -117,7 +118,8 @@ const initialState = {
       technologies: "React, TypeScript, TailwindCSS, shadcn/ui",
       responsibilities:
         "负责整体技术方案设计和团队管理，把控项目进度和代码质量",
-      achievements: "系统整体性能提升 50%，代码重用率提高到 80%"
+      achievements: "系统整体性能提升 50%，代码重用率提高到 80%",
+      visible: true
     }
   ]
 };

@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import Field from "./Field";
 import ProjectItem from "./project/ProjectItem";
 
-// ProjectEditor 组件用于编辑单个项目
 interface Project {
   id: string;
   name: string;
@@ -31,6 +30,7 @@ interface Project {
   technologies: string;
   responsibilities: string;
   achievements: string;
+  visible: boolean;
 }
 
 // 主面板组件
@@ -56,7 +56,8 @@ export function EditPanel() {
       description: "",
       technologies: "",
       responsibilities: "",
-      achievements: ""
+      achievements: "",
+      visible: true
     };
     setEditingId(newProject.id);
     updateProjects(newProject);

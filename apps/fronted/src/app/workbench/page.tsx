@@ -9,6 +9,7 @@ import { EditPanel } from "@/components/editor/EditPanel";
 import { PreviewPanel } from "@/components/editor/PreviewPanel";
 import { getThemeConfig } from "@/theme/themeConfig";
 import { Eye, Edit2, Menu } from "lucide-react";
+import { useScrollbarTheme } from "@/hooks/useScrollBarTheme";
 
 export default function Home() {
   const theme = useResumeStore((state) => state.theme);
@@ -18,6 +19,7 @@ export default function Home() {
   // 移动端状态管理
   const [showSidebar, setShowSidebar] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  useScrollbarTheme();
 
   // 移动端切换按钮
   const MobileNav = () => (

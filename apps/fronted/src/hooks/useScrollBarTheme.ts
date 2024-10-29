@@ -1,15 +1,13 @@
 import { useEffect } from "react";
-import { useResumeStore } from "../store/useResumeStore"; // 调整路径到你的 store 文件
+import { useResumeStore } from "../store/useResumeStore";
 
 export const useScrollbarTheme = () => {
   const theme = useResumeStore((state) => state.theme);
 
   useEffect(() => {
-    // 创建样式元素
     const styleElement = document.createElement("style");
     styleElement.setAttribute("id", "scrollbar-style");
 
-    // 根据主题设置不同的滚动条样式
     const scrollbarStyles =
       theme === "dark"
         ? `
@@ -65,16 +63,13 @@ export const useScrollbarTheme = () => {
 
     styleElement.textContent = scrollbarStyles;
 
-    // 移除旧的样式（如果存在）
     const existingStyle = document.getElementById("scrollbar-style");
     if (existingStyle) {
       existingStyle.remove();
     }
 
-    // 添加新样式
     document.head.appendChild(styleElement);
 
-    // 清理函数
     return () => {
       styleElement.remove();
     };

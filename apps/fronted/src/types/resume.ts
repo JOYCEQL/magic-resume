@@ -6,6 +6,13 @@ export interface BasicInfo {
   phone: string;
   location: string;
   summary: string;
+  customFields: Array<{
+    id: string;
+    label: string;
+    value: string;
+    required: boolean;
+    placeholder: string;
+  }>;
 }
 
 export interface Education {

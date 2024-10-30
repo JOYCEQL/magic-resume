@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Field from "./Field";
 import ProjectItem from "./project/ProjectItem";
+import BasicPanel from "./basic/BasicPanel";
 
 interface Project {
   id: string;
@@ -66,60 +67,7 @@ export function EditPanel() {
   const renderFields = () => {
     switch (activeSection) {
       case "basic":
-        return (
-          <div className="space-y-5 p-4">
-            <Field
-              label="姓名"
-              value={basic.name}
-              onChange={(value) => updateBasicInfo({ name: value })}
-              placeholder="请输入你的姓名"
-              required
-            />
-            <Field
-              label="职位"
-              value={basic.title}
-              onChange={(value) => updateBasicInfo({ title: value })}
-              placeholder="期望职位"
-              required
-            />
-            <Field
-              label="出生日期"
-              value={basic.birthDate}
-              onChange={(value) => updateBasicInfo({ birthDate: value })}
-              type="date"
-            />
-            <div className="grid grid-cols-2 gap-5">
-              <Field
-                label="电子邮箱"
-                value={basic.email}
-                onChange={(value) => updateBasicInfo({ email: value })}
-                placeholder="your@email.com"
-                required
-              />
-              <Field
-                label="电话"
-                value={basic.phone}
-                onChange={(value) => updateBasicInfo({ phone: value })}
-                placeholder="手机号码"
-                required
-              />
-            </div>
-            <Field
-              label="所在地"
-              value={basic.location}
-              onChange={(value) => updateBasicInfo({ location: value })}
-              placeholder="城市"
-              required
-            />
-            <Field
-              label="个人简介"
-              value={basic.summary}
-              onChange={(value) => updateBasicInfo({ summary: value })}
-              type="textarea"
-              placeholder="简单介绍一下自己..."
-            />
-          </div>
-        );
+        return <BasicPanel />;
 
       case "projects":
         return (

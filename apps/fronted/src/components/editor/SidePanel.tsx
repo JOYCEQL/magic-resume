@@ -133,7 +133,7 @@ export function SidePanel() {
                 <div className="flex items-center p-3 space-x-3">
                   <GripVertical
                     className={cn(
-                      "w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity",
+                      "w-5 h-5  transition-opacity",
                       theme === "dark" ? "text-neutral-400" : "text-gray-400"
                     )}
                   />

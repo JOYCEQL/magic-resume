@@ -525,7 +525,8 @@ export function PreviewPanel() {
                     basic.location,
                     basic.birthDate
                       ? new Date(basic.birthDate).toLocaleDateString()
-                      : ""
+                      : "",
+                    ...(basic.customFields?.map((field) => field.value) || []) // 添加自定义字段的值
                   ]
                     .filter(Boolean)
                     .map((item, index, array) => (

@@ -65,7 +65,8 @@ const initialState = {
     phone: "13800138000",
     location: "北京市",
     summary: "5年前端开发经验...",
-    birthDate: "1995-01-01"
+    birthDate: "1995-01-01",
+    customFields: []
   },
   education: [
     {

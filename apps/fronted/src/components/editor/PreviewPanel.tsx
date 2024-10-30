@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
+import { THEME_COLORS } from "@/types/resume";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -26,7 +27,8 @@ export function PreviewPanel() {
     menuSections,
     globalSettings,
     projects,
-    draggingProjectId
+    draggingProjectId,
+    colorTheme
   } = useResumeStore();
   const previewRef = React.useRef<HTMLDivElement>(null);
   const [scrollBehavior, setScrollBehavior] =
@@ -35,6 +37,18 @@ export function PreviewPanel() {
   const fontFamilyClass = getFontFamilyClass(
     globalSettings?.fontFamily || "sans"
   );
+
+  // 获取当前主题色
+  const currentThemeColor = useMemo(() => {
+    return colorTheme || THEME_COLORS[0];
+  }, [colorTheme]);
+
+  // 标题样式的公共配置
+  const sectionTitleStyles = {
+    fontSize: `${globalSettings?.headerSize || 18}px`,
+    borderColor: currentThemeColor, // 使用主题色作为下边框颜色
+    color: currentThemeColor // 使用主题色作为文字颜色
+  };
 
   // 处理自动滚动
   const handleScroll = React.useCallback(
@@ -101,9 +115,7 @@ export function PreviewPanel() {
     >
       <h3
         className="text-lg font-semibold border-b border-gray-200 pb-2"
-        style={{
-          fontSize: `${globalSettings?.headerSize || 18}px`
-        }}
+        style={sectionTitleStyles}
       >
         项目经历
       </h3>
@@ -180,7 +192,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("text-gray-600")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     {project.role}
@@ -190,7 +202,7 @@ export function PreviewPanel() {
                   layout
                   className={cn("text-gray-600")}
                   style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`
                   }}
                 >
                   {project.date}
@@ -203,7 +215,7 @@ export function PreviewPanel() {
                   layout
                   className={cn("whitespace-pre-wrap", "text-gray-600")}
                   style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
                   }}
                 >
@@ -220,7 +232,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("font-medium", "text-gray-800")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     技术栈：
@@ -229,7 +241,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("whitespace-pre-wrap", "text-gray-600")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
                       lineHeight: globalSettings?.lineHeight || 1.6
                     }}
                   >
@@ -245,7 +257,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("font-medium", "text-gray-800")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     主要职责：
@@ -254,7 +266,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("whitespace-pre-wrap", "text-gray-600")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
                       lineHeight: globalSettings?.lineHeight || 1.6
                     }}
                   >
@@ -270,7 +282,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("font-medium", "text-gray-800")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     项目成就：
@@ -279,7 +291,7 @@ export function PreviewPanel() {
                     layout
                     className={cn("whitespace-pre-wrap", "text-gray-600")}
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
                       lineHeight: globalSettings?.lineHeight || 1.6
                     }}
                   >
@@ -293,8 +305,6 @@ export function PreviewPanel() {
     </motion.div>
   );
 
-  // ... 其他 section 渲染函数 ...
-
   const renderSection = (sectionId: string) => {
     switch (sectionId) {
       case "basic":
@@ -302,16 +312,14 @@ export function PreviewPanel() {
           <motion.div layout className="space-y-2">
             <h3
               className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={{
-                fontSize: `${globalSettings?.headerSize || 18}px`
-              }}
+              style={sectionTitleStyles}
             >
               个人简介
             </h3>
             <p
               className="text-gray-600 whitespace-pre-wrap"
               style={{
-                fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                fontSize: `${globalSettings?.baseFontSize || 14}px`,
                 lineHeight: globalSettings?.lineHeight || 1.6
               }}
             >
@@ -331,9 +339,7 @@ export function PreviewPanel() {
           >
             <h3
               className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={{
-                fontSize: `${globalSettings?.headerSize || 18}px`
-              }}
+              style={sectionTitleStyles}
             >
               教育经历
             </h3>
@@ -358,7 +364,7 @@ export function PreviewPanel() {
                     <p
                       className="text-gray-600"
                       style={{
-                        fontSize: `${globalSettings?.contentFontSize || 14}px`
+                        fontSize: `${globalSettings?.baseFontSize || 14}px`
                       }}
                     >
                       {edu.degree}
@@ -367,7 +373,7 @@ export function PreviewPanel() {
                   <span
                     className="text-gray-600"
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     {edu.date}
@@ -376,7 +382,7 @@ export function PreviewPanel() {
                 <p
                   className="text-gray-600"
                   style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
                   }}
                 >
@@ -398,9 +404,7 @@ export function PreviewPanel() {
           >
             <h3
               className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={{
-                fontSize: `${globalSettings?.headerSize || 18}px`
-              }}
+              style={sectionTitleStyles}
             >
               工作经验
             </h3>
@@ -425,7 +429,7 @@ export function PreviewPanel() {
                     <p
                       className="text-gray-600"
                       style={{
-                        fontSize: `${globalSettings?.contentFontSize || 14}px`
+                        fontSize: `${globalSettings?.baseFontSize || 14}px`
                       }}
                     >
                       {exp.position}
@@ -434,7 +438,7 @@ export function PreviewPanel() {
                   <span
                     className="text-gray-600"
                     style={{
-                      fontSize: `${globalSettings?.contentFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
                   >
                     {exp.date}
@@ -443,7 +447,7 @@ export function PreviewPanel() {
                 <p
                   className="text-gray-600"
                   style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                     lineHeight: globalSettings?.lineHeight || 1.6
                   }}
                 >
@@ -455,7 +459,6 @@ export function PreviewPanel() {
         );
       case "projects":
         return renderProjects();
-      // ... 其他 case
       default:
         return null;
     }
@@ -512,7 +515,7 @@ export function PreviewPanel() {
                   layout="position"
                   className="flex justify-center items-center space-x-4 flex-wrap"
                   style={{
-                    fontSize: `${globalSettings?.contentFontSize || 14}px`,
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                     color: "rgb(75, 85, 99)"
                   }}
                 >

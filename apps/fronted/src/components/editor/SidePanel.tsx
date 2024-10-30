@@ -7,7 +7,9 @@ import {
   EyeOff,
   Layout,
   Type,
-  SpaceIcon
+  SpaceIcon,
+  Palette,
+  Plus
 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
@@ -22,6 +24,9 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { THEME_COLORS } from "@/types/resume";
+import debounce from "lodash/debounce";
+import { useMemo } from "react";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
@@ -79,8 +84,18 @@ export function SidePanel() {
     toggleSectionVisibility,
     setActiveSection,
     globalSettings,
-    updateGlobalSettings
+    updateGlobalSettings,
+    colorTheme,
+    setColorTheme
   } = useResumeStore();
+
+  const debouncedSetColor = useMemo(
+    () =>
+      debounce((value) => {
+        setColorTheme(value);
+      }, 100),
+    []
+  );
 
   return (
     <motion.div
@@ -166,6 +181,62 @@ export function SidePanel() {
               </Reorder.Item>
             ))}
           </Reorder.Group>
+        </SettingCard>
+
+        {/* 主题色设置  */}
+
+        <SettingCard icon={Palette} title="主题色">
+          <div className="space-y-4">
+            <div className="grid grid-cols-6 gap-2">
+              {THEME_COLORS.map((presetTheme) => (
+                <button
+                  key={presetTheme}
+                  className={cn(
+                    "relative group aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200",
+                    colorTheme === presetTheme
+                      ? "border-black dark:border-white"
+                      : theme === "dark"
+                        ? "border-neutral-800 hover:border-neutral-700"
+                        : "border-gray-100 hover:border-gray-200"
+                  )}
+                  onClick={() => setColorTheme(presetTheme)}
+                >
+                  {/* 颜色展示 */}
+                  <div
+                    className="absolute inset-0"
+                    style={{ backgroundColor: presetTheme }}
+                  />
+
+                  {/* 选中指示器 */}
+                  {colorTheme === presetTheme && (
+                    <motion.div
+                      layoutId="theme-selected"
+                      className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-white/20"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6
+                      }}
+                    >
+                      <div className="w-2 h-2 rounded-full bg-white dark:bg-black" />
+                    </motion.div>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex  flex-col gap-4">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                自定义
+              </div>
+              <input
+                type="color"
+                onChange={(e) => debouncedSetColor(e.target.value)}
+                className="w-[40px] h-[40px] rounded-lg cursor-pointer overflow-hidden hover:scale-105 transition-transform"
+              />
+            </div>
+          </div>
         </SettingCard>
 
         {/* 排版设置 */}

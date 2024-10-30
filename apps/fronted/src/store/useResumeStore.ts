@@ -7,7 +7,8 @@ import {
   Education,
   Experience,
   GlobalSettings,
-  Project
+  Project,
+  ResumeTheme
 } from "../types/resume";
 
 interface ResumeStore {
@@ -28,6 +29,11 @@ interface ResumeStore {
   // 主题设置
   theme: "light" | "dark";
   activeSection: string;
+
+  colorTheme: string; // 当前使用的主题色 ID
+
+  // 新增 Actions
+  setColorTheme: (colorTheme: string) => void;
 
   // Actions
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
@@ -93,6 +99,10 @@ const initialState = {
     { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 4 }
   ],
   theme: "light" as const,
+
+  // 主题色
+  colorTheme: "#2563eb", // 默认使用经典蓝主题
+
   activeSection: "basic",
   projects: [
     {
@@ -128,6 +138,11 @@ export const useResumeStore = create<ResumeStore>()(
   persist(
     (set) => ({
       ...initialState,
+      setColorTheme: (colorTheme) => {
+        console.log(colorTheme, "colorTheme");
+        set({ colorTheme });
+      },
+
       setDraggingProjectId: (id) => set({ draggingProjectId: id }),
 
       updateBasicInfo: (data) =>

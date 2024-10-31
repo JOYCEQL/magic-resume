@@ -467,7 +467,7 @@ export function PreviewPanel() {
   return (
     <motion.div
       ref={previewRef}
-      className={cn("flex-1 overflow-y-auto", "bg-gray-100")}
+      className={cn("flex-1 overflow-y-auto")}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >

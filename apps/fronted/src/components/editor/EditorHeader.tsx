@@ -30,11 +30,11 @@ export function EditorHeader({ previewRef, isMobile }: EditorHeaderProps) {
       <div className="flex items-center justify-between px-6 h-full">
         <div className="flex items-center space-x-6  scrollbar-hide">
           <motion.div
-            className="flex items-center space-x-2 shrink-0"
+            className="flex items-center space-x-2 shrink-0 cursor-pointer"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <span className="text-lg font-semibold">Resume</span>
+            <span className="text-lg font-semibold">Magic Resume</span>
             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
           </motion.div>
 
@@ -76,15 +76,6 @@ export function EditorHeader({ previewRef, isMobile }: EditorHeaderProps) {
 
           {/* 在移动端隐藏这些按钮 */}
           <div className="hidden md:flex items-center space-x-3">
-            <motion.button
-              className={`px-4 py-2 ${themeConfig.button} rounded-lg text-sm font-medium flex items-center space-x-2`}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Eye className="w-4 h-4" />
-              <span>预览</span>
-            </motion.button>
-
             <PdfExport />
           </div>
         </div>

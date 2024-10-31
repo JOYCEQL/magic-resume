@@ -78,10 +78,6 @@ interface MenuButtonProps {
   tooltip?: string;
 }
 
-const handleToolbarClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-};
-
 const MenuButton = ({
   onClick,
   isActive = false,
@@ -93,9 +89,16 @@ const MenuButton = ({
   const theme = useResumeStore((state) => state.theme);
   const [showTooltip, setShowTooltip] = React.useState(false);
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
-    <div className="relative">
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
       <Button
+        onMouseDown={(e) => e.preventDefault()}
         variant={isActive ? "secondary" : "ghost"}
         size="sm"
         className={cn(
@@ -110,7 +113,7 @@ const MenuButton = ({
           disabled ? "opacity-50" : "",
           className
         )}
-        onClick={onClick}
+        onClick={handleClick}
         disabled={disabled}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
@@ -427,6 +430,7 @@ const RichTextEditor = ({
           ? "bg-neutral-900/30 border-neutral-800"
           : "bg-card border-gray-100"
       )}
+      onClick={(e) => e.stopPropagation()}
     >
       {/* Toolbar */}
       <div
@@ -436,7 +440,6 @@ const RichTextEditor = ({
             ? "bg-neutral-900/50 border-neutral-800"
             : "bg-background"
         )}
-        onClick={handleToolbarClick}
       >
         <div className="flex items-center">
           <HeadingSelect editor={editor} />

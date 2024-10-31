@@ -296,6 +296,7 @@ export function SidePanel() {
               </Select>
             </div>
 
+            {/* 基础字号选择 */}
             <div className="space-y-2">
               <Label
                 className={cn(
@@ -304,30 +305,50 @@ export function SidePanel() {
               >
                 基础字号
               </Label>
-              <div className="flex items-center gap-4">
-                <Slider
-                  value={[globalSettings?.baseFontSize || 0]}
-                  min={12}
-                  max={100}
-                  step={1}
-                  onValueChange={([value]) =>
-                    updateGlobalSettings?.({ baseFontSize: value })
-                  }
+              <Select
+                value={globalSettings?.baseFontSize?.toString()}
+                onValueChange={(value) =>
+                  updateGlobalSettings?.({ baseFontSize: parseInt(value) })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "border transition-colors",
+                      theme === "dark"
+                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
+                        : "border-gray-200 bg-white text-gray-700"
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent
                   className={cn(
                     theme === "dark"
-                      ? "[&_[role=slider]]:bg-neutral-200"
-                      : "[&_[role=slider]]:bg-gray-900"
-                  )}
-                />
-                <span
-                  className={cn(
-                    "min-w-[3ch] text-sm",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      : "bg-white border-gray-200"
                   )}
                 >
-                  {globalSettings?.baseFontSize}px
-                </span>
-              </div>
+                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={size.toString()}
+                      className={cn(
+                        "cursor-pointer",
+                        theme === "dark"
+                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
+                          : "focus:bg-gray-100 hover:bg-gray-100"
+                      )}
+                    >
+                      {size}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </SettingCard>

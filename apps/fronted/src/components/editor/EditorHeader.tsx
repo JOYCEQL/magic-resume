@@ -7,11 +7,10 @@ import { getThemeConfig } from "@/theme/themeConfig";
 import { PdfExport } from "./PdfExport";
 
 interface EditorHeaderProps {
-  previewRef: React.RefObject<HTMLDivElement>;
   isMobile?: boolean;
 }
 
-export function EditorHeader({ previewRef, isMobile }: EditorHeaderProps) {
+export function EditorHeader({ isMobile }: EditorHeaderProps) {
   const { theme, menuSections, activeSection, setActiveSection, toggleTheme } =
     useResumeStore();
 

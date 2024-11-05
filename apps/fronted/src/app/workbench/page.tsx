@@ -288,7 +288,7 @@ export default function Home() {
           : "bg-white text-gray-900"
       )}
     >
-      <EditorHeader previewRef={previewRef} />
+      <EditorHeader />
 
       {/* 桌面端布局 */}
       <div className="hidden md:block h-[calc(100vh-64px)]">

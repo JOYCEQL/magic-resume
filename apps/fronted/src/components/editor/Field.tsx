@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
@@ -7,7 +8,6 @@ import { CalendarIcon } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import RichTextEditor from "@/app/workbench/compoents/Editor/RichText";
 
-// 扩展 FieldProps 类型定义
 type FieldProps = {
   label: string;
   value: string;

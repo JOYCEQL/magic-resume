@@ -43,7 +43,7 @@ const IconSelector = ({ value, onChange, theme }) => {
   const selectedIcon =
     iconOptions.find((i) => i.value === value) || iconOptions[0];
 
-  const handleSelect = (iconValue) => {
+  const handleSelect = (iconValue: string) => {
     onChange(iconValue);
     setOpen(false);
   };

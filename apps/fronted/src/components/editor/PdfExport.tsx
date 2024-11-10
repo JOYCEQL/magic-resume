@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
 import html2pdf from "html2pdf.js";
@@ -46,7 +46,13 @@ export function PdfExport() {
   return (
     <div>
       <motion.button
-        className={`px-4 py-2  text-white rounded-lg text-sm font-medium flex items-center space-x-2`}
+        className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2
+          ${
+            theme === "dark"
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+              : "bg-black hover:bg-neutral-800 text-white"
+          } 
+          disabled:opacity-50 disabled:cursor-not-allowed`}
         whileHover={!isExporting ? { scale: 1.02 } : {}}
         whileTap={!isExporting ? { scale: 0.98 } : {}}
         onClick={handleExport}

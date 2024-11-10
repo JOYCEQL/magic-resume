@@ -11,6 +11,7 @@
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-select": "^2.1.2",
@@ -31,6 +32,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cmdk": "1.0.0",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
     "framer-motion": "^11.11.10",

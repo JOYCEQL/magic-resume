@@ -6,10 +6,12 @@ export interface BasicInfo {
   phone: string;
   location: string;
   summary: string;
+  icons: Record<string, string>;
   customFields: Array<{
     id: string;
     label: string;
     value: string;
+    icon: string;
     required: boolean;
     placeholder: string;
   }>;

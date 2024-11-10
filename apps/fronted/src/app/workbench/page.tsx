@@ -272,7 +272,7 @@ export default function Home() {
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 20 }}
           >
-            <SidePanel onClose={() => setShowMobileSidebar(false)} />
+            <SidePanel />
           </motion.div>
         </>
       )}

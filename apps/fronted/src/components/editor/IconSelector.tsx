@@ -24,26 +24,6 @@ const IconSelector = ({ value, onChange, theme = "light" }) => {
   const [open, setOpen] = React.useState(false);
   const [icons, setIcons] = React.useState(ICONS);
 
-  // 在组件挂载时加载图标
-  React.useEffect(() => {
-    const loadIcons = async () => {
-      const lucide = await import("lucide-react");
-      // console.log(lucide, "lucide");
-      // const iconList = Object.entries(lucide)
-      //   .filter(
-      //     ([name]) => name[0] === name[0].toUpperCase() // 只选择以大写字母开头的导出（图标组件）
-      //   )
-      //   ?.map(([name, component]) => ({
-      //     name,
-      //     component
-      //   }));
-      // console.log(iconList, "iconList");
-      // setIcons(iconList);
-    };
-
-    loadIcons();
-  }, []);
-
   // 获取当前选中的图标组件
   const getCurrentIcon = React.useCallback(() => {
     if (!value) return User;

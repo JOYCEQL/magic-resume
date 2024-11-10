@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
-import html2pdf from "html2pdf.js";
 import { useResumeStore } from "@/store/useResumeStore";
+import dynamic from "next/dynamic";
+const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
 
 export function PdfExport() {
   const { basic, theme } = useResumeStore();
@@ -30,7 +31,6 @@ export function PdfExport() {
         orientation: "portrait"
       }
     };
-
     const res = html2pdf().set(opt).from(element).save();
     setIsExporting(false);
     return res;

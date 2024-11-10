@@ -92,8 +92,6 @@ ol {
   margin: 0;
 
   li p {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
   }
 }
 /* Heading styles */
@@ -107,8 +105,6 @@ h6 {
 
 h1,
 h2 {
-  margin-top: 3.5rem;
-  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -165,3 +161,4 @@ hr {
   border-top: 1px solid gray;
   margin: 2rem 0;
 }
+

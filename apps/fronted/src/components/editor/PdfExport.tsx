@@ -9,38 +9,31 @@ export function PdfExport() {
   const { basic, theme } = useResumeStore();
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExport = async () => {
-    try {
-      setIsExporting(true);
-      const element = document.querySelector("#resume-preview");
-      if (!element) {
-        return;
-      }
-      const opt = {
-        margin: [10, 10, 10, 10],
-        filename: `${basic.name}_简历.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true
-        },
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation: "portrait"
-        }
-      };
-
-      const res = await html2pdf().set(opt).from(element).save();
-      return res;
-    } catch (error) {
-      console.error("PDF export failed:", error);
-      return { notFound: true };
-    } finally {
-      setIsExporting(false);
-      return { finally: true };
+  const handleExport = () => {
+    setIsExporting(true);
+    const element = document.querySelector("#resume-preview");
+    if (!element) {
+      return;
     }
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `${basic.name}_简历.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        letterRendering: true
+      },
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+      }
+    };
+
+    const res = html2pdf().set(opt).from(element).save();
+    setIsExporting(false);
+    return res;
   };
 
   return (

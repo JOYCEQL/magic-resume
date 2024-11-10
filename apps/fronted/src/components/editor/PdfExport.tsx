@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
+import html2pdf from "html2pdf.js";
 import { useResumeStore } from "@/store/useResumeStore";
-import dynamic from "next/dynamic";
-const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
 
 export function PdfExport() {
   const { basic, theme } = useResumeStore();
@@ -13,9 +12,12 @@ export function PdfExport() {
   const handleExport = () => {
     setIsExporting(true);
     const element = document.querySelector("#resume-preview");
+
     if (!element) {
+      setIsExporting(false);
       return;
     }
+
     const opt = {
       margin: [10, 10, 10, 10],
       filename: `${basic.name}_简历.pdf`,
@@ -31,21 +33,28 @@ export function PdfExport() {
         orientation: "portrait"
       }
     };
-    const res = html2pdf().set(opt).from(element).save();
-    setIsExporting(false);
-    return res;
+
+    html2pdf()
+      .set(opt)
+      .from(element)
+      .save()
+      .then((res) => {
+        return res;
+      })
+      .catch((error) => {
+        console.error("PDF export failed:", error);
+        return { notFound: true };
+      })
+      .finally(() => {
+        setIsExporting(false);
+        return { finally: true };
+      });
   };
 
   return (
     <div>
       <motion.button
-        className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2
-          ${
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          } 
-          disabled:opacity-50 disabled:cursor-not-allowed`}
+        className="px-4 py-2 text-white rounded-lg text-sm font-medium flex items-center space-x-2"
         whileHover={!isExporting ? { scale: 1.02 } : {}}
         whileTap={!isExporting ? { scale: 0.98 } : {}}
         onClick={handleExport}

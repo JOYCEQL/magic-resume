@@ -7,13 +7,12 @@ export interface BasicInfo {
   location: string;
   summary: string;
   icons: Record<string, string>;
+  employed: boolean;
   customFields: Array<{
     id: string;
     label: string;
     value: string;
     icon: string;
-    required: boolean;
-    placeholder: string;
   }>;
 }
 
@@ -102,20 +101,19 @@ export interface ResumeTheme {
 }
 
 export const THEME_COLORS = [
-  "#2563eb", // 经典蓝
-  "#059669", // 翡翠绿
-  "#7c3aed", // 优雅紫
-  "#e11d48", // 玫瑰红
-  "#d97706", // 琥珀金
-  "#0891b2", // 青碧蓝
-  "#4f46e5", // 靛青蓝
-  "#0d9488", // 青蓝绿
-  "#0284c7", // 天际蓝
-  "#6d28d9", // 雅致紫
-  "#c026d3", // 绯紫红
-  "#db2777", // 粉红色
-  "#ea580c", // 活力橙
-  "#65a30d", // 青柠绿
-  "#475569", // 岩石灰
-  "#dc2626" // 中国红
+  "#2563eb",
+  "#059669",
+  "#7c3aed",
+  "#e11d48",
+  "#d97706",
+  "#0891b2",
+  "#4f46e5",
+  "#0d9488",
+  "#0284c7",
+  "#6d28d9",
+  "#c026d3",
+  "#ea580c",
+  "#65a30d",
+  "#475569",
+  "#dc2626"
 ];

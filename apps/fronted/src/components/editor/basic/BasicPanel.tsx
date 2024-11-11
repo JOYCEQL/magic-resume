@@ -169,17 +169,17 @@ const CustomField: React.FC<CustomFieldProps> = ({
           onChange={(value) => onUpdate({ ...field, value })}
           placeholder="字段内容"
         />
-        <Button
+
+        <Trash2
           onClick={() => onDelete(field.id)}
+          size={26}
           className={cn(
-            "p-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity",
+            "p-1.5 rounded-md  cursor-pointer",
             theme === "dark"
-              ? "hover:bg-red-500/20 text-red-400 hover:text-red-300"
-              : "hover:bg-red-500/10 text-red-500 hover:text-red-600"
+              ? "text-red-400 hover:text-red-300"
+              : "text-red-500 hover:text-red-600"
           )}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
+        />
       </div>
     </Reorder.Item>
   );

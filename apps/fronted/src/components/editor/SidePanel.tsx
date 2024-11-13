@@ -34,6 +34,12 @@ const fontOptions = [
   { value: "mono", label: "等宽体" }
 ];
 
+const lineHeightOptions = [
+  { value: "normal", label: "默认" },
+  { value: "relaxed", label: "适中" },
+  { value: "loose", label: "宽松" }
+];
+
 function SettingCard({
   icon: Icon,
   title,
@@ -184,7 +190,6 @@ export function SidePanel() {
         </SettingCard>
 
         {/* 主题色设置  */}
-
         <SettingCard icon={Palette} title="主题色">
           <div className="space-y-4">
             <div className="grid grid-cols-6 gap-2">
@@ -226,11 +231,11 @@ export function SidePanel() {
               ))}
             </div>
 
-            <div className="flex  flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 自定义
               </div>
-              <input
+              <motion.input
                 type="color"
                 onChange={(e) => debouncedSetColor(e.target.value)}
                 className="w-[40px] h-[40px] rounded-lg cursor-pointer overflow-hidden hover:scale-105 transition-transform"
@@ -294,6 +299,41 @@ export function SidePanel() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* 行高选择 */}
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                行高
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.lineHeight || 1.5]}
+                  min={1}
+                  max={2}
+                  step={0.1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ lineHeight: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.lineHeight}
+                </span>
+              </div>
             </div>
 
             {/* 基础字号选择 */}

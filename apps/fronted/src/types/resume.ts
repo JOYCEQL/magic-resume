@@ -57,6 +57,7 @@ export type GlobalSettings = {
   baseFontSize: number;
   pagePadding: number;
   paragraphSpacing: number;
+  lineHeight: number; // 新增行高设置
 };
 
 export interface ResumeTheme {

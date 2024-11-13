@@ -343,12 +343,11 @@ const BasicPanel: React.FC = () => {
         {/* 添加按钮 */}
         <Button
           onClick={addCustomField}
-          variant={theme === "dark" ? "ghost" : "outline"}
           className={cn(
-            "w-full border-dashed",
+            "w-full",
             theme === "dark"
-              ? "hover:bg-neutral-800 border-neutral-700 text-neutral-200 hover:text-neutral-100"
-              : "hover:bg-neutral-50 border-neutral-200 text-neutral-600 hover:text-neutral-900"
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+              : "bg-black hover:bg-neutral-800 text-white"
           )}
         >
           <PlusCircle

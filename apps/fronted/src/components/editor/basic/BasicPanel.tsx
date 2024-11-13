@@ -17,8 +17,6 @@ import {
   LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import Field from "../Field";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
@@ -27,7 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover";
-import { motion, Reorder } from "framer-motion";
+import { Reorder } from "framer-motion";
 
 type IconOption = {
   label: string;
@@ -68,6 +66,7 @@ interface BasicInfo {
   employed?: boolean;
   customFields?: CustomFieldType[];
   icons?: Record<string, string>;
+  employementStatus?: string;
 }
 
 const iconOptions: IconOption[] = [
@@ -285,31 +284,7 @@ const BasicPanel: React.FC = () => {
     <div className="space-y-5 p-4">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">{renderField("name", "姓名")}</div>
-        <div className="flex items-center gap-2 pt-8">
-          <Switch
-            id="employed"
-            checked={basic?.employed ?? true}
-            onCheckedChange={(checked) =>
-              updateBasicInfo({
-                ...basic,
-                employed: checked
-              })
-            }
-            className={cn(
-              theme === "dark" ? "bg-neutral-700" : "bg-neutral-200",
-              "data-[state=checked]:bg-green-500"
-            )}
-          />
-          <Label
-            htmlFor="employed"
-            className={cn(
-              "text-sm cursor-pointer select-none",
-              theme === "dark" ? "text-neutral-200" : "text-neutral-700"
-            )}
-          >
-            {basic?.employed ?? true ? "在职" : "离职"}
-          </Label>
-        </div>
+        <div>{renderField("employementStatus", "在职状态")}</div>
       </div>
       {renderField("title", "职位")}
       {renderField("birthDate", "出生日期", { type: "date" })}
@@ -340,7 +315,6 @@ const BasicPanel: React.FC = () => {
             ))}
         </Reorder.Group>
 
-        {/* 添加按钮 */}
         <Button
           onClick={addCustomField}
           className={cn(

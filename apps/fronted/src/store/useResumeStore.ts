@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
-  ResumeData,
-  ResumeSection,
   BasicInfo,
   Education,
   Experience,
   GlobalSettings,
-  Project,
-  ResumeTheme
+  Project
 } from "../types/resume";
 
 interface ResumeStore {

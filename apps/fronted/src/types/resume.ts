@@ -50,24 +50,6 @@ export interface Project {
   visible: boolean;
 }
 
-export interface ResumeSection {
-  id: string;
-  title: string;
-  icon: string;
-  type: "basic" | "education" | "experience" | "skills" | "projects";
-}
-
-export interface ResumeData {
-  basic: BasicInfo;
-  education: Education[];
-  experience: Experience[];
-  skills: Skill[];
-  projects: Project[];
-  sections: ResumeSection[];
-  activeSection: string;
-  theme: "light" | "dark";
-}
-
 export type GlobalSettings = {
   theme: "light" | "dark";
   themeColor: string;
@@ -76,23 +58,6 @@ export type GlobalSettings = {
   pagePadding: number;
   paragraphSpacing: number;
 };
-
-export interface ThemeColors {
-  primary: string; // 主色
-  secondary: string; // 次要色
-  text: {
-    primary: string; // 主要文字颜色
-    secondary: string; // 次要文字颜色
-    accent: string; // 强调文字颜色
-  };
-  background: {
-    primary: string; // 主要背景色
-    secondary: string; // 次要背景色
-    accent: string; // 强调背景色
-  };
-  border: string; // 边框颜色
-  divider: string; // 分割线颜色
-}
 
 export interface ResumeTheme {
   id: string;

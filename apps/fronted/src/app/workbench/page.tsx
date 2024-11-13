@@ -15,7 +15,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
-import { PreviewPanel } from "@/components/editor/PreviewPanel";
+import { PreviewPanel } from "@/components/preview/PreviewPanel";
 import { getThemeConfig } from "@/theme/themeConfig";
 import { useScrollbarTheme } from "@/hooks/useScrollBarTheme";
 import {

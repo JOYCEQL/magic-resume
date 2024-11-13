@@ -471,7 +471,7 @@ export function PreviewPanel() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <div className="py-8 px-4 min-h-screen flex justify-center">
+      <div className="py-4 px-4 min-h-screen flex justify-center">
         <motion.div
           layout
           className={cn(
@@ -526,7 +526,7 @@ export function PreviewPanel() {
                     basic.birthDate
                       ? new Date(basic.birthDate).toLocaleDateString()
                       : "",
-                    ...(basic.customFields?.map((field) => field.value) || []) // 添加自定义字段的值
+                    ...(basic.customFields?.map((field) => field.value) || [])
                   ]
                     .filter(Boolean)
                     .map((item, index, array) => (

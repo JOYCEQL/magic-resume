@@ -436,13 +436,46 @@ export function SidePanel() {
                   theme === "dark" ? "text-neutral-300" : "text-gray-600"
                 )}
               >
+                模块间距
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.sectionSpacing || 0]}
+                  min={20}
+                  max={100}
+                  step={1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ sectionSpacing: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.sectionSpacing}px
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
                 段落间距
               </Label>
               <div className="flex items-center gap-4">
                 <Slider
                   value={[globalSettings?.paragraphSpacing || 0]}
-                  min={0.8}
-                  max={2}
+                  min={1}
                   step={0.1}
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ paragraphSpacing: value })
@@ -459,7 +492,7 @@ export function SidePanel() {
                     theme === "dark" ? "text-neutral-300" : "text-gray-600"
                   )}
                 >
-                  {globalSettings?.paragraphSpacing}em
+                  {globalSettings?.paragraphSpacing}px
                 </span>
               </div>
             </div>

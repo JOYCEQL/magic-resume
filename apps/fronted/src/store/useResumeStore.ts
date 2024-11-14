@@ -104,6 +104,7 @@ const initialState = {
   colorTheme: "#2563eb", // 默认使用经典蓝主题
 
   activeSection: "basic",
+
   projects: [
     {
       id: "p1",
@@ -131,7 +132,13 @@ const initialState = {
       achievements: "系统整体性能提升 50%，代码重用率提高到 80%",
       visible: true
     }
-  ]
+  ],
+  globalSettings: {
+    pagePadding: 20,
+    paragraphSpacing: 20,
+    lineHeight: 1,
+    sectionSpacing: 20
+  }
 };
 
 export const useResumeStore = create<ResumeStore>()(

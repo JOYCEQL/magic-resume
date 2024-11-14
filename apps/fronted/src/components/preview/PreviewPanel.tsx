@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
 import { THEME_COLORS } from "@/types/resume";
+import { ResumeHeader } from "./BaseInfo";
+import { SectionTitle } from "./SectionTitle";
+import { ProjectItem } from "./ProjectItem";
+import { ExperienceSection } from "./ExperienceSection";
+import { EducationSection } from "./EducationSection";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -16,6 +21,39 @@ const getFontFamilyClass = (fontFamily: string) => {
     default:
       return "font-sans";
   }
+};
+
+interface PageBreakLineProps {
+  pageNumber: number;
+}
+
+const PageBreakLine = ({ pageNumber }: PageBreakLineProps) => {
+  const A4_HEIGHT_MM = 297;
+  const TOP_MARGIN_MM = 4;
+  const BOTTOM_MARGIN_MM = 4;
+  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - BOTTOM_MARGIN_MM;
+  const MM_TO_PX = 3.78;
+  const SCALE_FACTOR = 2; // 考虑导出时的 scale: 2 设置
+
+  const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
+
+  return (
+    <div
+      className="absolute left-0 right-0 pointer-events-none  page-break-line"
+      style={{
+        top: `${pageHeight * pageNumber}px`,
+        breakAfter: "page",
+        breakBefore: "page"
+      }}
+    >
+      <div className="relative w-full">
+        <div className="absolute w-full border-t-2 border-dashed border-red-400" />
+        <div className="absolute right-0 -top-6 text-xs text-red-500">
+          第{pageNumber}页结束
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export function PreviewPanel() {
@@ -30,7 +68,10 @@ export function PreviewPanel() {
     draggingProjectId,
     colorTheme
   } = useResumeStore();
+
   const previewRef = React.useRef<HTMLDivElement>(null);
+  const resumeContentRef = React.useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
   const [scrollBehavior, setScrollBehavior] =
     React.useState<ScrollBehavior>("smooth");
 
@@ -43,12 +84,25 @@ export function PreviewPanel() {
     return colorTheme || THEME_COLORS[0];
   }, [colorTheme]);
 
-  // 标题样式的公共配置
-  const sectionTitleStyles = {
-    fontSize: `${globalSettings?.headerSize || 18}px`,
-    borderColor: currentThemeColor, // 使用主题色作为下边框颜色
-    color: currentThemeColor // 使用主题色作为文字颜色
-  };
+  // 监测内容高度变化
+  useEffect(() => {
+    const updateContentHeight = () => {
+      if (resumeContentRef.current) {
+        setContentHeight(resumeContentRef.current.scrollHeight);
+      }
+    };
+
+    updateContentHeight();
+
+    const resizeObserver = new ResizeObserver(updateContentHeight);
+    if (resumeContentRef.current) {
+      resizeObserver.observe(resumeContentRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   // 处理自动滚动
   const handleScroll = React.useCallback(
@@ -113,349 +167,75 @@ export function PreviewPanel() {
         marginTop: `${globalSettings?.sectionSpacing || 24}px`
       }}
     >
-      <h3
-        className="text-lg font-semibold border-b border-gray-200 pb-2"
-        style={sectionTitleStyles}
-      >
-        项目经历
-      </h3>
+      <SectionTitle
+        title="项目经历"
+        themeColor={currentThemeColor}
+        globalSettings={globalSettings}
+      />
       <AnimatePresence mode="popLayout" initial={false}>
         {projects
-          .filter((project) => project.visible) // 只显示 visible 为 true 的项目
+          .filter((project) => project.visible)
           .map((project) => (
-            <motion.div
+            <ProjectItem
               key={project.id}
-              data-project-id={project.id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                scale: draggingProjectId === project.id ? 1.01 : 1
-              }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 50,
-                mass: 1
-              }}
-              className={cn(
-                "space-y-2 relative rounded-lg p-4",
-                draggingProjectId === project.id && "z-10"
-              )}
-              style={{
-                marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
-              }}
-            >
-              {/* 拖拽高亮效果 */}
-              {draggingProjectId === project.id && (
-                <motion.div
-                  layoutId="project-highlight"
-                  className="absolute inset-0 rounded-lg pointer-events-none"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <div
-                    className={cn(
-                      "absolute inset-0 rounded-lg",
-                      "bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-indigo-500/5 border-2 border-indigo-500/10"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "absolute inset-0 animate-pulse",
-                        "bg-black/5",
-                        "rounded-lg"
-                      )}
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              <motion.div
-                layout
-                className="flex justify-between items-start relative z-10"
-              >
-                <motion.div layout>
-                  <motion.h4
-                    layout
-                    className={cn("font-medium", "text-gray-800")}
-                    style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`
-                    }}
-                  >
-                    {project.name || "未命名项目"}
-                  </motion.h4>
-                  <motion.div
-                    layout
-                    className={cn("text-gray-600")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    {project.role}
-                  </motion.div>
-                </motion.div>
-                <motion.span
-                  layout
-                  className={cn("text-gray-600")}
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`
-                  }}
-                >
-                  {project.date}
-                </motion.span>
-              </motion.div>
-
-              {/* 项目详情 */}
-              {project.description && (
-                <motion.div
-                  layout
-                  className={cn("whitespace-pre-wrap", "text-gray-600")}
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  <div
-                    dangerouslySetInnerHTML={{ __html: project.description }}
-                  />
-                </motion.div>
-              )}
-
-              {/* 技术栈 */}
-              {project.technologies && (
-                <motion.div layout>
-                  <motion.div
-                    layout
-                    className={cn("font-medium", "text-gray-800")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    技术栈：
-                  </motion.div>
-                  <motion.div
-                    layout
-                    className={cn("whitespace-pre-wrap", "text-gray-600")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                      lineHeight: globalSettings?.lineHeight || 1.6
-                    }}
-                  >
-                    {project.technologies}
-                  </motion.div>
-                </motion.div>
-              )}
-
-              {/* 主要职责 */}
-              {project.responsibilities && (
-                <motion.div layout>
-                  <motion.div
-                    layout
-                    className={cn("font-medium", "text-gray-800")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    主要职责：
-                  </motion.div>
-                  <motion.div
-                    layout
-                    className={cn("whitespace-pre-wrap", "text-gray-600")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                      lineHeight: globalSettings?.lineHeight || 1.6
-                    }}
-                  >
-                    {project.responsibilities}
-                  </motion.div>
-                </motion.div>
-              )}
-
-              {/* 项目成就 */}
-              {project.achievements && (
-                <motion.div layout>
-                  <motion.div
-                    layout
-                    className={cn("font-medium", "text-gray-800")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    项目成就：
-                  </motion.div>
-                  <motion.div
-                    layout
-                    className={cn("whitespace-pre-wrap", "text-gray-600")}
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                      lineHeight: globalSettings?.lineHeight || 1.6
-                    }}
-                  >
-                    {project.achievements}
-                  </motion.div>
-                </motion.div>
-              )}
-            </motion.div>
+              project={project}
+              draggingProjectId={draggingProjectId}
+              globalSettings={globalSettings}
+            />
           ))}
       </AnimatePresence>
+    </motion.div>
+  );
+
+  const pageBreakCount = useMemo(() => {
+    const A4_HEIGHT_MM = 297;
+    const TOP_MARGIN_MM = 4;
+    const BOTTOM_MARGIN_MM = 4;
+    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - BOTTOM_MARGIN_MM;
+    const MM_TO_PX = 3.78;
+
+    const pageHeightPx = CONTENT_HEIGHT_MM * MM_TO_PX;
+    return Math.max(0, Math.ceil(contentHeight / pageHeightPx) - 1);
+  }, [contentHeight]);
+
+  const renderBasicInfo = () => (
+    <motion.div layout className="space-y-2">
+      <SectionTitle
+        title="个人简介"
+        themeColor={currentThemeColor}
+        globalSettings={globalSettings}
+      />
+      <p
+        className="text-gray-600 whitespace-pre-wrap"
+        style={{
+          fontSize: `${globalSettings?.baseFontSize || 14}px`,
+          lineHeight: globalSettings?.lineHeight || 1.6
+        }}
+      >
+        {basic.summary}
+      </p>
     </motion.div>
   );
 
   const renderSection = (sectionId: string) => {
     switch (sectionId) {
       case "basic":
-        return (
-          <motion.div layout className="space-y-2">
-            <h3
-              className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={sectionTitleStyles}
-            >
-              个人简介
-            </h3>
-            <p
-              className="text-gray-600 whitespace-pre-wrap"
-              style={{
-                fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                lineHeight: globalSettings?.lineHeight || 1.6
-              }}
-            >
-              {basic.summary}
-            </p>
-          </motion.div>
-        );
-
+        return renderBasicInfo();
       case "education":
         return (
-          <motion.div
-            layout
-            className="space-y-4"
-            style={{
-              marginTop: `${globalSettings?.sectionSpacing || 24}px`
-            }}
-          >
-            <h3
-              className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={sectionTitleStyles}
-            >
-              教育经历
-            </h3>
-            {education.map((edu) => (
-              <div
-                key={edu.id}
-                className="space-y-2"
-                style={{
-                  marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
-                }}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4
-                      className="font-medium text-gray-800"
-                      style={{
-                        fontSize: `${globalSettings?.subheaderSize || 16}px`
-                      }}
-                    >
-                      {edu.school}
-                    </h4>
-                    <p
-                      className="text-gray-600"
-                      style={{
-                        fontSize: `${globalSettings?.baseFontSize || 14}px`
-                      }}
-                    >
-                      {edu.degree}
-                    </p>
-                  </div>
-                  <span
-                    className="text-gray-600"
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    {edu.date}
-                  </span>
-                </div>
-                <p
-                  className="text-gray-600"
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  {edu.details}
-                </p>
-              </div>
-            ))}
-          </motion.div>
+          <EducationSection
+            education={education}
+            globalSettings={globalSettings}
+            themeColor={currentThemeColor}
+          />
         );
-
       case "experience":
         return (
-          <motion.div
-            layout
-            className="space-y-4"
-            style={{
-              marginTop: `${globalSettings?.sectionSpacing || 24}px`
-            }}
-          >
-            <h3
-              className="text-lg font-semibold border-b border-gray-200 pb-2"
-              style={sectionTitleStyles}
-            >
-              工作经验
-            </h3>
-            {experience.map((exp) => (
-              <div
-                key={exp.id}
-                className="space-y-2"
-                style={{
-                  marginTop: `${globalSettings?.paragraphSpacing || 1.5}em`
-                }}
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4
-                      className="font-medium text-gray-800"
-                      style={{
-                        fontSize: `${globalSettings?.subheaderSize || 16}px`
-                      }}
-                    >
-                      {exp.company}
-                    </h4>
-                    <p
-                      className="text-gray-600"
-                      style={{
-                        fontSize: `${globalSettings?.baseFontSize || 14}px`
-                      }}
-                    >
-                      {exp.position}
-                    </p>
-                  </div>
-                  <span
-                    className="text-gray-600"
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
-                    }}
-                  >
-                    {exp.date}
-                  </span>
-                </div>
-                <p
-                  className="text-gray-600"
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                    lineHeight: globalSettings?.lineHeight || 1.6
-                  }}
-                >
-                  {exp.details}
-                </p>
-              </div>
-            ))}
-          </motion.div>
+          <ExperienceSection
+            experience={experience}
+            globalSettings={globalSettings}
+            themeColor={currentThemeColor}
+          />
         );
       case "projects":
         return renderProjects();
@@ -482,61 +262,21 @@ export function PreviewPanel() {
             fontFamilyClass,
             "text-[#000]"
           )}
+          style={{
+            // 设置与 html2pdf 配置一致的尺寸
+            minHeight: "297mm"
+          }}
         >
           <div
             className="relative"
             style={{
-              padding: `${globalSettings?.pagePadding || 40}px`
+              padding: "4mm"
             }}
             id="resume-preview"
           >
-            <motion.div layout className="space-y-8">
+            <motion.div layout className="space-y-8" ref={resumeContentRef}>
               {/* Header */}
-              <div className="text-center space-y-4">
-                <motion.h1
-                  layout="position"
-                  className={cn("font-bold", "text-gray-900")}
-                  style={{
-                    fontSize: `${(globalSettings?.headerSize || 24) * 1.5}px`
-                  }}
-                >
-                  {basic.name}
-                </motion.h1>
-                <motion.h2
-                  layout="position"
-                  className={"text-gray-600"}
-                  style={{
-                    fontSize: `${globalSettings?.subheaderSize || 16}px`
-                  }}
-                >
-                  {basic.title}
-                </motion.h2>
-                <motion.div
-                  layout="position"
-                  className="flex justify-center items-center space-x-4 flex-wrap"
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                    color: "rgb(75, 85, 99)"
-                  }}
-                >
-                  {[
-                    basic.email,
-                    basic.phone,
-                    basic.location,
-                    basic.birthDate
-                      ? new Date(basic.birthDate).toLocaleDateString()
-                      : "",
-                    ...(basic.customFields?.map((field) => field.value) || [])
-                  ]
-                    .filter(Boolean)
-                    .map((item, index, array) => (
-                      <React.Fragment key={index}>
-                        <span>{item}</span>
-                        {index < array.length - 1 && <span>•</span>}
-                      </React.Fragment>
-                    ))}
-                </motion.div>
-              </div>
+              <ResumeHeader basic={basic} globalSettings={globalSettings} />
 
               {/* Sections */}
               {menuSections
@@ -548,6 +288,11 @@ export function PreviewPanel() {
                   </motion.div>
                 ))}
             </motion.div>
+
+            {/* 动态分页指示线 */}
+            {Array.from({ length: pageBreakCount }, (_, i) => (
+              <PageBreakLine key={i} pageNumber={i + 1} />
+            ))}
           </div>
         </motion.div>
       </div>

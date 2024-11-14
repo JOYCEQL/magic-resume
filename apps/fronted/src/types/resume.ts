@@ -51,13 +51,14 @@ export interface Project {
 }
 
 export type GlobalSettings = {
-  theme: "light" | "dark";
-  themeColor: string;
-  fontFamily: string;
-  baseFontSize: number;
-  pagePadding: number;
-  paragraphSpacing: number;
-  lineHeight: number; // 新增行高设置
+  theme?: "light" | "dark" | undefined;
+  themeColor?: string | undefined;
+  fontFamily?: string | undefined;
+  baseFontSize?: number | undefined;
+  pagePadding?: number | undefined;
+  paragraphSpacing?: number | undefined;
+  lineHeight?: number | undefined;
+  sectionSpacing?: number | undefined;
 };
 
 export interface ResumeTheme {

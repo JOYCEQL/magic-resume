@@ -4,7 +4,7 @@ import { SectionTitle } from "./SectionTitle";
 
 interface EducationSectionProps {
   education: Education[];
-  globalSettings: GlobalSettings;
+  globalSettings: GlobalSettings | undefined;
   themeColor: string;
 }
 

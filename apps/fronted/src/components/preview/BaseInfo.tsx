@@ -3,12 +3,12 @@ import { BasicInfo, GlobalSettings } from "@/types/resume";
 import { motion } from "framer-motion";
 import React from "react";
 
-interface ResumeHeaderProps {
+interface BaaseInfoProps {
   basic: BasicInfo;
-  globalSettings: GlobalSettings;
+  globalSettings: GlobalSettings | undefined;
 }
 
-export function ResumeHeader({ basic, globalSettings }: ResumeHeaderProps) {
+export function BaseInfo({ basic, globalSettings }: BaaseInfoProps) {
   return (
     <div className="text-center space-y-4">
       <motion.h1

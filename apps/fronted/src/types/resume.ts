@@ -59,6 +59,8 @@ export type GlobalSettings = {
   paragraphSpacing?: number | undefined;
   lineHeight?: number | undefined;
   sectionSpacing?: number | undefined;
+  headerSize?: number | undefined;
+  subHeaderSize?: number | undefined;
 };
 
 export interface ResumeTheme {

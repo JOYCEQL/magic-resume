@@ -43,8 +43,8 @@ interface ResumeStore {
   setActiveSection: (sectionId: string) => void;
   toggleTheme: () => void;
   // 全局设置
-  globalSettings?: GlobalSettings;
-  updateGlobalSettings?: (settings: Partial<GlobalSettings>) => void;
+  globalSettings: GlobalSettings;
+  updateGlobalSettings: (settings: Partial<GlobalSettings>) => void;
   // 项目经历
   projects: Project[];
   updateProjects: (project: Project) => void;
@@ -100,8 +100,7 @@ const initialState = {
   ],
   theme: "light" as const,
 
-  // 主题色
-  colorTheme: "#2563eb", // 默认使用经典蓝主题
+  colorTheme: "#2563eb",
 
   activeSection: "basic",
 
@@ -134,10 +133,13 @@ const initialState = {
     }
   ],
   globalSettings: {
+    baseFontSize: 14,
     pagePadding: 20,
     paragraphSpacing: 20,
     lineHeight: 1,
-    sectionSpacing: 20
+    sectionSpacing: 20,
+    headerSize: 18,
+    subheaderSize: 16
   }
 };
 

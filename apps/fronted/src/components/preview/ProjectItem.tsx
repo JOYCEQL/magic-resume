@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface ProjectItemProps {
   project: Project;
   draggingProjectId: string | null;
-  globalSettings: GlobalSettings;
+  globalSettings: GlobalSettings | undefined;
 }
 
 export function ProjectItem({

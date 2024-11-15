@@ -4,7 +4,7 @@ import { SectionTitle } from "./SectionTitle";
 
 interface ExperienceSectionProps {
   experience: Experience[];
-  globalSettings: GlobalSettings;
+  globalSettings: GlobalSettings | undefined;
   themeColor: string;
 }
 

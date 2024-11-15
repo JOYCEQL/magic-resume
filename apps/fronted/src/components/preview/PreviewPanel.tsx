@@ -6,7 +6,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
 import { THEME_COLORS } from "@/types/resume";
-import { ResumeHeader } from "./BaseInfo";
+import { BaseInfo } from "./BaseInfo";
 import { SectionTitle } from "./SectionTitle";
 import { ProjectItem } from "./ProjectItem";
 import { ExperienceSection } from "./ExperienceSection";
@@ -68,6 +68,7 @@ export function PreviewPanel() {
     draggingProjectId,
     colorTheme
   } = useResumeStore();
+  console.log(globalSettings, "globalSettingsglobalSettings");
 
   const previewRef = React.useRef<HTMLDivElement>(null);
   const resumeContentRef = React.useRef<HTMLDivElement>(null);
@@ -276,7 +277,7 @@ export function PreviewPanel() {
           >
             <motion.div layout className="space-y-8" ref={resumeContentRef}>
               {/* Header */}
-              <ResumeHeader basic={basic} globalSettings={globalSettings} />
+              <BaseInfo basic={basic} globalSettings={globalSettings} />
 
               {/* Sections */}
               {menuSections

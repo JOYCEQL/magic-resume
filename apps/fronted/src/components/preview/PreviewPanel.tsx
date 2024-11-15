@@ -68,7 +68,6 @@ export function PreviewPanel() {
     draggingProjectId,
     colorTheme
   } = useResumeStore();
-  console.log(globalSettings, "globalSettingsglobalSettings");
 
   const previewRef = React.useRef<HTMLDivElement>(null);
   const resumeContentRef = React.useRef<HTMLDivElement>(null);

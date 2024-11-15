@@ -63,9 +63,9 @@ const initialState = {
     location: "北京市",
     summary: "5年前端开发经验...",
     birthDate: "",
-    employed: false,
     icons: {},
-    customFields: []
+    customFields: [],
+    employementStatus: ""
   },
   education: [
     {

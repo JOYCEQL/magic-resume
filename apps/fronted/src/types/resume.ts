@@ -7,7 +7,7 @@ export interface BasicInfo {
   location: string;
   summary: string;
   icons: Record<string, string>;
-  employed: boolean;
+  employementStatus: string;
   customFields: Array<{
     id: string;
     label: string;

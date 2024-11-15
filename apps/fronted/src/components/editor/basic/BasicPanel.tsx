@@ -1,37 +1,11 @@
 import React, { useState } from "react";
-import {
-  PlusCircle,
-  X,
-  User,
-  Briefcase,
-  Calendar,
-  Mail,
-  Phone,
-  MapPin,
-  FileText,
-  Smartphone,
-  Globe,
-  Github,
-  GripVertical,
-  Trash2,
-  LucideIcon
-} from "lucide-react";
+import { PlusCircle, GripVertical, Trash2, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Field from "../Field";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
 import { Reorder } from "framer-motion";
-
-type IconOption = {
-  label: string;
-  value: string;
-  icon: LucideIcon;
-};
+import IconSelector from "../IconSelector";
 
 type CustomFieldType = {
   id: string;
@@ -63,72 +37,10 @@ interface BasicInfo {
   phone?: string;
   location?: string;
   summary?: string;
-  employed?: boolean;
   customFields?: CustomFieldType[];
   icons?: Record<string, string>;
   employementStatus?: string;
 }
-
-const iconOptions: IconOption[] = [
-  { label: "用户", value: "User", icon: User },
-  { label: "工作", value: "Briefcase", icon: Briefcase },
-  { label: "日期", value: "Calendar", icon: Calendar },
-  { label: "邮箱", value: "Mail", icon: Mail },
-  { label: "电话", value: "Phone", icon: Phone },
-  { label: "地址", value: "MapPin", icon: MapPin },
-  { label: "简介", value: "FileText", icon: FileText },
-  { label: "手机", value: "Smartphone", icon: Smartphone },
-  { label: "网站", value: "Globe", icon: Globe },
-  { label: "Github", value: "Github", icon: Github }
-];
-
-const IconSelector: React.FC<IconSelectorProps> = ({
-  value,
-  onChange,
-  theme
-}) => {
-  const [open, setOpen] = React.useState(false);
-  const selectedIcon =
-    iconOptions.find((i) => i.value === value) || iconOptions[0];
-  const Icon = selectedIcon.icon;
-
-  const handleSelect = (iconValue: string) => {
-    onChange(iconValue);
-    setOpen(false);
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Icon className="w-4 h-4" />
-      </PopoverTrigger>
-      <PopoverContent
-        className={cn(
-          "w-[200px] p-2 grid grid-cols-5 gap-1",
-          theme === "dark" ? "bg-neutral-900 border-neutral-700" : "bg-white"
-        )}
-      >
-        {iconOptions.map(({ value: iconValue, icon: Icon, label }) => (
-          <Button
-            key={iconValue}
-            onClick={() => handleSelect(iconValue)}
-            className={cn(
-              "p-2 rounded flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-800 group relative",
-              theme === "dark" ? "text-neutral-200" : "text-neutral-700",
-              value === iconValue &&
-                (theme === "dark" ? "bg-neutral-800" : "bg-neutral-100")
-            )}
-          >
-            <Icon className="w-4 h-4" />
-            <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 text-xs rounded bg-black text-white opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-              {label}
-            </span>
-          </Button>
-        ))}
-      </PopoverContent>
-    </Popover>
-  );
-};
 
 const CustomField: React.FC<CustomFieldProps> = ({
   field,

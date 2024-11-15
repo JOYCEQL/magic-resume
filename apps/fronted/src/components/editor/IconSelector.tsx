@@ -311,7 +311,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({
             ))}
           </div>
 
-          <div className="grid grid-cols-8 gap-2 max-h-[320px] overflow-y-auto pr-2">
+          <div className="grid grid-cols-8 gap-2 max-h-[400px] overflow-x-hidden overflow-y-auto pr-2">
             {filteredIcons.map(({ value: iconValue, icon: Icon, label }) => (
               <Button
                 key={iconValue}
@@ -321,28 +321,20 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                 onClick={() => handleSelect(iconValue)}
                 className={cn(
                   "relative p-2 h-10 rounded-lg group",
-                  "transform-gpu transition-all duration-300 ease-out",
                   theme === "dark"
                     ? "hover:bg-neutral-800/70 text-neutral-300 hover:text-neutral-200"
                     : "hover:bg-neutral-100/70 text-neutral-600 hover:text-neutral-900",
-                  "hover:scale-110 active:scale-95",
                   value === iconValue &&
                     (theme === "dark"
                       ? "bg-neutral-800 text-blue-400 ring-1 ring-blue-500/30"
                       : "bg-blue-50 text-blue-600 ring-1 ring-blue-500/20")
                 )}
               >
-                <Icon
-                  className={cn(
-                    "w-4 h-4 transform-gpu transition-all duration-300",
-                    isHovered === iconValue && "rotate-[360deg] scale-110"
-                  )}
-                />
+                <Icon className={cn("w-4 h-4")} />
                 <span
                   className={cn(
                     "absolute -top-9 left-1/2 -translate-x-1/2",
                     "px-2 py-1 text-xs rounded-md",
-                    "transform-gpu transition-all duration-300",
                     "opacity-0 translate-y-1",
                     "group-hover:opacity-100 group-hover:translate-y-0",
                     "pointer-events-none",

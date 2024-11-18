@@ -27,11 +27,18 @@ import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
 import debounce from "lodash/debounce";
 import { useMemo } from "react";
+import { Switch } from "../ui/switch";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
   { value: "serif", label: "衬线体" },
   { value: "mono", label: "等宽体" }
+];
+
+const lineHeightOptions = [
+  { value: "normal", label: "默认" },
+  { value: "relaxed", label: "适中" },
+  { value: "loose", label: "宽松" }
 ];
 
 function SettingCard({
@@ -184,7 +191,6 @@ export function SidePanel() {
         </SettingCard>
 
         {/* 主题色设置  */}
-
         <SettingCard icon={Palette} title="主题色">
           <div className="space-y-4">
             <div className="grid grid-cols-6 gap-2">
@@ -226,11 +232,11 @@ export function SidePanel() {
               ))}
             </div>
 
-            <div className="flex  flex-col gap-4">
+            <div className="flex flex-col gap-4">
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 自定义
               </div>
-              <input
+              <motion.input
                 type="color"
                 onChange={(e) => debouncedSetColor(e.target.value)}
                 className="w-[40px] h-[40px] rounded-lg cursor-pointer overflow-hidden hover:scale-105 transition-transform"
@@ -296,7 +302,41 @@ export function SidePanel() {
               </Select>
             </div>
 
-            {/* 基础字号选择 */}
+            {/* 行高选择 */}
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                行高
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.lineHeight || 1.5]}
+                  min={1}
+                  max={2}
+                  step={0.1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ lineHeight: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.lineHeight}
+                </span>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label
                 className={cn(
@@ -309,6 +349,112 @@ export function SidePanel() {
                 value={globalSettings?.baseFontSize?.toString()}
                 onValueChange={(value) =>
                   updateGlobalSettings?.({ baseFontSize: parseInt(value) })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "border transition-colors",
+                      theme === "dark"
+                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
+                        : "border-gray-200 bg-white text-gray-700"
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent
+                  className={cn(
+                    theme === "dark"
+                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      : "bg-white border-gray-200"
+                  )}
+                >
+                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={size.toString()}
+                      className={cn(
+                        "cursor-pointer",
+                        theme === "dark"
+                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
+                          : "focus:bg-gray-100 hover:bg-gray-100"
+                      )}
+                    >
+                      {size}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                模块标题字号
+              </Label>
+              <Select
+                value={globalSettings?.headerSize?.toString()}
+                onValueChange={(value) =>
+                  updateGlobalSettings?.({ headerSize: parseInt(value) })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger
+                    className={cn(
+                      "border transition-colors",
+                      theme === "dark"
+                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
+                        : "border-gray-200 bg-white text-gray-700"
+                    )}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent
+                  className={cn(
+                    theme === "dark"
+                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      : "bg-white border-gray-200"
+                  )}
+                >
+                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={size.toString()}
+                      className={cn(
+                        "cursor-pointer",
+                        theme === "dark"
+                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
+                          : "focus:bg-gray-100 hover:bg-gray-100"
+                      )}
+                    >
+                      {size}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
+                模块二级标题字号
+              </Label>
+              <Select
+                value={globalSettings?.subheaderSize?.toString()}
+                onValueChange={(value) =>
+                  updateGlobalSettings?.({ subheaderSize: parseInt(value) })
                 }
               >
                 <motion.div
@@ -396,13 +542,46 @@ export function SidePanel() {
                   theme === "dark" ? "text-neutral-300" : "text-gray-600"
                 )}
               >
+                模块间距
+              </Label>
+              <div className="flex items-center gap-4">
+                <Slider
+                  value={[globalSettings?.sectionSpacing || 0]}
+                  min={20}
+                  max={100}
+                  step={1}
+                  onValueChange={([value]) =>
+                    updateGlobalSettings?.({ sectionSpacing: value })
+                  }
+                  className={cn(
+                    theme === "dark"
+                      ? "[&_[role=slider]]:bg-neutral-200"
+                      : "[&_[role=slider]]:bg-gray-900"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "min-w-[3ch] text-sm",
+                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                  )}
+                >
+                  {globalSettings?.sectionSpacing}px
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                className={cn(
+                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                )}
+              >
                 段落间距
               </Label>
               <div className="flex items-center gap-4">
                 <Slider
                   value={[globalSettings?.paragraphSpacing || 0]}
-                  min={0.8}
-                  max={2}
+                  min={1}
                   step={0.1}
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ paragraphSpacing: value })
@@ -419,9 +598,31 @@ export function SidePanel() {
                     theme === "dark" ? "text-neutral-300" : "text-gray-600"
                   )}
                 >
-                  {globalSettings?.paragraphSpacing}em
+                  {globalSettings?.paragraphSpacing}px
                 </span>
               </div>
+            </div>
+          </div>
+        </SettingCard>
+        <SettingCard icon={SpaceIcon} title="模式">
+          <div>
+            <Label
+              className={cn(
+                theme === "dark" ? "text-neutral-300" : "text-gray-600"
+              )}
+            >
+              图标模式
+            </Label>
+            <div className="flex items-center gap-4">
+              <Switch
+                checked={globalSettings.useIconMode}
+                onCheckedChange={(checked) =>
+                  updateGlobalSettings({
+                    ...globalSettings,
+                    useIconMode: checked
+                  })
+                }
+              />
             </div>
           </div>
         </SettingCard>

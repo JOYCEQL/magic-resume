@@ -46,9 +46,11 @@
     "react-resizable-panels": "^2.0.20",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.1",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

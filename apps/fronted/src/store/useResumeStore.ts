@@ -1,14 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
-  ResumeData,
-  ResumeSection,
   BasicInfo,
   Education,
   Experience,
   GlobalSettings,
-  Project,
-  ResumeTheme
+  DEFAULT_CONFIG,
+  Project
 } from "../types/resume";
 
 interface ResumeStore {
@@ -32,7 +30,6 @@ interface ResumeStore {
 
   colorTheme: string; // 当前使用的主题色 ID
 
-  // 新增 Actions
   setColorTheme: (colorTheme: string) => void;
 
   // Actions
@@ -46,8 +43,8 @@ interface ResumeStore {
   setActiveSection: (sectionId: string) => void;
   toggleTheme: () => void;
   // 全局设置
-  globalSettings?: GlobalSettings;
-  updateGlobalSettings?: (settings: Partial<GlobalSettings>) => void;
+  globalSettings: GlobalSettings;
+  updateGlobalSettings: (settings: Partial<GlobalSettings>) => void;
   // 项目经历
   projects: Project[];
   updateProjects: (project: Project) => void;
@@ -67,7 +64,10 @@ const initialState = {
     summary: "5年前端开发经验...",
     birthDate: "",
     icons: {},
-    customFields: []
+    photoConfig: DEFAULT_CONFIG,
+    customFields: [],
+    employementStatus: "",
+    photo: "https://talencat.s3.amazonaws.com/app/avatar/builtin/cat001.png"
   },
   education: [
     {
@@ -102,10 +102,10 @@ const initialState = {
   ],
   theme: "light" as const,
 
-  // 主题色
-  colorTheme: "#2563eb", // 默认使用经典蓝主题
+  colorTheme: "#2563eb",
 
   activeSection: "basic",
+
   projects: [
     {
       id: "p1",
@@ -133,7 +133,17 @@ const initialState = {
       achievements: "系统整体性能提升 50%，代码重用率提高到 80%",
       visible: true
     }
-  ]
+  ],
+  globalSettings: {
+    baseFontSize: 14,
+    pagePadding: 20,
+    paragraphSpacing: 20,
+    lineHeight: 1,
+    sectionSpacing: 20,
+    headerSize: 18,
+    subheaderSize: 16,
+    useIconMode: false
+  }
 };
 
 export const useResumeStore = create<ResumeStore>()(
@@ -141,7 +151,6 @@ export const useResumeStore = create<ResumeStore>()(
     (set) => ({
       ...initialState,
       setColorTheme: (colorTheme) => {
-        console.log(colorTheme, "colorTheme");
         set({ colorTheme });
       },
 
@@ -165,10 +174,9 @@ export const useResumeStore = create<ResumeStore>()(
         })),
 
       reorderSections: (newOrder) => {
-        // 根据新顺序重新计算每个部分的 order
         const updatedSections = newOrder.map((section, index) => ({
           ...section,
-          order: index // 根据数组索引设置新的顺序
+          order: index
         }));
 
         set({ menuSections: updatedSections });

@@ -1,3 +1,65 @@
+export interface PhotoConfig {
+  width: number;
+  height: number;
+  aspectRatio: "1:1" | "4:3" | "3:4" | "16:9" | "custom";
+  borderRadius: "none" | "medium" | "full" | "custom";
+  customBorderRadius: number;
+  visible?: boolean;
+}
+
+export const DEFAULT_CONFIG: PhotoConfig = {
+  width: 96,
+  height: 96,
+  aspectRatio: "1:1",
+  borderRadius: "none",
+  customBorderRadius: 0,
+  visible: true
+};
+
+// 助手函数
+export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
+  switch (ratio) {
+    case "4:3":
+      return 3 / 4;
+    case "3:4":
+      return 4 / 3;
+    case "16:9":
+      return 9 / 16;
+    default:
+      return 1;
+  }
+};
+
+export const getBorderRadiusValue = (config?: PhotoConfig) => {
+  if (!config) return "0";
+
+  switch (config.borderRadius) {
+    case "medium":
+      return "0.5rem";
+    case "full":
+      return "9999px";
+    case "custom":
+      return `${config.customBorderRadius}px`;
+    default:
+      return "0";
+  }
+};
+
+export interface BasicFieldType {
+  id: string;
+  key: keyof BasicInfo;
+  label: string;
+  type?: "date" | "textarea" | "text" | "editor";
+  visible: boolean;
+}
+
+export interface CustomFieldType {
+  id: string;
+  label: string;
+  value: string;
+  icon: string;
+  visible?: boolean;
+}
 export interface BasicInfo {
   birthDate: string;
   name: string;
@@ -7,13 +69,16 @@ export interface BasicInfo {
   location: string;
   summary: string;
   icons: Record<string, string>;
+  employementStatus: string;
+  photo: string;
+  photoConfig: PhotoConfig;
+  fieldOrder?: BasicFieldType[]; // 新增字段排序
   customFields: Array<{
     id: string;
     label: string;
     value: string;
     icon: string;
-    required: boolean;
-    placeholder: string;
+    visible?: boolean;
   }>;
 }
 
@@ -51,49 +116,19 @@ export interface Project {
   visible: boolean;
 }
 
-export interface ResumeSection {
-  id: string;
-  title: string;
-  icon: string;
-  type: "basic" | "education" | "experience" | "skills" | "projects";
-}
-
-export interface ResumeData {
-  basic: BasicInfo;
-  education: Education[];
-  experience: Experience[];
-  skills: Skill[];
-  projects: Project[];
-  sections: ResumeSection[];
-  activeSection: string;
-  theme: "light" | "dark";
-}
-
 export type GlobalSettings = {
-  theme: "light" | "dark";
-  themeColor: string;
-  fontFamily: string;
-  baseFontSize: number;
-  pagePadding: number;
-  paragraphSpacing: number;
+  theme?: "light" | "dark" | undefined;
+  themeColor?: string | undefined;
+  fontFamily?: string | undefined;
+  baseFontSize?: number | undefined;
+  pagePadding?: number | undefined;
+  paragraphSpacing?: number | undefined;
+  lineHeight?: number | undefined;
+  sectionSpacing?: number | undefined;
+  headerSize?: number | undefined;
+  subheaderSize?: number | undefined;
+  useIconMode?: boolean | undefined;
 };
-
-export interface ThemeColors {
-  primary: string; // 主色
-  secondary: string; // 次要色
-  text: {
-    primary: string; // 主要文字颜色
-    secondary: string; // 次要文字颜色
-    accent: string; // 强调文字颜色
-  };
-  background: {
-    primary: string; // 主要背景色
-    secondary: string; // 次要背景色
-    accent: string; // 强调背景色
-  };
-  border: string; // 边框颜色
-  divider: string; // 分割线颜色
-}
 
 export interface ResumeTheme {
   id: string;
@@ -102,20 +137,19 @@ export interface ResumeTheme {
 }
 
 export const THEME_COLORS = [
-  "#2563eb", // 经典蓝
-  "#059669", // 翡翠绿
-  "#7c3aed", // 优雅紫
-  "#e11d48", // 玫瑰红
-  "#d97706", // 琥珀金
-  "#0891b2", // 青碧蓝
-  "#4f46e5", // 靛青蓝
-  "#0d9488", // 青蓝绿
-  "#0284c7", // 天际蓝
-  "#6d28d9", // 雅致紫
-  "#c026d3", // 绯紫红
-  "#db2777", // 粉红色
-  "#ea580c", // 活力橙
-  "#65a30d", // 青柠绿
-  "#475569", // 岩石灰
-  "#dc2626" // 中国红
+  "#2563eb",
+  "#059669",
+  "#7c3aed",
+  "#e11d48",
+  "#d97706",
+  "#0891b2",
+  "#4f46e5",
+  "#0d9488",
+  "#0284c7",
+  "#6d28d9",
+  "#c026d3",
+  "#ea580c",
+  "#65a30d",
+  "#475569",
+  "#dc2626"
 ];

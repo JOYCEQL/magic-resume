@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   Drawer,
@@ -47,9 +48,20 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   const [config, setConfig] = useState<PhotoConfig>(
     initialConfig || DEFAULT_CONFIG
   );
-  const isMobile = useMemo(() => {
-    return window.innerWidth <= 768;
-  }, [window.innerWidth]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       setConfig(initialConfig || DEFAULT_CONFIG);

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";

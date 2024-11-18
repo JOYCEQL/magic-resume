@@ -4,6 +4,7 @@ export interface PhotoConfig {
   aspectRatio: "1:1" | "4:3" | "3:4" | "16:9" | "custom";
   borderRadius: "none" | "medium" | "full" | "custom";
   customBorderRadius: number;
+  visible?: boolean;
 }
 
 export const DEFAULT_CONFIG: PhotoConfig = {
@@ -11,7 +12,8 @@ export const DEFAULT_CONFIG: PhotoConfig = {
   height: 96,
   aspectRatio: "1:1",
   borderRadius: "none",
-  customBorderRadius: 0
+  customBorderRadius: 0,
+  visible: true
 };
 
 // 助手函数
@@ -43,6 +45,21 @@ export const getBorderRadiusValue = (config?: PhotoConfig) => {
   }
 };
 
+export interface BasicFieldType {
+  id: string;
+  key: keyof BasicInfo;
+  label: string;
+  type?: "date" | "textarea" | "text" | "editor";
+  visible: boolean;
+}
+
+export interface CustomFieldType {
+  id: string;
+  label: string;
+  value: string;
+  icon: string;
+  visible?: boolean;
+}
 export interface BasicInfo {
   birthDate: string;
   name: string;
@@ -55,11 +72,13 @@ export interface BasicInfo {
   employementStatus: string;
   photo: string;
   photoConfig: PhotoConfig;
+  fieldOrder?: BasicFieldType[]; // 新增字段排序
   customFields: Array<{
     id: string;
     label: string;
     value: string;
     icon: string;
+    visible?: boolean;
   }>;
 }
 
@@ -108,6 +127,7 @@ export type GlobalSettings = {
   sectionSpacing?: number | undefined;
   headerSize?: number | undefined;
   subheaderSize?: number | undefined;
+  useIconMode?: boolean | undefined;
 };
 
 export interface ResumeTheme {

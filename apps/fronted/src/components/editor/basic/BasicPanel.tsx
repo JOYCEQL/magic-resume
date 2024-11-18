@@ -1,47 +1,50 @@
-import React, { useState } from "react";
-import { PlusCircle, GripVertical, Trash2, LucideIcon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Field from "../Field";
-import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
-import { Reorder } from "framer-motion";
+import { Reorder, AnimatePresence, motion } from "framer-motion";
 import IconSelector from "../IconSelector";
 import PhotoUpload from "@/components/PhotoSelector";
+import Field from "../Field";
+import { useResumeStore } from "@/store/useResumeStore";
+import { BasicFieldType, CustomFieldType } from "@/types/resume";
 
-type CustomFieldType = {
-  id: string;
-  label: string;
-  value: string;
-  icon: string;
-};
-
-type Theme = "dark" | "light";
-
-interface IconSelectorProps {
-  value: string;
-  onChange: (value: string) => void;
-  theme: Theme;
-}
+const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
+  { id: "1", key: "name", label: "姓名", type: "text", visible: true },
+  {
+    id: "2",
+    key: "employementStatus",
+    label: "求职状态",
+    type: "text",
+    visible: true
+  },
+  { id: "3", key: "title", label: "职位", type: "text", visible: true },
+  { id: "4", key: "birthDate", label: "出生日期", type: "date", visible: true },
+  { id: "5", key: "email", label: "电子邮箱", type: "text", visible: true },
+  { id: "6", key: "phone", label: "电话", type: "text", visible: true },
+  { id: "7", key: "location", label: "所在地", type: "text", visible: true },
+  {
+    id: "8",
+    key: "summary",
+    label: "个人简介",
+    type: "textarea",
+    visible: true
+  }
+];
 
 interface CustomFieldProps {
   field: CustomFieldType;
   onUpdate: (field: CustomFieldType) => void;
   onDelete: (id: string) => void;
-  theme: Theme;
+  theme: "dark" | "light";
 }
 
-interface BasicInfo {
-  name?: string;
-  title?: string;
-  birthDate?: string;
-  email?: string;
-  phone?: string;
-  location?: string;
-  summary?: string;
-  customFields?: CustomFieldType[];
-  icons?: Record<string, string>;
-  employementStatus?: string;
-}
+const itemAnimations = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 }
+};
 
 const CustomField: React.FC<CustomFieldProps> = ({
   field,
@@ -55,198 +58,330 @@ const CustomField: React.FC<CustomFieldProps> = ({
       id={field.id}
       className="group touch-none list-none"
     >
-      <div
+      <motion.div
+        {...itemAnimations}
         className={cn(
-          "grid grid-cols-[auto_auto_1fr_1fr_auto] gap-2 items-center p-2 rounded-lg border border-transparent",
-          theme === "dark"
-            ? "hover:border-neutral-700"
-            : "hover:border-neutral-200"
+          "grid grid-cols-[auto_auto_1fr_1fr_auto_auto] gap-3 items-center p-3",
+          "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
+          "border border-neutral-100 dark:border-neutral-700",
+          "transition-all duration-200",
+          "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
+          !field.visible && "opacity-60"
         )}
       >
-        <GripVertical className="w-4 h-4 cursor-grab active:cursor-grabbing text-neutral-400" />
-        <IconSelector
-          value={field.icon}
-          onChange={(value) => onUpdate({ ...field, icon: value })}
-          theme={theme}
-        />
+        <div className="flex items-center justify-center">
+          <GripVertical
+            className={cn(
+              "w-4 h-4 cursor-grab active:cursor-grabbing",
+              "text-neutral-300 dark:text-neutral-500",
+              "transition-colors duration-200",
+              "group-hover:text-neutral-400 dark:group-hover:text-neutral-400"
+            )}
+          />
+        </div>
+        <div className="flex items-center justify-center">
+          <IconSelector
+            value={field.icon}
+            onChange={(value) => onUpdate({ ...field, icon: value })}
+            theme={theme}
+          />
+        </div>
         <Field
           label=""
           value={field.label}
           onChange={(value) => onUpdate({ ...field, label: value })}
           placeholder="字段名称"
+          className={cn(
+            "bg-neutral-50 dark:bg-neutral-900",
+            "border-neutral-200 dark:border-neutral-700",
+            "focus:border-blue-500 dark:focus:border-blue-400",
+            "placeholder-neutral-400 dark:placeholder-neutral-500"
+          )}
         />
         <Field
           label=""
           value={field.value}
           onChange={(value) => onUpdate({ ...field, value })}
           placeholder="字段内容"
-        />
-
-        <Trash2
-          onClick={() => onDelete(field.id)}
-          size={26}
           className={cn(
-            "p-1.5 rounded-md  cursor-pointer",
-            theme === "dark"
-              ? "text-red-400 hover:text-red-300"
-              : "text-red-500 hover:text-red-600"
+            "bg-neutral-50 dark:bg-neutral-900",
+            "border-neutral-200 dark:border-neutral-700",
+            "focus:border-blue-500 dark:focus:border-blue-400",
+            "placeholder-neutral-400 dark:placeholder-neutral-500"
           )}
         />
-      </div>
+
+        {field.visible ? (
+          <Eye
+            className="w-4 h-4 cursor-pointer"
+            onClick={() => onUpdate({ ...field, visible: !field.visible })}
+          />
+        ) : (
+          <EyeOff
+            className="w-4 h-4 cursor-pointer"
+            onClick={() => onUpdate({ ...field, visible: !field.visible })}
+          />
+        )}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onDelete(field.id)}
+          className={cn(
+            "p-2 rounded-lg transition-colors",
+            "hover:bg-red-100 dark:hover:bg-red-900/40",
+            "text-red-500 bg-red-50 dark:bg-red-900/20"
+          )}
+        >
+          <Trash2 className="w-4 h-4" />
+        </motion.button>
+      </motion.div>
     </Reorder.Item>
   );
 };
 
 const BasicPanel: React.FC = () => {
   const { basic, updateBasicInfo, theme } = useResumeStore();
-  const [fields, setFields] = useState<CustomFieldType[]>(
-    basic?.customFields || []
+  const [customFields, setCustomFields] = useState<CustomFieldType[]>(
+    basic?.customFields?.map((field) => ({
+      ...field,
+      visible: field.visible ?? true
+    })) || []
   );
+  const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
+    if (!basic.fieldOrder) {
+      return DEFAULT_FIELD_ORDER;
+    }
+    return basic.fieldOrder.map((field) => ({
+      ...field,
+      visible: field.visible ?? true
+    }));
+  });
+
+  useEffect(() => {
+    if (!basic.fieldOrder) {
+      updateBasicInfo({
+        ...basic,
+        fieldOrder: DEFAULT_FIELD_ORDER
+      });
+    }
+  }, []);
+
+  const handleBasicReorder = (newOrder: BasicFieldType[]) => {
+    setBasicFields(newOrder);
+    updateBasicInfo({
+      ...basic,
+      fieldOrder: newOrder
+    });
+  };
+
+  const toggleFieldVisibility = (fieldId: string, isVisible: boolean) => {
+    const newFields = basicFields.map((field) =>
+      field.id === fieldId ? { ...field, visible: isVisible } : field
+    );
+    setBasicFields(newFields);
+    updateBasicInfo({
+      ...basic,
+      fieldOrder: newFields
+    });
+  };
 
   const addCustomField = () => {
     const fieldToAdd: CustomFieldType = {
       id: crypto.randomUUID(),
       label: "",
       value: "",
-      icon: "User"
+      icon: "User",
+      visible: true
     };
-    const updatedFields = [...fields, fieldToAdd];
-    setFields(updatedFields);
+    const updatedFields = [...customFields, fieldToAdd];
+    setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
       customFields: updatedFields
     });
   };
 
-  const updateField = (updatedField: CustomFieldType) => {
-    const updatedFields = fields.map((field) =>
+  const updateCustomField = (updatedField: CustomFieldType) => {
+    const updatedFields = customFields.map((field) =>
       field.id === updatedField.id ? updatedField : field
     );
-    setFields(updatedFields);
+    setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
       customFields: updatedFields
     });
   };
 
-  const deleteField = (id: string) => {
-    const updatedFields = fields.filter((field) => field.id !== id);
-    setFields(updatedFields);
+  const deleteCustomField = (id: string) => {
+    const updatedFields = customFields.filter((field) => field.id !== id);
+    setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
       customFields: updatedFields
     });
   };
 
-  const handleReorder = (newOrder: CustomFieldType[]) => {
-    setFields(newOrder);
+  const handleCustomFieldsReorder = (newOrder: CustomFieldType[]) => {
+    setCustomFields(newOrder);
     updateBasicInfo({
       ...basic,
       customFields: newOrder
     });
   };
-
-  const renderField = (
-    key: keyof BasicInfo,
-    label: string,
-    options: {
-      type?: "date" | "textarea" | "text" | "editor" | undefined;
-      isCustom?: boolean;
-      field?: CustomFieldType | null;
-    } = {}
-  ) => {
-    const { type = "text", isCustom = false, field = null } = options;
-
-    const selectedIcon = basic?.icons?.[key] || "User";
+  const renderBasicField = (field: BasicFieldType) => {
+    const selectedIcon = basic?.icons?.[field.key] || "User";
 
     return (
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <IconSelector
-            value={selectedIcon}
-            onChange={(value) => {
-              updateBasicInfo({
-                ...basic,
-                icons: {
-                  ...(basic?.icons || {}),
-                  [key]: value
-                }
-              });
-            }}
-            theme={theme}
-          />
-          <span className="text-sm font-medium">{label}</span>
-        </div>
-
-        <Field
-          label=""
-          value={isCustom ? field?.value || "" : (basic?.[key] as string) || ""}
-          onChange={(value) =>
-            isCustom && field
-              ? updateField({ ...field, value })
-              : updateBasicInfo({ ...basic, [key]: value })
-          }
-          placeholder={`请输入${label}`}
-          type={type}
-        />
-      </div>
+      <Reorder.Item
+        value={field}
+        id={field.id}
+        key={field.id}
+        className="group touch-none list-none"
+      >
+        <motion.div
+          {...itemAnimations}
+          className={cn(
+            "grid grid-cols-[auto_auto_1fr_auto] gap-3 items-center p-3",
+            "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
+            "border border-neutral-100 dark:border-neutral-700",
+            "transition-all duration-200",
+            "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
+            !field.visible && "opacity-60"
+          )}
+        >
+          <div className="flex items-center justify-center">
+            <GripVertical
+              className={cn(
+                "w-4 h-4 cursor-grab active:cursor-grabbing",
+                "text-neutral-300 dark:text-neutral-500",
+                "transition-colors duration-200",
+                "group-hover:text-neutral-400 dark:group-hover:text-neutral-400"
+              )}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <IconSelector
+              value={selectedIcon}
+              onChange={(value) => {
+                updateBasicInfo({
+                  ...basic,
+                  icons: {
+                    ...(basic?.icons || {}),
+                    [field.key]: value
+                  }
+                });
+              }}
+              theme={theme}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                {field.label}
+              </span>
+            </div>
+            <Field
+              label=""
+              value={(basic[field.key] as string) || ""}
+              onChange={(value) =>
+                updateBasicInfo({
+                  ...basic,
+                  [field.key]: value
+                })
+              }
+              placeholder={`请输入${field.label}`}
+              type={field.type}
+            />
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2"
+            onClick={() => toggleFieldVisibility(field.id, !field.visible)}
+          >
+            {field.visible ? (
+              <Eye className="w-4 h-4 cursor-pointer" />
+            ) : (
+              <EyeOff className="w-4 h-4 cursor-pointer" />
+            )}
+          </Button>
+        </motion.div>
+      </Reorder.Item>
     );
   };
 
   return (
-    <div className="space-y-5 p-4">
-      <PhotoUpload theme={theme} />
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex-1">{renderField("name", "姓名")}</div>
+    <div className="space-y-6 p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white dark:bg-neutral-800 rounded-xl p-3 shadow-sm border border-neutral-100 dark:border-neutral-700"
+      >
+        <PhotoUpload theme={theme} />
+      </motion.div>
 
-        <div>{renderField("employementStatus", "在职状态")}</div>
-      </div>
-      {renderField("title", "职位")}
-      {renderField("birthDate", "出生日期", { type: "date" })}
-      <div className="grid grid-cols-2 gap-5">
-        {renderField("email", "电子邮箱")}
-        {renderField("phone", "电话")}
-      </div>
-      {renderField("location", "所在地")}
-      {renderField("summary", "个人简介", { type: "textarea" })}
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+            基本字段
+          </h3>
+          <AnimatePresence mode="popLayout">
+            <Reorder.Group
+              axis="y"
+              as="div"
+              values={basicFields}
+              onReorder={handleBasicReorder}
+              className="space-y-3"
+            >
+              {basicFields.map((field) => renderBasicField(field))}
+            </Reorder.Group>
+          </AnimatePresence>
+        </div>
 
-      {/* 自定义字段 */}
-      <div className="space-y-4">
-        <Reorder.Group
-          axis="y"
-          values={fields}
-          onReorder={handleReorder}
-          className="space-y-2"
-        >
-          {Array.isArray(fields) &&
-            fields.map((field) => (
-              <CustomField
-                key={field.id}
-                field={field}
-                onUpdate={updateField}
-                onDelete={deleteField}
-                theme={theme}
-              />
-            ))}
-        </Reorder.Group>
+        <div className="space-y-3">
+          <h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+            自定义字段
+          </h3>
+          <AnimatePresence mode="popLayout">
+            <Reorder.Group
+              axis="y"
+              as="div"
+              values={customFields}
+              onReorder={handleCustomFieldsReorder}
+              className="space-y-3"
+            >
+              {Array.isArray(customFields) &&
+                customFields.map((field) => (
+                  <CustomField
+                    key={field.id}
+                    field={field}
+                    onUpdate={updateCustomField}
+                    onDelete={deleteCustomField}
+                    theme={theme}
+                  />
+                ))}
+            </Reorder.Group>
+          </AnimatePresence>
 
-        <Button
-          onClick={addCustomField}
-          className={cn(
-            "w-full",
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
-        >
-          <PlusCircle
-            className={cn(
-              "w-4 h-4 mr-2",
-              theme === "dark" ? "text-neutral-400" : "text-neutral-500"
-            )}
-          />
-          添加自定义字段
-        </Button>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Button
+              onClick={addCustomField}
+              className={cn(
+                "w-full mt-4 transition-colors",
+                "text-white shadow-sm",
+                "bg-indigo-600",
+                "hover:bg-indigo-700 hover:bg-indigo-700"
+              )}
+            >
+              <PlusCircle className="w-4 h-4 mr-2" />
+              添加自定义字段
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -15,16 +15,17 @@ type FieldProps = {
   type?: "text" | "textarea" | "date" | "editor";
   placeholder?: string;
   required?: boolean;
+  className?: string;
 };
 
-// Field 组件
 const Field: React.FC<FieldProps> = ({
   label,
   value,
   onChange,
   type = "text",
   placeholder,
-  required
+  required,
+  className
 }) => {
   const theme = useResumeStore((state) => state.theme);
 

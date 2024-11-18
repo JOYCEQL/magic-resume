@@ -141,7 +141,8 @@ const initialState = {
     lineHeight: 1,
     sectionSpacing: 20,
     headerSize: 18,
-    subheaderSize: 16
+    subheaderSize: 16,
+    useIconMode: false
   }
 };
 

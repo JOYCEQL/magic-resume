@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Settings2, Image } from "lucide-react";
+import { Settings2, Image, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PhotoConfigDrawer from "./PhotoConfigDrawer";
@@ -40,14 +40,36 @@ const PhotoSelector: React.FC<Props> = ({ className, theme }) => {
           <Image className="w-4 h-4" />
           <span className="text-sm font-medium">头像</span>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-6 px-2"
-          onClick={() => setShowConfig(true)}
-        >
-          <Settings2 className="w-3 h-3" />
-        </Button>
+        <div className="flex gap-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2"
+            onClick={() => setShowConfig(true)}
+          >
+            <Settings2 className="w-3 h-3" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 px-2"
+            onClick={() => {
+              updateBasicInfo({
+                ...basic,
+                photoConfig: {
+                  ...basic.photoConfig,
+                  visible: !(basic.photoConfig?.visible ?? true)
+                }
+              });
+            }}
+          >
+            {basic.photoConfig?.visible !== false ? (
+              <Eye className="w-4 h-4" />
+            ) : (
+              <EyeOff className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {basic.photo && (

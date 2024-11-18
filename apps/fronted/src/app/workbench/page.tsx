@@ -284,7 +284,7 @@ export default function Home() {
       className={cn(
         "w-full h-screen overflow-hidden",
         theme === "dark"
-          ? "bg-neutral-900 text-neutral-200"
+          ? "dark bg-neutral-900 text-neutral-200"
           : "bg-white text-gray-900"
       )}
     >

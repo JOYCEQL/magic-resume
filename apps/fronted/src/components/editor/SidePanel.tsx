@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
 import debounce from "lodash/debounce";
 import { useMemo } from "react";
+import { Switch } from "../ui/switch";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
@@ -600,6 +601,28 @@ export function SidePanel() {
                   {globalSettings?.paragraphSpacing}px
                 </span>
               </div>
+            </div>
+          </div>
+        </SettingCard>
+        <SettingCard icon={SpaceIcon} title="模式">
+          <div>
+            <Label
+              className={cn(
+                theme === "dark" ? "text-neutral-300" : "text-gray-600"
+              )}
+            >
+              图标模式
+            </Label>
+            <div className="flex items-center gap-4">
+              <Switch
+                checked={globalSettings.useIconMode}
+                onCheckedChange={(checked) =>
+                  updateGlobalSettings({
+                    ...globalSettings,
+                    useIconMode: checked
+                  })
+                }
+              />
             </div>
           </div>
         </SettingCard>

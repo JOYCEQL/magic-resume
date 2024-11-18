@@ -6,6 +6,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
 import IconSelector from "../IconSelector";
+import PhotoUpload from "@/components/PhotoSelector";
 
 type CustomFieldType = {
   id: string;
@@ -194,8 +195,10 @@ const BasicPanel: React.FC = () => {
 
   return (
     <div className="space-y-5 p-4">
+      <PhotoUpload theme={theme} />
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">{renderField("name", "姓名")}</div>
+
         <div>{renderField("employementStatus", "在职状态")}</div>
       </div>
       {renderField("title", "职位")}

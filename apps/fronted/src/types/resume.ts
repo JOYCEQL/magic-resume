@@ -1,3 +1,48 @@
+export interface PhotoConfig {
+  width: number;
+  height: number;
+  aspectRatio: "1:1" | "4:3" | "3:4" | "16:9" | "custom";
+  borderRadius: "none" | "medium" | "full" | "custom";
+  customBorderRadius: number;
+}
+
+export const DEFAULT_CONFIG: PhotoConfig = {
+  width: 96,
+  height: 96,
+  aspectRatio: "1:1",
+  borderRadius: "none",
+  customBorderRadius: 0
+};
+
+// 助手函数
+export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
+  switch (ratio) {
+    case "4:3":
+      return 3 / 4;
+    case "3:4":
+      return 4 / 3;
+    case "16:9":
+      return 9 / 16;
+    default:
+      return 1;
+  }
+};
+
+export const getBorderRadiusValue = (config?: PhotoConfig) => {
+  if (!config) return "0";
+
+  switch (config.borderRadius) {
+    case "medium":
+      return "0.5rem";
+    case "full":
+      return "9999px";
+    case "custom":
+      return `${config.customBorderRadius}px`;
+    default:
+      return "0";
+  }
+};
+
 export interface BasicInfo {
   birthDate: string;
   name: string;
@@ -8,6 +53,8 @@ export interface BasicInfo {
   summary: string;
   icons: Record<string, string>;
   employementStatus: string;
+  photo: string;
+  photoConfig: PhotoConfig;
   customFields: Array<{
     id: string;
     label: string;
@@ -60,7 +107,7 @@ export type GlobalSettings = {
   lineHeight?: number | undefined;
   sectionSpacing?: number | undefined;
   headerSize?: number | undefined;
-  subHeaderSize?: number | undefined;
+  subheaderSize?: number | undefined;
 };
 
 export interface ResumeTheme {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
@@ -27,19 +27,18 @@ interface PageBreakLineProps {
   pageNumber: number;
 }
 
-const PageBreakLine = ({ pageNumber }: PageBreakLineProps) => {
+const PageBreakLine = React.memo(({ pageNumber }: PageBreakLineProps) => {
   const A4_HEIGHT_MM = 297;
   const TOP_MARGIN_MM = 4;
   const BOTTOM_MARGIN_MM = 4;
   const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - BOTTOM_MARGIN_MM;
   const MM_TO_PX = 3.78;
-  const SCALE_FACTOR = 2; // 考虑导出时的 scale: 2 设置
 
   const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
 
   return (
     <div
-      className="absolute left-0 right-0 pointer-events-none  page-break-line"
+      className="absolute left-0 right-0 pointer-events-none page-break-line"
       style={{
         top: `${pageHeight * pageNumber}px`,
         breakAfter: "page",
@@ -54,7 +53,9 @@ const PageBreakLine = ({ pageNumber }: PageBreakLineProps) => {
       </div>
     </div>
   );
-};
+});
+
+PageBreakLine.displayName = "PageBreakLine";
 
 export function PreviewPanel() {
   const {
@@ -79,20 +80,16 @@ export function PreviewPanel() {
     globalSettings?.fontFamily || "sans"
   );
 
-  // 获取当前主题色
   const currentThemeColor = useMemo(() => {
     return colorTheme || THEME_COLORS[0];
   }, [colorTheme]);
 
-  // 监测内容高度变化
   useEffect(() => {
-    const updateContentHeight = () => {
+    const updateContentHeight = throttle(() => {
       if (resumeContentRef.current) {
         setContentHeight(resumeContentRef.current.scrollHeight);
       }
-    };
-
-    updateContentHeight();
+    }, 100);
 
     const resizeObserver = new ResizeObserver(updateContentHeight);
     if (resumeContentRef.current) {
@@ -101,10 +98,10 @@ export function PreviewPanel() {
 
     return () => {
       resizeObserver.disconnect();
+      updateContentHeight.cancel();
     };
   }, []);
 
-  // 处理自动滚动
   const handleScroll = React.useCallback(
     throttle((offset: number) => {
       if (previewRef.current) {
@@ -117,7 +114,6 @@ export function PreviewPanel() {
     [scrollBehavior]
   );
 
-  // 使用 IntersectionObserver 监测拖拽元素
   React.useEffect(() => {
     if (!draggingProjectId || !previewRef.current) return;
 
@@ -160,31 +156,33 @@ export function PreviewPanel() {
   }, [draggingProjectId, handleScroll]);
 
   const renderProjects = () => (
-    <motion.div
-      layout
-      className="space-y-4"
-      style={{
-        marginTop: `${globalSettings?.sectionSpacing || 24}px`
-      }}
-    >
-      <SectionTitle
-        title="项目经历"
-        themeColor={currentThemeColor}
-        globalSettings={globalSettings}
-      />
-      <AnimatePresence mode="popLayout" initial={false}>
-        {projects
-          .filter((project) => project.visible)
-          .map((project) => (
-            <ProjectItem
-              key={project.id}
-              project={project}
-              draggingProjectId={draggingProjectId}
-              globalSettings={globalSettings}
-            />
-          ))}
-      </AnimatePresence>
-    </motion.div>
+    <LayoutGroup>
+      <motion.div
+        layout
+        className="space-y-4"
+        style={{
+          marginTop: `${globalSettings?.sectionSpacing || 24}px`
+        }}
+      >
+        <SectionTitle
+          title="项目经历"
+          themeColor={currentThemeColor}
+          globalSettings={globalSettings}
+        />
+        <AnimatePresence mode="popLayout" initial={false}>
+          {projects
+            .filter((project) => project.visible)
+            .map((project) => (
+              <ProjectItem
+                key={project.id}
+                project={project}
+                draggingProjectId={draggingProjectId}
+                globalSettings={globalSettings}
+              />
+            ))}
+        </AnimatePresence>
+      </motion.div>
+    </LayoutGroup>
   );
 
   const pageBreakCount = useMemo(() => {
@@ -263,7 +261,6 @@ export function PreviewPanel() {
             "text-[#000]"
           )}
           style={{
-            // 设置与 html2pdf 配置一致的尺寸
             minHeight: "297mm"
           }}
         >
@@ -274,22 +271,20 @@ export function PreviewPanel() {
             }}
             id="resume-preview"
           >
-            <motion.div layout className="space-y-8" ref={resumeContentRef}>
-              {/* Header */}
-              <BaseInfo basic={basic} globalSettings={globalSettings} />
+            <LayoutGroup>
+              <motion.div layout className="space-y-8" ref={resumeContentRef}>
+                <BaseInfo basic={basic} globalSettings={globalSettings} />
+                {menuSections
+                  .filter((section) => section.enabled)
+                  .sort((a, b) => a.order - b.order)
+                  .map((section) => (
+                    <motion.div key={section.id} layout>
+                      {renderSection(section.id)}
+                    </motion.div>
+                  ))}
+              </motion.div>
+            </LayoutGroup>
 
-              {/* Sections */}
-              {menuSections
-                .filter((section) => section.enabled)
-                .sort((a, b) => a.order - b.order)
-                .map((section) => (
-                  <motion.div key={section.id} layout>
-                    {renderSection(section.id)}
-                  </motion.div>
-                ))}
-            </motion.div>
-
-            {/* 动态分页指示线 */}
             {Array.from({ length: pageBreakCount }, (_, i) => (
               <PageBreakLine key={i} pageNumber={i + 1} />
             ))}

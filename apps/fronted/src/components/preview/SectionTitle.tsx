@@ -19,7 +19,7 @@ export function SectionTitle({
 
   return (
     <h3
-      className="text-lg font-semibold border-b border-gray-200 pb-2"
+      className="font-semibold border-b border-gray-200 pb-2"
       style={sectionTitleStyles}
     >
       {title}

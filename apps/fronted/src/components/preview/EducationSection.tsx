@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import { SectionTitle } from "./SectionTitle";
@@ -13,6 +14,9 @@ export function EducationSection({
   globalSettings,
   themeColor
 }: EducationSectionProps) {
+  // 只显示visible为true的教育经历
+  const visibleEducation = education.filter((edu) => edu.visible);
+
   return (
     <motion.div
       layout
@@ -26,7 +30,7 @@ export function EducationSection({
         themeColor={themeColor}
         globalSettings={globalSettings}
       />
-      {education.map((edu) => (
+      {visibleEducation.map((edu) => (
         <div
           key={edu.id}
           className="space-y-2"
@@ -35,42 +39,57 @@ export function EducationSection({
           }}
         >
           <div className="flex justify-between items-start">
-            <div>
-              <h4
-                className="font-medium text-gray-800"
-                style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`
-                }}
-              >
-                {edu.school}
-              </h4>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <h4
+                  className="font-medium text-gray-800"
+                  style={{
+                    fontSize: `${globalSettings?.subheaderSize || 16}px`
+                  }}
+                >
+                  {edu.school}
+                </h4>
+                {edu.location && (
+                  <span
+                    className="text-gray-600"
+                    style={{
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
+                    }}
+                  >
+                    · {edu.location}
+                  </span>
+                )}
+              </div>
               <p
                 className="text-gray-600"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`
                 }}
               >
-                {edu.degree}
+                {[edu.major, edu.degree].filter(Boolean).join(" · ")}
+                {edu.gpa && ` · GPA ${edu.gpa}`}
               </p>
             </div>
             <span
-              className="text-gray-600"
+              className="text-gray-600 shrink-0 ml-4"
               style={{
                 fontSize: `${globalSettings?.baseFontSize || 14}px`
               }}
+              suppressHydrationWarning
             >
-              {edu.date}
+              {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(edu.endDate).toLocaleDateString()}`}
             </span>
           </div>
-          <p
-            className="text-gray-600"
-            style={{
-              fontSize: `${globalSettings?.baseFontSize || 14}px`,
-              lineHeight: globalSettings?.lineHeight || 1.6
-            }}
-          >
-            {edu.details}
-          </p>
+          {edu.description && (
+            <div
+              className="text-gray-600"
+              style={{
+                fontSize: `${globalSettings?.baseFontSize || 14}px`,
+                lineHeight: globalSettings?.lineHeight || 1.6
+              }}
+              dangerouslySetInnerHTML={{ __html: edu.description }}
+            />
+          )}
         </div>
       ))}
     </motion.div>

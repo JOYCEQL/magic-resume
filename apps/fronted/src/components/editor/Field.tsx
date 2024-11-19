@@ -10,7 +10,7 @@ import RichTextEditor from "@/app/workbench/compoents/Editor/RichText";
 
 type FieldProps = {
   label: string;
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   type?: "text" | "textarea" | "date" | "editor";
   placeholder?: string;

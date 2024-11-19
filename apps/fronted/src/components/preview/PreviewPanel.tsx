@@ -161,7 +161,7 @@ export function PreviewPanel() {
         layout
         className="space-y-4"
         style={{
-          marginTop: `${globalSettings?.sectionSpacing || 24}px`
+          marginTop: `${globalSettings?.paragraphSpacing || 20}px`
         }}
       >
         <SectionTitle

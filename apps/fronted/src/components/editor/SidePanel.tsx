@@ -12,7 +12,6 @@ import {
   Plus
 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
-import { getThemeConfig } from "@/theme/themeConfig";
 import {
   Select,
   SelectContent,
@@ -249,11 +248,7 @@ export function SidePanel() {
         <SettingCard icon={Type} title="排版">
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 字体
               </Label>
               <Select
@@ -266,21 +261,14 @@ export function SidePanel() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <SelectTrigger
-                    className={cn(
-                      "border transition-colors",
-                      theme === "dark"
-                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
-                        : "border-gray-200 bg-white text-gray-700"
-                    )}
-                  >
+                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
                     <SelectValue />
                   </SelectTrigger>
                 </motion.div>
                 <SelectContent
                   className={cn(
                     theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800"
+                      ? "bg-neutral-900 border-neutral-800 text-white"
                       : "bg-white border-gray-200"
                   )}
                 >
@@ -288,12 +276,7 @@ export function SidePanel() {
                     <SelectItem
                       key={font.value}
                       value={font.value}
-                      className={cn(
-                        "cursor-pointer",
-                        theme === "dark"
-                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
-                          : "focus:bg-gray-100 hover:bg-gray-100"
-                      )}
+                      className="cursor-pointer transition-colors focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
                     >
                       {font.label}
                     </SelectItem>
@@ -304,11 +287,7 @@ export function SidePanel() {
 
             {/* 行高选择 */}
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 行高
               </Label>
               <div className="flex items-center gap-4">
@@ -320,29 +299,16 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ lineHeight: value })
                   }
-                  className={cn(
-                    theme === "dark"
-                      ? "[&_[role=slider]]:bg-neutral-200"
-                      : "[&_[role=slider]]:bg-gray-900"
-                  )}
+                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
-                <span
-                  className={cn(
-                    "min-w-[3ch] text-sm",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                  )}
-                >
+                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.lineHeight}
                 </span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 基础字号
               </Label>
               <Select
@@ -355,21 +321,14 @@ export function SidePanel() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <SelectTrigger
-                    className={cn(
-                      "border transition-colors",
-                      theme === "dark"
-                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
-                        : "border-gray-200 bg-white text-gray-700"
-                    )}
-                  >
+                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
                     <SelectValue />
                   </SelectTrigger>
                 </motion.div>
                 <SelectContent
                   className={cn(
                     theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      ? "bg-neutral-900 border-neutral-800 text-white"
                       : "bg-white border-gray-200"
                   )}
                 >
@@ -377,12 +336,7 @@ export function SidePanel() {
                     <SelectItem
                       key={size}
                       value={size.toString()}
-                      className={cn(
-                        "cursor-pointer",
-                        theme === "dark"
-                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
-                          : "focus:bg-gray-100 hover:bg-gray-100"
-                      )}
+                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
                     >
                       {size}px
                     </SelectItem>
@@ -390,12 +344,9 @@ export function SidePanel() {
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 模块标题字号
               </Label>
               <Select
@@ -408,21 +359,14 @@ export function SidePanel() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <SelectTrigger
-                    className={cn(
-                      "border transition-colors",
-                      theme === "dark"
-                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
-                        : "border-gray-200 bg-white text-gray-700"
-                    )}
-                  >
+                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
                     <SelectValue />
                   </SelectTrigger>
                 </motion.div>
                 <SelectContent
                   className={cn(
                     theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      ? "bg-neutral-900 border-neutral-800 text-white"
                       : "bg-white border-gray-200"
                   )}
                 >
@@ -430,12 +374,7 @@ export function SidePanel() {
                     <SelectItem
                       key={size}
                       value={size.toString()}
-                      className={cn(
-                        "cursor-pointer",
-                        theme === "dark"
-                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
-                          : "focus:bg-gray-100 hover:bg-gray-100"
-                      )}
+                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
                     >
                       {size}px
                     </SelectItem>
@@ -443,12 +382,9 @@ export function SidePanel() {
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 模块二级标题字号
               </Label>
               <Select
@@ -461,21 +397,14 @@ export function SidePanel() {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <SelectTrigger
-                    className={cn(
-                      "border transition-colors",
-                      theme === "dark"
-                        ? "border-neutral-800 bg-neutral-900 text-neutral-200"
-                        : "border-gray-200 bg-white text-gray-700"
-                    )}
-                  >
+                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
                     <SelectValue />
                   </SelectTrigger>
                 </motion.div>
                 <SelectContent
                   className={cn(
                     theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-[#fff] hover:text-white"
+                      ? "bg-neutral-900 border-neutral-800 text-white"
                       : "bg-white border-gray-200"
                   )}
                 >
@@ -483,12 +412,7 @@ export function SidePanel() {
                     <SelectItem
                       key={size}
                       value={size.toString()}
-                      className={cn(
-                        "cursor-pointer",
-                        theme === "dark"
-                          ? "focus:bg-neutral-800 hover:bg-neutral-800"
-                          : "focus:bg-gray-100 hover:bg-gray-100"
-                      )}
+                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
                     >
                       {size}px
                     </SelectItem>
@@ -503,11 +427,7 @@ export function SidePanel() {
         <SettingCard icon={SpaceIcon} title="间距">
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 页边距
               </Label>
               <div className="flex items-center gap-4">
@@ -519,29 +439,16 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ pagePadding: value })
                   }
-                  className={cn(
-                    theme === "dark"
-                      ? "[&_[role=slider]]:bg-neutral-200"
-                      : "[&_[role=slider]]:bg-gray-900"
-                  )}
+                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
-                <span
-                  className={cn(
-                    "min-w-[3ch] text-sm",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                  )}
-                >
+                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.pagePadding}px
                 </span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 模块间距
               </Label>
               <div className="flex items-center gap-4">
@@ -553,29 +460,16 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ sectionSpacing: value })
                   }
-                  className={cn(
-                    theme === "dark"
-                      ? "[&_[role=slider]]:bg-neutral-200"
-                      : "[&_[role=slider]]:bg-gray-900"
-                  )}
+                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
-                <span
-                  className={cn(
-                    "min-w-[3ch] text-sm",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                  )}
-                >
+                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.sectionSpacing}px
                 </span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label
-                className={cn(
-                  theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                )}
-              >
+              <Label className="text-gray-600 dark:text-neutral-300">
                 段落间距
               </Label>
               <div className="flex items-center gap-4">
@@ -586,32 +480,21 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ paragraphSpacing: value })
                   }
-                  className={cn(
-                    theme === "dark"
-                      ? "[&_[role=slider]]:bg-neutral-200"
-                      : "[&_[role=slider]]:bg-gray-900"
-                  )}
+                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
-                <span
-                  className={cn(
-                    "min-w-[3ch] text-sm",
-                    theme === "dark" ? "text-neutral-300" : "text-gray-600"
-                  )}
-                >
+                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.paragraphSpacing}px
                 </span>
               </div>
             </div>
           </div>
         </SettingCard>
+
+        {/* 模式设置 */}
         <SettingCard icon={SpaceIcon} title="模式">
-          <div>
-            <Label
-              className={cn(
-                theme === "dark" ? "text-neutral-300" : "text-gray-600"
-              )}
-            >
-              图标模式
+          <div className="space-y-2">
+            <Label className="text-gray-600 dark:text-neutral-300">
+              简洁模式
             </Label>
             <div className="flex items-center gap-4">
               <Switch

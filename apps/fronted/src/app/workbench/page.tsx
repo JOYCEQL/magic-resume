@@ -89,6 +89,9 @@ export default function Home() {
     setPanelSizes(newSizes);
     setLayoutKey((prev) => prev + 1);
   };
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+  }, []);
 
   useEffect(() => {
     let newSizes;

@@ -63,10 +63,10 @@ const CustomField: React.FC<CustomFieldProps> = ({
         {...itemAnimations}
         className={cn(
           "grid grid-cols-[auto_auto_1fr_1fr_auto_auto] gap-3 items-center p-3",
-          "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
+          "bg-white dark:bg-neutral-800 rounded-xl",
           "border border-neutral-100 dark:border-neutral-700",
           "transition-all duration-200",
-          "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
+          " hover:border-neutral-200 dark:hover:border-neutral-600",
           !field.visible && "!opacity-60"
         )}
       >
@@ -243,10 +243,10 @@ const BasicPanel: React.FC = () => {
           {...itemAnimations}
           className={cn(
             "grid grid-cols-[auto_auto_1fr_auto] gap-3 items-center p-3",
-            "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
+            "bg-white dark:bg-neutral-800 rounded-xl",
             "border border-neutral-100 dark:border-neutral-700",
             "transition-all duration-200",
-            "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
+            "hover:border-neutral-200 dark:hover:border-neutral-600",
             !field.visible && "opacity-60"
           )}
         >
@@ -316,7 +316,7 @@ const BasicPanel: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-neutral-800 rounded-xl p-3 shadow-sm border border-neutral-100 dark:border-neutral-700"
+        className="bg-white dark:bg-neutral-800 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
       >
         <PhotoUpload theme={theme} />
       </motion.div>
@@ -373,7 +373,7 @@ const BasicPanel: React.FC = () => {
               onClick={addCustomField}
               className={cn(
                 "w-full mt-4 transition-colors",
-                "text-white shadow-sm",
+                "text-white",
                 "bg-indigo-600",
                 "hover:bg-indigo-700 hover:bg-indigo-700"
               )}

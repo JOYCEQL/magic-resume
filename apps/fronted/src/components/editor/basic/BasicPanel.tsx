@@ -67,7 +67,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           "border border-neutral-100 dark:border-neutral-700",
           "transition-all duration-200",
           "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
-          !field.visible && "opacity-60"
+          !field.visible && "!opacity-60"
         )}
       >
         <div className="flex items-center justify-center">
@@ -321,11 +321,11 @@ const BasicPanel: React.FC = () => {
         <PhotoUpload theme={theme} />
       </motion.div>
 
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+      <motion.div className="space-y-6">
+        <motion.div className="space-y-3">
+          <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
             基本字段
-          </h3>
+          </motion.h3>
           <AnimatePresence mode="popLayout">
             <Reorder.Group
               axis="y"
@@ -337,12 +337,12 @@ const BasicPanel: React.FC = () => {
               {basicFields.map((field) => renderBasicField(field))}
             </Reorder.Group>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
-        <div className="space-y-3">
-          <h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+        <motion.div className="space-y-3">
+          <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
             自定义字段
-          </h3>
+          </motion.h3>
           <AnimatePresence mode="popLayout">
             <Reorder.Group
               axis="y"
@@ -382,8 +382,8 @@ const BasicPanel: React.FC = () => {
               添加自定义字段
             </Button>
           </motion.div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

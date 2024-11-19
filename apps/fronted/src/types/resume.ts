@@ -16,7 +16,6 @@ export const DEFAULT_CONFIG: PhotoConfig = {
   visible: true
 };
 
-// 助手函数
 export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
   switch (ratio) {
     case "4:3":
@@ -72,7 +71,7 @@ export interface BasicInfo {
   employementStatus: string;
   photo: string;
   photoConfig: PhotoConfig;
-  fieldOrder?: BasicFieldType[]; // 新增字段排序
+  fieldOrder?: BasicFieldType[];
   customFields: Array<{
     id: string;
     label: string;
@@ -85,9 +84,14 @@ export interface BasicInfo {
 export interface Education {
   id: string;
   school: string;
+  major: string;
   degree: string;
-  date: string;
-  details: string;
+  startDate: string;
+  endDate: string;
+  gpa?: string;
+  location?: string;
+  description?: string;
+  visible?: boolean;
 }
 
 export interface Experience {

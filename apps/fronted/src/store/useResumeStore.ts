@@ -34,7 +34,9 @@ interface ResumeStore {
 
   // Actions
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
-  updateEducation: (id: string, data: Partial<Education>) => void;
+  updateEducation: (data: Education) => void;
+  deleteEducation: (id: string) => void;
+
   updateExperience: (id: string, data: Partial<Experience>) => void;
 
   // 菜单操作
@@ -73,9 +75,15 @@ const initialState = {
     {
       id: "1",
       school: "北京大学",
-      degree: "计算机科学与技术",
-      date: "2016-2020",
-      details: "主修课程：..."
+      major: "计算机科学与技术",
+      degree: "本科",
+      startDate: "2019-09",
+      endDate: "2023-06",
+      visible: true,
+      gpa: "3.8/4.0",
+      location: "北京",
+      description:
+        "主修课程：数据结构、算法设计、操作系统、计算机网络、数据库系统\n在校期间保持专业前10%，获得优秀学生奖学金，参与多个开源项目"
     }
   ],
   experience: [
@@ -159,13 +167,6 @@ export const useResumeStore = create<ResumeStore>()(
       updateBasicInfo: (data) =>
         set((state) => ({ basic: { ...state.basic, ...data } })),
 
-      updateEducation: (id, data) =>
-        set((state) => ({
-          education: state.education.map((edu) =>
-            edu.id === id ? { ...edu, ...data } : edu
-          )
-        })),
-
       updateExperience: (id, data) =>
         set((state) => ({
           experience: state.experience.map((exp) =>
@@ -204,11 +205,28 @@ export const useResumeStore = create<ResumeStore>()(
           return { projects: newProjects };
         }),
 
+      updateEducation: (education) =>
+        set((state) => {
+          const newEducations = state.education.some(
+            (p) => p.id === education.id
+          )
+            ? state.education.map((p) =>
+                p.id === education.id ? { ...education } : p
+              )
+            : [...state.education, { ...education }];
+
+          return { education: newEducations };
+        }),
+
       deleteProject: (id) =>
         set((state) => ({
           projects: state.projects.filter((p) => p.id !== id)
         })),
 
+      deleteEducation: (id) =>
+        set((state) => ({
+          education: state.education.filter((p) => p.id !== id)
+        })),
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light"

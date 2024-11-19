@@ -36,7 +36,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
-  content: string;
+  content?: string;
   onChange: (content: string) => void;
   placeholder?: string;
 }

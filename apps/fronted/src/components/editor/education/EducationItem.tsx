@@ -2,14 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
+import { Education } from "@/types/resume";
 import {
-  AnimatePresence,
-  motion,
+  useDragControls,
   Reorder,
-  useDragControls
+  motion,
+  AnimatePresence
 } from "framer-motion";
-import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
+import { useState, useCallback } from "react";
 import Field from "../Field";
 import {
   AlertDialog,
@@ -23,32 +24,142 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 
-interface Project {
-  id: string;
-  name: string;
-  role: string;
-  date: string;
-  description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
-  visible: boolean;
-}
-
-interface ProjectEditorProps {
-  project: Project;
-  onSave: (project: Project) => void;
+interface EducationEditorProps {
+  education: Education;
+  onSave: (educaton: Education) => void;
   onDelete: () => void;
   onCancel: () => void;
 }
 
 interface DeleteConfirmDialogProps {
-  projectName: string;
+  schoolName: string;
   onDelete: () => void;
 }
 
+const EducationEditor: React.FC<EducationEditorProps> = ({
+  education,
+  onSave
+}) => {
+  const theme = useResumeStore((state) => state.theme);
+  const [data, setData] = useState<Education>(education);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !data.school ||
+      !data.major ||
+      !data.degree ||
+      !data.startDate ||
+      !data.endDate
+    )
+      return;
+    onSave(data);
+  };
+
+  return (
+    <form onSubmit={handleSave} className="space-y-5">
+      <div className="grid gap-5">
+        <div className="grid grid-cols-2 gap-4">
+          <Field
+            label="学校名称"
+            value={data.school}
+            onChange={(value) =>
+              setData((prev) => ({ ...prev, school: value }))
+            }
+            placeholder="学校名称"
+            required
+          />
+          <Field
+            label="所在地"
+            value={data.location || ""}
+            onChange={(value) =>
+              setData((prev) => ({ ...prev, location: value }))
+            }
+            placeholder="城市"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Field
+            label="专业"
+            value={data.major}
+            onChange={(value) => setData((prev) => ({ ...prev, major: value }))}
+            placeholder="专业名称"
+            required
+          />
+          <Field
+            label="学历"
+            value={data.degree}
+            onChange={(value) =>
+              setData((prev) => ({ ...prev, degree: value }))
+            }
+            placeholder="学历"
+            required
+          />
+        </div>
+
+        {/* 时间和GPA */}
+        <div className="grid grid-cols-2 gap-4">
+          <Field
+            label="开始时间"
+            value={data.startDate}
+            onChange={(value) =>
+              setData((prev) => ({ ...prev, startDate: value }))
+            }
+            type="date"
+            placeholder="YYYY-MM"
+            required
+          />
+          <Field
+            label="结束时间"
+            value={data.endDate}
+            onChange={(value) =>
+              setData((prev) => ({ ...prev, endDate: value }))
+            }
+            type="date"
+            placeholder="YYYY-MM"
+            required
+          />
+        </div>
+
+        <Field
+          label="GPA"
+          value={data.gpa || ""}
+          onChange={(value) => setData((prev) => ({ ...prev, gpa: value }))}
+          placeholder="选填"
+        />
+
+        {/* 在校经历描述 */}
+        <Field
+          label="在校经历"
+          value={data.description}
+          onChange={(value) =>
+            setData((prev) => ({ ...prev, description: value }))
+          }
+          type="editor"
+          placeholder="描述你的在校表现、获奖经历等..."
+        />
+      </div>
+
+      <div className="flex justify-end gap-2 pt-2">
+        <Button
+          type="submit"
+          size="sm"
+          className={cn(
+            theme === "dark"
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+              : "bg-black hover:bg-neutral-800 text-white"
+          )}
+        >
+          保存修改
+        </Button>
+      </div>
+    </form>
+  );
+};
+
 const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
-  projectName,
+  schoolName,
   onDelete
 }) => {
   const theme = useResumeStore((state) => state.theme);
@@ -89,7 +200,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
               theme === "dark" ? "text-neutral-400" : "text-gray-500"
             )}
           >
-            您确定要删除项目 {projectName} 吗？此操作无法撤销。
+            您确定要删除项目 {schoolName} 吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -121,73 +232,10 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   );
 };
 
-const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
-  const theme = useResumeStore((state) => state.theme);
-  const [data, setData] = useState<Project>(project);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!data.name || !data.role || !data.date) return;
-    onSave(data);
-  };
-
-  return (
-    <form onSubmit={handleSave} className="space-y-5">
-      <div className="grid gap-5">
-        <div className="grid grid-cols-2 gap-4">
-          <Field
-            label="项目名称"
-            value={data.name}
-            onChange={(value) => setData((prev) => ({ ...prev, name: value }))}
-            placeholder="项目名称"
-            required
-          />
-          <Field
-            label="担任角色"
-            value={data.role}
-            onChange={(value) => setData((prev) => ({ ...prev, role: value }))}
-            placeholder="如：前端负责人"
-            required
-          />
-        </div>
-        <Field
-          label="项目时间"
-          value={data.date}
-          onChange={(value) => setData((prev) => ({ ...prev, date: value }))}
-          placeholder="如：2023.01 - 2023.06"
-          required
-        />
-        <Field
-          label="项目描述"
-          value={data.description}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, description: value }))
-          }
-          type="editor"
-          placeholder="简要描述项目的背景和目标..."
-        />
-      </div>
-      <div className="flex justify-end gap-2 pt-2">
-        <Button
-          type="submit"
-          size="sm"
-          className={cn(
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
-        >
-          保存修改
-        </Button>
-      </div>
-    </form>
-  );
-};
-
-const ProjectItem = ({ project }: { project: Project }) => {
+const EducationItem = ({ education }: { education: Education }) => {
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { theme, updateProjects, deleteProject } = useResumeStore();
+  const { theme, updateEducation, deleteEducation } = useResumeStore();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -199,25 +247,22 @@ const ProjectItem = ({ project }: { project: Project }) => {
 
       setIsUpdating(true);
       setTimeout(() => {
-        updateProjects({
-          ...project,
-          visible: !project.visible
+        updateEducation({
+          ...education,
+          visible: !education.visible
         });
         setIsUpdating(false);
       }, 10);
     },
-    [project, updateProjects, isUpdating]
+    [education, updateEducation, isUpdating]
   );
 
   return (
     <Reorder.Item
-      id={project.id}
-      value={project}
+      id={education.id}
+      value={education}
       dragListener={false}
       dragControls={dragControls}
-      onDragEnd={() => {
-        useResumeStore.getState().setDraggingProjectId(null);
-      }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
         theme === "dark"
@@ -228,20 +273,13 @@ const ProjectItem = ({ project }: { project: Project }) => {
       {/* 拖拽手柄区域 */}
       <div
         onPointerDown={(event) => {
-          if (expandedId === project.id) return;
+          if (expandedId === education.id) return;
           dragControls.start(event);
-          useResumeStore.getState().setDraggingProjectId(project.id);
-        }}
-        onPointerUp={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
-        }}
-        onPointerCancel={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
           theme === "dark" ? "border-neutral-800" : "border-gray-100",
-          expandedId === project.id
+          expandedId === education.id
             ? "cursor-not-allowed"
             : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
         )}
@@ -250,7 +288,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
           className={cn(
             "w-4 h-4",
             theme === "dark" ? "text-neutral-400" : "text-gray-400",
-            expandedId === project.id && "opacity-50",
+            expandedId === education.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
         />
@@ -261,27 +299,43 @@ const ProjectItem = ({ project }: { project: Project }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === project.id &&
+            expandedId === education.id &&
               (theme === "dark" ? "bg-neutral-800/50" : "bg-gray-50"),
             "cursor-pointer select-none"
           )}
           onClick={(e) => {
-            if (expandedId === project.id) {
+            if (expandedId === education.id) {
               setExpandedId(null);
             } else {
-              setExpandedId(project.id);
+              setExpandedId(education.id);
             }
           }}
         >
           <div className="flex-1 min-w-0">
-            <h3
-              className={cn(
-                "font-medium truncate",
-                theme === "dark" ? "text-neutral-200" : "text-gray-700"
-              )}
-            >
-              {project.name || "未命名项目"}
-            </h3>
+            <div className="flex items-center gap-3">
+              <div>
+                <h3
+                  className={cn(
+                    "font-medium truncate",
+                    theme === "dark" ? "text-neutral-200" : "text-gray-700"
+                  )}
+                >
+                  {education.school || "未填写学校"}
+                </h3>
+                {(education.major || education.degree) && (
+                  <p
+                    className={cn(
+                      "text-sm truncate",
+                      theme === "dark" ? "text-neutral-400" : "text-gray-500"
+                    )}
+                  >
+                    {[education.major, education.degree]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">
             <Button
@@ -291,32 +345,32 @@ const ProjectItem = ({ project }: { project: Project }) => {
               className={cn(
                 "text-sm",
                 theme === "dark"
-                  ? project.visible
+                  ? education.visible
                     ? "hover:bg-neutral-800 text-neutral-400"
                     : "hover:bg-neutral-800 text-neutral-600"
-                  : project.visible
+                  : education.visible
                     ? "hover:bg-gray-100 text-gray-500"
                     : "hover:bg-gray-100 text-gray-400"
               )}
               onClick={handleVisibilityToggle}
             >
-              {project.visible ? (
+              {education.visible ? (
                 <Eye className="w-4 h-4" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
             <DeleteConfirmDialog
-              projectName={project.name}
+              schoolName={education.school}
               onDelete={() => {
-                deleteProject(project.id);
+                deleteEducation(education.id);
                 setExpandedId(null);
               }}
             />
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === project.id ? 180 : 0
+                rotate: expandedId === education.id ? 180 : 0
               }}
             >
               <ChevronDown
@@ -329,7 +383,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
           </div>
         </div>
         <AnimatePresence>
-          {expandedId === project.id && (
+          {expandedId === education.id && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -350,14 +404,14 @@ const ProjectItem = ({ project }: { project: Project }) => {
                     theme === "dark" ? "bg-neutral-800" : "bg-gray-100"
                   )}
                 />
-                <ProjectEditor
-                  project={project}
-                  onSave={(updatedProject) => {
-                    updateProjects(updatedProject);
+                <EducationEditor
+                  education={education}
+                  onSave={(updatedEducation) => {
+                    updateEducation(updatedEducation);
                     setExpandedId(null);
                   }}
                   onDelete={() => {
-                    deleteProject(project.id);
+                    deleteEducation(education.id);
                     setExpandedId(null);
                   }}
                   onCancel={() => setExpandedId(null)}
@@ -371,4 +425,4 @@ const ProjectItem = ({ project }: { project: Project }) => {
   );
 };
 
-export default ProjectItem;
+export default EducationItem;

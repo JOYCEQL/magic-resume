@@ -20,7 +20,6 @@ export function EducationSection({
   return (
     <motion.div
       layout
-      className="space-y-4"
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`
       }}
@@ -33,7 +32,6 @@ export function EducationSection({
       {visibleEducation.map((edu) => (
         <div
           key={edu.id}
-          className="space-y-2"
           style={{
             marginTop: `${globalSettings?.paragraphSpacing}px`
           }}

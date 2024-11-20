@@ -23,14 +23,7 @@ const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
   { id: "4", key: "birthDate", label: "出生日期", type: "date", visible: true },
   { id: "5", key: "email", label: "电子邮箱", type: "text", visible: true },
   { id: "6", key: "phone", label: "电话", type: "text", visible: true },
-  { id: "7", key: "location", label: "所在地", type: "text", visible: true },
-  {
-    id: "8",
-    key: "summary",
-    label: "个人简介",
-    type: "textarea",
-    visible: true
-  }
+  { id: "7", key: "location", label: "所在地", type: "text", visible: true }
 ];
 
 interface CustomFieldProps {
@@ -41,9 +34,9 @@ interface CustomFieldProps {
 }
 
 const itemAnimations = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0, y: 0 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
+  exit: { opacity: 0, y: 0 },
   transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 }
 };
 
@@ -63,10 +56,10 @@ const CustomField: React.FC<CustomFieldProps> = ({
         {...itemAnimations}
         className={cn(
           "grid grid-cols-[auto_auto_1fr_1fr_auto_auto] gap-3 items-center p-3",
-          "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
+          "bg-white dark:bg-neutral-800 rounded-xl",
           "border border-neutral-100 dark:border-neutral-700",
           "transition-all duration-200",
-          "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
+          " hover:border-neutral-200 dark:hover:border-neutral-600",
           !field.visible && "!opacity-60"
         )}
       >
@@ -158,15 +151,6 @@ const BasicPanel: React.FC = () => {
     }));
   });
 
-  useEffect(() => {
-    if (!basic.fieldOrder) {
-      updateBasicInfo({
-        ...basic,
-        fieldOrder: DEFAULT_FIELD_ORDER
-      });
-    }
-  }, []);
-
   const handleBasicReorder = (newOrder: BasicFieldType[]) => {
     setBasicFields(newOrder);
     updateBasicInfo({
@@ -242,25 +226,28 @@ const BasicPanel: React.FC = () => {
         <motion.div
           {...itemAnimations}
           className={cn(
-            "grid grid-cols-[auto_auto_1fr_auto] gap-3 items-center p-3",
-            "bg-white dark:bg-neutral-800 rounded-xl shadow-sm",
-            "border border-neutral-100 dark:border-neutral-700",
+            "flex items-center gap-4 p-4",
+            "bg-white dark:bg-neutral-900",
+            "rounded-lg shadow-sm",
+            "border border-neutral-200 dark:border-neutral-800",
             "transition-all duration-200",
-            "hover:shadow-md hover:border-neutral-200 dark:hover:border-neutral-600",
-            !field.visible && "opacity-60"
+            "hover:shadow-md hover:border-neutral-300 dark:hover:border-neutral-700",
+            !field.visible && "opacity-75"
           )}
         >
-          <div className="flex items-center justify-center">
+          {/* Drag Handle */}
+          <div className="shrink-0">
             <GripVertical
               className={cn(
-                "w-4 h-4 cursor-grab active:cursor-grabbing",
-                "text-neutral-300 dark:text-neutral-500",
-                "transition-colors duration-200",
-                "group-hover:text-neutral-400 dark:group-hover:text-neutral-400"
+                "w-5 h-5 cursor-grab active:cursor-grabbing",
+                "text-neutral-400 dark:text-neutral-600",
+                "hover:text-neutral-600 dark:hover:text-neutral-400",
+                "transition-colors duration-200"
               )}
             />
           </div>
-          <div className="flex items-center justify-center">
+
+          <div className="shrink-0">
             <IconSelector
               value={selectedIcon}
               onChange={(value) => {
@@ -275,11 +262,9 @@ const BasicPanel: React.FC = () => {
               theme={theme}
             />
           </div>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
-                {field.label}
-              </span>
+          <div className="flex-1 min-w-0">
+            <div className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
+              {field.label}
             </div>
             <Field
               label=""
@@ -294,16 +279,21 @@ const BasicPanel: React.FC = () => {
               type={field.type}
             />
           </div>
+
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 px-2"
+            className={cn(
+              "shrink-0 h-8 px-2",
+              "text-neutral-500 dark:text-neutral-400",
+              "hover:text-neutral-700 dark:hover:text-neutral-200"
+            )}
             onClick={() => toggleFieldVisibility(field.id, !field.visible)}
           >
             {field.visible ? (
-              <Eye className="w-4 h-4 cursor-pointer" />
+              <Eye className="w-4 h-4" />
             ) : (
-              <EyeOff className="w-4 h-4 cursor-pointer" />
+              <EyeOff className="w-4 h-4" />
             )}
           </Button>
         </motion.div>
@@ -312,11 +302,11 @@ const BasicPanel: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <motion.div className="space-y-6 p-6" {...itemAnimations}>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-neutral-800 rounded-xl p-3 shadow-sm border border-neutral-100 dark:border-neutral-700"
+        className="bg-white dark:bg-neutral-900 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
       >
         <PhotoUpload theme={theme} />
       </motion.div>
@@ -373,7 +363,7 @@ const BasicPanel: React.FC = () => {
               onClick={addCustomField}
               className={cn(
                 "w-full mt-4 transition-colors",
-                "text-white shadow-sm",
+                "text-white",
                 "bg-indigo-600",
                 "hover:bg-indigo-700 hover:bg-indigo-700"
               )}
@@ -384,7 +374,7 @@ const BasicPanel: React.FC = () => {
           </motion.div>
         </motion.div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

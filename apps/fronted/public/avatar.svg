@@ -1,0 +1,10 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆圈 -->
+  <circle cx="100" cy="100" r="100" fill="#FAF5FF"/>
+  
+  <!-- 头部 -->
+  <circle cx="100" cy="85" r="35" fill="#9F7AEA"/>
+  
+  <!-- 身体 -->
+  <path d="M100 125c25 0 45 20 45 45v30H55v-30c0-25 20-45 45-45z" fill="#9F7AEA"/>
+</svg>

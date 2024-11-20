@@ -63,13 +63,12 @@ const initialState = {
     email: "example@email.com",
     phone: "13800138000",
     location: "北京市",
-    summary: "5年前端开发经验...",
     birthDate: "",
     icons: {},
     photoConfig: DEFAULT_CONFIG,
     customFields: [],
     employementStatus: "",
-    photo: "https://talencat.s3.amazonaws.com/app/avatar/builtin/cat001.png"
+    photo: "avatar.svg"
   },
   education: [
     {
@@ -143,6 +142,7 @@ const initialState = {
     }
   ],
   globalSettings: {
+    fontFamily: "sans",
     baseFontSize: 14,
     pagePadding: 20,
     paragraphSpacing: 20,
@@ -164,8 +164,10 @@ export const useResumeStore = create<ResumeStore>()(
 
       setDraggingProjectId: (id) => set({ draggingProjectId: id }),
 
-      updateBasicInfo: (data) =>
-        set((state) => ({ basic: { ...state.basic, ...data } })),
+      updateBasicInfo: (data) => {
+        console.log(data, "data");
+        set((state) => ({ basic: { ...state.basic, ...data } }));
+      },
 
       updateExperience: (id, data) =>
         set((state) => ({

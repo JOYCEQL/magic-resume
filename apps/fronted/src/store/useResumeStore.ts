@@ -68,7 +68,7 @@ const initialState = {
     photoConfig: DEFAULT_CONFIG,
     customFields: [],
     employementStatus: "",
-    photo: "https://talencat.s3.amazonaws.com/app/avatar/builtin/cat001.png"
+    photo: "avatar.svg"
   },
   education: [
     {

@@ -66,7 +66,6 @@ export interface BasicInfo {
   email: string;
   phone: string;
   location: string;
-  summary: string;
   icons: Record<string, string>;
   employementStatus: string;
   photo: string;

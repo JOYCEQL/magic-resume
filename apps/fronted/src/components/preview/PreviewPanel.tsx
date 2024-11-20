@@ -159,9 +159,8 @@ export function PreviewPanel() {
     <LayoutGroup>
       <motion.div
         layout
-        className="space-y-4"
         style={{
-          marginTop: `${globalSettings?.paragraphSpacing || 20}px`
+          marginTop: `${globalSettings?.sectionSpacing || 24}px`
         }}
       >
         <SectionTitle
@@ -196,29 +195,8 @@ export function PreviewPanel() {
     return Math.max(0, Math.ceil(contentHeight / pageHeightPx) - 1);
   }, [contentHeight]);
 
-  const renderBasicInfo = () => (
-    <motion.div layout className="space-y-2">
-      <SectionTitle
-        title="个人简介"
-        themeColor={currentThemeColor}
-        globalSettings={globalSettings}
-      />
-      <p
-        className="text-gray-600 whitespace-pre-wrap"
-        style={{
-          fontSize: `${globalSettings?.baseFontSize || 14}px`,
-          lineHeight: globalSettings?.lineHeight || 1.6
-        }}
-      >
-        {basic.summary}
-      </p>
-    </motion.div>
-  );
-
   const renderSection = (sectionId: string) => {
     switch (sectionId) {
-      case "basic":
-        return renderBasicInfo();
       case "education":
         return (
           <EducationSection
@@ -272,7 +250,7 @@ export function PreviewPanel() {
             id="resume-preview"
           >
             <LayoutGroup>
-              <motion.div layout className="space-y-8" ref={resumeContentRef}>
+              <motion.div layout ref={resumeContentRef}>
                 <BaseInfo basic={basic} globalSettings={globalSettings} />
                 {menuSections
                   .filter((section) => section.enabled)

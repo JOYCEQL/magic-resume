@@ -23,14 +23,7 @@ const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
   { id: "4", key: "birthDate", label: "出生日期", type: "date", visible: true },
   { id: "5", key: "email", label: "电子邮箱", type: "text", visible: true },
   { id: "6", key: "phone", label: "电话", type: "text", visible: true },
-  { id: "7", key: "location", label: "所在地", type: "text", visible: true },
-  {
-    id: "8",
-    key: "summary",
-    label: "个人简介",
-    type: "textarea",
-    visible: true
-  }
+  { id: "7", key: "location", label: "所在地", type: "text", visible: true }
 ];
 
 interface CustomFieldProps {
@@ -157,15 +150,6 @@ const BasicPanel: React.FC = () => {
       visible: field.visible ?? true
     }));
   });
-
-  useEffect(() => {
-    if (!basic.fieldOrder) {
-      updateBasicInfo({
-        ...basic,
-        fieldOrder: DEFAULT_FIELD_ORDER
-      });
-    }
-  }, []);
 
   const handleBasicReorder = (newOrder: BasicFieldType[]) => {
     setBasicFields(newOrder);

@@ -33,10 +33,7 @@ export function ProjectItem({
         damping: 50,
         mass: 1
       }}
-      className={cn(
-        "space-y-2 relative rounded-lg p-4 pl-0",
-        isDragging && "z-10"
-      )}
+      className={cn("relative rounded-lg  pl-0", isDragging && "z-10")}
       style={{
         marginTop: `${globalSettings?.paragraphSpacing}px`
       }}

@@ -454,7 +454,7 @@ export function SidePanel() {
               <div className="flex items-center gap-4">
                 <Slider
                   value={[globalSettings?.sectionSpacing || 0]}
-                  min={20}
+                  min={1}
                   max={100}
                   step={1}
                   onValueChange={([value]) =>

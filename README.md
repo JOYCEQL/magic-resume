@@ -97,7 +97,7 @@ pnpm -F fronted build
 
 - 作者：[JOYCEQL]
 - 邮箱：[18806723365@163.com]
-- 项目主页：[https://github.com/yourusername/magic-resume](https://github.com/JOYCEQL/magic-resume)
+- 项目主页：[https://github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 支持项目
 

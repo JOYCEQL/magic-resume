@@ -294,7 +294,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               onClick={handleVisibilityToggle}
             >
               {experience.visible ? (
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-indigo-600" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}

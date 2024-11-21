@@ -42,15 +42,10 @@ const ExperiencePanel = () => {
 
         <Button
           onClick={handleCreateProject}
-          className={cn(
-            "w-full",
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
+          className={cn("w-full bg-indigo-600 text-white hover:bg-indigo-600")}
         >
           <PlusCircle className="w-4 h-4 mr-2" />
-          添加经历
+          添加
         </Button>
       </Reorder.Group>
     </div>

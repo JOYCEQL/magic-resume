@@ -178,7 +178,7 @@ export function SidePanel() {
                     )}
                   >
                     {item.enabled ? (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-4 h-4 text-indigo-600" />
                     ) : (
                       <EyeOff className="w-4 h-4" />
                     )}

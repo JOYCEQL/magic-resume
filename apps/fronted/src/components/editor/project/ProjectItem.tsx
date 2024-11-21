@@ -225,7 +225,6 @@ const ProjectItem = ({ project }: { project: Project }) => {
           : "bg-white border-gray-100"
       )}
     >
-      {/* 拖拽手柄区域 */}
       <div
         onPointerDown={(event) => {
           if (expandedId === project.id) return;
@@ -256,7 +255,6 @@ const ProjectItem = ({ project }: { project: Project }) => {
         />
       </div>
 
-      {/* 内容区域 */}
       <div className="flex-1 min-w-0">
         <div
           className={cn(
@@ -301,7 +299,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
               onClick={handleVisibilityToggle}
             >
               {project.visible ? (
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-indigo-600" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}

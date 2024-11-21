@@ -193,14 +193,14 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
               theme === "dark" ? "text-neutral-200" : "text-gray-900"
             )}
           >
-            确认删除项目
+            确认删除经历
           </AlertDialogTitle>
           <AlertDialogDescription
             className={cn(
               theme === "dark" ? "text-neutral-400" : "text-gray-500"
             )}
           >
-            您确定要删除项目 {schoolName} 吗？此操作无法撤销。
+            您确定要删除经历 {schoolName} 吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -355,7 +355,7 @@ const EducationItem = ({ education }: { education: Education }) => {
               onClick={handleVisibilityToggle}
             >
               {education.visible ? (
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-indigo-600" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}

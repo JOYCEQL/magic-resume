@@ -37,8 +37,8 @@ interface ResumeStore {
   updateEducation: (data: Education) => void;
   deleteEducation: (id: string) => void;
 
-  updateExperience: (id: string, data: Partial<Experience>) => void;
-
+  updateExperience: (data: Experience) => void;
+  deleteExperience: (id: string) => void;
   // 菜单操作
   reorderSections: (newOrder: typeof initialState.menuSections) => void;
   toggleSectionVisibility: (sectionId: string) => void;
@@ -165,16 +165,21 @@ export const useResumeStore = create<ResumeStore>()(
       setDraggingProjectId: (id) => set({ draggingProjectId: id }),
 
       updateBasicInfo: (data) => {
-        console.log(data, "data");
         set((state) => ({ basic: { ...state.basic, ...data } }));
       },
 
-      updateExperience: (id, data) =>
-        set((state) => ({
-          experience: state.experience.map((exp) =>
-            exp.id === id ? { ...exp, ...data } : exp
+      updateExperience: (experience) =>
+        set((state) => {
+          const newExperience = state.experience.some(
+            (p) => p.id === experience.id
           )
-        })),
+            ? state.experience.map((p) =>
+                p.id === experience.id ? { ...experience } : p
+              )
+            : [...state.experience, { ...experience }];
+
+          return { experience: newExperience };
+        }),
 
       reorderSections: (newOrder) => {
         const updatedSections = newOrder.map((section, index) => ({
@@ -229,6 +234,12 @@ export const useResumeStore = create<ResumeStore>()(
         set((state) => ({
           education: state.education.filter((p) => p.id !== id)
         })),
+
+      deleteExperience: (id) =>
+        set((state) => ({
+          experience: state.experience.filter((p) => p.id !== id)
+        })),
+
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light"

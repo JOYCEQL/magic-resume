@@ -7,17 +7,7 @@ import { cn } from "@/lib/utils";
 import BasicPanel from "./basic/BasicPanel";
 import EducationPanel from "./education/EducationPanel";
 import ProjectPanel from "./project/ProjectPanel";
-interface Project {
-  id: string;
-  name: string;
-  role: string;
-  date: string;
-  description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
-  visible: boolean;
-}
+import ExperiencePanel from "./experience/ExperiencePanel";
 
 export function EditPanel() {
   const { theme, activeSection, menuSections } = useResumeStore();
@@ -31,6 +21,9 @@ export function EditPanel() {
         return <ProjectPanel />;
       case "education":
         return <EducationPanel />;
+      case "experience":
+        return <ExperiencePanel />;
+      case "skills":
       default:
         return null;
     }

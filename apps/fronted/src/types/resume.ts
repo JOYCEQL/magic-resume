@@ -99,6 +99,7 @@ export interface Experience {
   position: string;
   date: string;
   details: string;
+  visible?: boolean;
 }
 
 export interface Skill {

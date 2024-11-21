@@ -55,11 +55,14 @@ export function PdfExport() {
           scale: window.devicePixelRatio * 3,
           letterRendering: true,
           scrollY: -window.scrollY,
+          useCORS: true,
+          allowTaint: true,
           height: pageHeightPx * numberOfPages
         },
         jsPDF: {
           unit: "mm",
           format: "a4",
+          useCORS: true,
           orientation: "portrait",
           putTotalPages: false
         }

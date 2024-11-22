@@ -19,7 +19,7 @@ export function CustomSection({
   themeColor
 }: CustomSectionProps) {
   const visibleItems = items.filter((item) => {
-    return item.visible && item.description;
+    return item.visible && (item.title || item.description);
   });
 
   return (

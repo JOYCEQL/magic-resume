@@ -103,7 +103,11 @@ const DeleteConfirmDialog = ({
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <AlertDialogHeader>
+        <AlertDialogHeader
+          className={cn(
+            theme === "dark" ? "text-neutral-200" : "text-gray-900"
+          )}
+        >
           <AlertDialogTitle>确认删除</AlertDialogTitle>
           <AlertDialogDescription>
             您确定要删除 {title || "此项"} 吗？此操作无法撤销。
@@ -189,7 +193,7 @@ const CustomItem = ({
       <div className="flex-1 min-w-0">
         <div
           className={cn(
-            "px-4 py-4 flex items-center justify-between",
+            "px-4 py-4 flex items-center justify-between cursor-pointer select-none",
             expandedId === item.id &&
               (theme === "dark" ? "bg-neutral-800/50" : "bg-gray-50")
           )}

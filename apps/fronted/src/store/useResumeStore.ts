@@ -315,7 +315,7 @@ export const useResumeStore = create<ResumeStore>()(
               ...(state.customData[sectionId] || []),
               {
                 id: crypto.randomUUID(),
-                title: "",
+                title: "未命名模块",
                 subtitle: "",
                 dateRange: "",
                 description: "",

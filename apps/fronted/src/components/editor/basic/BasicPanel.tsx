@@ -107,7 +107,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
 
         {field.visible ? (
           <Eye
-            className="w-4 h-4 cursor-pointer"
+            className="w-4 h-4 cursor-pointer text-indigo-600"
             onClick={() => onUpdate({ ...field, visible: !field.visible })}
           />
         ) : (
@@ -291,7 +291,7 @@ const BasicPanel: React.FC = () => {
             onClick={() => toggleFieldVisibility(field.id, !field.visible)}
           >
             {field.visible ? (
-              <Eye className="w-4 h-4" />
+              <Eye className="w-4 h-4 text-indigo-600" />
             ) : (
               <EyeOff className="w-4 h-4" />
             )}

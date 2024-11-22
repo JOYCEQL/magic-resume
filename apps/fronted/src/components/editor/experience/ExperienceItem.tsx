@@ -22,22 +22,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
-
-interface Project {
-  id: string;
-  name: string;
-  role: string;
-  date: string;
-  description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
-  visible: boolean;
-}
+import { Experience } from "@/types/resume";
 
 interface ProjectEditorProps {
-  project: Project;
-  onSave: (project: Project) => void;
+  experience: Experience;
+  onSave: (experience: Experience) => void;
   onDelete: () => void;
   onCancel: () => void;
 }
@@ -82,14 +71,14 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
               theme === "dark" ? "text-neutral-200" : "text-gray-900"
             )}
           >
-            确认删除项目
+            确认删除经历
           </AlertDialogTitle>
           <AlertDialogDescription
             className={cn(
               theme === "dark" ? "text-neutral-400" : "text-gray-500"
             )}
           >
-            您确定要删除项目 {projectName} 吗？此操作无法撤销。
+            您确定要删除经历 {projectName} 吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -121,10 +110,13 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   );
 };
 
-const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
-  const handleChange = (field: keyof Project, value: string) => {
+const ProjectEditor: React.FC<ProjectEditorProps> = ({
+  experience,
+  onSave
+}) => {
+  const handleChange = (field: keyof Experience, value: string) => {
     onSave({
-      ...project,
+      ...experience,
       [field]: value
     });
   };
@@ -134,65 +126,43 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label="项目名称"
-            value={project.name}
-            onChange={(value) => handleChange("name", value)}
+            label="公司名称"
+            value={experience.company}
+            onChange={(value) => handleChange("company", value)}
             placeholder="项目名称"
             required
           />
           <Field
-            label="担任角色"
-            value={project.role}
-            onChange={(value) => handleChange("role", value)}
-            placeholder="如：前端负责人"
+            label="岗位"
+            value={experience.position}
+            onChange={(value) => handleChange("position", value)}
+            placeholder="如：前端工程师"
             required
           />
         </div>
         <Field
-          label="项目时间"
-          value={project.date}
+          label="开始时间-结束时间"
+          value={experience.date}
           onChange={(value) => handleChange("date", value)}
           placeholder="如：2023.01 - 2023.06"
           required
         />
         <Field
-          label="项目描述"
-          value={project.description}
-          onChange={(value) => handleChange("description", value)}
+          label="主要职责"
+          value={experience.details}
+          onChange={(value) => handleChange("details", value)}
           type="editor"
           placeholder="简要描述项目的背景和目标..."
-        />
-        <Field
-          label="技术栈"
-          value={project.technologies}
-          onChange={(value) => handleChange("technologies", value)}
-          type="editor"
-          placeholder="使用的技术栈和工具..."
-        />
-        <Field
-          label="主要职责"
-          value={project.responsibilities}
-          onChange={(value) => handleChange("responsibilities", value)}
-          type="editor"
-          placeholder="在项目中的主要职责..."
-        />
-        <Field
-          label="项目成果"
-          value={project.achievements}
-          onChange={(value) => handleChange("achievements", value)}
-          type="editor"
-          placeholder="项目取得的成果..."
         />
       </div>
     </div>
   );
 };
 
-const ProjectItem = ({ project }: { project: Project }) => {
+const ExperienceItem = ({ experience }: { experience: Experience }) => {
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { theme, updateProjects, deleteProject } = useResumeStore();
-
+  const { theme, updateExperience, deleteExperience } = useResumeStore();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleVisibilityToggle = useCallback(
@@ -203,20 +173,20 @@ const ProjectItem = ({ project }: { project: Project }) => {
 
       setIsUpdating(true);
       setTimeout(() => {
-        updateProjects({
-          ...project,
-          visible: !project.visible
+        updateExperience({
+          ...experience,
+          visible: !experience.visible
         });
         setIsUpdating(false);
       }, 10);
     },
-    [project, updateProjects, isUpdating]
+    [experience, updateExperience, isUpdating]
   );
 
   return (
     <Reorder.Item
-      id={project.id}
-      value={project}
+      id={experience.id}
+      value={experience}
       dragListener={false}
       dragControls={dragControls}
       onDragEnd={() => {
@@ -232,9 +202,9 @@ const ProjectItem = ({ project }: { project: Project }) => {
     >
       <div
         onPointerDown={(event) => {
-          if (expandedId === project.id) return;
+          if (expandedId === experience.id) return;
           dragControls.start(event);
-          useResumeStore.getState().setDraggingProjectId(project.id);
+          useResumeStore.getState().setDraggingProjectId(experience.id);
         }}
         onPointerUp={() => {
           useResumeStore.getState().setDraggingProjectId(null);
@@ -245,7 +215,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
           theme === "dark" ? "border-neutral-800" : "border-gray-100",
-          expandedId === project.id
+          expandedId === experience.id
             ? "cursor-not-allowed"
             : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
         )}
@@ -254,7 +224,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
           className={cn(
             "w-4 h-4",
             theme === "dark" ? "text-neutral-400" : "text-gray-400",
-            expandedId === project.id && "opacity-50",
+            expandedId === experience.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
         />
@@ -264,15 +234,15 @@ const ProjectItem = ({ project }: { project: Project }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === project.id &&
+            expandedId === experience.id &&
               (theme === "dark" ? "bg-neutral-800/50" : "bg-gray-50"),
             "cursor-pointer select-none"
           )}
           onClick={(e) => {
-            if (expandedId === project.id) {
+            if (expandedId === experience.id) {
               setExpandedId(null);
             } else {
-              setExpandedId(project.id);
+              setExpandedId(experience.id);
             }
           }}
         >
@@ -283,7 +253,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
                 theme === "dark" ? "text-neutral-200" : "text-gray-700"
               )}
             >
-              {project.name || "未命名项目"}
+              {experience.company || "家里蹲公司"}
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">
@@ -294,32 +264,32 @@ const ProjectItem = ({ project }: { project: Project }) => {
               className={cn(
                 "text-sm",
                 theme === "dark"
-                  ? project.visible
+                  ? experience.visible
                     ? "hover:bg-neutral-800 text-neutral-400"
                     : "hover:bg-neutral-800 text-neutral-600"
-                  : project.visible
+                  : experience.visible
                     ? "hover:bg-gray-100 text-gray-500"
                     : "hover:bg-gray-100 text-gray-400"
               )}
               onClick={handleVisibilityToggle}
             >
-              {project.visible ? (
+              {experience.visible ? (
                 <Eye className="w-4 h-4 text-indigo-600" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
             <DeleteConfirmDialog
-              projectName={project.name}
+              projectName={experience.company}
               onDelete={() => {
-                deleteProject(project.id);
+                deleteExperience(experience.id);
                 setExpandedId(null);
               }}
             />
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === project.id ? 180 : 0
+                rotate: expandedId === experience.id ? 180 : 0
               }}
             >
               <ChevronDown
@@ -332,7 +302,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
           </div>
         </div>
         <AnimatePresence>
-          {expandedId === project.id && (
+          {expandedId === experience.id && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -354,12 +324,10 @@ const ProjectItem = ({ project }: { project: Project }) => {
                   )}
                 />
                 <ProjectEditor
-                  project={project}
-                  onSave={(updatedProject) => {
-                    updateProjects(updatedProject);
-                  }}
+                  experience={experience}
+                  onSave={updateExperience}
                   onDelete={() => {
-                    deleteProject(project.id);
+                    deleteExperience(experience.id);
                     setExpandedId(null);
                   }}
                   onCancel={() => setExpandedId(null)}
@@ -373,4 +341,4 @@ const ProjectItem = ({ project }: { project: Project }) => {
   );
 };
 
-export default ProjectItem;
+export default ExperienceItem;

@@ -584,7 +584,7 @@ const RichTextEditor = ({
       <EditorContent editor={editor} />
 
       {/* Bubble Menu */}
-      {editor && (
+      {/* {editor && (
         <BubbleMenu
           className={cn(
             "flex items-center gap-0.5 p-1 rounded-md backdrop-blur border shadow-lg",
@@ -616,7 +616,7 @@ const RichTextEditor = ({
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
         </BubbleMenu>
-      )}
+      )} */}
     </div>
   );
 };

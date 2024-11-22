@@ -26,7 +26,7 @@ import {
 
 interface EducationEditorProps {
   education: Education;
-  onSave: (educaton: Education) => void;
+  onSave: (education: Education) => void;
   onDelete: () => void;
   onCancel: () => void;
 }
@@ -40,41 +40,28 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
   education,
   onSave
 }) => {
-  const theme = useResumeStore((state) => state.theme);
-  const [data, setData] = useState<Education>(education);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !data.school ||
-      !data.major ||
-      !data.degree ||
-      !data.startDate ||
-      !data.endDate
-    )
-      return;
-    onSave(data);
+  const handleChange = (field: keyof Education, value: string) => {
+    onSave({
+      ...education,
+      [field]: value
+    });
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-5">
+    <div className="space-y-5">
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
             label="学校名称"
-            value={data.school}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, school: value }))
-            }
+            value={education.school}
+            onChange={(value) => handleChange("school", value)}
             placeholder="学校名称"
             required
           />
           <Field
             label="所在地"
-            value={data.location || ""}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, location: value }))
-            }
+            value={education.location || ""}
+            onChange={(value) => handleChange("location", value)}
             placeholder="城市"
           />
         </div>
@@ -82,40 +69,33 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label="专业"
-            value={data.major}
-            onChange={(value) => setData((prev) => ({ ...prev, major: value }))}
+            value={education.major}
+            onChange={(value) => handleChange("major", value)}
             placeholder="专业名称"
             required
           />
           <Field
             label="学历"
-            value={data.degree}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, degree: value }))
-            }
+            value={education.degree}
+            onChange={(value) => handleChange("degree", value)}
             placeholder="学历"
             required
           />
         </div>
 
-        {/* 时间和GPA */}
         <div className="grid grid-cols-2 gap-4">
           <Field
             label="开始时间"
-            value={data.startDate}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, startDate: value }))
-            }
+            value={education.startDate}
+            onChange={(value) => handleChange("startDate", value)}
             type="date"
             placeholder="YYYY-MM"
             required
           />
           <Field
             label="结束时间"
-            value={data.endDate}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, endDate: value }))
-            }
+            value={education.endDate}
+            onChange={(value) => handleChange("endDate", value)}
             type="date"
             placeholder="YYYY-MM"
             required
@@ -124,37 +104,20 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
         <Field
           label="GPA"
-          value={data.gpa || ""}
-          onChange={(value) => setData((prev) => ({ ...prev, gpa: value }))}
+          value={education.gpa || ""}
+          onChange={(value) => handleChange("gpa", value)}
           placeholder="选填"
         />
 
-        {/* 在校经历描述 */}
         <Field
           label="在校经历"
-          value={data.description}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, description: value }))
-          }
+          value={education.description}
+          onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder="描述你的在校表现、获奖经历等..."
         />
       </div>
-
-      <div className="flex justify-end gap-2 pt-2">
-        <Button
-          type="submit"
-          size="sm"
-          className={cn(
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
-        >
-          保存修改
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 
@@ -193,14 +156,14 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
               theme === "dark" ? "text-neutral-200" : "text-gray-900"
             )}
           >
-            确认删除项目
+            确认删除经历
           </AlertDialogTitle>
           <AlertDialogDescription
             className={cn(
               theme === "dark" ? "text-neutral-400" : "text-gray-500"
             )}
           >
-            您确定要删除项目 {schoolName} 吗？此操作无法撤销。
+            您确定要删除经历 {schoolName} 吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -265,12 +228,12 @@ const EducationItem = ({ education }: { education: Education }) => {
       dragControls={dragControls}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        theme === "dark"
-          ? "bg-neutral-900/30 border-neutral-800"
-          : "bg-white border-gray-100"
+        "bg-white hover:border-indigo-600",
+        "dark:bg-neutral-900/30",
+        "border-gray-100 dark:border-neutral-800",
+        "dark:hover:border-indigo-600"
       )}
     >
-      {/* 拖拽手柄区域 */}
       <div
         onPointerDown={(event) => {
           if (expandedId === education.id) return;
@@ -294,7 +257,6 @@ const EducationItem = ({ education }: { education: Education }) => {
         />
       </div>
 
-      {/* 内容区域 */}
       <div className="flex-1 min-w-0">
         <div
           className={cn(
@@ -355,7 +317,7 @@ const EducationItem = ({ education }: { education: Education }) => {
               onClick={handleVisibilityToggle}
             >
               {education.visible ? (
-                <Eye className="w-4 h-4" />
+                <Eye className="w-4 h-4 text-indigo-600" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}
@@ -406,10 +368,7 @@ const EducationItem = ({ education }: { education: Education }) => {
                 />
                 <EducationEditor
                   education={education}
-                  onSave={(updatedEducation) => {
-                    updateEducation(updatedEducation);
-                    setExpandedId(null);
-                  }}
+                  onSave={updateEducation}
                   onDelete={() => {
                     deleteEducation(education.id);
                     setExpandedId(null);

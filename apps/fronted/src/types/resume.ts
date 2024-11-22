@@ -56,7 +56,7 @@ export interface CustomFieldType {
   id: string;
   label: string;
   value: string;
-  icon: string;
+  icon?: string;
   visible?: boolean;
 }
 export interface BasicInfo {
@@ -75,7 +75,7 @@ export interface BasicInfo {
     id: string;
     label: string;
     value: string;
-    icon: string;
+    icon?: string;
     visible?: boolean;
   }>;
 }
@@ -99,6 +99,7 @@ export interface Experience {
   position: string;
   date: string;
   details: string;
+  visible?: boolean;
 }
 
 export interface Skill {
@@ -137,6 +138,15 @@ export interface ResumeTheme {
   id: string;
   name: string;
   color: string;
+}
+
+export interface CustomItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  dateRange: string;
+  description: string;
+  visible: boolean;
 }
 
 export const THEME_COLORS = [

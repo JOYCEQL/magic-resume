@@ -25,52 +25,54 @@ export function ExperienceSection({
         themeColor={themeColor}
         globalSettings={globalSettings}
       />
-      {experience.map((exp) => (
-        <div
-          key={exp.id}
-          style={{
-            marginTop: `${globalSettings?.paragraphSpacing}px`
-          }}
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <h4
-                className="font-medium text-gray-800"
-                style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`
-                }}
-              >
-                {exp.company}
-              </h4>
-              <p
-                className="text-gray-600"
-                style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`
-                }}
-              >
-                {exp.position}
-              </p>
-            </div>
-            <span
-              className="text-gray-600"
+      {experience.map(
+        (exp) =>
+          exp.visible && (
+            <div
+              key={exp.id}
               style={{
-                fontSize: `${globalSettings?.baseFontSize || 14}px`
+                marginTop: `${globalSettings?.paragraphSpacing}px`
               }}
             >
-              {exp.date}
-            </span>
-          </div>
-          <p
-            className="text-gray-600"
-            style={{
-              fontSize: `${globalSettings?.baseFontSize || 14}px`,
-              lineHeight: globalSettings?.lineHeight || 1.6
-            }}
-          >
-            {exp.details}
-          </p>
-        </div>
-      ))}
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4
+                    className="font-medium text-gray-800"
+                    style={{
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`
+                    }}
+                  >
+                    {exp.company}
+                  </h4>
+                  <p
+                    className="text-gray-600"
+                    style={{
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`
+                    }}
+                  >
+                    {exp.position}
+                  </p>
+                </div>
+                <span
+                  className="text-gray-600"
+                  style={{
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`
+                  }}
+                >
+                  {exp.date}
+                </span>
+              </div>
+              <div
+                className="text-gray-600"
+                style={{
+                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
+                  lineHeight: globalSettings?.lineHeight || 1.6
+                }}
+                dangerouslySetInnerHTML={{ __html: exp.details }}
+              />
+            </div>
+          )
+      )}
     </motion.div>
   );
 }

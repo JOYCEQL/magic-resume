@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Sun, Moon, Eye } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
-import { PdfExport } from "./PdfExport";
+import { PdfExport } from "../PdfExport";
 
 interface EditorHeaderProps {
   isMobile?: boolean;

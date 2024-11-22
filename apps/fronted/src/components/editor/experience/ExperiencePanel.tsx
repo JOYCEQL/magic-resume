@@ -4,24 +4,21 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import EducationItem from "./EducationItem";
-import { Education, Project } from "@/types/resume";
+import ExperienceItem from "./ExperienceItem";
+import { Experience } from "@/types/resume";
 
-const ProjectPanel = () => {
-  const { theme, education = [], updateEducation } = useResumeStore();
-
+const ExperiencePanel = () => {
+  const { theme, experience = [], updateExperience } = useResumeStore();
   const handleCreateProject = () => {
-    const newEducation: Education = {
+    const newProject: Experience = {
       id: crypto.randomUUID(),
-      school: "家里蹲大学",
-      major: "",
-      degree: "",
-      startDate: "2015-09-01",
-      endDate: "2019-06-30",
-      description: "",
+      company: "某科技有限公司",
+      position: "高级前端工程师",
+      date: "2020-至今",
+      details: "负责公司核心产品...",
       visible: true
     };
-    updateEducation(newEducation);
+    updateExperience(newProject);
   };
 
   return (
@@ -33,17 +30,14 @@ const ProjectPanel = () => {
     >
       <Reorder.Group
         axis="y"
-        values={education}
+        values={experience}
         onReorder={(newOrder) => {
-          useResumeStore.setState({ education: newOrder });
+          useResumeStore.setState({ experience: newOrder });
         }}
         className="space-y-3"
       >
-        {education.map((education) => (
-          <EducationItem
-            key={education.id}
-            education={education}
-          ></EducationItem>
+        {experience.map((item) => (
+          <ExperienceItem key={item.id} experience={item}></ExperienceItem>
         ))}
 
         <Button
@@ -57,4 +51,4 @@ const ProjectPanel = () => {
     </div>
   );
 };
-export default ProjectPanel;
+export default ExperiencePanel;

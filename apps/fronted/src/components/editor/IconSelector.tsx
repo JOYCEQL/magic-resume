@@ -82,7 +82,7 @@ interface IconOption {
 }
 
 interface IconSelectorProps {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   theme?: "light" | "dark";
 }

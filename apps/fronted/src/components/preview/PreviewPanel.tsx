@@ -11,6 +11,8 @@ import { SectionTitle } from "./SectionTitle";
 import { ProjectItem } from "./ProjectItem";
 import { ExperienceSection } from "./ExperienceSection";
 import { EducationSection } from "./EducationSection";
+import { CustomSection } from "./CustomSection";
+import { SkillSection } from "./SkillPanel";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -67,7 +69,9 @@ export function PreviewPanel() {
     globalSettings,
     projects,
     draggingProjectId,
-    colorTheme
+    colorTheme,
+    customData,
+    skillContent
   } = useResumeStore();
 
   const previewRef = React.useRef<HTMLDivElement>(null);
@@ -196,6 +200,19 @@ export function PreviewPanel() {
   }, [contentHeight]);
 
   const renderSection = (sectionId: string) => {
+    if (sectionId.startsWith("custom")) {
+      const sectionConfig = menuSections.find((s) => s.id === sectionId);
+      return (
+        <CustomSection
+          sectionId={sectionId}
+          title={sectionConfig?.title || "自定义模块"}
+          items={customData[sectionId] || []}
+          globalSettings={globalSettings}
+          themeColor={currentThemeColor}
+        />
+      );
+    }
+
     switch (sectionId) {
       case "education":
         return (
@@ -215,6 +232,14 @@ export function PreviewPanel() {
         );
       case "projects":
         return renderProjects();
+      case "skills":
+        return (
+          <SkillSection
+            skill={skillContent}
+            globalSettings={globalSettings}
+            themeColor={currentThemeColor}
+          />
+        );
       default:
         return null;
     }

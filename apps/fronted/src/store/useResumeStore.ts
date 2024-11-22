@@ -6,8 +6,14 @@ import {
   Experience,
   GlobalSettings,
   DEFAULT_CONFIG,
-  Project
+  Project,
+  CustomItem
 } from "../types/resume";
+
+interface CustomSection {
+  id: string;
+  items: CustomItem[];
+}
 
 interface ResumeStore {
   // 基础数据
@@ -23,13 +29,13 @@ interface ResumeStore {
     enabled: boolean;
     order: number;
   }[];
+  customData: Record<string, CustomItem[]>;
 
-  // 主题设置
   theme: "light" | "dark";
   activeSection: string;
 
-  colorTheme: string; // 当前使用的主题色 ID
-
+  // 当前使用的主题色 ID
+  colorTheme: string;
   setColorTheme: (colorTheme: string) => void;
 
   // Actions
@@ -43,6 +49,19 @@ interface ResumeStore {
   reorderSections: (newOrder: typeof initialState.menuSections) => void;
   toggleSectionVisibility: (sectionId: string) => void;
   setActiveSection: (sectionId: string) => void;
+  updateMenuSections: (sections: typeof initialState.menuSections) => void;
+
+  addCustomData: (sectionId: string) => void;
+  updateCustomData: (sectionId: string, items: CustomItem[]) => void;
+  removeCustomData: (sectionId: string) => void;
+  addCustomItem: (sectionId: string) => void;
+  updateCustomItem: (
+    sectionId: string,
+    itemId: string,
+    updates: Partial<CustomItem>
+  ) => void;
+  removeCustomItem: (sectionId: string, itemId: string) => void;
+
   toggleTheme: () => void;
   // 全局设置
   globalSettings: GlobalSettings;
@@ -107,6 +126,7 @@ const initialState = {
     { id: "skills", title: "技能特长", icon: "⚡", enabled: true, order: 3 },
     { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 4 }
   ],
+  customData: {},
   theme: "light" as const,
 
   colorTheme: "#2563eb",
@@ -201,6 +221,8 @@ export const useResumeStore = create<ResumeStore>()(
 
       setActiveSection: (sectionId) => set({ activeSection: sectionId }),
 
+      updateMenuSections: (sections) => set({ menuSections: sections }),
+
       updateProjects: (project) =>
         set((state) => {
           const newProjects = state.projects.some((p) => p.id === project.id)
@@ -253,7 +275,77 @@ export const useResumeStore = create<ResumeStore>()(
           return {
             globalSettings: newSettings
           };
-        })
+        }),
+      addCustomData: (sectionId) =>
+        set((state) => ({
+          customData: {
+            ...state.customData,
+            [sectionId]: [
+              {
+                id: crypto.randomUUID(),
+                title: "",
+                subtitle: "",
+                dateRange: "",
+                description: "",
+                visible: true
+              }
+            ]
+          }
+        })),
+
+      updateCustomData: (sectionId, items) =>
+        set((state) => ({
+          customData: {
+            ...state.customData,
+            [sectionId]: items
+          }
+        })),
+
+      removeCustomData: (sectionId) =>
+        set((state) => {
+          const { [sectionId]: _, ...rest } = state.customData;
+          return { customData: rest };
+        }),
+
+      addCustomItem: (sectionId) =>
+        set((state) => ({
+          customData: {
+            ...state.customData,
+            [sectionId]: [
+              ...(state.customData[sectionId] || []),
+              {
+                id: crypto.randomUUID(),
+                title: "",
+                subtitle: "",
+                dateRange: "",
+                description: "",
+                visible: true
+              }
+            ]
+          }
+        })),
+
+      updateCustomItem: (sectionId, itemId, updates) => {
+        console.log(sectionId, "sectionId");
+        set((state) => ({
+          customData: {
+            ...state.customData,
+            [sectionId]: state.customData[sectionId].map((item) =>
+              item.id === itemId ? { ...item, ...updates } : item
+            )
+          }
+        }));
+      },
+
+      removeCustomItem: (sectionId, itemId) =>
+        set((state) => ({
+          customData: {
+            ...state.customData,
+            [sectionId]: state.customData[sectionId].filter(
+              (item) => item.id !== itemId
+            )
+          }
+        }))
     }),
 
     {

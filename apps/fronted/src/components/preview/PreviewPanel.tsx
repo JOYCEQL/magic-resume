@@ -11,6 +11,7 @@ import { SectionTitle } from "./SectionTitle";
 import { ProjectItem } from "./ProjectItem";
 import { ExperienceSection } from "./ExperienceSection";
 import { EducationSection } from "./EducationSection";
+import { CustomSection } from "./CustomSection";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -67,7 +68,8 @@ export function PreviewPanel() {
     globalSettings,
     projects,
     draggingProjectId,
-    colorTheme
+    colorTheme,
+    customData
   } = useResumeStore();
 
   const previewRef = React.useRef<HTMLDivElement>(null);
@@ -196,6 +198,19 @@ export function PreviewPanel() {
   }, [contentHeight]);
 
   const renderSection = (sectionId: string) => {
+    if (sectionId.startsWith("custom")) {
+      const sectionConfig = menuSections.find((s) => s.id === sectionId);
+      return (
+        <CustomSection
+          sectionId={sectionId}
+          title={sectionConfig?.title || "自定义模块"}
+          items={customData[sectionId] || []}
+          globalSettings={globalSettings}
+          themeColor={currentThemeColor}
+        />
+      );
+    }
+
     switch (sectionId) {
       case "education":
         return (

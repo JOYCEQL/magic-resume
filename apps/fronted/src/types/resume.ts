@@ -140,6 +140,15 @@ export interface ResumeTheme {
   color: string;
 }
 
+export interface CustomItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  dateRange: string;
+  description: string;
+  visible: boolean;
+}
+
 export const THEME_COLORS = [
   "#2563eb",
   "#059669",

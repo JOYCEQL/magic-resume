@@ -3,7 +3,7 @@ import { GlobalSettings } from "@/types/resume";
 interface SectionTitleProps {
   title: string;
   themeColor: string;
-  globalSettings: GlobalSettings;
+  globalSettings?: GlobalSettings;
 }
 
 export function SectionTitle({

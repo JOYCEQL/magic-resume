@@ -8,6 +8,7 @@ import BasicPanel from "./basic/BasicPanel";
 import EducationPanel from "./education/EducationPanel";
 import ProjectPanel from "./project/ProjectPanel";
 import ExperiencePanel from "./experience/ExperiencePanel";
+import CustomPanel from "./custom/CustomPanel";
 
 export function EditPanel() {
   const { theme, activeSection, menuSections } = useResumeStore();
@@ -24,8 +25,13 @@ export function EditPanel() {
       case "experience":
         return <ExperiencePanel />;
       case "skills":
-      default:
         return null;
+      default:
+        if (activeSection.startsWith("custom")) {
+          return <CustomPanel sectionId={activeSection} />;
+        } else {
+          return <BasicPanel />;
+        }
     }
   };
 

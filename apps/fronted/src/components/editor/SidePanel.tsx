@@ -9,7 +9,8 @@ import {
   Type,
   SpaceIcon,
   Palette,
-  Plus
+  Plus,
+  Trash2
 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import {
@@ -92,7 +93,9 @@ export function SidePanel() {
     globalSettings,
     updateGlobalSettings,
     colorTheme,
-    setColorTheme
+    setColorTheme,
+    updateMenuSections,
+    addCustomData
   } = useResumeStore();
 
   const debouncedSetColor = useMemo(
@@ -103,6 +106,27 @@ export function SidePanel() {
     []
   );
 
+  const generateCustomSectionId = (menuSections: any[]) => {
+    const customSections = menuSections.filter((s) =>
+      s.id.startsWith("custom")
+    );
+    const nextNum = customSections.length + 1;
+    return `custom-${nextNum}`;
+  };
+
+  const handleCreateSection = () => {
+    const sectionId = generateCustomSectionId(menuSections);
+    const newSection = {
+      id: sectionId,
+      title: sectionId,
+      icon: "➕",
+      enabled: true,
+      order: menuSections.length
+    };
+
+    updateMenuSections([...menuSections, newSection]);
+    addCustomData(sectionId);
+  };
   return (
     <motion.div
       className={cn(
@@ -183,10 +207,41 @@ export function SidePanel() {
                       <EyeOff className="w-4 h-4" />
                     )}
                   </motion.button>
+                  {/* 删除按钮 */}
+
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      updateMenuSections(
+                        menuSections.filter((section) => section.id !== item.id)
+                      );
+                      setActiveSection(menuSections[0].id);
+                    }}
+                    className={cn(
+                      "p-1.5 rounded-md text-primary",
+                      theme === "dark"
+                        ? "hover:bg-neutral-700 text-neutral-300"
+                        : "hover:bg-gray-100 text-gray-600"
+                    )}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-400" />
+                  </motion.button>
                 </div>
               </Reorder.Item>
             ))}
           </Reorder.Group>
+          {/* 添加自定义模块 */}
+          <div className="space-y-2  p-[16px]">
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleCreateSection}
+              className="flex justify-center w-full rounded-lg items-center gap-2 py-2 px-3  text-sm font-medium text-indigo-600 bg-indigo-50"
+            >
+              添加自定义模块
+            </motion.button>
+          </div>
         </SettingCard>
 
         {/* 主题色设置  */}

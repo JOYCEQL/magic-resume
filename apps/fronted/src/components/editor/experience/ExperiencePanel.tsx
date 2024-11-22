@@ -16,7 +16,8 @@ const ExperiencePanel = () => {
       company: "某科技有限公司",
       position: "高级前端工程师",
       date: "2020-至今",
-      details: "负责公司核心产品..."
+      details: "负责公司核心产品...",
+      visible: true
     };
     updateExperience(newProject);
   };

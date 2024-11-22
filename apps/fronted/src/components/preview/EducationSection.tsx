@@ -14,9 +14,7 @@ export function EducationSection({
   globalSettings,
   themeColor
 }: EducationSectionProps) {
-  // 只显示visible为true的教育经历
   const visibleEducation = education.filter((edu) => edu.visible);
-
   return (
     <motion.div
       layout

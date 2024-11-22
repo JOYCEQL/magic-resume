@@ -9,7 +9,6 @@ import { Experience } from "@/types/resume";
 
 const ExperiencePanel = () => {
   const { theme, experience = [], updateExperience } = useResumeStore();
-  console.log(1111, "experienceexperience");
   const handleCreateProject = () => {
     const newProject: Experience = {
       id: crypto.randomUUID(),

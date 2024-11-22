@@ -62,15 +62,14 @@ export function ExperienceSection({
                   {exp.date}
                 </span>
               </div>
-              <p
+              <div
                 className="text-gray-600"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   lineHeight: globalSettings?.lineHeight || 1.6
                 }}
-              >
-                {exp.details}
-              </p>
+                dangerouslySetInnerHTML={{ __html: exp.details }}
+              />
             </div>
           )
       )}

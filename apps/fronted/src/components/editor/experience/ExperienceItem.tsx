@@ -114,67 +114,48 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
   onSave
 }) => {
-  const theme = useResumeStore((state) => state.theme);
-  const [data, setData] = useState<Experience>(experience);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!data.company || !data.position || !data.date) return;
-    onSave(data);
+  const handleChange = (field: keyof Experience, value: string) => {
+    onSave({
+      ...experience,
+      [field]: value
+    });
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-5">
+    <div className="space-y-5">
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
             label="公司名称"
-            value={data.company}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, company: value }))
-            }
+            value={experience.company}
+            onChange={(value) => handleChange("company", value)}
             placeholder="项目名称"
             required
           />
           <Field
             label="岗位"
-            value={data.position}
-            onChange={(value) =>
-              setData((prev) => ({ ...prev, position: value }))
-            }
+            value={experience.position}
+            onChange={(value) => handleChange("position", value)}
             placeholder="如：前端工程师"
             required
           />
         </div>
         <Field
           label="开始时间-结束时间"
-          value={data.date}
-          onChange={(value) => setData((prev) => ({ ...prev, date: value }))}
+          value={experience.date}
+          onChange={(value) => handleChange("date", value)}
           placeholder="如：2023.01 - 2023.06"
           required
         />
         <Field
           label="主要职责"
-          value={data.details}
-          onChange={(value) => setData((prev) => ({ ...prev, details: value }))}
+          value={experience.details}
+          onChange={(value) => handleChange("details", value)}
           type="editor"
           placeholder="简要描述项目的背景和目标..."
         />
       </div>
-      <div className="flex justify-end gap-2 pt-2">
-        <Button
-          type="submit"
-          size="sm"
-          className={cn(
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
-        >
-          保存修改
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 
@@ -219,7 +200,6 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         "dark:hover:border-indigo-600"
       )}
     >
-      {/* 拖拽手柄区域 */}
       <div
         onPointerDown={(event) => {
           if (expandedId === experience.id) return;
@@ -250,7 +230,6 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         />
       </div>
 
-      {/* 内容区域 */}
       <div className="flex-1 min-w-0">
         <div
           className={cn(
@@ -346,10 +325,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
                 />
                 <ProjectEditor
                   experience={experience}
-                  onSave={(updatedData) => {
-                    updateExperience(updatedData);
-                    setExpandedId(null);
-                  }}
+                  onSave={updateExperience}
                   onDelete={() => {
                     deleteExperience(experience.id);
                     setExpandedId(null);

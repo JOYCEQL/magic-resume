@@ -122,65 +122,69 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
 };
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
-  const theme = useResumeStore((state) => state.theme);
-  const [data, setData] = useState<Project>(project);
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!data.name || !data.role || !data.date) return;
-    onSave(data);
+  const handleChange = (field: keyof Project, value: string) => {
+    onSave({
+      ...project,
+      [field]: value
+    });
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-5">
+    <div className="space-y-5">
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
             label="项目名称"
-            value={data.name}
-            onChange={(value) => setData((prev) => ({ ...prev, name: value }))}
+            value={project.name}
+            onChange={(value) => handleChange("name", value)}
             placeholder="项目名称"
             required
           />
           <Field
             label="担任角色"
-            value={data.role}
-            onChange={(value) => setData((prev) => ({ ...prev, role: value }))}
+            value={project.role}
+            onChange={(value) => handleChange("role", value)}
             placeholder="如：前端负责人"
             required
           />
         </div>
         <Field
           label="项目时间"
-          value={data.date}
-          onChange={(value) => setData((prev) => ({ ...prev, date: value }))}
+          value={project.date}
+          onChange={(value) => handleChange("date", value)}
           placeholder="如：2023.01 - 2023.06"
           required
         />
         <Field
           label="项目描述"
-          value={data.description}
-          onChange={(value) =>
-            setData((prev) => ({ ...prev, description: value }))
-          }
+          value={project.description}
+          onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder="简要描述项目的背景和目标..."
         />
+        <Field
+          label="技术栈"
+          value={project.technologies}
+          onChange={(value) => handleChange("technologies", value)}
+          type="editor"
+          placeholder="使用的技术栈和工具..."
+        />
+        <Field
+          label="主要职责"
+          value={project.responsibilities}
+          onChange={(value) => handleChange("responsibilities", value)}
+          type="editor"
+          placeholder="在项目中的主要职责..."
+        />
+        <Field
+          label="项目成果"
+          value={project.achievements}
+          onChange={(value) => handleChange("achievements", value)}
+          type="editor"
+          placeholder="项目取得的成果..."
+        />
       </div>
-      <div className="flex justify-end gap-2 pt-2">
-        <Button
-          type="submit"
-          size="sm"
-          className={cn(
-            theme === "dark"
-              ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-              : "bg-black hover:bg-neutral-800 text-white"
-          )}
-        >
-          保存修改
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 
@@ -353,7 +357,6 @@ const ProjectItem = ({ project }: { project: Project }) => {
                   project={project}
                   onSave={(updatedProject) => {
                     updateProjects(updatedProject);
-                    setExpandedId(null);
                   }}
                   onDelete={() => {
                     deleteProject(project.id);

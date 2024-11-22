@@ -12,6 +12,7 @@ import { ProjectItem } from "./ProjectItem";
 import { ExperienceSection } from "./ExperienceSection";
 import { EducationSection } from "./EducationSection";
 import { CustomSection } from "./CustomSection";
+import { SkillSection } from "./SkillPanel";
 
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
@@ -69,7 +70,8 @@ export function PreviewPanel() {
     projects,
     draggingProjectId,
     colorTheme,
-    customData
+    customData,
+    skillContent
   } = useResumeStore();
 
   const previewRef = React.useRef<HTMLDivElement>(null);
@@ -230,6 +232,14 @@ export function PreviewPanel() {
         );
       case "projects":
         return renderProjects();
+      case "skills":
+        return (
+          <SkillSection
+            skill={skillContent}
+            globalSettings={globalSettings}
+            themeColor={currentThemeColor}
+          />
+        );
       default:
         return null;
     }

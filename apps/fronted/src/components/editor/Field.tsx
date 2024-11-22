@@ -9,7 +9,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import RichTextEditor from "@/app/workbench/compoents/Editor/RichText";
 
 type FieldProps = {
-  label: string;
+  label?: string;
   value?: string;
   onChange: (value: string) => void;
   type?: "text" | "textarea" | "date" | "editor";

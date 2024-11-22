@@ -56,7 +56,7 @@ export interface CustomFieldType {
   id: string;
   label: string;
   value: string;
-  icon: string;
+  icon?: string;
   visible?: boolean;
 }
 export interface BasicInfo {
@@ -75,7 +75,7 @@ export interface BasicInfo {
     id: string;
     label: string;
     value: string;
-    icon: string;
+    icon?: string;
     visible?: boolean;
   }>;
 }

@@ -220,9 +220,10 @@ const ProjectItem = ({ project }: { project: Project }) => {
       }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        theme === "dark"
-          ? "bg-neutral-900/30 border-neutral-800"
-          : "bg-white border-gray-100"
+        "bg-white hover:border-indigo-600",
+        "dark:bg-neutral-900/30",
+        "border-gray-100 dark:border-neutral-800",
+        "dark:hover:border-indigo-600"
       )}
     >
       <div

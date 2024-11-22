@@ -216,7 +216,11 @@ export function SidePanel() {
                       updateMenuSections(
                         menuSections.filter((section) => section.id !== item.id)
                       );
-                      setActiveSection(menuSections[0].id);
+                      setActiveSection(
+                        menuSections[
+                          menuSections.findIndex((s) => s.id === item.id) - 1
+                        ].id
+                      );
                     }}
                     className={cn(
                       "p-1.5 rounded-md text-primary",

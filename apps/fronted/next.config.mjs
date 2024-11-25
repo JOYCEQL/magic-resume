@@ -2,6 +2,9 @@
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
+  },
+  serverRuntimeConfig: {
+    chromePath: process.env.CHROME_PATH
   }
 };
 

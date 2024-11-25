@@ -37,17 +37,6 @@ export function PdfExport() {
     const content = `
     <html>
      <head>
-       <style>
-          @font-face {
-            font-family: 'Noto Sans SC';
-            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-          }
-          body {
-            font-family: 'Noto Sans SC', sans-serif;
-          }
-        </style>
         <style>${styles}</style>
       </head>
       <body>
@@ -55,6 +44,7 @@ export function PdfExport() {
       </body>
     </html>
   `;
+
     const response = await fetch("/api/generate-pdf", {
       method: "POST",
       headers: {

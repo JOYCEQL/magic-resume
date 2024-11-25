@@ -1,6 +1,6 @@
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
-// import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
 import path from "path";
 import fs from "fs";

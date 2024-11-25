@@ -77,24 +77,19 @@
 /* List styles */
 ul,
 ol {
+  list-style-position:  inside;
   list-style-type: disc;
-  padding: 0 1rem;
   margin: 0;
-
-  li p {
+  /* li p {
     margin-top: 0.25em;
     margin-bottom: 0.25em;
-  }
+  } */
 }
 ol {
   list-style-type: decimal;
-  padding: 0 1rem;
   margin: 0;
 
-  li p {
-  }
 }
-/* Heading styles */
 h1,
 h2,
 h3,
@@ -125,7 +120,6 @@ h6 {
   font-size: 1rem;
 }
 
-/* Code and preformatted text styles */
 code {
   background-color: rgba(27, 31, 35, 0.05);
   border-radius: 0.4rem;

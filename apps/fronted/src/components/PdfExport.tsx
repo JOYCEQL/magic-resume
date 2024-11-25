@@ -34,20 +34,20 @@ export function PdfExport() {
       })
       .join("\n");
 
-    // 字体集成打印
-    const fontLinks = Array.from(
-      document.querySelectorAll<HTMLLinkElement>(
-        "link[rel='stylesheet'][href*='fonts.googleapis.com']"
-      )
-    )
-      .map((link) => `<link rel="stylesheet" href="${link.href}">`)
-      .join("\n");
-
-    styles += fontLinks;
-
     const content = `
     <html>
      <head>
+       <style>
+          @font-face {
+            font-family: 'Noto Sans SC';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+          }
+          body {
+            font-family: 'Noto Sans SC', sans-serif;
+          }
+        </style>
         <style>${styles}</style>
       </head>
       <body>
@@ -69,7 +69,6 @@ export function PdfExport() {
     if (!response.ok) {
       throw new Error("Failed to generate PDF");
     }
-
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");

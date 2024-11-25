@@ -30,7 +30,7 @@ import { useMemo } from "react";
 import { Switch } from "../ui/switch";
 
 const fontOptions = [
-  { value: "sans", label: "无衬线体" },
+  { value: "Noto Sans SC", label: "无衬线体" },
   { value: "serif", label: "衬线体" },
   { value: "mono", label: "等宽体" }
 ];

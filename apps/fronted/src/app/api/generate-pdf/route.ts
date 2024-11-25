@@ -1,11 +1,22 @@
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
+import puppeteer from "puppeteer-core";
+import chrome from "@sparticuz/chromium";
 export async function POST(req: Request) {
   try {
     const { content, margin } = await req.json();
 
+    // 客户端环境
+    // const browser = await puppeteer.launch({
+    //   headless: true
+    // });
+
+    // 无服务器端
     const browser = await puppeteer.launch({
-      headless: true
+      args: chrome.args,
+      defaultViewport: chrome.defaultViewport,
+      executablePath: await chrome.executablePath(),
+      headless: chrome.headless
     });
 
     const page = await browser.newPage();

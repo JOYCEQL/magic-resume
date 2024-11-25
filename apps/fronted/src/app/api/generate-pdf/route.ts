@@ -29,6 +29,8 @@ export async function POST(req: Request) {
 
     await page.setContent(content);
 
+    await page.evaluate(() => document.fonts.ready);
+
     const marginPx = margin + "px";
 
     const pdf = await page.pdf({

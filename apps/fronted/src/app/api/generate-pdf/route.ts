@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
 
-export const runtime = "experimental-edge";
-
 export async function POST(req: Request) {
   try {
     const { content, margin } = await req.json();
+
     // const browser = await puppeteer.launch({
-    //     headless: true
-    //   });
+    //   headless: true
+    // });
 
     const browser = await puppeteer.launch({
       args: chrome.args,

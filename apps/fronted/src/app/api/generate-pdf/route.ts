@@ -3,10 +3,7 @@ import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
 
-// vercel  serverless  puppeteer  chromium  deploy  500
-export const config = {
-  runtime: "experimental-edge"
-};
+export const runtime = "experimental-edge";
 
 export async function POST(req: Request) {
   try {

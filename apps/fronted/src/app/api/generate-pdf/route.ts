@@ -2,16 +2,16 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
+
+export const runtime = "experimental-edge";
+
 export async function POST(req: Request) {
   try {
     const { content, margin } = await req.json();
-
-    // 客户端环境
     // const browser = await puppeteer.launch({
-    //   headless: true
-    // });
+    //     headless: true
+    //   });
 
-    // 无服务器端
     const browser = await puppeteer.launch({
       args: chrome.args,
       defaultViewport: chrome.defaultViewport,
@@ -51,9 +51,7 @@ export async function POST(req: Request) {
       }
     });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to generate PDF" },
-      { status: 500 }
-    );
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

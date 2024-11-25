@@ -1,7 +1,9 @@
-// import puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
+// import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
+import path from "path";
+import fs from "fs";
 
 export async function POST(req: Request) {
   try {
@@ -26,6 +28,19 @@ export async function POST(req: Request) {
     });
 
     const page = await browser.newPage();
+    const fontPath = path.join(
+      process.cwd(),
+      "public",
+      "fonts",
+      "NotoSansSC.ttf"
+    );
+    const fontBuffer = fs.readFileSync(fontPath);
+
+    await page.evaluate(async (fontBuffer) => {
+      const font = new FontFace("Noto Sans SC", fontBuffer);
+      await font.load();
+      document.fonts.add(font);
+    }, fontBuffer);
 
     await page.setContent(content);
 

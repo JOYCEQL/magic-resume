@@ -264,11 +264,12 @@ export function PreviewPanel() {
             "bg-white",
             "shadow-lg",
             "relative mx-auto",
-            fontFamilyClass,
+            // fontFamilyClass,
             "text-[#000]"
           )}
           style={{
-            minHeight: "297mm"
+            minHeight: "297mm",
+            fontFamily: "Noto Sans SC"
           }}
         >
           <div

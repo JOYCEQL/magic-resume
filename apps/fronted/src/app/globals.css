@@ -156,3 +156,11 @@ hr {
   margin: 2rem 0;
 }
 
+
+
+@font-face {
+  font-family: 'Noto Sans SC';
+  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}

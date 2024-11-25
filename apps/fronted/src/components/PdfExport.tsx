@@ -4,80 +4,83 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
-import dynamic from "next/dynamic";
-
-const html2pdf = dynamic(() => import("html2pdf.js"), {
-  ssr: false
-});
+import { convertImagesToBase64 } from "@/utils";
 
 export function PdfExport() {
-  const { basic, theme } = useResumeStore();
   const [isExporting, setIsExporting] = useState(false);
 
+  const globalSettings = useResumeStore((state) => state.globalSettings);
+
   const handleExport = async () => {
-    try {
-      setIsExporting(true);
+    setIsExporting(true);
+    const pdfElement = document.querySelector<HTMLElement>("#resume-preview");
+    if (!pdfElement) return;
+    const pageBreakLines =
+      pdfElement.querySelectorAll<HTMLElement>(".page-break-line");
 
-      if (typeof window === "undefined") return;
-
-      const element = document.querySelector("#resume-preview");
-      if (!element) {
-        setIsExporting(false);
-        return;
-      }
-
-      const contentHeight = element.scrollHeight - 30.22;
-      const A4_HEIGHT_MM = 297;
-      const MARGINS_MM = 8;
-      const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - MARGINS_MM;
-      const DPI = 96;
-      const MM_TO_PX = DPI / 25.4;
-
-      const pageHeightPx = Math.ceil(CONTENT_HEIGHT_MM * MM_TO_PX);
-      const numberOfPages = Math.ceil(contentHeight / pageHeightPx);
-
-      const pageBreakLines = element.querySelectorAll(".page-break-line");
-      pageBreakLines.forEach((line) => {
-        line.style.display = "none";
-      });
-
-      const html2pdfModule = await import("html2pdf.js");
-      const html2pdfInstance = html2pdfModule.default;
-
-      const opt = {
-        margin: [4, 4, 4, 4],
-        filename: `${basic.name}_简历.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        pagebreak: {
-          mode: ["css", "legacy"]
-        },
-        html2canvas: {
-          scale: window.devicePixelRatio * 3,
-          letterRendering: true,
-          scrollY: -window.scrollY,
-          useCORS: true,
-          allowTaint: true,
-          height: pageHeightPx * numberOfPages
-        },
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          useCORS: true,
-          orientation: "portrait",
-          putTotalPages: false
+    pageBreakLines.forEach((line: HTMLElement) => {
+      line.style.display = "none";
+    });
+    const pdfContent = await convertImagesToBase64(pdfElement);
+    let styles = Array.from(document.styleSheets)
+      .map((sheet) => {
+        try {
+          return Array.from(sheet.cssRules)
+            .map((rule) => rule.cssText)
+            .join("\n");
+        } catch (e) {
+          return "";
         }
-      };
+      })
+      .join("\n");
 
-      await html2pdfInstance().set(opt).from(element).save();
-    } catch (error) {
-      console.error("PDF export failed:", error);
-    } finally {
-      const pageBreakLines = document.querySelectorAll(".page-break-line");
-      pageBreakLines.forEach((line) => {
-        line.style.display = "";
-      });
-      setIsExporting(false);
+    // 字体集成打印
+    const fontLinks = Array.from(
+      document.querySelectorAll<HTMLLinkElement>(
+        "link[rel='stylesheet'][href*='fonts.googleapis.com']"
+      )
+    )
+      .map((link) => `<link rel="stylesheet" href="${link.href}">`)
+      .join("\n");
+
+    styles += fontLinks;
+
+    const content = `
+    <html>
+     <head>
+        <style>${styles}</style>
+      </head>
+      <body>
+        ${pdfContent}
+      </body>
+    </html>
+  `;
+    const response = await fetch("/api/generate-pdf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        content,
+        margin: globalSettings.pagePadding
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to generate PDF");
     }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "document.pdf";
+    link.click();
+    window.URL.revokeObjectURL(url);
+    setIsExporting(false);
+    pageBreakLines.forEach((line) => {
+      line.style.display = "block";
+    });
   };
 
   return (

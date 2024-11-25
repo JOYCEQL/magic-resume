@@ -34,6 +34,7 @@ import {
 import Highlight from "@tiptap/extension-highlight";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
+import ListItem from "@tiptap/extension-list-item";
 
 interface RichTextEditorProps {
   content?: string;
@@ -377,6 +378,10 @@ const RichTextEditor = ({
 }: RichTextEditorProps) => {
   const theme = useResumeStore((state) => state.theme);
 
+  const CustomListItem = ListItem.extend({
+    content: "inline*"
+  });
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -384,6 +389,7 @@ const RichTextEditor = ({
           levels: [1, 2, 3]
         }
       }),
+      CustomListItem,
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"]

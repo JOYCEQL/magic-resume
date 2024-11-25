@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
@@ -30,12 +30,14 @@ interface PageBreakLineProps {
 }
 
 const PageBreakLine = React.memo(({ pageNumber }: PageBreakLineProps) => {
+  const { globalSettings } = useResumeStore();
+  if (!globalSettings?.pagePadding) return;
   const A4_HEIGHT_MM = 297;
-  const TOP_MARGIN_MM = 4;
-  const BOTTOM_MARGIN_MM = 4;
-  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - BOTTOM_MARGIN_MM;
   const MM_TO_PX = 3.78;
 
+  const TOP_MARGIN_MM = globalSettings?.pagePadding / MM_TO_PX;
+
+  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM;
   const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
 
   return (
@@ -106,7 +108,7 @@ export function PreviewPanel() {
     };
   }, []);
 
-  const handleScroll = React.useCallback(
+  const handleScroll = useCallback(
     throttle((offset: number) => {
       if (previewRef.current) {
         previewRef.current.scrollBy({
@@ -189,15 +191,17 @@ export function PreviewPanel() {
   );
 
   const pageBreakCount = useMemo(() => {
+    if (!globalSettings?.pagePadding) return;
     const A4_HEIGHT_MM = 297;
-    const TOP_MARGIN_MM = 4;
-    const BOTTOM_MARGIN_MM = 4;
-    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - BOTTOM_MARGIN_MM;
     const MM_TO_PX = 3.78;
+
+    const TOP_MARGIN_MM = globalSettings?.pagePadding / MM_TO_PX;
+
+    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM;
 
     const pageHeightPx = CONTENT_HEIGHT_MM * MM_TO_PX;
     return Math.max(0, Math.ceil(contentHeight / pageHeightPx) - 1);
-  }, [contentHeight]);
+  }, [contentHeight, globalSettings?.pagePadding]);
 
   const renderSection = (sectionId: string) => {
     if (sectionId.startsWith("custom")) {
@@ -270,7 +274,7 @@ export function PreviewPanel() {
           <div
             className="relative"
             style={{
-              padding: "4mm"
+              padding: `${globalSettings?.pagePadding || 20}px`
             }}
             id="resume-preview"
           >

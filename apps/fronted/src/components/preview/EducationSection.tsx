@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import { SectionTitle } from "./SectionTitle";
-
 interface EducationSectionProps {
   education: Education[];
   globalSettings: GlobalSettings | undefined;

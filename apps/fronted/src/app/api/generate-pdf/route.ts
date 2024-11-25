@@ -12,7 +12,12 @@ export async function POST(req: Request) {
     // });
 
     const browser = await puppeteer.launch({
-      args: chrome.args,
+      args: [
+        ...chrome.args,
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--font-render-hinting=none"
+      ],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`

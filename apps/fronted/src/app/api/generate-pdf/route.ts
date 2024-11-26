@@ -29,16 +29,11 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
+    await page.evaluate(() => document.fonts.ready);
+
     await page.setContent(content);
 
     const marginPx = margin + "px";
-
-    await page.addStyleTag({
-      content:
-        '@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");'
-    });
-
-    await page.evaluate(() => document.fonts.ready);
 
     const pdf = await page.pdf({
       format: "A4",
@@ -53,6 +48,18 @@ export async function POST(req: Request) {
 
     await page.setContent(content, {
       waitUntil: ["domcontentloaded", "networkidle0"]
+    });
+
+    // 加入fonts文件夹加入的字体
+    await page.addStyleTag({
+      content: `
+        @font-face {
+          font-family: 'GeistMonoVF';
+          src: url('/fonts/GeistMonoVF.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+        }
+      `
     });
 
     await page.evaluateHandle("document.fonts.ready");

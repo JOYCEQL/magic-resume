@@ -28,9 +28,16 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.evaluateHandle("document.fonts.ready");
+    await page.evaluate(async () => {
+      const font = await fetch("/fonts/NotoSansSC.ttf").then((res) =>
+        res.arrayBuffer()
+      );
+      await document.fonts.add(new FontFace("Noto Sans SC", font));
+    });
 
     await page.setContent(content);
+
+    await page.evaluate(() => document.fonts.ready);
 
     const marginPx = margin + "px";
 
@@ -48,6 +55,8 @@ export async function POST(req: Request) {
     await page.setContent(content, {
       waitUntil: ["domcontentloaded", "networkidle0"]
     });
+
+    await page.evaluateHandle("document.fonts.ready");
 
     await browser.close();
 

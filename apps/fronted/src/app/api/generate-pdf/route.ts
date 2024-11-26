@@ -1,9 +1,7 @@
 // import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
-import chrome from "@sparticuz/chromium";
-import path from "path";
-import fs from "fs";
+import chrome from "chrome-aws-lambda";
 
 export async function POST(req: Request) {
   try {
@@ -21,36 +19,25 @@ export async function POST(req: Request) {
         "--font-render-hinting=none"
       ],
       //   defaultViewport: chrome.defaultViewport,
-      executablePath: await chrome.executablePath(
-        `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
-      ),
+      //   executablePath: await chrome.executablePath(
+      //     `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
+      //   ),
+      executablePath: await chrome.executablePath,
       headless: chrome.headless
     });
 
     const page = await browser.newPage();
-    const fontPath = path.join(
-      process.cwd(),
-      "public",
-      "fonts",
-      "NotoSansSC.ttf"
-    );
-    const fontBuffer = fs.readFileSync(fontPath);
-
-    await page.evaluate(async (fontBuffer) => {
-      const font = new FontFace("Noto Sans SC", fontBuffer);
-      await font.load();
-      document.fonts.add(font);
-    }, fontBuffer);
 
     await page.setContent(content);
 
-    await page.evaluate(() => document.fonts.ready);
+    await page.waitForFunction("document.fonts.ready");
 
     const marginPx = margin + "px";
 
     const pdf = await page.pdf({
       format: "A4",
       printBackground: true,
+      waitForFonts: true,
       margin: {
         top: marginPx,
         right: marginPx,

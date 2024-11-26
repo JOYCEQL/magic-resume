@@ -17,8 +17,7 @@ export async function POST(req: Request) {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--font-render-hinting=none",
-        "--disable-web-security",
-        "--font-family=Microsoft YaHei"
+        "--disable-web-security"
       ],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
@@ -29,7 +28,17 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.evaluate(() => document.fonts.ready);
+    await page.addStyleTag({
+      content: `
+          @font-face {
+            font-family: 'GeistMonoVF';
+            src: url('/fonts/GeistMonoVF.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+          }
+        `
+    });
+    await page.evaluateHandle("document.fonts.ready");
 
     await page.setContent(content);
 
@@ -49,20 +58,6 @@ export async function POST(req: Request) {
     await page.setContent(content, {
       waitUntil: ["domcontentloaded", "networkidle0"]
     });
-
-    // 加入fonts文件夹加入的字体
-    await page.addStyleTag({
-      content: `
-        @font-face {
-          font-family: 'GeistMonoVF';
-          src: url('/fonts/GeistMonoVF.woff') format('woff');
-          font-weight: normal;
-          font-style: normal;
-        }
-      `
-    });
-
-    await page.evaluateHandle("document.fonts.ready");
 
     await browser.close();
 

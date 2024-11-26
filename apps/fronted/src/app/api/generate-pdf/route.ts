@@ -28,16 +28,6 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.addStyleTag({
-      content: `
-          @font-face {
-            font-family: 'GeistMonoVF';
-            src: url('/fonts/GeistMonoVF.woff');
-            font-weight: normal;
-            font-style: normal;
-          }
-        `
-    });
     await page.evaluateHandle("document.fonts.ready");
 
     await page.setContent(content);

@@ -2,8 +2,6 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
-import path from "path";
-import fs from "fs";
 
 export async function POST(req: Request) {
   try {
@@ -14,12 +12,7 @@ export async function POST(req: Request) {
     // });
 
     const browser = await puppeteer.launch({
-      args: [
-        ...chrome.args,
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--font-render-hinting=none"
-      ],
+      args: chrome.args,
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
@@ -30,8 +23,6 @@ export async function POST(req: Request) {
     const page = await browser.newPage();
 
     await page.setContent(content);
-
-    await page.evaluate(() => document.fonts.ready);
 
     const marginPx = margin + "px";
 

@@ -17,7 +17,8 @@ export async function POST(req: Request) {
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--font-render-hinting=none",
-        "--disable-web-security"
+        "--disable-web-security",
+        "--font-family=Microsoft YaHei"
       ],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
@@ -28,8 +29,6 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.evaluate(() => document.fonts.ready);
-
     await page.setContent(content);
 
     const marginPx = margin + "px";
@@ -38,6 +37,8 @@ export async function POST(req: Request) {
       content:
         '@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");'
     });
+
+    await page.evaluate(() => document.fonts.ready);
 
     const pdf = await page.pdf({
       format: "A4",

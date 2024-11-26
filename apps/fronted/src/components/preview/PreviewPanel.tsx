@@ -268,7 +268,7 @@ export function PreviewPanel() {
           )}
           style={{
             minHeight: "297mm",
-            fontFamily: "Noto Sans SC"
+            fontFamily: "Naihu SC"
           }}
         >
           <div

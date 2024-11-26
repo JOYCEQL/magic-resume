@@ -34,6 +34,11 @@ export async function POST(req: Request) {
 
     const marginPx = margin + "px";
 
+    await page.addStyleTag({
+      content:
+        '@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");'
+    });
+
     const pdf = await page.pdf({
       format: "A4",
       printBackground: true,

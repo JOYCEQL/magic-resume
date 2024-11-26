@@ -32,7 +32,7 @@ export async function POST(req: Request) {
       content: `
           @font-face {
             font-family: 'GeistMonoVF';
-            src: url('/fonts/GeistMonoVF.woff') format('woff');
+            src: url('/fonts/GeistMonoVF.woff');
             font-weight: normal;
             font-style: normal;
           }

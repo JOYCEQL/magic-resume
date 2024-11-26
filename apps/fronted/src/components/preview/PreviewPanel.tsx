@@ -264,11 +264,11 @@ export function PreviewPanel() {
             "bg-white",
             "shadow-lg",
             "relative mx-auto",
+            fontFamilyClass,
             "text-[#000]"
           )}
           style={{
-            minHeight: "297mm",
-            fontFamily: "Naihu SC"
+            minHeight: "297mm"
           }}
         >
           <div

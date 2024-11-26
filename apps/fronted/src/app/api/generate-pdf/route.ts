@@ -2,8 +2,6 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chrome from "@sparticuz/chromium";
-import path from "path";
-import fs from "fs";
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +16,8 @@ export async function POST(req: Request) {
         ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--font-render-hinting=none"
+        "--font-render-hinting=none",
+        "--disable-web-security"
       ],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
@@ -28,23 +27,10 @@ export async function POST(req: Request) {
     });
 
     const page = await browser.newPage();
-    const fontPath = path.join(
-      process.cwd(),
-      "public",
-      "fonts",
-      "NotoSansSC.ttf"
-    );
-    const fontBuffer = fs.readFileSync(fontPath);
-
-    await page.evaluate(async (fontBuffer) => {
-      const font = new FontFace("Noto Sans SC", fontBuffer);
-      await font.load();
-      document.fonts.add(font);
-    }, fontBuffer);
-
-    await page.setContent(content);
 
     await page.evaluate(() => document.fonts.ready);
+
+    await page.setContent(content);
 
     const marginPx = margin + "px";
 

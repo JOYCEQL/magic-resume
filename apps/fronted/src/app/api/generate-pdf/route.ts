@@ -28,14 +28,6 @@ export async function POST(req: Request) {
     });
 
     const page = await browser.newPage();
-    const fontPath = path.join(process.cwd(), "fonts", "NaihuSC.woff2");
-    const fontBuffer = fs.readFileSync(fontPath);
-
-    await page.evaluate(async (fontBuffer) => {
-      const font = new FontFace("Naihu SC", fontBuffer);
-      await font.load();
-      document.fonts.add(font);
-    }, fontBuffer);
 
     await page.setContent(content);
 

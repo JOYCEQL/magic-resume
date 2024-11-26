@@ -28,13 +28,16 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.evaluate(async () => {
-      const font = await fetch("/fonts/NotoSansSC.ttf").then((res) =>
-        res.arrayBuffer()
-      );
-      await document.fonts.add(new FontFace("Noto Sans SC", font));
+    await page.addStyleTag({
+      content: `
+          @font-face {
+            font-family: 'Noto Sans SC';
+            src: url('/fonts/NotoSansSC.woff');
+            font-weight: normal;
+            font-style: normal;
+          }
+        `
     });
-
     await page.setContent(content);
 
     await page.evaluate(() => document.fonts.ready);

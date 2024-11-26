@@ -1,7 +1,7 @@
 // import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
-import chrome from "chrome-aws-lambda";
+import chrome from "@sparticuz/chromium";
 
 export async function POST(req: Request) {
   try {
@@ -16,28 +16,27 @@ export async function POST(req: Request) {
         ...chrome.args,
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--font-render-hinting=none"
+        "--font-render-hinting=none",
+        "--disable-web-security"
       ],
       //   defaultViewport: chrome.defaultViewport,
-      //   executablePath: await chrome.executablePath(
-      //     `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
-      //   ),
-      executablePath: await chrome.executablePath,
+      executablePath: await chrome.executablePath(
+        `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
+      ),
       headless: chrome.headless
     });
 
     const page = await browser.newPage();
 
-    await page.setContent(content);
+    await page.evaluate(() => document.fonts.ready);
 
-    await page.waitForFunction("document.fonts.ready");
+    await page.setContent(content);
 
     const marginPx = margin + "px";
 
     const pdf = await page.pdf({
       format: "A4",
       printBackground: true,
-      waitForFonts: true,
       margin: {
         top: marginPx,
         right: marginPx,

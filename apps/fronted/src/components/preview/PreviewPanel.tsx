@@ -268,7 +268,7 @@ export function PreviewPanel() {
           )}
           style={{
             minHeight: "297mm",
-            fontFamily: "Geist Mono VF"
+            fontFamily: "GeistMonoVF"
           }}
         >
           <div

@@ -37,6 +37,17 @@ export function PdfExport() {
     const content = `
     <html>
      <head>
+       <style>
+           @font-face {
+            font-family: 'GeistMonoVF';
+            src: url('/fonts/GeistMonoVF.woff');
+            font-weight: normal;
+            font-style: normal;
+          }
+          body {
+            font-family: 'GeistMonoVF', sans-serif;
+          }
+        </style>
         <style>${styles}</style>
       </head>
       <body>

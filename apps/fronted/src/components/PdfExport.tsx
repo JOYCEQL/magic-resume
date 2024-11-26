@@ -37,15 +37,6 @@ export function PdfExport() {
     const content = `
     <html>
      <head>
-       <style>
-          @font-face {
-            font-family: 'Noto Sans SC';
-            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
-          }
-          body {
-            font-family: 'Noto Sans SC', sans-serif;
-          }
-        </style>
         <style>${styles}</style>
       </head>
       <body>

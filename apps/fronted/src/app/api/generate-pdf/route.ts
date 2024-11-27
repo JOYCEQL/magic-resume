@@ -21,20 +21,20 @@ export async function POST(req: Request) {
       headless: chrome.headless
     });
 
-    const contentWithFont = `
-    <style>
-      @font-face {
-        font-family: 'NaihuSC';
-        src: url('${process.env.FONT_URL}') format('woff2');
-        font-display: swap;
-      }
-    </style>
-    ${content}
-  `;
+    //   const contentWithFont = `
+    //   <style>
+    //     @font-face {
+    //       font-family: 'NaihuSC';
+    //       src: url('${process.env.FONT_URL}') format('woff2');
+    //       font-display: swap;
+    //     }
+    //   </style>
+    //   ${content}
+    // `;
 
     const page = await browser.newPage();
 
-    await page.setContent(contentWithFont);
+    await page.setContent(content);
 
     const marginPx = margin + "px";
 

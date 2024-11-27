@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     // const browser = await puppeteer.launch({
     //   headless: true
     // });
-    await chrome.font("/var/task/fonts/NaihuSC.woff2");
+    // await chrome.font("/var/task/fonts/NaihuSC.woff2");
 
     const browser = await puppeteer.launch({
       args: [...chrome.args, "--font-render-hinting=none"],
@@ -21,9 +21,20 @@ export async function POST(req: Request) {
       headless: chrome.headless
     });
 
+    const contentWithFont = `
+    <style>
+      @font-face {
+        font-family: 'NaihuSC';
+        src: url('${process.env.FONT_URL}') format('woff2');
+        font-display: swap;
+      }
+    </style>
+    ${content}
+  `;
+
     const page = await browser.newPage();
 
-    await page.setContent(content);
+    await page.setContent(contentWithFont);
 
     const marginPx = margin + "px";
 

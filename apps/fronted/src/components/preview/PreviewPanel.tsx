@@ -267,8 +267,7 @@ export function PreviewPanel() {
             "text-[#000]"
           )}
           style={{
-            minHeight: "297mm",
-            fontFamily: "Noto Sans SC"
+            minHeight: "297mm"
           }}
         >
           <div
@@ -278,23 +277,25 @@ export function PreviewPanel() {
             }}
             id="resume-preview"
           >
-            <LayoutGroup>
-              <motion.div layout ref={resumeContentRef}>
-                <BaseInfo basic={basic} globalSettings={globalSettings} />
-                {menuSections
-                  .filter((section) => section.enabled)
-                  .sort((a, b) => a.order - b.order)
-                  .map((section) => (
-                    <motion.div key={section.id} layout>
-                      {renderSection(section.id)}
-                    </motion.div>
-                  ))}
-              </motion.div>
-            </LayoutGroup>
+            <div className={cn(fontFamilyClass)}>
+              <LayoutGroup>
+                <motion.div layout ref={resumeContentRef}>
+                  <BaseInfo basic={basic} globalSettings={globalSettings} />
+                  {menuSections
+                    .filter((section) => section.enabled)
+                    .sort((a, b) => a.order - b.order)
+                    .map((section) => (
+                      <motion.div key={section.id} layout>
+                        {renderSection(section.id)}
+                      </motion.div>
+                    ))}
+                </motion.div>
+              </LayoutGroup>
 
-            {Array.from({ length: pageBreakCount }, (_, i) => (
-              <PageBreakLine key={i} pageNumber={i + 1} />
-            ))}
+              {Array.from({ length: pageBreakCount }, (_, i) => (
+                <PageBreakLine key={i} pageNumber={i + 1} />
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>

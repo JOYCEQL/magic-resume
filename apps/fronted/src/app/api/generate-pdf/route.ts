@@ -41,6 +41,9 @@ export async function POST(req: Request) {
   `;
     console.log(pdfContent, "pdfContent");
 
+    // 等待font加载完成
+    await page.evaluateHandle("document.fonts.ready");
+
     await page.setContent(pdfContent);
 
     const marginPx = margin + "px";

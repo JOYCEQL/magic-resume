@@ -33,6 +33,7 @@ export async function POST(req: Request) {
             font-display: swap;
           }
         </style>
+        <style> ${styles} </style>
       </head>
       <body>
         ${content}

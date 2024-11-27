@@ -34,24 +34,14 @@ export function PdfExport() {
       })
       .join("\n");
 
-    const content = `
-    <html>
-     <head>
-        <style>${styles}</style>
-      </head>
-      <body>
-        ${pdfContent}
-      </body>
-    </html>
-  `;
-
     const response = await fetch("/api/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        content,
+        content: pdfContent,
+        styles: styles,
         margin: globalSettings.pagePadding
       })
     });

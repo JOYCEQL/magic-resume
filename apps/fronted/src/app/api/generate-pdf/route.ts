@@ -5,7 +5,7 @@ import chrome from "@sparticuz/chromium";
 
 export async function POST(req: Request) {
   try {
-    const { content, margin } = await req.json();
+    const { content, styles, margin } = await req.json();
 
     // const browser = await puppeteer.launch({
     //   headless: true
@@ -23,7 +23,28 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    await page.setContent(content);
+    const pdfContent = `
+    <html>
+     <head>
+        <style>
+           <style>
+            @font-face {
+              font-family: 'Noto Sans SC';
+              src: url('${process.env.FONT_URL}') format('woff2');
+              font-display: swap;
+            }
+          </style>
+        <style>
+        <style>${styles}</style>
+      </head>
+      <body>
+        ${content}
+      </body>
+    </html>
+  `;
+    console.log(pdfContent, "pdfContent");
+
+    await page.setContent(pdfContent);
 
     const marginPx = margin + "px";
 

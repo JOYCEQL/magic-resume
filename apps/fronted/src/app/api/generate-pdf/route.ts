@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       ),
       headless: chrome.headless
     });
+    console.log(process.env.FONT_URL, "process.env.FONT_URL");
 
     const page = await browser.newPage();
 
@@ -36,6 +37,8 @@ export async function POST(req: Request) {
         left: marginPx
       }
     });
+
+    await chrome.font(`${process.env.FONT_URL}`);
 
     await page.setContent(content, {
       waitUntil: ["domcontentloaded", "networkidle0"]

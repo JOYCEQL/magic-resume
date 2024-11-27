@@ -22,17 +22,17 @@ export function PdfExport() {
       line.style.display = "none";
     });
     const pdfContent = await convertImagesToBase64(pdfElement);
-    let styles = Array.from(document.styleSheets)
-      .map((sheet) => {
-        try {
-          return Array.from(sheet.cssRules)
-            .map((rule) => rule.cssText)
-            .join("\n");
-        } catch (e) {
-          return "";
-        }
-      })
-      .join("\n");
+    // let styles = Array.from(document.styleSheets)
+    //   .map((sheet) => {
+    //     try {
+    //       return Array.from(sheet.cssRules)
+    //         .map((rule) => rule.cssText)
+    //         .join("\n");
+    //     } catch (e) {
+    //       return "";
+    //     }
+    //   })
+    //   .join("\n");
 
     const response = await fetch("/api/generate-pdf", {
       method: "POST",
@@ -41,7 +41,7 @@ export function PdfExport() {
       },
       body: JSON.stringify({
         content: pdfContent,
-        styles: styles,
+        // styles: styles,
         margin: globalSettings.pagePadding
       })
     });

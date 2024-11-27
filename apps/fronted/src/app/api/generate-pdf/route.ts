@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     const pdfContent = `
     <html>
      <head>
+        <style>${styles}</style>
           <style>
           @font-face {
             font-family: 'Noto Sans SC';
@@ -33,7 +34,6 @@ export async function POST(req: Request) {
             font-display: swap;
           }
         </style>
-        <style>${styles}</style>
       </head>
       <body>
         ${content}

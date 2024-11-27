@@ -37,6 +37,13 @@ export function PdfExport() {
     const content = `
     <html>
      <head>
+       <style>
+        @font-face {
+          font-family: 'NaihuSC';
+          src: url('${process.env.FONT_URL}') format('woff2');
+          font-display: swap;
+        }
+      </style>
         <style>${styles}</style>
       </head>
       <body>

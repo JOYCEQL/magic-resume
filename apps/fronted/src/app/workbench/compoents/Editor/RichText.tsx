@@ -35,7 +35,10 @@ import Highlight from "@tiptap/extension-highlight";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
-
+// 无序列表扩展
+import BulletList from "@tiptap/extension-bullet-list";
+// 有序列表扩展
+import OrderedList from "@tiptap/extension-ordered-list";
 interface RichTextEditorProps {
   content?: string;
   onChange: (content: string) => void;
@@ -382,6 +385,37 @@ const RichTextEditor = ({
     content: "inline*"
   });
 
+  const CustomList = BulletList.extend({
+    renderHTML({ HTMLAttributes }) {
+      console.log(HTMLAttributes, "HTMLAttributes");
+      return [
+        "ul",
+        {
+          ...HTMLAttributes,
+          class: "custom-list"
+          // style: { listStyleType: "none" }
+        },
+        ["li", 0]
+      ];
+    },
+    renderText({ node }) {
+      return content;
+    }
+  });
+
+  const CustomListOrdered = OrderedList.extend({
+    renderHTML({ HTMLAttributes }) {
+      return [
+        "ol",
+        { ...HTMLAttributes, class: "custom-list-ordered" },
+        ["li", 0]
+      ];
+    },
+    renderText({ node }) {
+      return node.textContent;
+    }
+  });
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -389,7 +423,16 @@ const RichTextEditor = ({
           levels: [1, 2, 3]
         }
       }),
-      CustomListItem,
+      // ListItem
+      BulletList,
+      OrderedList,
+      ListItem.configure({
+        HTMLAttributes: {
+          class: "custom-list"
+        }
+      }),
+
+      // ListItem,
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"]

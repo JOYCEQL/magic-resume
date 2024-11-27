@@ -77,18 +77,17 @@
 /* List styles */
 ul,
 ol {
-  list-style-position:  inside;
+  list-style-position: inside;
   list-style-type: disc;
   margin: 0;
-  /* li p {
-    margin-top: 0.25em;
-    margin-bottom: 0.25em;
-  } */
-}
+
+  li p {
+    display: inline;
+  }
+  }
 ol {
   list-style-type: decimal;
   margin: 0;
-
 }
 h1,
 h2,
@@ -157,4 +156,29 @@ hr {
 }
 
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
+/* li:before {
+  content: "•";
+  margin-right: 10px;
+} */
+
+.custom-list {
+  list-style-type: none;
+}
+
+.custom-list::marker,
+.custom-list-ordered::marker {
+  display: none;
+}
+
+.custom-list::before,
+.custom-list-ordered::before {
+  content: '•';
+  display: inline-block;
+  margin-right: 10px;
+} 

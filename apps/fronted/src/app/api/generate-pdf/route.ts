@@ -10,9 +10,10 @@ export async function POST(req: Request) {
     // const browser = await puppeteer.launch({
     //   headless: true
     // });
+    await chrome.font("/var/task/fonts/NaihuSC.woff2");
 
     const browser = await puppeteer.launch({
-      args: chrome.args,
+      args: [...chrome.args, "--font-render-hinting=none"],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
         `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`

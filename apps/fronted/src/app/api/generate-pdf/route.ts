@@ -6,6 +6,7 @@ import chrome from "@sparticuz/chromium";
 export async function POST(req: Request) {
   try {
     const { content, styles, margin } = await req.json();
+    console.log(content, "process.env.FONT_URL");
 
     // const browser = await puppeteer.launch({
     //   headless: true
@@ -15,11 +16,10 @@ export async function POST(req: Request) {
       args: [...chrome.args, "--font-render-hinting=none"],
       //   defaultViewport: chrome.defaultViewport,
       executablePath: await chrome.executablePath(
-        `https://github.com/Sparticuz/chromium/releases/download/v126.0.0/chromium-v126.0.0-pack.tar`
+        `https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar`
       ),
       headless: chrome.headless
     });
-    console.log(process.env.FONT_URL, "process.env.FONT_URL");
 
     const page = await browser.newPage();
 

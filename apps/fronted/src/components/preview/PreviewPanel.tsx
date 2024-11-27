@@ -277,11 +277,7 @@ export function PreviewPanel() {
             }}
             id="resume-preview"
           >
-            <div
-              style={{
-                fontFamily: "Noto Sans SC !important"
-              }}
-            >
+            <div>
               <LayoutGroup>
                 <motion.div layout ref={resumeContentRef}>
                   <BaseInfo basic={basic} globalSettings={globalSettings} />

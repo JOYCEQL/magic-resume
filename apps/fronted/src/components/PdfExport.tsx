@@ -34,7 +34,7 @@ export function PdfExport() {
       })
       .join("\n");
 
-    const response = await fetch("/api/generate-pdf", {
+    const response = await fetch("/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -49,6 +49,7 @@ export function PdfExport() {
     if (!response.ok) {
       throw new Error("Failed to generate PDF");
     }
+    console.log(response, "response");
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");

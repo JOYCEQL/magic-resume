@@ -26,15 +26,13 @@ export async function POST(req: Request) {
     const pdfContent = `
     <html>
      <head>
-        <style>
-           <style>
-            @font-face {
-              font-family: 'Noto Sans SC';
-              src: url('${process.env.FONT_URL}') format('woff2');
-              font-display: swap;
-            }
-          </style>
-        <style>
+          <style>
+          @font-face {
+            font-family: 'Noto Sans SC';
+            src: url('${process.env.FONT_URL}') format('woff2');
+            font-display: swap;
+          }
+        </style>
         <style>${styles}</style>
       </head>
       <body>

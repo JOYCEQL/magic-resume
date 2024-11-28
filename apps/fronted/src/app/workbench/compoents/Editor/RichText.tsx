@@ -423,16 +423,19 @@ const RichTextEditor = ({
           levels: [1, 2, 3]
         }
       }),
-      // ListItem
-      BulletList,
-      OrderedList,
-      ListItem.configure({
+      BulletList.configure({
         HTMLAttributes: {
           class: "custom-list"
         }
       }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: "custom-list-ordered"
+        }
+      }),
 
-      // ListItem,
+      ListItem,
+
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"]

@@ -86,7 +86,8 @@ ol {
   }
   }
 ol {
-  list-style-type: decimal;
+  list-style-type: none;
+  counter-reset: list-0 list-1 list-2 list-3 list-4;
   margin: 0;
 }
 h1,
@@ -162,23 +163,31 @@ hr {
   box-sizing: border-box;
 }
 
-/* li:before {
-  content: "•";
-  margin-right: 10px;
-} */
 
-.custom-list {
+.custom-list,.custom-list-ordered {
   list-style-type: none;
 }
 
-.custom-list::marker,
-.custom-list-ordered::marker {
+.custom-list li::marker,
+.custom-list-ordered li::marker {
   display: none;
 }
 
-.custom-list::before,
-.custom-list-ordered::before {
+.custom-list li::before {
   content: '•';
   display: inline-block;
   margin-right: 10px;
 } 
+
+/* 帮我写custom-list-ordered的样式 */
+
+
+.custom-list-ordered li::before {
+  content: counter(list-0, decimal) ". ";
+  counter-increment: list-0;  
+  display: inline-block;
+  margin-right: 5px;
+}
+
+
+

@@ -173,14 +173,14 @@ hr {
 }
 
 .custom-list li::before {
-  content: "";
-  width: 4px;
+  content: "•";
+  /* width: 4px;
   height: 4px;
   border-radius: 50%;
   background: #000;
+  vertical-align: middle; */
   display: inline-block;
   margin-right: 10px;
-  vertical-align: middle;
 }
 
 .custom-list-ordered li::before {

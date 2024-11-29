@@ -84,7 +84,7 @@ ol {
   li p {
     display: inline;
   }
-  }
+}
 ol {
   list-style-type: none;
   counter-reset: list-0 list-1 list-2 list-3 list-4;
@@ -156,15 +156,14 @@ hr {
   margin: 2rem 0;
 }
 
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-.custom-list,.custom-list-ordered {
+.custom-list,
+.custom-list-ordered {
   list-style-type: none;
 }
 
@@ -174,20 +173,19 @@ hr {
 }
 
 .custom-list li::before {
-  content: '•';
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #000;
   display: inline-block;
   margin-right: 10px;
-} 
-
-/* 帮我写custom-list-ordered的样式 */
-
+  vertical-align: middle;
+}
 
 .custom-list-ordered li::before {
   content: counter(list-0, decimal) ". ";
-  counter-increment: list-0;  
+  counter-increment: list-0;
   display: inline-block;
   margin-right: 5px;
 }
-
-
-

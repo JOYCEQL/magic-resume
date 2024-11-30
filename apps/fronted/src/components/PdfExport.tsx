@@ -22,10 +22,32 @@ export function PdfExport() {
       line.style.display = "none";
     });
     const pdfContent = await convertImagesToBase64(pdfElement);
+
+    // 不过滤字体
+    // let styles = Array.from(document.styleSheets)
+    //   .map((sheet) => {
+    //     try {
+    //       return Array.from(sheet.cssRules)
+    //         .map((rule) => rule.cssText)
+    //         .join("\n");
+    //     } catch (e) {
+    //       return "";
+    //     }
+    //   })
+    //   .join("\n");
+
+    // 过滤字体
     let styles = Array.from(document.styleSheets)
       .map((sheet) => {
         try {
           return Array.from(sheet.cssRules)
+            .filter((rule) => {
+              // 过滤掉 @font-face 规则
+              if (rule instanceof CSSFontFaceRule) return false;
+              // 过滤掉包含 font 相关属性的规则
+              if (rule.cssText.includes("font-family")) return false;
+              return true;
+            })
             .map((rule) => rule.cssText)
             .join("\n");
         } catch (e) {
@@ -34,35 +56,14 @@ export function PdfExport() {
       })
       .join("\n");
 
-    const content = `
-    <html>
-     <head>
-       <style>
-           @font-face {
-            font-family: 'GeistMonoVF';
-            src: url('/fonts/GeistMonoVF.woff');
-            font-weight: normal;
-            font-style: normal;
-          }
-          body {
-            font-family: 'GeistMonoVF', sans-serif;
-          }
-        </style>
-        <style>${styles}</style>
-      </head>
-      <body>
-        ${pdfContent}
-      </body>
-    </html>
-  `;
-
-    const response = await fetch("/api/generate-pdf", {
+    const response = await fetch("/generate-pdf", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        content,
+        content: pdfContent,
+        styles: styles,
         margin: globalSettings.pagePadding
       })
     });

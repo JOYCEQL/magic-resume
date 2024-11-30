@@ -35,7 +35,10 @@ import Highlight from "@tiptap/extension-highlight";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
-
+// 无序列表扩展
+import BulletList from "@tiptap/extension-bullet-list";
+// 有序列表扩展
+import OrderedList from "@tiptap/extension-ordered-list";
 interface RichTextEditorProps {
   content?: string;
   onChange: (content: string) => void;
@@ -378,10 +381,6 @@ const RichTextEditor = ({
 }: RichTextEditorProps) => {
   const theme = useResumeStore((state) => state.theme);
 
-  const CustomListItem = ListItem.extend({
-    content: "inline*"
-  });
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -389,7 +388,17 @@ const RichTextEditor = ({
           levels: [1, 2, 3]
         }
       }),
-      CustomListItem,
+      BulletList.configure({
+        HTMLAttributes: {
+          class: "custom-list"
+        }
+      }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: "custom-list-ordered"
+        }
+      }),
+      ListItem,
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"]

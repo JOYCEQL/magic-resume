@@ -107,7 +107,7 @@ const initialState = {
       visible: true,
       gpa: "3.8/4.0",
       location: "北京",
-      description: `<ul>
+      description: `<ul class="custom-list">
         <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>
         <li>专业排名前 5%，连续三年获得一等奖学金</li>
         <li>担任计算机协会技术部部长，组织多次技术分享会</li>
@@ -116,7 +116,7 @@ const initialState = {
     }
   ],
   skillContent: `<div class="skill-content">
-  <ul>
+  <ul class="custom-list">
     <li>前端框架：精通 React、Vue.js，熟悉 Next.js、Nuxt.js 等 SSR 框架</li>
     <li>开发语言：TypeScript、JavaScript(ES6+)、HTML5、CSS3</li>
     <li>UI/样式：精通 TailwindCSS、Sass/Less、CSS Module、Styled-components</li>
@@ -125,9 +125,7 @@ const initialState = {
     <li>测试工具：Jest、React Testing Library、Cypress</li>
     <li>性能优化：熟悉浏览器渲染原理、性能指标监控、代码分割、懒加载等优化技术</li>
     <li>版本控制：Git、SVN</li>
-  </ul>
-  <ul>
-    <li>技术管理：具备团队管理经验，主导过多个大型项目的技术选型和架构设计</li>
+        <li>技术管理：具备团队管理经验，主导过多个大型项目的技术选型和架构设计</li>
     <li>技术分享：定期组织团队技术分享，主导建设团队技术博客</li>
     <li>敏捷开发：熟悉 Scrum 开发流程，具有良好的项目把控能力</li>
     <li>英语能力：CET-6 分数 560，具备良好的英文文档阅读和技术交流能力</li>
@@ -139,7 +137,8 @@ const initialState = {
       company: "字节跳动",
       position: "高级前端工程师",
       date: "2021.07 - 至今",
-      details: `<ul>
+      visible: true,
+      details: `<ul class="custom-list">
       <li>负责抖音创作者平台的开发与维护，主导多个核心功能的技术方案设计</li>
       <li>优化项目工程化配置，将构建时间从 8 分钟优化至 2 分钟，提升团队开发效率</li>
       <li>设计并实现组件库，提升代码复用率达 70%，显著减少开发时间</li>

@@ -58,7 +58,6 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
           </div>
         </div>
 
-        {/* 在移动端只显示主题切换按钮 */}
         <div className="flex items-center space-x-3">
           <motion.button
             className={`p-2 rounded-lg ${themeConfig.button}`}
@@ -73,7 +72,6 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             )}
           </motion.button>
 
-          {/* 在移动端隐藏这些按钮 */}
           <div className="hidden md:flex items-center space-x-3">
             <PdfExport />
           </div>

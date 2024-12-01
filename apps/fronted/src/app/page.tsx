@@ -20,7 +20,8 @@ import {
   Zap,
   Shield,
   Globe,
-  Cloud
+  Cloud,
+  ChevronRight
 } from "lucide-react";
 import ScrollToTop from "../components/ScrollToTop";
 import EditButton from "@/components/EditButton";
@@ -316,9 +317,9 @@ export default function LandingPage() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            <EditButton>
-              立即使用
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <EditButton className="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center space-x-1">
+              <span>开始制作</span>
+              <ChevronRight className="h-4 w-4" />
             </EditButton>
           </div>
         </div>
@@ -337,10 +338,11 @@ export default function LandingPage() {
           <p className="text-xl text-gray-400">
             <TypewriterText text="每一处细节，都由你掌控。打造真正与众不同的个人简历。" />
           </p>
-          <Button size="lg" className="mt-8">
-            开始定制
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+
+          <EditButton className="mt-8 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+            <span>开始定制</span>
+            <ChevronRight className="h-4 w-4" />
+          </EditButton>
         </div>
       </section>
 
@@ -423,13 +425,13 @@ export default function LandingPage() {
             className="space-y-8"
           >
             <h2 className="text-3xl font-bold mb-8">开启你的个性化简历之旅</h2>
-            <Button
+            <EditButton
               size="lg"
               className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
             >
               立即开始定制
               <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            </EditButton>
           </motion.div>
         </div>
       </section>

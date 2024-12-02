@@ -88,11 +88,27 @@ const initialState = {
     phone: "13800138000",
     location: "北京市朝阳区",
     birthDate: "1995-01",
-    icons: {},
+    icons: {
+      email: "Mail",
+      phone: "Phone",
+      birthDate: "CalendarRange",
+      employementStatus: "Briefcase",
+      location: "MapPin"
+    },
     photoConfig: DEFAULT_CONFIG,
     customFields: [
-      { id: "personal", label: "个人网站", value: "https://zhangsan.dev" },
-      { id: "github", label: "GitHub", value: "https://github.com/zhangsan" }
+      {
+        id: "personal",
+        label: "个人网站",
+        value: "https://zhangsan.dev",
+        icon: "Globe"
+      },
+      {
+        id: "github",
+        label: "GitHub",
+        value: "https://github.com/zhangsan",
+        icon: "Github"
+      }
     ],
     employementStatus: "全职",
     photo: "avatar.svg"

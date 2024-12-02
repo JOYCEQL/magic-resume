@@ -222,45 +222,50 @@ const BasicPanel: React.FC = () => {
         id={field.id}
         key={field.id}
         className="group touch-none list-none"
+        dragListener={
+          // 姓名和职位禁用拖拽
+          field.key !== "name" && field.key !== "title"
+        }
       >
         <motion.div
           {...itemAnimations}
           className={cn(
             "flex items-center gap-4 p-4",
             "bg-white dark:bg-neutral-900",
-            "rounded-lg shadow-sm",
-            "border border-neutral-200 dark:border-neutral-800",
+            "rounded-lg ",
             "transition-all duration-200",
-            "hover:shadow-md hover:border-neutral-300 dark:hover:border-neutral-700",
             !field.visible && "opacity-75"
           )}
         >
-          {/* Drag Handle */}
-          <div className="shrink-0">
-            <GripVertical
-              className={cn(
-                "w-5 h-5 cursor-grab active:cursor-grabbing",
-                "text-neutral-400 dark:text-neutral-600",
-                "hover:text-neutral-600 dark:hover:text-neutral-400",
-                "transition-colors duration-200"
-              )}
-            />
-          </div>
+          {field.key !== "name" && field.key !== "title" && (
+            <div className="shrink-0">
+              <GripVertical
+                className={cn(
+                  "w-5 h-5 cursor-grab active:cursor-grabbing",
+                  "text-neutral-400 dark:text-neutral-600",
+                  "hover:text-neutral-600 dark:hover:text-neutral-400",
+                  "transition-colors duration-200"
+                )}
+              />
+            </div>
+          )}
 
           <div className="shrink-0">
-            <IconSelector
-              value={selectedIcon}
-              onChange={(value) => {
-                updateBasicInfo({
-                  ...basic,
-                  icons: {
-                    ...(basic?.icons || {}),
-                    [field.key]: value
-                  }
-                });
-              }}
-              theme={theme}
-            />
+            {field.key !== "name" && field.key !== "title" && (
+              <IconSelector
+                value={selectedIcon}
+                onChange={(value) => {
+                  updateBasicInfo({
+                    ...basic,
+                    icons: {
+                      ...(basic?.icons || {}),
+                      [field.key]: value
+                    }
+                  });
+                }}
+                theme={theme}
+              />
+            )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">

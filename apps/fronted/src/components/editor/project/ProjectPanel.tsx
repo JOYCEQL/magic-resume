@@ -16,9 +16,6 @@ const ProjectPanel = () => {
       role: "Project Role",
       date: "",
       description: "",
-      technologies: "",
-      responsibilities: "",
-      achievements: "",
       visible: true
     };
     updateProjects(newProject);
@@ -43,10 +40,7 @@ const ProjectPanel = () => {
           <ProjectItem key={project.id} project={project}></ProjectItem>
         ))}
 
-        <Button
-          onClick={handleCreateProject}
-          className="w-full bg-indigo-600 text-white hover:bg-indigo-600"
-        >
+        <Button onClick={handleCreateProject} className="w-full">
           <PlusCircle className="w-4 h-4 mr-2" />
           添加
         </Button>

@@ -46,10 +46,7 @@ const ProjectPanel = () => {
           ></EducationItem>
         ))}
 
-        <Button
-          onClick={handleCreateProject}
-          className={cn("w-full bg-indigo-600 text-white hover:bg-indigo-600")}
-        >
+        <Button onClick={handleCreateProject} className="w-full">
           <PlusCircle className="w-4 h-4 mr-2" />
           添加
         </Button>

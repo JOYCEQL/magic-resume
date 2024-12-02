@@ -235,8 +235,7 @@ export function SidePanel() {
               </Reorder.Item>
             ))}
           </Reorder.Group>
-          {/* 添加自定义模块 */}
-          <div className="space-y-2  p-[16px]">
+          <div className="space-y-2  py-4">
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.9 }}

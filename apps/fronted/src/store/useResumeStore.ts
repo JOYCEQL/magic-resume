@@ -237,15 +237,19 @@ export const useResumeStore = create<ResumeStore>()(
           return { experience: newExperience };
         }),
 
-      reorderSections: (newOrder) => {
-        const updatedSections = newOrder.map((section, index) => ({
-          ...section,
-          order: index
-        }));
-
-        set({ menuSections: updatedSections });
-      },
-
+      reorderSections: (newOrder) =>
+        set((state) => {
+          const basicSection = state.menuSections.find(
+            (section) => section.id === "basic"
+          );
+          const updatedSections = newOrder.map((section, index) => ({
+            ...section,
+            order: index + 1
+          }));
+          return {
+            menuSections: [{ ...basicSection, order: 0 }, ...updatedSections]
+          };
+        }),
       toggleSectionVisibility: (sectionId) =>
         set((state) => ({
           menuSections: state.menuSections.map((section) =>

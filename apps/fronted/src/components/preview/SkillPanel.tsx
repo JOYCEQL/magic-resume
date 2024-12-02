@@ -25,7 +25,7 @@ export function SkillSection({
       }}
     >
       <SectionTitle
-        title="技能特长"
+        type="skills"
         themeColor={themeColor}
         globalSettings={globalSettings}
       />

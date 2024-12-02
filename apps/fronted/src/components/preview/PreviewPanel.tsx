@@ -170,7 +170,7 @@ export function PreviewPanel() {
         }}
       >
         <SectionTitle
-          title="项目经历"
+          type="projects"
           themeColor={currentThemeColor}
           globalSettings={globalSettings}
         />

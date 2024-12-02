@@ -21,7 +21,7 @@ export function ExperienceSection({
       }}
     >
       <SectionTitle
-        title="工作经验"
+        type="experience"
         themeColor={themeColor}
         globalSettings={globalSettings}
       />

@@ -29,6 +29,7 @@ interface ResumeStore {
     enabled: boolean;
     order: number;
   }[];
+
   customData: Record<string, CustomItem[]>;
 
   theme: "light" | "dark";

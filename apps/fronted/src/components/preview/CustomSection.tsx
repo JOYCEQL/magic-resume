@@ -31,6 +31,7 @@ export function CustomSection({
     >
       <SectionTitle
         title={title}
+        type="custom"
         themeColor={themeColor}
         globalSettings={globalSettings}
       />

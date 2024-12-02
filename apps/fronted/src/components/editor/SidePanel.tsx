@@ -306,7 +306,7 @@ export function SidePanel() {
         {/* 排版设置 */}
         <SettingCard icon={Type} title="排版">
           <div className="space-y-6">
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label className="text-gray-600 dark:text-neutral-300">
                 字体
               </Label>
@@ -342,7 +342,7 @@ export function SidePanel() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
             {/* 行高选择 */}
             <div className="space-y-2">

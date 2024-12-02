@@ -141,35 +141,22 @@ export function SidePanel() {
       <div className="p-4 space-y-4">
         {/* 布局部分 */}
         <SettingCard icon={Layout} title="布局">
-          <Reorder.Group
-            axis="y"
-            values={menuSections}
-            onReorder={reorderSections}
-            className="space-y-2 list-none"
-          >
-            {menuSections.map((item) => (
-              <Reorder.Item
+          {menuSections
+            .filter((item) => item.id === "basic")
+            .map((item) => (
+              <div
                 key={item.id}
-                value={item}
                 className={cn(
-                  "rounded-lg cursor-move group border",
+                  "rounded-lg group border mb-2 hover:border-indigo-600",
                   theme === "dark"
                     ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
                     : "hover:bg-gray-50 bg-white border-gray-100"
                 )}
-                whileHover={{ scale: 1.01 }}
-                whileDrag={{ scale: 1.02 }}
               >
-                <div className="flex items-center p-3 space-x-3">
-                  <GripVertical
-                    className={cn(
-                      "w-5 h-5  transition-opacity",
-                      theme === "dark" ? "text-neutral-400" : "text-gray-400"
-                    )}
-                  />
+                <div className="flex items-center p-3 pl-[32px] space-x-3 ">
                   <span
                     className={cn(
-                      "text-lg mr-2",
+                      "text-lg  ml-[12px]",
                       theme === "dark" ? "text-neutral-300" : "text-gray-600"
                     )}
                   >
@@ -190,50 +177,107 @@ export function SidePanel() {
                   >
                     {item.title}
                   </span>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => toggleSectionVisibility(item.id)}
-                    className={cn(
-                      "p-1.5 rounded-md",
-                      theme === "dark"
-                        ? "hover:bg-neutral-700 text-neutral-300"
-                        : "hover:bg-gray-100 text-gray-600"
-                    )}
-                  >
-                    {item.enabled ? (
-                      <Eye className="w-4 h-4 text-indigo-600" />
-                    ) : (
-                      <EyeOff className="w-4 h-4" />
-                    )}
-                  </motion.button>
-                  {/* 删除按钮 */}
-
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => {
-                      updateMenuSections(
-                        menuSections.filter((section) => section.id !== item.id)
-                      );
-                      setActiveSection(
-                        menuSections[
-                          menuSections.findIndex((s) => s.id === item.id) - 1
-                        ].id
-                      );
-                    }}
-                    className={cn(
-                      "p-1.5 rounded-md text-primary",
-                      theme === "dark"
-                        ? "hover:bg-neutral-700 text-neutral-300"
-                        : "hover:bg-gray-100 text-gray-600"
-                    )}
-                  >
-                    <Trash2 className="w-4 h-4 text-red-400" />
-                  </motion.button>
                 </div>
-              </Reorder.Item>
+              </div>
             ))}
+
+          <Reorder.Group
+            axis="y"
+            values={menuSections}
+            onReorder={reorderSections}
+            className="space-y-2 list-none"
+          >
+            {menuSections
+              .filter((item) => item.id !== "basic")
+              .map((item) => (
+                <Reorder.Item
+                  key={item.id}
+                  value={item}
+                  className={cn(
+                    "rounded-lg cursor-move group border hover:border-indigo-600",
+                    theme === "dark"
+                      ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
+                      : "hover:bg-gray-50 bg-white border-gray-100"
+                  )}
+                  whileHover={{ scale: 1.01 }}
+                  whileDrag={{ scale: 1.02 }}
+                >
+                  <div className="flex items-center p-3 space-x-3">
+                    <GripVertical
+                      className={cn(
+                        "w-5 h-5  transition-opacity",
+                        theme === "dark" ? "text-neutral-400" : "text-gray-400"
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "text-lg mr-2",
+                        theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                    <span
+                      className={cn(
+                        "text-sm flex-1 cursor-pointer",
+                        item.enabled
+                          ? theme === "dark"
+                            ? "text-neutral-200"
+                            : "text-gray-700"
+                          : theme === "dark"
+                            ? "text-neutral-500"
+                            : "text-gray-400"
+                      )}
+                      onClick={() => setActiveSection(item.id)}
+                    >
+                      {item.title}
+                    </span>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => toggleSectionVisibility(item.id)}
+                      className={cn(
+                        "p-1.5 rounded-md",
+                        theme === "dark"
+                          ? "hover:bg-neutral-700 text-neutral-300"
+                          : "hover:bg-gray-100 text-gray-600"
+                      )}
+                    >
+                      {item.enabled ? (
+                        <Eye className="w-4 h-4 text-indigo-600" />
+                      ) : (
+                        <EyeOff className="w-4 h-4" />
+                      )}
+                    </motion.button>
+                    {/* 删除按钮 */}
+
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        updateMenuSections(
+                          menuSections.filter(
+                            (section) => section.id !== item.id
+                          )
+                        );
+                        setActiveSection(
+                          menuSections[
+                            menuSections.findIndex((s) => s.id === item.id) - 1
+                          ].id
+                        );
+                      }}
+                      className={cn(
+                        "p-1.5 rounded-md text-primary",
+                        theme === "dark"
+                          ? "hover:bg-neutral-700 text-neutral-300"
+                          : "hover:bg-gray-100 text-gray-600"
+                      )}
+                    >
+                      <Trash2 className="w-4 h-4 text-red-400" />
+                    </motion.button>
+                  </div>
+                </Reorder.Item>
+              ))}
           </Reorder.Group>
           <div className="space-y-2  py-4">
             <motion.button

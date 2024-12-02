@@ -224,7 +224,7 @@ const initialState = {
   activeSection: "basic",
 
   globalSettings: {
-    fontFamily: "sans",
+    // fontFamily: "sans",
     baseFontSize: 14,
     pagePadding: 20,
     paragraphSpacing: 20,

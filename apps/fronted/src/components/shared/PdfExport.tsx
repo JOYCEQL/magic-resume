@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { convertImagesToBase64 } from "@/utils";
+import { Button } from "@/components/ui/button";
 
 const PdfExport = () => {
   const [isExporting, setIsExporting] = useState(false);
@@ -86,11 +87,9 @@ const PdfExport = () => {
 
   return (
     <div>
-      <motion.button
-        className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 
+      <Button
+        className=" px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 
           disabled:opacity-50 disabled:cursor-not-allowed"
-        whileHover={!isExporting ? { scale: 1.02 } : {}}
-        whileTap={!isExporting ? { scale: 0.98 } : {}}
         onClick={handleExport}
         disabled={isExporting}
       >
@@ -100,7 +99,7 @@ const PdfExport = () => {
           <Download className="w-4 h-4" />
         )}
         <span>{isExporting ? "导出中..." : "导出 PDF"}</span>
-      </motion.button>
+      </Button>
     </div>
   );
 };

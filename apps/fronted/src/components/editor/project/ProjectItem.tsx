@@ -29,9 +29,6 @@ interface Project {
   role: string;
   date: string;
   description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
   visible: boolean;
 }
 
@@ -161,27 +158,6 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
           onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder="简要描述项目的背景和目标..."
-        />
-        <Field
-          label="技术栈"
-          value={project.technologies}
-          onChange={(value) => handleChange("technologies", value)}
-          type="editor"
-          placeholder="使用的技术栈和工具..."
-        />
-        <Field
-          label="主要职责"
-          value={project.responsibilities}
-          onChange={(value) => handleChange("responsibilities", value)}
-          type="editor"
-          placeholder="在项目中的主要职责..."
-        />
-        <Field
-          label="项目成果"
-          value={project.achievements}
-          onChange={(value) => handleChange("achievements", value)}
-          type="editor"
-          placeholder="项目取得的成果..."
         />
       </div>
     </div>

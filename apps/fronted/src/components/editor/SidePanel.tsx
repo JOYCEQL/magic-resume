@@ -401,7 +401,6 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ lineHeight: value })
                   }
-                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
                 <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.lineHeight}
@@ -541,7 +540,6 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ pagePadding: value })
                   }
-                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
                 <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.pagePadding}px
@@ -562,7 +560,6 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ sectionSpacing: value })
                   }
-                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
                 <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.sectionSpacing}px
@@ -582,7 +579,6 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ paragraphSpacing: value })
                   }
-                  className="[&_[role=slider]]:bg-gray-900 dark:[&_[role=slider]]:bg-neutral-200"
                 />
                 <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
                   {globalSettings?.paragraphSpacing}px

@@ -21,11 +21,17 @@ export function EducationSection({
         marginTop: `${globalSettings?.sectionSpacing || 24}px`
       }}
     >
-      <SectionTitle
+      {/* <SectionTitle
         title="教育经历"
         themeColor={themeColor}
         globalSettings={globalSettings}
-      />
+      /> */}
+
+      <SectionTitle
+        type="education"
+        themeColor={themeColor}
+        globalSettings={globalSettings}
+      ></SectionTitle>
       {visibleEducation.map((edu) => (
         <div
           key={edu.id}

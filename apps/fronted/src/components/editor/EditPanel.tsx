@@ -12,7 +12,8 @@ import CustomPanel from "./custom/CustomPanel";
 import SkillPanel from "./skills/SkillPanel";
 
 export function EditPanel() {
-  const { theme, activeSection, menuSections } = useResumeStore();
+  const { theme, activeSection, menuSections, updateMenuSections } =
+    useResumeStore();
 
   const renderFields = () => {
     switch (activeSection) {
@@ -58,14 +59,26 @@ export function EditPanel() {
             <span className="text-lg">
               {menuSections?.find((s) => s.id === activeSection)?.icon}
             </span>
-            <h1
+            <input
               className={cn(
-                "text-base font-medium",
-                theme === "dark" ? "text-neutral-200" : "text-gray-700"
+                "flex-1 text-base  font-medium hover:border-indigo-600 hover:text-indigo-600 border-black  bg-transparent outline-none  border-b pb-1 text-gray-700",
+                "dark:text-neutral-200 dark:border-white dark:hover:border-indigo-600 dark:hover:text-indigo-600"
               )}
-            >
-              {menuSections?.find((s) => s.id === activeSection)?.title}
-            </h1>
+              type="text"
+              value={menuSections?.find((s) => s.id === activeSection)?.title}
+              onChange={(e) => {
+                const newMenuSections = menuSections.map((s) => {
+                  if (s.id === activeSection) {
+                    return {
+                      ...s,
+                      title: e.target.value
+                    };
+                  }
+                  return s;
+                });
+                updateMenuSections(newMenuSections);
+              }}
+            />
           </div>
         </motion.div>
 

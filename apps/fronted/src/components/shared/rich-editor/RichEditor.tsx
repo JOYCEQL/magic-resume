@@ -35,9 +35,7 @@ import Highlight from "@tiptap/extension-highlight";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
-// 无序列表扩展
 import BulletList from "@tiptap/extension-bullet-list";
-// 有序列表扩展
 import OrderedList from "@tiptap/extension-ordered-list";
 interface RichTextEditorProps {
   content?: string;

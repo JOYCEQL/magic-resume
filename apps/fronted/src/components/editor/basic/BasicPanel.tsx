@@ -12,14 +12,15 @@ import { BasicFieldType, CustomFieldType } from "@/types/resume";
 
 const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
   { id: "1", key: "name", label: "姓名", type: "text", visible: true },
+
+  { id: "2", key: "title", label: "职位", type: "text", visible: true },
   {
-    id: "2",
+    id: "3",
     key: "employementStatus",
     label: "求职状态",
     type: "text",
     visible: true
   },
-  { id: "3", key: "title", label: "职位", type: "text", visible: true },
   { id: "4", key: "birthDate", label: "出生日期", type: "date", visible: true },
   { id: "5", key: "email", label: "电子邮箱", type: "text", visible: true },
   { id: "6", key: "phone", label: "电话", type: "text", visible: true },
@@ -250,7 +251,7 @@ const BasicPanel: React.FC = () => {
             </div>
           )}
 
-          <div className="shrink-0">
+          <div className="flex flex-1 min-w-0 items-center">
             {field.key !== "name" && field.key !== "title" && (
               <IconSelector
                 value={selectedIcon}
@@ -266,23 +267,23 @@ const BasicPanel: React.FC = () => {
                 theme={theme}
               />
             )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="mb-2 text-sm font-medium text-neutral-700 dark:text-neutral-200">
+            <div className=" w-[80px] ml-[4px] text-sm font-medium text-neutral-700 dark:text-neutral-200">
               {field.label}
             </div>
-            <Field
-              label=""
-              value={(basic[field.key] as string) || ""}
-              onChange={(value) =>
-                updateBasicInfo({
-                  ...basic,
-                  [field.key]: value
-                })
-              }
-              placeholder={`请输入${field.label}`}
-              type={field.type}
-            />
+            <div className="flex-1">
+              <Field
+                label=""
+                value={(basic[field.key] as string) || ""}
+                onChange={(value) =>
+                  updateBasicInfo({
+                    ...basic,
+                    [field.key]: value
+                  })
+                }
+                placeholder={`请输入${field.label}`}
+                type={field.type}
+              />
+            </div>
           </div>
 
           <Button

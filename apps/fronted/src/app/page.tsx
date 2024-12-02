@@ -10,20 +10,12 @@ import {
   Sun,
   Moon,
   Layout,
-  Brush,
-  Download,
-  Share2,
-  Grid,
   Layers,
-  Palette,
-  Settings,
-  Zap,
   Shield,
-  Globe,
   Cloud
 } from "lucide-react";
-import ScrollToTop from "../components/ScrollToTop";
-import EditButton from "@/components/EditButton";
+import ScrollToTop from "../components/shared/ScrollToTop";
+import EditButton from "@/components/shared/EditButton";
 import { cn } from "@/lib/utils";
 
 const TypewriterText = ({ text }) => {

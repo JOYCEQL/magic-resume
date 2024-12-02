@@ -6,7 +6,7 @@ import { Download, Loader2 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { convertImagesToBase64 } from "@/utils";
 
-export function PdfExport() {
+const PdfExport = () => {
   const [isExporting, setIsExporting] = useState(false);
 
   const globalSettings = useResumeStore((state) => state.globalSettings);
@@ -103,4 +103,6 @@ export function PdfExport() {
       </motion.button>
     </div>
   );
-}
+};
+
+export default PdfExport;

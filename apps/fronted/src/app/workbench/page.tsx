@@ -1,22 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Eye,
-  Edit2,
-  Menu,
-  PanelLeft,
-  PanelRight,
-  Maximize2,
-  Minimize2
-} from "lucide-react";
+import { Eye, Edit2, Menu, PanelLeft, Minimize2 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
 import { PreviewPanel } from "@/components/preview/PreviewPanel";
-import { getThemeConfig } from "@/theme/themeConfig";
 import { useScrollbarTheme } from "@/hooks/useScrollBarTheme";
 import {
   ResizableHandle,
@@ -72,8 +63,6 @@ const DragHandle = ({ show = true }) => {
 
 export default function Home() {
   const theme = useResumeStore((state) => state.theme);
-  const previewRef = useRef<HTMLDivElement>(null);
-  const themeConfig = getThemeConfig(theme === "dark");
 
   const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);
   const [focusedPanel, setFocusedPanel] = useState<null | "edit" | "preview">(

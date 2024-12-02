@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
-import RichTextEditor from "@/app/workbench/compoents/Editor/RichText";
+import RichTextEditor from "@/components/shared/rich-editor/RichEditor";
 
 type FieldProps = {
   label?: string;

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
 import IconSelector from "../IconSelector";
-import PhotoUpload from "@/components/PhotoSelector";
+import PhotoUpload from "@/components/shared/PhotoSelector";
 import Field from "../Field";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicFieldType, CustomFieldType } from "@/types/resume";

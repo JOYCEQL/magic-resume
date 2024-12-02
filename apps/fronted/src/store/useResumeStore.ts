@@ -156,16 +156,6 @@ const initialState = {
       date: "2022.06 - 2023.12",
       description:
         "基于 React 的创作者数据分析和内容管理平台，服务百万级创作者群体，包含数据分析、内容管理、收益管理等多个子系统。",
-      technologies:
-        "React 18、TypeScript、TailwindCSS、Zustand、React Query、shadcn/ui、Recharts",
-      responsibilities: `- 主导项目技术选型和架构设计
-- 建立项目开发规范和 CI/CD 流程
-- 负责核心功能模块开发和性能优化
-- 指导团队成员，把控代码质量`,
-      achievements: `- 系统性能显著提升，首屏加载时间减少 50%
-- 代码重用率提高到 80%，显著减少开发时间
-- 平台日活跃用户提升 200%
-- 获得公司年度最佳项目奖`,
       visible: true
     },
     {
@@ -175,15 +165,6 @@ const initialState = {
       date: "2020.03 - 2021.06",
       description:
         "为开发者提供小程序开发、调试和发布的一站式解决方案。基于 Electron 构建的跨平台桌面应用。",
-      technologies:
-        "Electron、React、TypeScript、Monaco Editor、Node.js、WebSocket",
-      responsibilities: `- 负责编辑器核心功能开发
-- 实现实时预览和调试功能
-- 优化开发者使用体验
-- 处理性能问题和 Bug 修复`,
-      achievements: `- 编辑器性能提升 40%
-- 月活用户增长 150%
-- 获得最佳工具奖`,
       visible: true
     },
     {
@@ -193,14 +174,6 @@ const initialState = {
       date: "2021.09 - 2022.03",
       description:
         "一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能。",
-      technologies: "Vue 3、TypeScript、Vite、IndexedDB、WebWorker、Canvas",
-      responsibilities: `- 设计监控 SDK 和数据采集方案
-- 开发可视化数据面板
-- 优化数据处理性能
-- 制定监控告警策略`,
-      achievements: `- 准确捕获 99.9% 的前端异常
-- 帮助业务快速定位并解决问题
-- 平均故障排查时间减少 60%`,
       visible: true
     }
   ],

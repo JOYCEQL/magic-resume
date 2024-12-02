@@ -114,9 +114,6 @@ export interface Project {
   role: string;
   date: string;
   description: string;
-  technologies: string;
-  responsibilities: string;
-  achievements: string;
   visible: boolean;
 }
 

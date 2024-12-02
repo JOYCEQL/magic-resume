@@ -365,15 +365,7 @@ const BasicPanel: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <Button
-              onClick={addCustomField}
-              className={cn(
-                "w-full mt-4 transition-colors",
-                "text-white",
-                "bg-indigo-600",
-                "hover:bg-indigo-700 hover:bg-indigo-700"
-              )}
-            >
+            <Button onClick={addCustomField} className="w-full mt-4">
               <PlusCircle className="w-4 h-4 mr-2" />
               添加自定义字段
             </Button>

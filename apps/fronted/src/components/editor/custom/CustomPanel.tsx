@@ -33,14 +33,7 @@ const CustomPanel = memo(({ sectionId }: { sectionId: string }) => {
           <CustomItem key={item.id} item={item} sectionId={sectionId} />
         ))}
 
-        <Button
-          onClick={handleCreateItem}
-          className={cn(
-            "w-full",
-            "dark:bg-indigo-600 hover:bg-indigo-700 text-white",
-            "bg-indigo-600 hover:bg-indigo-700 text-white"
-          )}
-        >
+        <Button onClick={handleCreateItem} className={cn("w-full")}>
           <PlusCircle className="w-4 h-4 mr-2" />
           添加
         </Button>

@@ -1,12 +1,18 @@
 "use client";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { format } from "date-fns";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import { useResumeStore } from "@/store/useResumeStore";
 import RichTextEditor from "@/components/shared/rich-editor/RichEditor";
+import { Button } from "../ui/button";
 
 type FieldProps = {
   label?: string;
@@ -44,25 +50,7 @@ const Field: React.FC<FieldProps> = ({
   const inputStyles = cn(
     "mt-1.5 block w-full transition-all duration-200",
     "rounded-lg px-4 py-2.5",
-    "border",
-    theme === "dark"
-      ? [
-          "bg-neutral-900/30 border-neutral-800",
-          "text-neutral-100",
-          "focus:bg-neutral-900/50",
-          "placeholder:text-neutral-500"
-        ]
-      : [
-          "bg-white border-gray-100",
-          "text-gray-900",
-          "hover:border-gray-200",
-          "placeholder:text-gray-400"
-        ],
-    "focus:ring-1 focus:ring-offset-1",
-    theme === "dark"
-      ? "focus:ring-indigo-500/20 focus:ring-offset-neutral-900"
-      : "focus:ring-indigo-500/20 focus:ring-offset-white",
-    "focus:border-indigo-500"
+    "border"
   );
 
   if (type === "date") {
@@ -70,62 +58,27 @@ const Field: React.FC<FieldProps> = ({
 
     return (
       <label className="block">
-        <span
-          className={cn(
-            "text-sm font-medium flex gap-1 items-center",
-            theme === "dark" ? "text-neutral-300" : "text-gray-600"
-          )}
-        >
+        <span className={cn("text-sm font-medium flex gap-1 items-center")}>
           {label}
           {required && <span className="text-red-500">*</span>}
         </span>
         <Popover>
           <PopoverTrigger asChild>
-            <motion.button
-              type="button"
-              className={cn(
-                inputStyles,
-                "flex items-center justify-between",
-                !date && theme === "dark" ? "text-neutral-500" : "text-gray-400"
-              )}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
+            <Button
+              variant="outline"
+              className={cn("w-full flex items-center justify-between")}
             >
               <span>{date ? format(date, "yyyy-MM-dd") : "选择日期"}</span>
               <CalendarIcon className="w-4 h-4 opacity-50" />
-            </motion.button>
+            </Button>
           </PopoverTrigger>
-          <PopoverContent
-            className={cn(
-              "w-auto p-0",
-              theme === "dark"
-                ? "bg-neutral-900 border-neutral-800"
-                : "bg-white border-gray-100",
-              "shadow-lg rounded-lg"
-            )}
-            align="start"
-          >
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
               selected={date}
               onSelect={(date) => onChange(date ? date.toISOString() : "")}
               initialFocus
-              className={cn(
-                "rounded-lg p-3",
-                theme === "dark"
-                  ? [
-                      "bg-neutral-900",
-                      "[&_.rdp-day_button:hover]:bg-neutral-800",
-                      "[&_.rdp-day_button.rdp-day_selected]:bg-indigo-600",
-                      "text-neutral-200"
-                    ]
-                  : [
-                      "bg-white",
-                      "[&_.rdp-day_button:hover]:bg-gray-50",
-                      "[&_.rdp-day_button.rdp-day_selected]:bg-indigo-600",
-                      "text-gray-900"
-                    ]
-              )}
+              className={cn("rounded-lg p-3")}
             />
           </PopoverContent>
         </Popover>
@@ -184,15 +137,13 @@ const Field: React.FC<FieldProps> = ({
         {label}
         {required && <span className="text-red-500">*</span>}
       </span>
-      <motion.input
+      <Input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={inputStyles}
         required={required}
-        whileHover={{ scale: 1.005 }}
-        whileTap={{ scale: 0.995 }}
       />
     </label>
   );

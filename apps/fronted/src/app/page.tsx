@@ -309,7 +309,7 @@ export default function LandingPage() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            <EditButton className="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center space-x-1">
+            <EditButton className="bg-primary text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center space-x-1">
               <span>开始制作</span>
               <ChevronRight className="h-4 w-4" />
             </EditButton>
@@ -331,7 +331,7 @@ export default function LandingPage() {
             <TypewriterText text="每一处细节，都由你掌控。打造真正与众不同的个人简历。" />
           </p>
 
-          <EditButton className="mt-8 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
+          <EditButton className="mt-8 bg-primary text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors">
             <span>开始定制</span>
             <ChevronRight className="h-4 w-4" />
           </EditButton>

@@ -78,8 +78,20 @@ export default function Home() {
     setPanelSizes(newSizes);
     setLayoutKey((prev) => prev + 1);
   };
+
   useEffect(() => {
-    document.documentElement.classList.remove("dark");
+    const savedTheme = window?.localStorage?.getItem("theme");
+    const prefersDark = window?.matchMedia?.(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    const theme = savedTheme ? savedTheme === "dark" : prefersDark;
+
+    if (theme) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, []);
 
   useEffect(() => {
@@ -276,7 +288,7 @@ export default function Home() {
       className={cn(
         "w-full h-screen overflow-hidden",
         theme === "dark"
-          ? "dark bg-neutral-900 text-neutral-200"
+          ? "bg-neutral-900 text-neutral-200"
           : "bg-white text-gray-900"
       )}
     >

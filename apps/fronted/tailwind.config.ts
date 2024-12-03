@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 const config = {
-  important: true,
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -100,6 +99,9 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out"
       }
     }
+  },
+  colors: {
+    primary: "262.1 83.3% 57.8%"
   },
   plugins: [require("tailwindcss-animate")]
 } satisfies Config;

@@ -147,7 +147,7 @@ export function SidePanel() {
               <div
                 key={item.id}
                 className={cn(
-                  "rounded-lg group border mb-2 hover:border-indigo-600",
+                  "rounded-lg group border mb-2 hover:border-primary",
                   theme === "dark"
                     ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
                     : "hover:bg-gray-50 bg-white border-gray-100"
@@ -194,7 +194,7 @@ export function SidePanel() {
                   key={item.id}
                   value={item}
                   className={cn(
-                    "rounded-lg cursor-move group border hover:border-indigo-600",
+                    "rounded-lg cursor-move group border hover:border-primary",
                     theme === "dark"
                       ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
                       : "hover:bg-gray-50 bg-white border-gray-100"
@@ -244,7 +244,7 @@ export function SidePanel() {
                       )}
                     >
                       {item.enabled ? (
-                        <Eye className="w-4 h-4 text-indigo-600" />
+                        <Eye className="w-4 h-4 text-primary" />
                       ) : (
                         <EyeOff className="w-4 h-4" />
                       )}
@@ -284,7 +284,7 @@ export function SidePanel() {
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleCreateSection}
-              className="flex justify-center w-full rounded-lg items-center gap-2 py-2 px-3  text-sm font-medium text-indigo-600 bg-indigo-50"
+              className="flex justify-center w-full rounded-lg items-center gap-2 py-2 px-3  text-sm font-medium text-primary bg-indigo-50"
             >
               添加自定义模块
             </motion.button>

@@ -200,10 +200,10 @@ const ProjectItem = ({ project }: { project: Project }) => {
       }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        "bg-white hover:border-indigo-600",
+        "bg-white hover:border-primary",
         "dark:bg-neutral-900/30",
         "border-gray-100 dark:border-neutral-800",
-        "dark:hover:border-indigo-600"
+        "dark:hover:border-primary"
       )}
     >
       <div
@@ -280,7 +280,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
               onClick={handleVisibilityToggle}
             >
               {project.visible ? (
-                <Eye className="w-4 h-4 text-indigo-600" />
+                <Eye className="w-4 h-4 text-primary" />
               ) : (
                 <EyeOff className="w-4 h-4" />
               )}

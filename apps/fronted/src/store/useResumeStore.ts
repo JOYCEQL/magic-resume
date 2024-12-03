@@ -318,10 +318,19 @@ export const useResumeStore = create<ResumeStore>()(
           experience: state.experience.filter((p) => p.id !== id)
         })),
 
-      toggleTheme: () =>
-        set((state) => ({
-          theme: state.theme === "light" ? "dark" : "light"
-        })),
+      toggleTheme: () => {
+        set((state) => {
+          const newTheme = state.theme === "light" ? "dark" : "light";
+          document.documentElement.classList.toggle(
+            "dark",
+            newTheme === "dark"
+          );
+          // 本地存储也调整
+          window?.localStorage?.setItem("theme", newTheme);
+
+          return { theme: newTheme };
+        });
+      },
       updateGlobalSettings: (settings) =>
         set((state) => {
           const newSettings = {

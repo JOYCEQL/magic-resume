@@ -372,7 +372,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                           "h-9",
                           config.aspectRatio === ratio
                             ? theme === "dark"
-                              ? "bg-indigo-600 text-white"
+                              ? "bg-primary text-white"
                               : "bg-neutral-900 text-white"
                             : theme === "dark"
                               ? "bg-[#262626]  text-white border-none"
@@ -409,7 +409,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                           "h-9",
                           config.borderRadius === radius
                             ? theme === "dark"
-                              ? "bg-indigo-600 text-white"
+                              ? "bg-primary text-white"
                               : "bg-neutral-900 text-white"
                             : theme === "dark"
                               ? "bg-[#262626]  text-white"

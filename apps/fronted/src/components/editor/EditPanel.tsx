@@ -61,8 +61,8 @@ export function EditPanel() {
             </span>
             <input
               className={cn(
-                "flex-1 text-base  font-medium hover:border-indigo-600 hover:text-indigo-600 border-black  bg-transparent outline-none  border-b pb-1 text-gray-700",
-                "dark:text-neutral-200 dark:border-white dark:hover:border-indigo-600 dark:hover:text-indigo-600"
+                "flex-1 text-base  font-medium hover:border-primary hover:text-primary border-black  bg-transparent outline-none  border-b pb-1 text-gray-700",
+                "dark:text-neutral-200 dark:border-white dark:hover:border-primary dark:hover:text-primary"
               )}
               type="text"
               value={menuSections?.find((s) => s.id === activeSection)?.title}

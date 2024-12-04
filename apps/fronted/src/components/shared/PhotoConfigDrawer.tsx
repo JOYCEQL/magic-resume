@@ -28,7 +28,6 @@ interface Props {
   config?: PhotoConfig;
   onPhotoChange: (photo: string | undefined, config?: PhotoConfig) => void;
   onConfigChange: (config: PhotoConfig) => void;
-  theme: "dark" | "light";
 }
 
 const PhotoConfigDrawer: React.FC<Props> = ({
@@ -37,8 +36,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   photo,
   config: initialConfig,
   onPhotoChange,
-  onConfigChange,
-  theme
+  onConfigChange
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
@@ -216,7 +214,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       <DrawerContent
         ref={drawerContentRef}
         className={cn(
-          theme === "dark" ? "bg-neutral-900 text-white" : "bg-white",
+          "dark:bg-neutral-900 dark:text-white bg-white",
           "md:fixed md:border-none md:flex md:bottom-0 md:left-0 md:right-0 md:h-[93%] md:max-w-[360px] md:mx-[-1px] md:z-10 md:outline-none shadow shadow-blue-500/40"
         )}
       >
@@ -228,9 +226,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
             className={cn(
               "relative overflow-hidden border-2 transition-all mx-auto",
               isDragging ? "border-blue-500 border-solid" : "border-dashed",
-              theme === "dark"
-                ? "border-neutral-700 hover:border-neutral-600"
-                : "border-neutral-300 hover:border-neutral-400"
+              "dark:border-neutral-700 dark:hover:border-neutral-600 border-neutral-300 hover:border-neutral-400"
             )}
             style={{
               width: `${config.width}px`,
@@ -272,7 +268,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                 <Upload
                   className={cn(
                     "w-6 h-6 mb-2",
-                    theme === "dark" ? "text-neutral-400" : "text-neutral-500"
+                    "dark:text-neutral-400 text-neutral-500"
                   )}
                 />
                 <span className="text-sm">点击或拖拽上传照片</span>
@@ -299,7 +295,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                 placeholder="请输入图片链接"
                 className={cn(
                   "h-9",
-                  theme === "dark" && "bg-neutral-800 border-neutral-700"
+                  "dark:bg-neutral-800 dark:border-neutral-700"
                 )}
               />
             </div>
@@ -315,7 +311,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       onBlur={(e) => handleInputBlur(e, "width")}
                       className={cn(
                         "h-9 pr-7",
-                        theme === "dark" && "bg-neutral-800 border-neutral-700"
+                        "dark:bg-neutral-800 dark:border-neutral-700"
                       )}
                       min={24}
                       max={200}
@@ -324,9 +320,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     <div
                       className={cn(
                         "absolute right-3 top-1/2 -translate-y-1/2 text-sm",
-                        theme === "dark"
-                          ? "text-neutral-400"
-                          : "text-neutral-500"
+                        "dark:text-neutral-400 text-neutral-500"
                       )}
                     >
                       W
@@ -339,7 +333,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       onBlur={(e) => handleInputBlur(e, "height")}
                       className={cn(
                         "h-9 pr-7",
-                        theme === "dark" && "bg-neutral-800 border-neutral-700"
+                        "dark:bg-neutral-800 dark:border-neutral-700"
                       )}
                       min={24}
                       max={200}
@@ -348,9 +342,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     <div
                       className={cn(
                         "absolute right-3 top-1/2 -translate-y-1/2 text-sm",
-                        theme === "dark"
-                          ? "text-neutral-400"
-                          : "text-neutral-500"
+                        "dark:text-neutral-400 text-neutral-500"
                       )}
                     >
                       H
@@ -371,12 +363,8 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                         className={cn(
                           "h-9",
                           config.aspectRatio === ratio
-                            ? theme === "dark"
-                              ? "bg-primary text-white"
-                              : "bg-neutral-900 text-white"
-                            : theme === "dark"
-                              ? "bg-[#262626]  text-white border-none"
-                              : "bg-transparent text-black border-neutral-200"
+                            ? "bg-primary dark:text-white  text-white"
+                            : "dark:bg-[#262626] dark:text-white dark:border-none bg-transparent text-black border-neutral-200"
                         )}
                         onClick={() => {
                           if (ratio !== "custom") {
@@ -408,12 +396,8 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                         className={cn(
                           "h-9",
                           config.borderRadius === radius
-                            ? theme === "dark"
-                              ? "bg-primary text-white"
-                              : "bg-neutral-900 text-white"
-                            : theme === "dark"
-                              ? "bg-[#262626]  text-white"
-                              : "bg-transparent text-black border-2 border-neutral-200"
+                            ? "bg-primary dark:text-white text-white"
+                            : "dark:bg-[#262626] dark:text-white bg-transparent text-black dark:border-2 border-neutral-200"
                         )}
                         onClick={() =>
                           handleConfigChange({ borderRadius: radius })
@@ -438,7 +422,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     onBlur={(e) => handleInputBlur(e, "customBorderRadius")}
                     className={cn(
                       "h-9 mt-2",
-                      theme === "dark" && "bg-neutral-800 border-neutral-700"
+                      "dark:bg-neutral-800 dark:border-neutral-700"
                     )}
                     min={0}
                     max={Math.min(config.width, config.height) / 2}

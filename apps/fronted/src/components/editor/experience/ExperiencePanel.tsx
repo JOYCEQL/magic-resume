@@ -8,7 +8,7 @@ import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
 
 const ExperiencePanel = () => {
-  const { theme, experience = [], updateExperience } = useResumeStore();
+  const { experience = [], updateExperience } = useResumeStore();
   const handleCreateProject = () => {
     const newProject: Experience = {
       id: crypto.randomUUID(),
@@ -25,7 +25,7 @@ const ExperiencePanel = () => {
     <div
       className={cn(
         "space-y-4 px-4 py-4 rounded-lg",
-        theme === "dark" ? "bg-neutral-900/30" : "bg-white"
+        "bg-white dark:bg-neutral-900/30"
       )}
     >
       <Reorder.Group

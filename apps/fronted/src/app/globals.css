@@ -31,6 +31,25 @@
     --chart-5: 27 87% 67%;
   }
 
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+  }
+
   .dark {
     --background: 224 71.4% 4.1%;
     --foreground: 210 20% 98%;
@@ -56,6 +75,30 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    & ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    & ::-webkit-scrollbar-track {
+      background: #2d2d2d;
+      border-radius: 4px;
+    }
+
+    & ::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 4px;
+    }
+
+    & ::-webkit-scrollbar-thumb:hover {
+      background: #888;
+    }
+
+    & * {
+      scrollbar-width: thin;
+      scrollbar-color: #666 #2d2d2d;
+    }
   }
 }
 

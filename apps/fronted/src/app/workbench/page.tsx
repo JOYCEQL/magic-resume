@@ -8,7 +8,6 @@ import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
 import { PreviewPanel } from "@/components/preview/PreviewPanel";
-import { useScrollbarTheme } from "@/hooks/useScrollBarTheme";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -34,8 +33,6 @@ const LAYOUT_CONFIG = {
 
 // 创建自定义拖拽手柄组件
 const DragHandle = ({ show = true }) => {
-  const theme = useResumeStore((state) => state.theme);
-
   if (!show) return null;
 
   return (
@@ -44,7 +41,7 @@ const DragHandle = ({ show = true }) => {
         className={cn(
           "absolute inset-y-0 left-1/2 w-1 -translate-x-1/2",
           "group-hover:bg-primary/20 group-data-[dragging=true]:bg-primary",
-          theme === "dark" ? "bg-neutral-700/50" : "bg-gray-200"
+          "dark:bg-neutral-700/50 bg-gray-200"
         )}
       />
       <div
@@ -52,7 +49,7 @@ const DragHandle = ({ show = true }) => {
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           "w-4 h-8 rounded-full opacity-0 group-hover:opacity-100",
           "flex items-center justify-center",
-          theme === "dark" ? "bg-neutral-800" : "bg-gray-200"
+          "dark:bg-neutral-800 bg-gray-200"
         )}
       >
         <div className="w-0.5 h-4 bg-gray-400 rounded-full" />
@@ -62,8 +59,6 @@ const DragHandle = ({ show = true }) => {
 };
 
 export default function Home() {
-  const theme = useResumeStore((state) => state.theme);
-
   const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);
   const [focusedPanel, setFocusedPanel] = useState<null | "edit" | "preview">(
     null
@@ -73,26 +68,10 @@ export default function Home() {
   const [panelSizes, setPanelSizes] = useState(LAYOUT_CONFIG.DEFAULT);
   const [layoutKey, setLayoutKey] = useState(0);
 
-  useScrollbarTheme();
   const updateLayout = (newSizes: number[]) => {
     setPanelSizes(newSizes);
     setLayoutKey((prev) => prev + 1);
   };
-
-  useEffect(() => {
-    const savedTheme = window?.localStorage?.getItem("theme");
-    const prefersDark = window?.matchMedia?.(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    const theme = savedTheme ? savedTheme === "dark" : prefersDark;
-
-    if (theme) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
 
   useEffect(() => {
     let newSizes;
@@ -130,9 +109,7 @@ export default function Home() {
       className={cn(
         "absolute bottom-6 left-1/2 -translate-x-1/2",
         "flex items-center gap-2 z-10 p-2 rounded-full",
-        theme === "dark"
-          ? "bg-neutral-900/80 border border-neutral-800"
-          : "bg-white/80 border border-gray-200",
+        "dark:bg-neutral-900/80 dark:border dark:border-neutral-800 bg-white/80 border border-gray-200",
         "backdrop-blur-sm shadow-lg"
       )}
     >
@@ -156,12 +133,7 @@ export default function Home() {
         </Tooltip>
       </TooltipProvider>
 
-      <div
-        className={cn(
-          "h-5 w-px mx-1",
-          theme === "dark" ? "bg-neutral-800" : "bg-gray-200"
-        )}
-      />
+      <div className={cn("h-5 w-px mx-1", "dark:bg-neutral-800 bg-gray-200")} />
 
       <TooltipProvider>
         <Tooltip>
@@ -219,16 +191,14 @@ export default function Home() {
       className={cn(
         "fixed bottom-6 right-6 flex gap-2 md:hidden z-50",
         "p-2 rounded-full",
-        theme === "dark"
-          ? "bg-neutral-900/80 border border-neutral-800"
-          : "bg-white/80 border border-gray-200",
+        "dark:bg-neutral-900/80 dark:border dark:border-neutral-800 bg-white/80 border border-gray-200",
         "backdrop-blur-sm shadow-lg"
       )}
     >
       <motion.button
         className={cn(
           "p-3 rounded-full",
-          theme === "dark" ? "hover:bg-neutral-800" : "hover:bg-gray-100"
+          "dark:hover:bg-neutral-800 hover:bg-gray-100"
         )}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -239,7 +209,7 @@ export default function Home() {
       <motion.button
         className={cn(
           "p-3 rounded-full",
-          theme === "dark" ? "hover:bg-neutral-800" : "hover:bg-gray-100"
+          "dark:hover:bg-neutral-800 hover:bg-gray-100"
         )}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -269,7 +239,7 @@ export default function Home() {
           <motion.div
             className={cn(
               "fixed top-0 left-0 h-full w-80 z-50 md:hidden",
-              theme === "dark" ? "bg-neutral-900" : "bg-white"
+              "dark:bg-neutral-900 bg-white"
             )}
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
@@ -287,9 +257,8 @@ export default function Home() {
     <main
       className={cn(
         "w-full h-screen overflow-hidden",
-        theme === "dark"
-          ? "bg-neutral-900 text-neutral-200"
-          : "bg-white text-gray-900"
+        "bg-white text-gray-900",
+        "dark:bg-neutral-900 dark:text-neutral-200"
       )}
     >
       <EditorHeader />
@@ -301,9 +270,8 @@ export default function Home() {
           direction="horizontal"
           className={cn(
             "h-full rounded-lg",
-            theme === "dark"
-              ? "border-neutral-800 bg-neutral-900/50"
-              : "border border-gray-200 bg-white"
+            "border border-gray-200 bg-white",
+            "dark:border-neutral-800 dark:bg-neutral-900/50"
           )}
         >
           {/* 侧边栏面板 */}
@@ -313,9 +281,7 @@ export default function Home() {
                 defaultSize={panelSizes[0]}
                 minSize={20}
                 className={cn(
-                  theme === "dark"
-                    ? "bg-neutral-900 border-r border-neutral-800"
-                    : ""
+                  "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
                 )}
               >
                 <div className="h-full overflow-y-auto">
@@ -330,9 +296,7 @@ export default function Home() {
           <ResizablePanel
             defaultSize={panelSizes[1]}
             className={cn(
-              theme === "dark"
-                ? "bg-neutral-900 border-r border-neutral-800"
-                : ""
+              "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
             )}
           >
             <div className="h-full">

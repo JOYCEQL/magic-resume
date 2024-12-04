@@ -50,30 +50,20 @@ function SettingCard({
   title: string;
   children: React.ReactNode;
 }) {
-  const { theme } = useResumeStore();
-
   return (
     <Card
       className={cn(
         "border shadow-sm",
-        theme === "dark"
-          ? "bg-neutral-900 border-neutral-800 shadow-neutral-900/50"
-          : "bg-white border-gray-100 shadow-gray-100/50"
+        "dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-900/50",
+        "bg-white border-gray-100 shadow-gray-100/50"
       )}
     >
       <CardHeader className="p-4 pb-0">
         <CardTitle className="flex items-center gap-2 text-base font-medium">
           <Icon
-            className={cn(
-              "w-4 h-4",
-              theme === "dark" ? "text-neutral-300" : "text-gray-600"
-            )}
+            className={cn("w-4 h-4 text-gray-600", "dark:text-neutral-300")}
           />
-          <span
-            className={cn(
-              theme === "dark" ? "text-neutral-200" : "text-gray-700"
-            )}
-          >
+          <span className={cn("dark:text-neutral-200", "text-gray-700")}>
             {title}
           </span>
         </CardTitle>
@@ -85,7 +75,6 @@ function SettingCard({
 
 export function SidePanel() {
   const {
-    theme,
     menuSections,
     reorderSections,
     toggleSectionVisibility,
@@ -131,9 +120,8 @@ export function SidePanel() {
     <motion.div
       className={cn(
         "w-[80] border-r overflow-y-auto",
-        theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-gray-50 border-gray-100"
+        "dark:bg-neutral-950 dark:border-neutral-800",
+        "bg-gray-50 border-gray-100"
       )}
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
@@ -148,16 +136,16 @@ export function SidePanel() {
                 key={item.id}
                 className={cn(
                   "rounded-lg group border mb-2 hover:border-primary",
-                  theme === "dark"
-                    ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
-                    : "hover:bg-gray-50 bg-white border-gray-100"
+                  "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800",
+                  "hover:bg-gray-50 bg-white border-gray-100"
                 )}
               >
                 <div className="flex items-center p-3 pl-[32px] space-x-3 ">
                   <span
                     className={cn(
                       "text-lg  ml-[12px]",
-                      theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                      "dark:text-neutral-300",
+                      "text-gray-600"
                     )}
                   >
                     {item.icon}
@@ -166,12 +154,8 @@ export function SidePanel() {
                     className={cn(
                       "text-sm flex-1 cursor-pointer",
                       item.enabled
-                        ? theme === "dark"
-                          ? "text-neutral-200"
-                          : "text-gray-700"
-                        : theme === "dark"
-                          ? "text-neutral-500"
-                          : "text-gray-400"
+                        ? "dark:text-neutral-200 text-gray-700"
+                        : "dark:text-neutral-500 text-gray-400"
                     )}
                     onClick={() => setActiveSection(item.id)}
                   >
@@ -194,10 +178,9 @@ export function SidePanel() {
                   key={item.id}
                   value={item}
                   className={cn(
-                    "rounded-lg cursor-move group border hover:border-primary",
-                    theme === "dark"
-                      ? "hover:bg-neutral-800 bg-neutral-900/50 border-neutral-800"
-                      : "hover:bg-gray-50 bg-white border-gray-100"
+                    "rounded-lg cursor-move group border  hover:border-primary",
+                    "dark:hover:bg-neutral-800  dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-primary",
+                    "hover:bg-gray-50 bg-white border-gray-100 "
                   )}
                   whileHover={{ scale: 1.01 }}
                   whileDrag={{ scale: 1.02 }}
@@ -206,13 +189,15 @@ export function SidePanel() {
                     <GripVertical
                       className={cn(
                         "w-5 h-5  transition-opacity",
-                        theme === "dark" ? "text-neutral-400" : "text-gray-400"
+                        "dark:text-neutral-400",
+                        "text-gray-400"
                       )}
                     />
                     <span
                       className={cn(
                         "text-lg mr-2",
-                        theme === "dark" ? "text-neutral-300" : "text-gray-600"
+                        "dark:text-neutral-300",
+                        "text-gray-600"
                       )}
                     >
                       {item.icon}
@@ -221,12 +206,8 @@ export function SidePanel() {
                       className={cn(
                         "text-sm flex-1 cursor-pointer",
                         item.enabled
-                          ? theme === "dark"
-                            ? "text-neutral-200"
-                            : "text-gray-700"
-                          : theme === "dark"
-                            ? "text-neutral-500"
-                            : "text-gray-400"
+                          ? "dark:text-neutral-200 text-gray-700"
+                          : "dark:text-neutral-500 text-gray-400"
                       )}
                       onClick={() => setActiveSection(item.id)}
                     >
@@ -238,9 +219,8 @@ export function SidePanel() {
                       onClick={() => toggleSectionVisibility(item.id)}
                       className={cn(
                         "p-1.5 rounded-md",
-                        theme === "dark"
-                          ? "hover:bg-neutral-700 text-neutral-300"
-                          : "hover:bg-gray-100 text-gray-600"
+                        "dark:hover:bg-neutral-700 dark:text-neutral-300",
+                        "hover:bg-gray-100 text-gray-600"
                       )}
                     >
                       {item.enabled ? (
@@ -268,9 +248,8 @@ export function SidePanel() {
                       }}
                       className={cn(
                         "p-1.5 rounded-md text-primary",
-                        theme === "dark"
-                          ? "hover:bg-neutral-700 text-neutral-300"
-                          : "hover:bg-gray-100 text-gray-600"
+                        "dark:hover:bg-neutral-700 dark:text-neutral-300",
+                        "hover:bg-gray-100 text-gray-600"
                       )}
                     >
                       <Trash2 className="w-4 h-4 text-red-400" />
@@ -302,9 +281,7 @@ export function SidePanel() {
                     "relative group aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200",
                     colorTheme === presetTheme
                       ? "border-black dark:border-white"
-                      : theme === "dark"
-                        ? "border-neutral-800 hover:border-neutral-700"
-                        : "border-gray-100 hover:border-gray-200"
+                      : "dark:border-neutral-800 dark:hover:border-neutral-700 border-gray-100 hover:border-gray-200"
                   )}
                   onClick={() => setColorTheme(presetTheme)}
                 >
@@ -428,9 +405,8 @@ export function SidePanel() {
                 </motion.div>
                 <SelectContent
                   className={cn(
-                    theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-white"
-                      : "bg-white border-gray-200"
+                    "dark:bg-neutral-900 dark:border-neutral-800 text-white",
+                    "bg-white text-gray-700 border-gray-200"
                   )}
                 >
                   {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
@@ -466,9 +442,8 @@ export function SidePanel() {
                 </motion.div>
                 <SelectContent
                   className={cn(
-                    theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-white"
-                      : "bg-white border-gray-200"
+                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
+                    "bg-white border-gray-200"
                   )}
                 >
                   {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
@@ -504,9 +479,8 @@ export function SidePanel() {
                 </motion.div>
                 <SelectContent
                   className={cn(
-                    theme === "dark"
-                      ? "bg-neutral-900 border-neutral-800 text-white"
-                      : "bg-white border-gray-200"
+                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
+                    "bg-white border-gray-200"
                   )}
                 >
                   {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (

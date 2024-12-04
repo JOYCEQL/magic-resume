@@ -43,7 +43,7 @@ export function EducationSection({
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h4
-                  className="font-medium text-gray-800"
+                  className="font-semibold text-gray-800"
                   style={{
                     fontSize: `${globalSettings?.subheaderSize || 16}px`
                   }}
@@ -62,7 +62,7 @@ export function EducationSection({
                 )}
               </div>
               <p
-                className="text-gray-600"
+                className="font-medium  text-gray-600"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`
                 }}

@@ -71,7 +71,7 @@ export function ProjectItem({
         <motion.div layout>
           <motion.h4
             layout
-            className={cn("font-medium", "text-gray-800")}
+            className={cn("font-semibold", "text-gray-800")}
             style={{
               fontSize: `${globalSettings?.subheaderSize || 16}px`
             }}
@@ -80,7 +80,7 @@ export function ProjectItem({
           </motion.h4>
           <motion.div
             layout
-            className={cn("text-gray-600")}
+            className={cn("font-medium  text-gray-600")}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`
             }}

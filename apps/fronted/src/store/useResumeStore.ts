@@ -109,7 +109,7 @@ const initialState = {
         icon: "Github"
       }
     ],
-    photo: "avatar.svg"
+    photo: localStorage.getItem("photo") || "avatar.svg"
   },
   education: [
     {

@@ -109,7 +109,10 @@ const initialState = {
         icon: "Github"
       }
     ],
-    photo: localStorage.getItem("photo") || "avatar.svg"
+    photo:
+      typeof window !== "undefined"
+        ? localStorage.getItem("photo") || "avatar.svg"
+        : "avatar.svg"
   },
   education: [
     {

@@ -20,6 +20,7 @@ import {
 } from "@/types/resume";
 import { motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface Props {
   isOpen: boolean;
@@ -38,6 +39,8 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   onPhotoChange,
   onConfigChange
 }) => {
+  const { basic, updateBasicInfo } = useResumeStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
   const [isDragging, setIsDragging] = useState(false);
@@ -94,6 +97,11 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     reader.onloadend = () => {
       const result = reader.result as string;
       setPreviewUrl(result);
+      setImageUrl(result);
+      localStorage.setItem("photo", result);
+      updateBasicInfo({
+        photo: result
+      });
     };
     reader.readAsDataURL(file);
   };
@@ -109,6 +117,10 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     const url = e;
     setImageUrl(url);
     setPreviewUrl(url);
+    updateBasicInfo({
+      photo: url
+    });
+    localStorage.setItem("photo", url);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -271,10 +283,6 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     "dark:text-neutral-400 text-neutral-500"
                   )}
                 />
-                <span className="text-sm">点击或拖拽上传照片</span>
-                <span className="text-xs text-neutral-500 mt-1">
-                  支持 jpg、png 格式，≤5MB
-                </span>
               </Button>
             )}
             <motion.input
@@ -285,10 +293,15 @@ const PhotoConfigDrawer: React.FC<Props> = ({
               className="hidden"
             />
           </div>
-
+          <div className="p-6 space-y-6">
+            <span className="text-sm">点击或拖拽上传照片</span>
+            <span className="text-xs text-neutral-500 mt-1">
+              支持 jpg、png 格式，≤5MB
+            </span>
+          </div>
           <div className="p-6 space-y-6">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium">在线链接</h3>
+              <h3 className="text-sm font-medium">在线链接(或base64)</h3>
               <Textarea
                 value={imageUrl}
                 onChange={(e) => handleUrlChange(e.target.value)}
@@ -397,7 +410,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                           "h-9",
                           config.borderRadius === radius
                             ? "bg-primary dark:text-white text-white"
-                            : "dark:bg-[#262626] dark:text-white bg-transparent text-black dark:border-2 border-neutral-200"
+                            : "dark:bg-[#262626] dark:text-white bg-transparent text-black "
                         )}
                         onClick={() =>
                           handleConfigChange({ borderRadius: radius })
@@ -420,10 +433,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     value={config.customBorderRadius}
                     onChange={(e) => handleInputChange(e, "customBorderRadius")}
                     onBlur={(e) => handleInputBlur(e, "customBorderRadius")}
-                    className={cn(
-                      "h-9 mt-2",
-                      "dark:bg-neutral-800 dark:border-neutral-700"
-                    )}
+                    className={cn("h-9 mt-2", "dark:bg-neutral-800")}
                     min={0}
                     max={Math.min(config.width, config.height) / 2}
                     placeholder="自定义圆角大小"

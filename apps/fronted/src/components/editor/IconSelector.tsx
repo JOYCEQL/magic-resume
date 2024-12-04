@@ -253,7 +253,6 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
               "transform-gpu transition-all duration-300",
               "dark:bg-neutral-800/50  dark:border-neutral-700",
               "bg-neutral-50 border border-neutral-200",
-              "focus-within:ring-2",
               "dark:focus-within:ring-blue-500/30",
               "focus-within:ring-blue-500/20"
             )}
@@ -292,8 +291,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                   "px-2 py-1 text-xs rounded-md",
                   "transition-all duration-200",
                   selectedCategory === category
-                    ? "dark:bg-neutral-800 dark:text-blue-400 dark:ring-1 dark:ring-blue-500/30 bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
-                    : "dark:text-neutral-400 dark:hover:text-neutral-200 text-neutral-600 hover:text-neutral-900"
+                    ? "bg-primary text-white dark:ring-1 dark:ring-blue-500/30  ring-1 ring-blue-500/20"
+                    : "dark:text-white  text-neutral-600 hover:text-neutral-900"
                 )}
               >
                 {category}
@@ -310,11 +309,10 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                 onMouseLeave={() => setIsHovered("")}
                 onClick={() => handleSelect(iconValue)}
                 className={cn(
-                  "relative p-2 h-10 rounded-lg group",
+                  "relative p-2 h-10  group",
                   "dark:hover:bg-neutral-800/70 dark:text-neutral-300 hover:text-neutral-200",
                   "hover:bg-neutral-100/70 text-neutral-600 hover:text-neutral-900",
-                  value === iconValue &&
-                    "dark:bg-neutral-800 dark:text-blue-400 dark:ring-1 dark:ring-blue-500/30 bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
+                  value === iconValue && "bg-primary text-white  "
                 )}
               >
                 <Icon className={cn("w-4 h-4")} />

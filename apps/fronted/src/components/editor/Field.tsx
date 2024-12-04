@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { useResumeStore } from "@/store/useResumeStore";
 import RichTextEditor from "@/components/shared/rich-editor/RichEditor";
 import { Button } from "../ui/button";
 

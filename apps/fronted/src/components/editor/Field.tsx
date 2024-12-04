@@ -33,13 +33,11 @@ const Field: React.FC<FieldProps> = ({
   required,
   className
 }) => {
-  const theme = useResumeStore((state) => state.theme);
-
   const renderLabel = () => (
     <span
       className={cn(
         "text-sm font-medium flex gap-1 items-center",
-        theme === "dark" ? "text-neutral-300" : "text-gray-600"
+        "dark:text-neutral-300 text-gray-600"
       )}
     >
       {label}
@@ -92,7 +90,7 @@ const Field: React.FC<FieldProps> = ({
         <span
           className={cn(
             "text-sm font-medium flex gap-1 items-center",
-            theme === "dark" ? "text-neutral-300" : "text-gray-600"
+            "dark:text-neutral-300 text-gray-600"
           )}
         >
           {label}
@@ -131,7 +129,7 @@ const Field: React.FC<FieldProps> = ({
       <span
         className={cn(
           "text-sm font-medium flex gap-1 items-center",
-          theme === "dark" ? "text-neutral-300" : "text-gray-600"
+          "dark:text-neutral-300 text-gray-600"
         )}
       >
         {label}

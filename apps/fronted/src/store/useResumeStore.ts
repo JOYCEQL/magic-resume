@@ -32,7 +32,6 @@ interface ResumeStore {
 
   customData: Record<string, CustomItem[]>;
 
-  theme: "light" | "dark";
   activeSection: string;
 
   // 当前使用的主题色 ID
@@ -63,7 +62,6 @@ interface ResumeStore {
   ) => void;
   removeCustomItem: (sectionId: string, itemId: string) => void;
 
-  toggleTheme: () => void;
   // 全局设置
   globalSettings: GlobalSettings;
   updateGlobalSettings: (settings: Partial<GlobalSettings>) => void;
@@ -207,7 +205,6 @@ const initialState = {
     { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 4 }
   ],
   customData: {},
-  theme: "light" as const,
 
   colorTheme: "#2563eb",
 
@@ -318,19 +315,6 @@ export const useResumeStore = create<ResumeStore>()(
           experience: state.experience.filter((p) => p.id !== id)
         })),
 
-      toggleTheme: () => {
-        set((state) => {
-          const newTheme = state.theme === "light" ? "dark" : "light";
-          document.documentElement.classList.toggle(
-            "dark",
-            newTheme === "dark"
-          );
-          // 本地存储也调整
-          window?.localStorage?.setItem("theme", newTheme);
-
-          return { theme: newTheme };
-        });
-      },
       updateGlobalSettings: (settings) =>
         set((state) => {
           const newSettings = {

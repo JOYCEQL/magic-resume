@@ -18,6 +18,7 @@ import {
 import ScrollToTop from "../components/shared/ScrollToTop";
 import EditButton from "@/components/shared/EditButton";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 const TypewriterText = ({ text }) => {
   const [displayText, setDisplayText] = useState("");
@@ -44,7 +45,7 @@ const TypewriterText = ({ text }) => {
   );
 };
 
-const FeatureGrid = ({ isDark }) => {
+const FeatureGrid = () => {
   const brandFeature = {
     title: "Magic Resume",
     subtitle: "AI驱动的智能简历系统",
@@ -98,7 +99,7 @@ const FeatureGrid = ({ isDark }) => {
         className={cn(
           "h-full w-full rounded-3xl overflow-hidden",
           "border backdrop-blur-xl",
-          isDark ? "bg-black/40 border-white/10" : "bg-white/40 border-black/5"
+          "dark:bg-black/40 dark:border-white/10 bg-white/40 border-black/5"
         )}
       >
         {/* 渐变背景 */}
@@ -141,12 +142,7 @@ const FeatureGrid = ({ isDark }) => {
             <p className="text-xl md:text-2xl font-medium mb-6">
               {brandFeature.subtitle}
             </p>
-            <p
-              className={cn(
-                "text-base",
-                isDark ? "text-gray-400" : "text-gray-600"
-              )}
-            >
+            <p className={cn("text-base", "text-gray-600 dark:text-gray-400")}>
               {brandFeature.tagline}
             </p>
           </motion.div>
@@ -171,10 +167,7 @@ const FeatureGrid = ({ isDark }) => {
         className={cn(
           "h-full rounded-3xl overflow-hidden",
           "border backdrop-blur-xl transition-all duration-500",
-          isDark
-            ? "bg-black/40 border-white/10 hover:border-white/20"
-            : "bg-white/40 border-black/5 hover:border-black/10",
-          "hover:shadow-lg hover:scale-[1.02]"
+          "dark:bg-black/40 dark:border-white/10 bg-white/40 border-black/5 dark:hover:border-white/20 hover:border-black/10"
         )}
       >
         <div className="relative h-full p-6">
@@ -205,10 +198,7 @@ const FeatureGrid = ({ isDark }) => {
               {feature.title}
             </h3>
             <p
-              className={cn(
-                "text-sm mb-4",
-                isDark ? "text-gray-400" : "text-gray-600"
-              )}
+              className={cn("text-sm mb-4", "text-gray-600 dark:text-gray-400")}
             >
               {feature.description}
             </p>
@@ -219,9 +209,7 @@ const FeatureGrid = ({ isDark }) => {
                 className={cn(
                   "inline-block px-3 py-1 rounded-full text-sm",
                   "transition-all duration-500",
-                  isDark
-                    ? "bg-white/10 group-hover:bg-white/20"
-                    : "bg-black/5 group-hover:bg-black/10"
+                  "bg-black/5 dark:bg-white/10 group-hover:bg-black/10 dark:group-hover:bg-white/20"
                 )}
               >
                 {feature.highlight}
@@ -250,45 +238,14 @@ const FeatureGrid = ({ isDark }) => {
 
 // 主页面组件
 export default function LandingPage() {
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    const savedTheme = window?.localStorage?.getItem("theme");
-    const prefersDark = window?.matchMedia?.(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    const theme = savedTheme ? savedTheme === "dark" : prefersDark;
-    setIsDark(theme);
-
-    if (theme) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    window?.localStorage?.setItem("theme", newTheme ? "dark" : "light");
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   return (
-    <div
-      className={`min-h-screen relative ${isDark ? "bg-black text-white" : "bg-gray-50 text-gray-900"}`}
-    >
+    <div className="min-h-screen relative  dark:bg-black dark:text-white bg-gray-50 text-gray-900">
       <ScrollToTop />
 
       {/* Header */}
       <header
-        className={`fixed top-0 w-full border-b backdrop-blur-md z-40 transition-colors duration-300
-        ${isDark ? "border-white/5 bg-black/50" : "border-gray-200 bg-white/50"}`}
+        className="fixed top-0 w-full border-b backdrop-blur-md z-40 transition-colors duration-300
+        dark:border-white/5 dark:bg-black/50 border-gray-200 bg-white/50"
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -297,18 +254,7 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-full"
-            >
-              {isDark ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
+            <ThemeToggle></ThemeToggle>
             <EditButton className="bg-primary text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center space-x-1">
               <span>开始制作</span>
               <ChevronRight className="h-4 w-4" />
@@ -395,14 +341,14 @@ export default function LandingPage() {
             >
               {/* 背景装饰 */}
               <div
-                className={`absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 
                 rounded-3xl blur-3xl transition-opacity duration-500
-                ${isDark ? "opacity-30" : "opacity-10"}`}
+                dark:opacity-30 opacity-10"
               />
             </motion.div>
 
             {/* 功能网格 */}
-            <FeatureGrid isDark={isDark} />
+            <FeatureGrid />
           </div>
         </div>
       </section>
@@ -429,11 +375,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer
-        className={`py-8 border-t ${
-          isDark ? "border-white/5" : "border-gray-200"
-        }`}
-      >
+      <footer className={`py-8 border-t dark:border-white/5 border-gray-200`}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-gray-500">
@@ -442,31 +384,19 @@ export default function LandingPage() {
             <div className="flex items-center space-x-6">
               <a
                 href="#"
-                className={`text-sm ${
-                  isDark
-                    ? "text-gray-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-                } transition-colors`}
+                className="text-sm dark:text-gray-400 dark:hover:text-white text-gray-600 hover:text-gray-900 transition-colors"
               >
                 隐私政策
               </a>
               <a
                 href="#"
-                className={`text-sm ${
-                  isDark
-                    ? "text-gray-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-                } transition-colors`}
+                className="text-sm dark:text-gray-400 dark:hover:text-white text-gray-600 hover:text-gray-900 transition-colors"
               >
                 使用条款
               </a>
               <a
                 href="#"
-                className={`text-sm ${
-                  isDark
-                    ? "text-gray-400 hover:text-white"
-                    : "text-gray-600 hover:text-gray-900"
-                } transition-colors`}
+                className="text-sm dark:text-gray-400 dark:hover:text-white text-gray-600 hover:text-gray-900 transition-colors"
               >
                 联系我们
               </a>
@@ -480,9 +410,7 @@ export default function LandingPage() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className={`p-4 rounded-full shadow-lg ${
-            isDark ? "bg-white/10" : "bg-white"
-          } backdrop-blur-sm`}
+          className="p-4 rounded-full shadow-lg dark:bg-white/10 bg-white backdrop-blur-sm"
         >
           <ArrowRight className="h-6 w-6" />
         </motion.button>

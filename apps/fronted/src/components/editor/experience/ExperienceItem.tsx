@@ -40,8 +40,6 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   projectName,
   onDelete
 }) => {
-  const theme = useResumeStore((state) => state.theme);
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -50,9 +48,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
           size="sm"
           className={cn(
             "text-sm",
-            theme === "dark"
-              ? "hover:bg-red-900/50 text-red-400"
-              : "hover:bg-red-50 text-red-600"
+            "hover:bg-red-50 text-red-600 dark:hover:bg-red-900/50 dark:text-red-400"
           )}
           onClick={(e) => e.stopPropagation()}
         >
@@ -60,23 +56,17 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent
-        className={cn(
-          theme === "dark" ? "bg-neutral-900 border-neutral-800" : "bg-white"
-        )}
+        className={cn("bg-white dark:bg-neutral-900 dark:border-neutral-800")}
         onClick={(e) => e.stopPropagation()}
       >
         <AlertDialogHeader>
           <AlertDialogTitle
-            className={cn(
-              theme === "dark" ? "text-neutral-200" : "text-gray-900"
-            )}
+            className={cn("text-gray-900 dark:text-neutral-200")}
           >
             确认删除经历
           </AlertDialogTitle>
           <AlertDialogDescription
-            className={cn(
-              theme === "dark" ? "text-neutral-400" : "text-gray-500"
-            )}
+            className={cn("text-gray-500 dark:text-neutral-400")}
           >
             您确定要删除经历 {projectName} 吗？此操作无法撤销。
           </AlertDialogDescription>
@@ -84,9 +74,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         <AlertDialogFooter>
           <AlertDialogCancel
             className={cn(
-              theme === "dark"
-                ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border-neutral-700"
-                : ""
+              "dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 dark:border-neutral-700"
             )}
           >
             取消
@@ -96,11 +84,7 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
               e.preventDefault();
               onDelete();
             }}
-            className={cn(
-              theme === "dark"
-                ? "bg-red-600 hover:bg-red-700 text-white"
-                : "bg-red-600 hover:bg-red-700 text-white"
-            )}
+            className={cn("bg-red-600 hover:bg-red-700 text-white")}
           >
             删除
           </AlertDialogAction>
@@ -162,7 +146,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
 const ExperienceItem = ({ experience }: { experience: Experience }) => {
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { theme, updateExperience, deleteExperience } = useResumeStore();
+  const { updateExperience, deleteExperience } = useResumeStore();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleVisibilityToggle = useCallback(
@@ -214,7 +198,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
-          theme === "dark" ? "border-neutral-800" : "border-gray-100",
+          "border-gray-100 dark:border-neutral-800",
           expandedId === experience.id
             ? "cursor-not-allowed"
             : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
@@ -223,7 +207,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         <GripVertical
           className={cn(
             "w-4 h-4",
-            theme === "dark" ? "text-neutral-400" : "text-gray-400",
+            "text-gray-400 dark:text-neutral-400",
             expandedId === experience.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
@@ -234,8 +218,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === experience.id &&
-              (theme === "dark" ? "bg-neutral-800/50" : "bg-gray-50"),
+            expandedId === experience.id && "bg-gray-50 dark:bg-neutral-800/50",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {
@@ -250,7 +233,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
             <h3
               className={cn(
                 "font-medium truncate",
-                theme === "dark" ? "text-neutral-200" : "text-gray-700"
+                "text-gray-700 dark:text-neutral-200"
               )}
             >
               {experience.company || "家里蹲公司"}
@@ -263,13 +246,9 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               disabled={isUpdating}
               className={cn(
                 "text-sm",
-                theme === "dark"
-                  ? experience.visible
-                    ? "hover:bg-neutral-800 text-neutral-400"
-                    : "hover:bg-neutral-800 text-neutral-600"
-                  : experience.visible
-                    ? "hover:bg-gray-100 text-gray-500"
-                    : "hover:bg-gray-100 text-gray-400"
+                experience.visible
+                  ? "hover:bg-gray-100 text-gray-500 dark:hover:bg-neutral-800 dark:text-neutral-400"
+                  : "hover:bg-gray-100 text-gray-400 dark:hover:bg-neutral-800 dark:text-neutral-600"
               )}
               onClick={handleVisibilityToggle}
             >
@@ -293,10 +272,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               }}
             >
               <ChevronDown
-                className={cn(
-                  "w-5 h-5",
-                  theme === "dark" ? "text-neutral-400" : "text-gray-500"
-                )}
+                className={cn("w-5 h-5", "text-gray-500 dark:text-neutral-400")}
               />
             </motion.div>
           </div>
@@ -313,14 +289,14 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               <div
                 className={cn(
                   "px-4 pb-4 space-y-4",
-                  theme === "dark" ? "border-neutral-800" : "border-gray-100"
+                  "border-gray-100 dark:border-neutral-800"
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div
                   className={cn(
                     "h-px w-full",
-                    theme === "dark" ? "bg-neutral-800" : "bg-gray-100"
+                    "bg-gray-100 dark:bg-neutral-800"
                   )}
                 />
                 <ProjectEditor

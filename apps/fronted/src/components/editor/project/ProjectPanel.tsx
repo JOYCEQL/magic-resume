@@ -7,7 +7,7 @@ import ProjectItem from "./ProjectItem";
 import { Project } from "@/types/resume";
 
 const ProjectPanel = () => {
-  const { theme, projects = [], updateProjects } = useResumeStore();
+  const { projects = [], updateProjects } = useResumeStore();
 
   const handleCreateProject = () => {
     const newProject: Project = {
@@ -25,7 +25,7 @@ const ProjectPanel = () => {
     <div
       className={cn(
         "space-y-4 px-4 py-4 rounded-lg",
-        theme === "dark" ? "bg-neutral-900/30" : "bg-white"
+        "bg-white dark:bg-neutral-900/30"
       )}
     >
       <Reorder.Group

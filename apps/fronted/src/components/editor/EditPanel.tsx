@@ -12,8 +12,7 @@ import CustomPanel from "./custom/CustomPanel";
 import SkillPanel from "./skills/SkillPanel";
 
 export function EditPanel() {
-  const { theme, activeSection, menuSections, updateMenuSections } =
-    useResumeStore();
+  const { activeSection, menuSections, updateMenuSections } = useResumeStore();
 
   const renderFields = () => {
     switch (activeSection) {
@@ -41,18 +40,16 @@ export function EditPanel() {
     <motion.div
       className={cn(
         "w-full  h-full border-r overflow-y-auto",
-        theme === "dark"
-          ? "bg-neutral-950 border-neutral-800"
-          : "bg-gray-50 border-gray-100"
+        "dark:bg-neutral-950 dark:border-neutral-800",
+        "bg-gray-50 border-gray-100"
       )}
     >
       <div className="p-4">
         <motion.div
           className={cn(
             "mb-4 p-4 rounded-lg border",
-            theme === "dark"
-              ? "bg-neutral-900/50 border-neutral-800"
-              : "bg-white border-gray-100"
+            "dark:bg-neutral-900/50 dark:border-neutral-800",
+            "bg-white border-gray-100"
           )}
         >
           <div className="flex items-center gap-2">
@@ -85,9 +82,8 @@ export function EditPanel() {
         <motion.div
           className={cn(
             "rounded-lg",
-            theme === "dark"
-              ? "bg-neutral-900/50 border-neutral-800"
-              : "bg-white border-gray-100"
+            "dark:bg-neutral-900/50 dark:border-neutral-800",
+            "bg-white border-gray-100"
           )}
         >
           {renderFields()}

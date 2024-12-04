@@ -89,7 +89,6 @@ const MenuButton = ({
   className = "",
   tooltip
 }: MenuButtonProps) => {
-  const theme = useResumeStore((state) => state.theme);
   const [showTooltip, setShowTooltip] = React.useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -107,12 +106,8 @@ const MenuButton = ({
         className={cn(
           "h-9 w-9 rounded-md transition-all duration-200 hover:scale-105 p-0",
           isActive
-            ? theme === "dark"
-              ? "bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-              : "bg-primary/10 text-primary hover:bg-primary/20"
-            : theme === "dark"
-              ? "hover:bg-neutral-800"
-              : "hover:bg-primary/5",
+            ? "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+            : "hover:bg-primary/5 dark:hover:bg-neutral-800",
           disabled ? "opacity-50" : "",
           className
         )}
@@ -129,9 +124,7 @@ const MenuButton = ({
             "absolute -bottom-8 left-1/2 transform -translate-x-1/2",
             "px-2 py-1 text-xs rounded-md whitespace-nowrap z-50",
             "transition-opacity duration-200",
-            theme === "dark"
-              ? "bg-neutral-800 text-neutral-200"
-              : "bg-secondary text-secondary-foreground"
+            "bg-secondary text-secondary-foreground dark:bg-neutral-800 dark:text-neutral-200"
           )}
         >
           {tooltip}
@@ -296,8 +289,6 @@ const BackgroundColorButton = ({ editor }) => {
 };
 
 const HeadingSelect = ({ editor }) => {
-  const theme = useResumeStore((state) => state.theme);
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -306,7 +297,7 @@ const HeadingSelect = ({ editor }) => {
           size="sm"
           className={cn(
             "h-9 px-2.5 rounded-md flex items-center gap-1.5 min-w-[100px]",
-            theme === "dark" ? "hover:bg-neutral-800" : "hover:bg-primary/5"
+            "hover:bg-primary/5 dark:hover:bg-neutral-800"
           )}
         >
           <Type className="h-5 w-5" />
@@ -323,10 +314,7 @@ const HeadingSelect = ({ editor }) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(
-          "w-40 p-1 rounded-lg",
-          theme === "dark" ? "bg-neutral-900" : "bg-white"
-        )}
+        className={cn("w-40 p-1 rounded-lg", "bg-white dark:bg-neutral-900")}
       >
         <div className="flex flex-col gap-0.5">
           {[
@@ -346,9 +334,7 @@ const HeadingSelect = ({ editor }) => {
                     ? undefined
                     : { level: parseInt(item.value) }
                 )
-                  ? theme === "dark"
-                    ? "bg-neutral-800 text-neutral-200"
-                    : "bg-primary/10 text-primary"
+                  ? "bg-primary/10 text-primary dark:bg-neutral-800 dark:text-neutral-200"
                   : ""
               )}
               onClick={() => {
@@ -377,8 +363,6 @@ const RichTextEditor = ({
   onChange,
   placeholder
 }: RichTextEditorProps) => {
-  const theme = useResumeStore((state) => state.theme);
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -414,18 +398,16 @@ const RichTextEditor = ({
       attributes: {
         class: cn(
           "prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[150px] px-4 py-3",
-          theme === "dark" && [
-            "prose-invert",
-            "prose-headings:text-neutral-200",
-            "prose-p:text-neutral-300",
-            "prose-strong:text-neutral-200",
-            "prose-em:text-neutral-200",
-            "prose-blockquote:text-neutral-300",
-            "prose-blockquote:border-neutral-700",
-            "prose-ul:text-neutral-300",
-            "prose-ol:text-neutral-300",
-            "[&_*::selection]:bg-neutral-700/50"
-          ]
+          "dark:prose-invert",
+          "dark:prose-headings:text-neutral-200",
+          "dark:prose-p:text-neutral-300",
+          "dark:prose-strong:text-neutral-200",
+          "dark:prose-em:text-neutral-200",
+          "dark:prose-blockquote:text-neutral-300",
+          "dark:prose-blockquote:border-neutral-700",
+          "dark:prose-ul:text-neutral-300",
+          "dark:prose-ol:text-neutral-300",
+          "dark:[&_*::selection]:bg-neutral-700/50"
         )
       }
     },
@@ -440,9 +422,7 @@ const RichTextEditor = ({
     <div
       className={cn(
         "rounded-lg overflow-hidden border shadow-sm",
-        theme === "dark"
-          ? "bg-neutral-900/30 border-neutral-800"
-          : "bg-card border-gray-100"
+        "bg-card border-gray-100 dark:bg-neutral-900/30 dark:border-neutral-800"
       )}
       onClick={(e) => e.stopPropagation()}
     >
@@ -450,21 +430,14 @@ const RichTextEditor = ({
       <div
         className={cn(
           "border-b px-2 py-1.5 flex flex-wrap items-center gap-3",
-          theme === "dark"
-            ? "bg-neutral-900/50 border-neutral-800"
-            : "bg-background"
+          "bg-background dark:bg-neutral-900/50 dark:border-neutral-800"
         )}
       >
         <div className="flex items-center">
           <HeadingSelect editor={editor} />
         </div>
 
-        <div
-          className={cn(
-            "h-5 w-px",
-            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
-          )}
-        />
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -499,12 +472,7 @@ const RichTextEditor = ({
           <BackgroundColorButton editor={editor} />
         </div>
 
-        <div
-          className={cn(
-            "h-5 w-px",
-            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
-          )}
-        />
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -537,12 +505,7 @@ const RichTextEditor = ({
           </MenuButton>
         </div>
 
-        <div
-          className={cn(
-            "h-5 w-px",
-            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
-          )}
-        />
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
 
         <div className="flex items-center gap-0.5">
           <MenuButton
@@ -568,12 +531,7 @@ const RichTextEditor = ({
           </MenuButton>
         </div>
 
-        <div
-          className={cn(
-            "h-5 w-px",
-            theme === "dark" ? "bg-neutral-800" : "bg-border/60"
-          )}
-        />
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
 
         <div className="flex items-center gap-0.5">
           <MenuButton

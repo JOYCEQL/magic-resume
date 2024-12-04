@@ -9,10 +9,9 @@ import { PhotoConfig } from "@/types/resume";
 
 interface Props {
   className?: string;
-  theme: "dark" | "light";
 }
 
-const PhotoSelector: React.FC<Props> = ({ className, theme }) => {
+const PhotoSelector: React.FC<Props> = ({ className }) => {
   const [showConfig, setShowConfig] = useState(false);
   const { basic, updateBasicInfo } = useResumeStore();
 
@@ -65,7 +64,7 @@ const PhotoSelector: React.FC<Props> = ({ className, theme }) => {
             }}
           >
             {basic.photoConfig?.visible !== false ? (
-              <Eye className="w-4 h-4" />
+              <Eye className="w-4 h-4 text-primary" />
             ) : (
               <EyeOff className="w-4 h-4" />
             )}
@@ -88,7 +87,6 @@ const PhotoSelector: React.FC<Props> = ({ className, theme }) => {
         config={basic.photoConfig}
         onPhotoChange={handlePhotoChange}
         onConfigChange={handleConfigChange}
-        theme={theme}
       />
     </div>
   );

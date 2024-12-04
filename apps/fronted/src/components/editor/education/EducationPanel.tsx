@@ -8,7 +8,7 @@ import EducationItem from "./EducationItem";
 import { Education, Project } from "@/types/resume";
 
 const ProjectPanel = () => {
-  const { theme, education = [], updateEducation } = useResumeStore();
+  const { education = [], updateEducation } = useResumeStore();
 
   const handleCreateProject = () => {
     const newEducation: Education = {
@@ -28,7 +28,8 @@ const ProjectPanel = () => {
     <div
       className={cn(
         "space-y-4 px-4 py-4 rounded-lg",
-        theme === "dark" ? "bg-neutral-900/30" : "bg-white"
+        "dark:bg-neutral-900/30",
+        "bg-white"
       )}
     >
       <Reorder.Group

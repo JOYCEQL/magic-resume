@@ -118,7 +118,6 @@ export interface Project {
 }
 
 export type GlobalSettings = {
-  theme?: "light" | "dark" | undefined;
   themeColor?: string | undefined;
   fontFamily?: string | undefined;
   baseFontSize?: number | undefined;

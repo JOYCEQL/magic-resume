@@ -31,7 +31,6 @@ interface CustomFieldProps {
   field: CustomFieldType;
   onUpdate: (field: CustomFieldType) => void;
   onDelete: (id: string) => void;
-  theme: "dark" | "light";
 }
 
 const itemAnimations = {
@@ -44,8 +43,7 @@ const itemAnimations = {
 const CustomField: React.FC<CustomFieldProps> = ({
   field,
   onUpdate,
-  onDelete,
-  theme
+  onDelete
 }) => {
   return (
     <Reorder.Item
@@ -78,7 +76,6 @@ const CustomField: React.FC<CustomFieldProps> = ({
           <IconSelector
             value={field.icon}
             onChange={(value) => onUpdate({ ...field, icon: value })}
-            theme={theme}
           />
         </div>
         <Field
@@ -135,7 +132,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
 };
 
 const BasicPanel: React.FC = () => {
-  const { basic, updateBasicInfo, theme } = useResumeStore();
+  const { basic, updateBasicInfo } = useResumeStore();
   const [customFields, setCustomFields] = useState<CustomFieldType[]>(
     basic?.customFields?.map((field) => ({
       ...field,
@@ -231,7 +228,7 @@ const BasicPanel: React.FC = () => {
         <motion.div
           {...itemAnimations}
           className={cn(
-            "flex items-center gap-4 p-4",
+            "flex items-center gap-4 p-4 pr-3",
             "bg-white dark:bg-neutral-900",
             "rounded-lg ",
             "transition-all duration-200",
@@ -264,7 +261,6 @@ const BasicPanel: React.FC = () => {
                     }
                   });
                 }}
-                theme={theme}
               />
             )}
             <div className=" w-[80px] ml-[4px] text-sm font-medium text-neutral-700 dark:text-neutral-200">
@@ -314,7 +310,7 @@ const BasicPanel: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white dark:bg-neutral-900 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
       >
-        <PhotoUpload theme={theme} />
+        <PhotoUpload />
       </motion.div>
 
       <motion.div className="space-y-6">
@@ -354,7 +350,6 @@ const BasicPanel: React.FC = () => {
                     field={field}
                     onUpdate={updateCustomField}
                     onDelete={deleteCustomField}
-                    theme={theme}
                   />
                 ))}
             </Reorder.Group>

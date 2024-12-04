@@ -1,20 +1,16 @@
 "use client";
-
 import { motion } from "framer-motion";
-import { Sun, Moon, Eye } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import PdfExport from "../shared/PdfExport";
-
+import ThemeToggle from "../shared/ThemeToggle";
 interface EditorHeaderProps {
   isMobile?: boolean;
 }
 
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
-  const { theme, menuSections, activeSection, setActiveSection, toggleTheme } =
-    useResumeStore();
-
-  const themeConfig = getThemeConfig(theme === "dark");
+  const { menuSections, activeSection, setActiveSection } = useResumeStore();
+  const themeConfig = getThemeConfig();
 
   const visibleSections = menuSections
     .filter((section) => section.enabled)
@@ -22,7 +18,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
 
   return (
     <motion.header
-      className={`h-16 border-b ${themeConfig.border} ${themeConfig.sidebar} sticky top-0 z-10`}
+      className={`h-16 border-b sticky top-0 z-10`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
     >
@@ -59,19 +55,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
         </div>
 
         <div className="flex items-center space-x-3">
-          <motion.button
-            className={`p-2 rounded-lg ${themeConfig.button}`}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={toggleTheme}
-          >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
-          </motion.button>
-
+          <ThemeToggle></ThemeToggle>
           <div className="hidden md:flex items-center space-x-3">
             <PdfExport />
           </div>

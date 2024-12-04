@@ -84,7 +84,6 @@ interface IconOption {
 interface IconSelectorProps {
   value?: string;
   onChange: (value: string) => void;
-  theme?: "light" | "dark";
 }
 
 const iconOptions: IconOption[] = [
@@ -188,11 +187,7 @@ const iconOptions: IconOption[] = [
   { label: "技能", value: "Zap", icon: Zap, category: "其他" }
 ];
 
-const IconSelector: React.FC<IconSelectorProps> = ({
-  value,
-  onChange,
-  theme = "light"
-}) => {
+const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isHovered, setIsHovered] = React.useState("");
@@ -228,16 +223,16 @@ const IconSelector: React.FC<IconSelectorProps> = ({
           className={cn(
             "w-8 h-8 p-2 rounded-md relative overflow-hidden",
             "transform-gpu transition-all duration-300 ease-out",
-            theme === "dark"
-              ? "bg-neutral-800 hover:bg-neutral-700/90"
-              : "bg-white hover:bg-neutral-50/90 "
+            "dark:bg-neutral-800 dark:hover:bg-neutral-700/90",
+            "bg-white hover:bg-neutral-50/90 "
           )}
         >
           <Icon
             className={cn(
               "w-4 h-4 transform-gpu transition-transform duration-300",
               "hover:rotate-[360deg]",
-              theme === "dark" ? "text-neutral-200" : "text-neutral-700"
+              "dark:text-neutral-200",
+              "text-neutral-700"
             )}
           />
         </Button>
@@ -245,9 +240,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
       <PopoverContent
         className={cn(
           "w-[420px] p-4",
-          theme === "dark"
-            ? "bg-neutral-900 border-neutral-800"
-            : "bg-white border-neutral-200",
+          "dark:bg-neutral-900 dark:border-neutral-800",
+          "bg-white border-neutral-200",
           "shadow-lg backdrop-blur-sm",
           "animate-in zoom-in-95 duration-200"
         )}
@@ -255,21 +249,20 @@ const IconSelector: React.FC<IconSelectorProps> = ({
         <div className="space-y-3">
           <div
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg",
+              "flex border items-center gap-2 px-3 py-2 rounded-lg",
               "transform-gpu transition-all duration-300",
-              theme === "dark"
-                ? "bg-neutral-800/50 border border-neutral-700"
-                : "bg-neutral-50 border border-neutral-200",
+              "dark:bg-neutral-800/50  dark:border-neutral-700",
+              "bg-neutral-50 border border-neutral-200",
               "focus-within:ring-2",
-              theme === "dark"
-                ? "focus-within:ring-blue-500/30"
-                : "focus-within:ring-blue-500/20"
+              "dark:focus-within:ring-blue-500/30",
+              "focus-within:ring-blue-500/20"
             )}
           >
             <Search
               className={cn(
                 "w-4 h-4 transition-colors duration-300",
-                theme === "dark" ? "text-neutral-400" : "text-neutral-500"
+                "dark:text-neutral-400",
+                "text-neutral-500"
               )}
             />
             <input
@@ -280,7 +273,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
               className={cn(
                 "w-full bg-transparent border-none outline-none text-sm",
                 "transition-colors duration-300",
-                theme === "dark" ? "text-neutral-200" : "text-neutral-700",
+                "dark:text-neutral-200",
+                "text-neutral-700",
                 "placeholder:text-neutral-500",
                 "focus:ring-0"
               )}
@@ -298,12 +292,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                   "px-2 py-1 text-xs rounded-md",
                   "transition-all duration-200",
                   selectedCategory === category
-                    ? theme === "dark"
-                      ? "bg-neutral-800 text-blue-400 ring-1 ring-blue-500/30"
-                      : "bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
-                    : theme === "dark"
-                      ? "text-neutral-400 hover:text-neutral-200"
-                      : "text-neutral-600 hover:text-neutral-900"
+                    ? "dark:bg-neutral-800 dark:text-blue-400 dark:ring-1 dark:ring-blue-500/30 bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
+                    : "dark:text-neutral-400 dark:hover:text-neutral-200 text-neutral-600 hover:text-neutral-900"
                 )}
               >
                 {category}
@@ -321,13 +311,10 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                 onClick={() => handleSelect(iconValue)}
                 className={cn(
                   "relative p-2 h-10 rounded-lg group",
-                  theme === "dark"
-                    ? "hover:bg-neutral-800/70 text-neutral-300 hover:text-neutral-200"
-                    : "hover:bg-neutral-100/70 text-neutral-600 hover:text-neutral-900",
+                  "dark:hover:bg-neutral-800/70 dark:text-neutral-300 hover:text-neutral-200",
+                  "hover:bg-neutral-100/70 text-neutral-600 hover:text-neutral-900",
                   value === iconValue &&
-                    (theme === "dark"
-                      ? "bg-neutral-800 text-blue-400 ring-1 ring-blue-500/30"
-                      : "bg-blue-50 text-blue-600 ring-1 ring-blue-500/20")
+                    "dark:bg-neutral-800 dark:text-blue-400 dark:ring-1 dark:ring-blue-500/30 bg-blue-50 text-blue-600 ring-1 ring-blue-500/20"
                 )}
               >
                 <Icon className={cn("w-4 h-4")} />
@@ -338,10 +325,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                     "opacity-0 translate-y-1",
                     "group-hover:opacity-100 group-hover:translate-y-0",
                     "pointer-events-none",
-
-                    theme === "dark"
-                      ? "bg-neutral-800 text-neutral-200 border border-neutral-700"
-                      : "bg-white text-neutral-700 border border-neutral-200",
+                    "dark:bg-neutral-800 dark:text-neutral-200 border dark:border-neutral-700",
+                    "bg-white text-neutral-700 border dark:border-neutral-200",
                     "shadow-sm whitespace-nowrap z-10"
                   )}
                 >
@@ -351,9 +336,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
                   <span
                     className={cn(
                       "absolute inset-0 bg-gradient-to-r",
-                      theme === "dark"
-                        ? "from-blue-500/10 to-purple-500/10"
-                        : "from-blue-500/5 to-purple-500/5",
+                      "dark:from-blue-500/10 dark:to-purple-500/10",
+                      "from-blue-500/5 to-purple-500/5",
                       "animate-in fade-in duration-300"
                     )}
                   />
@@ -367,7 +351,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({
               className={cn(
                 "flex flex-col items-center justify-center py-8 px-4",
                 "text-sm",
-                theme === "dark" ? "text-neutral-400" : "text-neutral-500"
+                "dark:text-neutral-400",
+                "text-neutral-500"
               )}
             >
               <SearchIcon className="w-12 h-12 mb-2 opacity-20" />

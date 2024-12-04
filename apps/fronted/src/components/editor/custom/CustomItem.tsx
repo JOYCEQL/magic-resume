@@ -78,8 +78,6 @@ const DeleteConfirmDialog = ({
   title: string;
   onDelete: () => void;
 }) => {
-  const theme = useResumeStore((state) => state.theme);
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -88,9 +86,7 @@ const DeleteConfirmDialog = ({
           size="sm"
           className={cn(
             "text-sm",
-            theme === "dark"
-              ? "hover:bg-red-900/50 text-red-400"
-              : "hover:bg-red-50 text-red-600"
+            "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
           )}
           onClick={(e) => e.stopPropagation()}
         >
@@ -98,15 +94,11 @@ const DeleteConfirmDialog = ({
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent
-        className={cn(
-          theme === "dark" ? "bg-neutral-900 border-neutral-800" : "bg-white"
-        )}
+        className={cn("dark:bg-neutral-900 dark:border-neutral-800 bg-white")}
         onClick={(e) => e.stopPropagation()}
       >
         <AlertDialogHeader
-          className={cn(
-            theme === "dark" ? "text-neutral-200" : "text-gray-900"
-          )}
+          className={cn("dark:text-neutral-200 text-gray-900")}
         >
           <AlertDialogTitle>确认删除</AlertDialogTitle>
           <AlertDialogDescription>
@@ -136,7 +128,7 @@ const CustomItem = ({
 }) => {
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { theme, updateCustomItem, removeCustomItem } = useResumeStore();
+  const { updateCustomItem, removeCustomItem } = useResumeStore();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -175,7 +167,7 @@ const CustomItem = ({
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
-          theme === "dark" ? "border-neutral-800" : "border-gray-100",
+          "dark:border-neutral-800 border-gray-100",
           expandedId === item.id
             ? "cursor-not-allowed"
             : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
@@ -184,7 +176,7 @@ const CustomItem = ({
         <GripVertical
           className={cn(
             "w-4 h-4",
-            theme === "dark" ? "text-neutral-400" : "text-gray-400",
+            "dark:text-neutral-400 text-gray-400",
             expandedId === item.id && "opacity-50"
           )}
         />
@@ -194,8 +186,7 @@ const CustomItem = ({
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between cursor-pointer select-none",
-            expandedId === item.id &&
-              (theme === "dark" ? "bg-neutral-800/50" : "bg-gray-50")
+            expandedId === item.id && "dark:bg-neutral-800/50 bg-gray-50"
           )}
           onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
         >
@@ -212,7 +203,7 @@ const CustomItem = ({
               <p
                 className={cn(
                   "text-sm truncate",
-                  theme === "dark" ? "text-neutral-400" : "text-gray-500"
+                  "dark:text-neutral-400 text-gray-500"
                 )}
               >
                 {item.subtitle}
@@ -247,10 +238,7 @@ const CustomItem = ({
               }}
             >
               <ChevronDown
-                className={cn(
-                  "w-5 h-5",
-                  theme === "dark" ? "text-neutral-400" : "text-gray-500"
-                )}
+                className={cn("w-5 h-5", "dark:text-neutral-400 text-gray-500")}
               />
             </motion.div>
           </div>
@@ -268,13 +256,13 @@ const CustomItem = ({
               <div
                 className={cn(
                   "px-4 pb-4 space-y-4",
-                  theme === "dark" ? "border-neutral-800" : "border-gray-100"
+                  "dark:border-neutral-800 border-gray-100"
                 )}
               >
                 <div
                   className={cn(
                     "h-px w-full",
-                    theme === "dark" ? "bg-neutral-800" : "bg-gray-100"
+                    "dark:bg-neutral-800 bg-gray-100"
                   )}
                 />
                 <CustomItemEditor

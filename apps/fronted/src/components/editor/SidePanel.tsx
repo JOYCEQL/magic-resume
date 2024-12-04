@@ -84,7 +84,8 @@ export function SidePanel() {
     colorTheme,
     setColorTheme,
     updateMenuSections,
-    addCustomData
+    addCustomData,
+    activeSection
   } = useResumeStore();
 
   const debouncedSetColor = useMemo(
@@ -135,9 +136,10 @@ export function SidePanel() {
               <div
                 key={item.id}
                 className={cn(
-                  "rounded-lg group border mb-2 hover:border-primary",
+                  "rounded-lg group border mb-2  hover:border-primary",
                   "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800",
-                  "hover:bg-gray-50 bg-white border-gray-100"
+                  "hover:bg-gray-50 bg-white border-gray-100",
+                  activeSection === item.id && "border-primary text-primary"
                 )}
               >
                 <div className="flex items-center p-3 pl-[32px] space-x-3 ">
@@ -151,12 +153,7 @@ export function SidePanel() {
                     {item.icon}
                   </span>
                   <span
-                    className={cn(
-                      "text-sm flex-1 cursor-pointer",
-                      item.enabled
-                        ? "dark:text-neutral-200 text-gray-700"
-                        : "dark:text-neutral-500 text-gray-400"
-                    )}
+                    className={cn("text-sm flex-1 cursor-pointer")}
                     onClick={() => setActiveSection(item.id)}
                   >
                     {item.title}
@@ -180,7 +177,8 @@ export function SidePanel() {
                   className={cn(
                     "rounded-lg cursor-move group border  hover:border-primary",
                     "dark:hover:bg-neutral-800  dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-primary",
-                    "hover:bg-gray-50 bg-white border-gray-100 "
+                    "hover:bg-gray-50 bg-white border-gray-100",
+                    activeSection === item.id && "border-primary text-primary"
                   )}
                   whileHover={{ scale: 1.01 }}
                   whileDrag={{ scale: 1.02 }}
@@ -203,12 +201,7 @@ export function SidePanel() {
                       {item.icon}
                     </span>
                     <span
-                      className={cn(
-                        "text-sm flex-1 cursor-pointer",
-                        item.enabled
-                          ? "dark:text-neutral-200 text-gray-700"
-                          : "dark:text-neutral-500 text-gray-400"
-                      )}
+                      className={cn("text-sm flex-1 cursor-pointer")}
                       onClick={() => setActiveSection(item.id)}
                     >
                       {item.title}

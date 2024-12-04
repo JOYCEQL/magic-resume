@@ -37,7 +37,7 @@ export function ExperienceSection({
               <div className="flex justify-between items-start">
                 <div>
                   <h4
-                    className="font-medium text-gray-800"
+                    className="font-semibold text-gray-800"
                     style={{
                       fontSize: `${globalSettings?.subheaderSize || 16}px`
                     }}
@@ -45,7 +45,7 @@ export function ExperienceSection({
                     {exp.company}
                   </h4>
                   <p
-                    className="text-gray-600"
+                    className="font-medium  text-gray-600"
                     style={{
                       fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}

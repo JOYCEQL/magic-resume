@@ -404,8 +404,7 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
           "dark:prose-blockquote:text-neutral-300",
           "dark:prose-blockquote:border-neutral-700",
           "dark:prose-ul:text-neutral-300",
-          "dark:prose-ol:text-neutral-300",
-          "dark:[&_*::selection]:bg-neutral-700/50"
+          "dark:prose-ol:text-neutral-300"
         )
       }
     },

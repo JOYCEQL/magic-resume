@@ -109,6 +109,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  ::selection {
+    @apply text-primary-foreground bg-primary;
+  }
+
+  ::-moz-selection {
+    @apply text-primary-foreground bg-primary;
+  }
 }
 
 /* List styles */

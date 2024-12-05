@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { DEFAULT_FIELD_ORDER } from "@/config";
 import {
   BasicInfo,
   Education,
@@ -87,6 +88,7 @@ const initialState = {
     phone: "13800138000",
     location: "北京市朝阳区",
     birthDate: "1995-01",
+    fieldOrder: DEFAULT_FIELD_ORDER,
     icons: {
       email: "Mail",
       phone: "Phone",

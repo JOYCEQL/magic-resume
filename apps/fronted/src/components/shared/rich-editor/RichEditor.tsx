@@ -32,7 +32,6 @@ import {
   Highlighter
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
-import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -358,14 +357,13 @@ const HeadingSelect = ({ editor }) => {
   );
 };
 
-const RichTextEditor = ({
-  content,
-  onChange,
-  placeholder
-}: RichTextEditorProps) => {
+const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
         heading: {
           levels: [1, 2, 3]
         }

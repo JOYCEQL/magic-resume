@@ -127,7 +127,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
           layout="position"
           className="font-bold text-gray-900"
           style={{
-            fontSize: `${(globalSettings?.headerSize || 24) * 1.5}px`
+            fontSize: `30px`
           }}
         >
           {basic[nameField.key] as string}
@@ -138,9 +138,9 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
       {titleField && basic[titleField.key] && (
         <motion.h2
           layout="position"
-          className="text-gray-600"
+          className="text-baseFont"
           style={{
-            fontSize: `${globalSettings?.subheaderSize || 16}px`
+            fontSize: `${globalSettings?.headerSize || 18}px`
           }}
         >
           {basic[titleField.key] as string}

@@ -55,7 +55,7 @@ export function CustomSection({
                 </h4>
                 <motion.div
                   layout
-                  className={"font-medium text-gray-600"}
+                  className={"font-medium text-baseFont"}
                   style={{
                     fontSize: `${globalSettings?.baseFontSize || 14}px`
                   }}
@@ -66,7 +66,7 @@ export function CustomSection({
             </div>
             {item.dateRange && (
               <span
-                className="text-gray-600 shrink-0 ml-4"
+                className="text-baseFont shrink-0 ml-4"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`
                 }}
@@ -77,7 +77,7 @@ export function CustomSection({
           </div>
           {item.description && (
             <div
-              className="text-gray-600 mt-1"
+              className="text-baseFont mt-1"
               style={{
                 fontSize: `${globalSettings?.baseFontSize || 14}px`,
                 lineHeight: globalSettings?.lineHeight || 1.6

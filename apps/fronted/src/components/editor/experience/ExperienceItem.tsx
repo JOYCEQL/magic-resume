@@ -11,18 +11,8 @@ import {
 import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
 import { Experience } from "@/types/resume";
+import ThemeModal from "@/components/shared/ThemeModal";
 
 interface ProjectEditorProps {
   experience: Experience;
@@ -30,69 +20,6 @@ interface ProjectEditorProps {
   onDelete: () => void;
   onCancel: () => void;
 }
-
-interface DeleteConfirmDialogProps {
-  projectName: string;
-  onDelete: () => void;
-}
-
-const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
-  projectName,
-  onDelete
-}) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-sm",
-            "hover:bg-red-50 text-red-600 dark:hover:bg-red-900/50 dark:text-red-400"
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent
-        className={cn("bg-white dark:bg-neutral-900 dark:border-neutral-800")}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <AlertDialogHeader>
-          <AlertDialogTitle
-            className={cn("text-gray-900 dark:text-neutral-200")}
-          >
-            确认删除经历
-          </AlertDialogTitle>
-          <AlertDialogDescription
-            className={cn("text-gray-500 dark:text-neutral-400")}
-          >
-            您确定要删除经历 {projectName} 吗？此操作无法撤销。
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel
-            className={cn(
-              "dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 dark:border-neutral-700"
-            )}
-          >
-            取消
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e: { preventDefault: () => void }) => {
-              e.preventDefault();
-              onDelete();
-            }}
-            className={cn("bg-red-600 hover:bg-red-700 text-white")}
-          >
-            删除
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
@@ -148,6 +75,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const { updateExperience, deleteExperience } = useResumeStore();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleVisibilityToggle = useCallback(
     (e: React.MouseEvent) => {
@@ -258,13 +186,32 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
-            <DeleteConfirmDialog
-              projectName={experience.company}
-              onDelete={() => {
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "text-sm",
+                "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteDialogOpen(true);
+              }}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <ThemeModal
+              isOpen={deleteDialogOpen}
+              title={experience.company}
+              onClose={() => setDeleteDialogOpen(false)}
+              onConfirm={() => {
                 deleteExperience(experience.id);
                 setExpandedId(null);
+                setDeleteDialogOpen(false);
               }}
             />
+
             <motion.div
               initial={false}
               animate={{

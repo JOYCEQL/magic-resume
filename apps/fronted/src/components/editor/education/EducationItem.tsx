@@ -12,28 +12,13 @@ import {
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import { useState, useCallback } from "react";
 import Field from "../Field";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
+import ThemeModal from "@/components/shared/ThemeModal";
 
 interface EducationEditorProps {
   education: Education;
   onSave: (education: Education) => void;
   onDelete: () => void;
   onCancel: () => void;
-}
-
-interface DeleteConfirmDialogProps {
-  schoolName: string;
-  onDelete: () => void;
 }
 
 const EducationEditor: React.FC<EducationEditorProps> = ({
@@ -121,77 +106,12 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
   );
 };
 
-const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
-  schoolName,
-  onDelete
-}) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-sm",
-            "dark:hover:bg-red-900/50 dark:text-red-400",
-            "hover:bg-red-50 text-red-600"
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent
-        className={cn(
-          "dark:bg-neutral-900 dark:border-neutral-800",
-          "bg-white"
-        )}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <AlertDialogHeader>
-          <AlertDialogTitle
-            className={cn("dark:text-neutral-200", "text-gray-900")}
-          >
-            确认删除经历
-          </AlertDialogTitle>
-          <AlertDialogDescription
-            className={cn("dark:text-neutral-400", "text-gray-500")}
-          >
-            您确定要删除经历 {schoolName} 吗？此操作无法撤销。
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel
-            className={cn(
-              "dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 dark:border-neutral-700"
-            )}
-          >
-            取消
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e: { preventDefault: () => void }) => {
-              e.preventDefault();
-              onDelete();
-            }}
-            className={cn(
-              "dark:bg-red-600 dark:hover:bg-red-700 dark:text-white",
-              "bg-red-600 hover:bg-red-700 text-white"
-            )}
-          >
-            删除
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
-
 const EducationItem = ({ education }: { education: Education }) => {
+  const { updateEducation, deleteEducation } = useResumeStore();
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { updateEducation, deleteEducation } = useResumeStore();
-
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleVisibilityToggle = useCallback(
     (e: React.MouseEvent) => {
@@ -307,13 +227,31 @@ const EducationItem = ({ education }: { education: Education }) => {
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
-            <DeleteConfirmDialog
-              schoolName={education.school}
-              onDelete={() => {
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "text-sm",
+                "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteDialogOpen(true);
+              }}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <ThemeModal
+              isOpen={deleteDialogOpen}
+              title={education.school}
+              onClose={() => setDeleteDialogOpen(false)}
+              onConfirm={() => {
                 deleteEducation(education.id);
                 setExpandedId(null);
+                setDeleteDialogOpen(false);
               }}
             />
+
             <motion.div
               initial={false}
               animate={{

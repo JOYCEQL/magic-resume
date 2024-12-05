@@ -81,7 +81,7 @@ const ProjectItem = React.forwardRef(
             </motion.h4>
             <motion.div
               layout
-              className={cn("font-medium  text-gray-600")}
+              className={cn("font-medium  text-baseFont")}
               style={{
                 fontSize: `${globalSettings?.baseFontSize || 14}px`
               }}
@@ -91,7 +91,7 @@ const ProjectItem = React.forwardRef(
           </motion.div>
           <motion.span
             layout
-            className={cn("text-gray-600")}
+            className={cn("text-baseFont")}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`
             }}
@@ -103,7 +103,7 @@ const ProjectItem = React.forwardRef(
         {project.description && (
           <motion.div
             layout
-            className={cn("whitespace-pre-wrap", "text-gray-600")}
+            className={cn("whitespace-pre-wrap", "text-baseFont")}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
               lineHeight: globalSettings?.lineHeight || 1.6

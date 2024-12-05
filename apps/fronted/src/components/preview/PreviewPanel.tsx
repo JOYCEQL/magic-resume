@@ -8,7 +8,7 @@ import { throttle } from "lodash";
 import { THEME_COLORS } from "@/types/resume";
 import { BaseInfo } from "./BaseInfo";
 import { SectionTitle } from "./SectionTitle";
-import { ProjectItem } from "./ProjectItem";
+import ProjectItem from "./ProjectItem";
 import { ExperienceSection } from "./ExperienceSection";
 import { EducationSection } from "./EducationSection";
 import { CustomSection } from "./CustomSection";
@@ -63,7 +63,6 @@ PageBreakLine.displayName = "PageBreakLine";
 
 export function PreviewPanel() {
   const {
-    theme,
     basic,
     education,
     experience,

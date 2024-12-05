@@ -9,20 +9,10 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
 import Field from "../Field";
 
 import { CustomItem as CustomItemType } from "@/types/resume";
+import ThemeModal from "@/components/shared/ThemeModal";
 const CustomItemEditor = ({
   item,
   onSave
@@ -71,54 +61,6 @@ const CustomItemEditor = ({
   );
 };
 
-const DeleteConfirmDialog = ({
-  title,
-  onDelete
-}: {
-  title: string;
-  onDelete: () => void;
-}) => {
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "text-sm",
-            "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
-          )}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent
-        className={cn("dark:bg-neutral-900 dark:border-neutral-800 bg-white")}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <AlertDialogHeader
-          className={cn("dark:text-neutral-200 text-gray-900")}
-        >
-          <AlertDialogTitle>确认删除</AlertDialogTitle>
-          <AlertDialogDescription>
-            您确定要删除 {title || "此项"} 吗？此操作无法撤销。
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onDelete}
-            className="bg-red-600 hover:bg-red-700 text-white"
-          >
-            删除
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
-
 const CustomItem = ({
   item,
   sectionId
@@ -126,11 +68,11 @@ const CustomItem = ({
   item: CustomItemType;
   sectionId: string;
 }) => {
+  const { updateCustomItem, removeCustomItem } = useResumeStore();
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const { updateCustomItem, removeCustomItem } = useResumeStore();
-
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleVisibilityToggle = useCallback(
     (e: React.MouseEvent) => {
@@ -224,13 +166,31 @@ const CustomItem = ({
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
-            <DeleteConfirmDialog
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "text-sm",
+                "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteDialogOpen(true);
+              }}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+            <ThemeModal
+              isOpen={deleteDialogOpen}
               title={item.title}
-              onDelete={() => {
+              onClose={() => setDeleteDialogOpen(false)}
+              onConfirm={() => {
                 removeCustomItem(sectionId, item.id);
                 setExpandedId(null);
+                setDeleteDialogOpen(false);
               }}
             />
+
             <motion.div
               initial={false}
               animate={{

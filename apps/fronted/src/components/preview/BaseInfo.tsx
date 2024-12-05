@@ -1,13 +1,12 @@
-import { cn } from "@/lib/utils";
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import * as Icons from "lucide-react";
 import {
   BasicInfo,
   getBorderRadiusValue,
-  GlobalSettings,
-  BasicFieldType
+  GlobalSettings
 } from "@/types/resume";
-import { motion } from "framer-motion";
-import React from "react";
-import * as Icons from "lucide-react";
 
 interface BaseInfoProps {
   basic: BasicInfo;
@@ -24,7 +23,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
     return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
   };
 
-  const getOrderedFields = () => {
+  const getOrderedFields = React.useMemo(() => {
     if (!basic.fieldOrder) {
       return [
         {
@@ -55,12 +54,10 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
         visible: field.visible
       }))
       .filter((item) => Boolean(item.value));
-  };
-
-  const orderedFields = getOrderedFields();
+  }, [basic]);
 
   const allFields = [
-    ...orderedFields,
+    ...getOrderedFields,
     ...(basic.customFields
       ?.filter((field) => field.visible !== false)
       .map((field) => ({
@@ -160,7 +157,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
         }}
       >
         {allFields.map((item, index) => (
-          <div key={item.key} className="flex items-center">
+          <motion.div key={item.key} className="flex items-center">
             {useIconMode ? (
               <span className="flex items-center gap-1">
                 {getIcon(item.icon)}
@@ -169,10 +166,10 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
             ) : (
               <span className="flex items-center gap-1">
                 <span className="text-gray-500">{item.label}:</span>
-                <span>{item.value}</span>
+                <span suppressHydrationWarning>{item.value}</span>
               </span>
             )}
-          </div>
+          </motion.div>
         ))}
       </motion.div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import PdfExport from "../shared/PdfExport";
@@ -11,6 +12,7 @@ interface EditorHeaderProps {
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
   const { menuSections, activeSection, setActiveSection } = useResumeStore();
   const themeConfig = getThemeConfig();
+  const router = useRouter();
 
   const visibleSections = menuSections
     .filter((section) => section.enabled)
@@ -28,6 +30,9 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             className="flex items-center space-x-2 shrink-0 cursor-pointer"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              router.push("/");
+            }}
           >
             <span className="text-lg font-semibold">Magic Resume</span>
             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />

@@ -215,11 +215,11 @@ const initialState = {
 
   globalSettings: {
     // fontFamily: "sans",
-    baseFontSize: 14,
-    pagePadding: 20,
-    paragraphSpacing: 20,
-    lineHeight: 1.2,
-    sectionSpacing: 20,
+    baseFontSize: 16,
+    pagePadding: 32,
+    paragraphSpacing: 12,
+    lineHeight: 1.5,
+    sectionSpacing: 10,
     headerSize: 18,
     subheaderSize: 16,
     useIconMode: false

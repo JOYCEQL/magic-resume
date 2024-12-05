@@ -35,7 +35,7 @@ export function SkillSection({
         }}
       >
         <div
-          className="text-gray-600"
+          className="text-baseFont"
           style={{
             fontSize: `${globalSettings?.baseFontSize || 14}px`,
             lineHeight: globalSettings?.lineHeight || 1.6

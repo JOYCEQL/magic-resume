@@ -45,7 +45,7 @@ export function ExperienceSection({
                     {exp.company}
                   </h4>
                   <p
-                    className="font-medium  text-gray-600"
+                    className="font-medium  text-baseFont"
                     style={{
                       fontSize: `${globalSettings?.baseFontSize || 14}px`
                     }}
@@ -54,7 +54,7 @@ export function ExperienceSection({
                   </p>
                 </div>
                 <span
-                  className="text-gray-600"
+                  className="text-baseFont"
                   style={{
                     fontSize: `${globalSettings?.baseFontSize || 14}px`
                   }}
@@ -63,7 +63,7 @@ export function ExperienceSection({
                 </span>
               </div>
               <div
-                className="text-gray-600"
+                className="text-baseFont"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   lineHeight: globalSettings?.lineHeight || 1.6

@@ -13,7 +13,7 @@ export const DEFAULT_CONFIG: PhotoConfig = {
   aspectRatio: "1:1",
   borderRadius: "none",
   customBorderRadius: 0,
-  visible: true
+  visible: true,
 };
 
 export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
@@ -160,5 +160,54 @@ export const THEME_COLORS = [
   "#ea580c",
   "#65a30d",
   "#475569",
-  "#dc2626"
+  "#dc2626",
 ];
+
+export interface ResumeData {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  templateId: string | null;
+  basic: BasicInfo;
+  education: Education[];
+  experience: Experience[];
+  projects: Project[];
+  customData: Record<string, CustomItem[]>;
+  skillContent: string;
+  activeSection: string;
+  colorTheme: string;
+  draggingProjectId: string | null;
+  menuSections: {
+    id: string;
+    title: string;
+    icon: string;
+    enabled: boolean;
+    order: number;
+  }[];
+  globalSettings: GlobalSettings;
+}
+
+export interface ResumeStore {
+  resumes: ResumeData[];
+  currentResumeId: string | null;
+  currentResume: ResumeData | null;
+  addResume: (resume: Omit<ResumeData, "id">) => void;
+  updateResume: (id: string, data: Partial<ResumeData>) => void;
+  deleteResume: (id: string) => void;
+  setCurrentResume: (id: string) => void;
+  updateBasicInfo: (info: Partial<ResumeData["basic"]>) => void;
+  addEducation: (education: Omit<ResumeData["education"][0], "id">) => void;
+  updateEducation: (
+    educationId: string,
+    data: Partial<ResumeData["education"][0]>
+  ) => void;
+  removeEducation: (educationId: string) => void;
+  addExperience: (experience: Omit<ResumeData["experience"][0], "id">) => void;
+  updateExperience: (
+    experienceId: string,
+    data: Partial<ResumeData["experience"][0]>
+  ) => void;
+  removeExperience: (experienceId: string) => void;
+  updateSkillContent: (skillContent: string) => void;
+}

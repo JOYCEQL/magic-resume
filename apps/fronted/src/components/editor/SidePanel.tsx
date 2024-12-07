@@ -10,7 +10,7 @@ import {
   SpaceIcon,
   Palette,
   Plus,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import {
@@ -18,7 +18,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
@@ -32,19 +32,19 @@ import { Switch } from "../ui/switch";
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
   { value: "serif", label: "衬线体" },
-  { value: "mono", label: "等宽体" }
+  { value: "mono", label: "等宽体" },
 ];
 
 const lineHeightOptions = [
   { value: "normal", label: "默认" },
   { value: "relaxed", label: "适中" },
-  { value: "loose", label: "宽松" }
+  { value: "loose", label: "宽松" },
 ];
 
 function SettingCard({
   icon: Icon,
   title,
-  children
+  children,
 }: {
   icon: any;
   title: string;
@@ -75,18 +75,21 @@ function SettingCard({
 
 export function SidePanel() {
   const {
-    menuSections,
-    reorderSections,
-    toggleSectionVisibility,
+    activeResume,
     setActiveSection,
-    globalSettings,
+    toggleSectionVisibility,
     updateGlobalSettings,
-    colorTheme,
-    setColorTheme,
     updateMenuSections,
+    setColorTheme,
+    reorderSections,
     addCustomData,
-    activeSection
   } = useResumeStore();
+  const {
+    menuSections = [],
+    globalSettings = {},
+    colorTheme,
+    activeSection,
+  } = activeResume || {};
 
   const debouncedSetColor = useMemo(
     () =>
@@ -111,7 +114,7 @@ export function SidePanel() {
       title: sectionId,
       icon: "➕",
       enabled: true,
-      order: menuSections.length
+      order: menuSections.length,
     };
 
     updateMenuSections([...menuSections, newSection]);
@@ -139,7 +142,8 @@ export function SidePanel() {
                   "rounded-lg group border mb-2  hover:border-primary",
                   "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800",
                   "hover:bg-gray-50 bg-white border-gray-100",
-                  activeSection === item.id && "border-primary text-primary"
+                  activeSection === item.id &&
+                    "border-primary dark:border-primary text-primary"
                 )}
               >
                 <div className="flex items-center p-3 pl-[32px] space-x-3 ">
@@ -178,7 +182,8 @@ export function SidePanel() {
                     "rounded-lg cursor-move group border  hover:border-primary",
                     "dark:hover:bg-neutral-800  dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-primary",
                     "hover:bg-gray-50 bg-white border-gray-100",
-                    activeSection === item.id && "border-primary text-primary"
+                    activeSection === item.id &&
+                      "border-primary dark:border-primary text-primary"
                   )}
                   whileHover={{ scale: 1.01 }}
                   whileDrag={{ scale: 1.02 }}
@@ -222,7 +227,6 @@ export function SidePanel() {
                         <EyeOff className="w-4 h-4" />
                       )}
                     </motion.button>
-                    {/* 删除按钮 */}
 
                     <motion.button
                       whileHover={{ scale: 1.1 }}
@@ -293,7 +297,7 @@ export function SidePanel() {
                       transition={{
                         type: "spring",
                         bounce: 0.2,
-                        duration: 0.6
+                        duration: 0.6,
                       }}
                     >
                       <div className="w-2 h-2 rounded-full bg-white dark:bg-black" />
@@ -567,7 +571,7 @@ export function SidePanel() {
                 onCheckedChange={(checked) =>
                   updateGlobalSettings({
                     ...globalSettings,
-                    useIconMode: checked
+                    useIconMode: checked,
                   })
                 }
               />

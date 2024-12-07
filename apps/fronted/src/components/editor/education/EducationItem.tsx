@@ -7,7 +7,7 @@ import {
   useDragControls,
   Reorder,
   motion,
-  AnimatePresence
+  AnimatePresence,
 } from "framer-motion";
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import { useState, useCallback } from "react";
@@ -23,12 +23,12 @@ interface EducationEditorProps {
 
 const EducationEditor: React.FC<EducationEditorProps> = ({
   education,
-  onSave
+  onSave,
 }) => {
   const handleChange = (field: keyof Education, value: string) => {
     onSave({
       ...education,
-      [field]: value
+      [field]: value,
     });
   };
 
@@ -123,7 +123,7 @@ const EducationItem = ({ education }: { education: Education }) => {
       setTimeout(() => {
         updateEducation({
           ...education,
-          visible: !education.visible
+          visible: !education.visible,
         });
         setIsUpdating(false);
       }, 10);
@@ -255,7 +255,7 @@ const EducationItem = ({ education }: { education: Education }) => {
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === education.id ? 180 : 0
+                rotate: expandedId === education.id ? 180 : 0,
               }}
             >
               <ChevronDown

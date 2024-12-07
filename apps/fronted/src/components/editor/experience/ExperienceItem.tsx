@@ -1,18 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useResumeStore } from "@/store/useResumeStore";
 import {
   AnimatePresence,
   motion,
   Reorder,
-  useDragControls
+  useDragControls,
 } from "framer-motion";
 import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
 import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface ProjectEditorProps {
   experience: Experience;
@@ -23,12 +23,12 @@ interface ProjectEditorProps {
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
-  onSave
+  onSave,
 }) => {
   const handleChange = (field: keyof Experience, value: string) => {
     onSave({
       ...experience,
-      [field]: value
+      [field]: value,
     });
   };
 
@@ -87,7 +87,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
       setTimeout(() => {
         updateExperience({
           ...experience,
-          visible: !experience.visible
+          visible: !experience.visible,
         });
         setIsUpdating(false);
       }, 10);
@@ -101,9 +101,6 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
       value={experience}
       dragListener={false}
       dragControls={dragControls}
-      onDragEnd={() => {
-        useResumeStore.getState().setDraggingProjectId(null);
-      }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
         "bg-white hover:border-primary",
@@ -116,13 +113,6 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         onPointerDown={(event) => {
           if (expandedId === experience.id) return;
           dragControls.start(event);
-          useResumeStore.getState().setDraggingProjectId(experience.id);
-        }}
-        onPointerUp={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
-        }}
-        onPointerCancel={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
@@ -215,7 +205,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === experience.id ? 180 : 0
+                rotate: expandedId === experience.id ? 180 : 0,
               }}
             >
               <ChevronDown

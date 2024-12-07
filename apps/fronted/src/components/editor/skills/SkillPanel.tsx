@@ -1,11 +1,11 @@
 "use client";
 import { useResumeStore } from "@/store/useResumeStore";
-import Field from "../Field";
 import { cn } from "@/lib/utils";
+import Field from "../Field";
 
 const SkillPanel = () => {
-  const { updateSkillContent, skillContent } = useResumeStore();
-
+  const { activeResume, updateSkillContent } = useResumeStore();
+  const { skillContent } = activeResume || {};
   const handleChange = (value: string) => {
     updateSkillContent(value);
   };

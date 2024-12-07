@@ -3,7 +3,7 @@ import {
   motion,
   useDragControls,
   Reorder,
-  AnimatePresence
+  AnimatePresence,
 } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ import { CustomItem as CustomItemType } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 const CustomItemEditor = ({
   item,
-  onSave
+  onSave,
 }: {
   item: CustomItemType;
   onSave: (item: CustomItemType) => void;
@@ -63,7 +63,7 @@ const CustomItemEditor = ({
 
 const CustomItem = ({
   item,
-  sectionId
+  sectionId,
 }: {
   item: CustomItemType;
   sectionId: string;
@@ -73,7 +73,6 @@ const CustomItem = ({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
   const handleVisibilityToggle = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -194,7 +193,7 @@ const CustomItem = ({
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === item.id ? 180 : 0
+                rotate: expandedId === item.id ? 180 : 0,
               }}
             >
               <ChevronDown

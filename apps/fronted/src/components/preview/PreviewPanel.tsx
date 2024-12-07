@@ -1,11 +1,10 @@
 "use client";
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
-import { THEME_COLORS } from "@/types/resume";
+import { ResumeData, THEME_COLORS } from "@/types/resume";
 import { BaseInfo } from "./BaseInfo";
 import { SectionTitle } from "./SectionTitle";
 import ProjectItem from "./ProjectItem";
@@ -30,7 +29,8 @@ interface PageBreakLineProps {
 }
 
 const PageBreakLine = React.memo(({ pageNumber }: PageBreakLineProps) => {
-  const { globalSettings } = useResumeStore();
+  const { activeResume } = useResumeStore();
+  const { globalSettings } = activeResume || {};
   if (!globalSettings?.pagePadding) return;
   const A4_HEIGHT_MM = 297;
   const MM_TO_PX = 3.78;
@@ -46,7 +46,7 @@ const PageBreakLine = React.memo(({ pageNumber }: PageBreakLineProps) => {
       style={{
         top: `${pageHeight * pageNumber}px`,
         breakAfter: "page",
-        breakBefore: "page"
+        breakBefore: "page",
       }}
     >
       <div className="relative w-full">
@@ -62,18 +62,19 @@ const PageBreakLine = React.memo(({ pageNumber }: PageBreakLineProps) => {
 PageBreakLine.displayName = "PageBreakLine";
 
 export function PreviewPanel() {
+  const { activeResume } = useResumeStore();
   const {
     basic,
-    education,
-    experience,
-    menuSections,
+    education = [],
+    experience = [],
+    menuSections = [],
     globalSettings,
-    projects,
+    projects = [],
     draggingProjectId,
     colorTheme,
-    customData,
-    skillContent
-  } = useResumeStore();
+    customData = {},
+    skillContent,
+  } = activeResume || {};
 
   const previewRef = React.useRef<HTMLDivElement>(null);
   const resumeContentRef = React.useRef<HTMLDivElement>(null);
@@ -112,7 +113,7 @@ export function PreviewPanel() {
       if (previewRef.current) {
         previewRef.current.scrollBy({
           top: offset,
-          behavior: scrollBehavior
+          behavior: scrollBehavior,
         });
       }
     }, 100),
@@ -143,7 +144,7 @@ export function PreviewPanel() {
       {
         root: previewRef.current,
         threshold: 0.5,
-        rootMargin: "-100px 0px"
+        rootMargin: "-100px 0px",
       }
     );
 
@@ -165,7 +166,7 @@ export function PreviewPanel() {
       <motion.div
         layout
         style={{
-          marginTop: `${globalSettings?.sectionSpacing || 24}px`
+          marginTop: `${globalSettings?.sectionSpacing || 24}px`,
         }}
       >
         <SectionTitle
@@ -266,13 +267,13 @@ export function PreviewPanel() {
             "text-[#000]"
           )}
           style={{
-            minHeight: "297mm"
+            minHeight: "297mm",
           }}
         >
           <div
             className="relative"
             style={{
-              padding: `${globalSettings?.pagePadding || 20}px`
+              padding: `${globalSettings?.pagePadding || 20}px`,
             }}
             id="resume-preview"
           >
@@ -290,7 +291,7 @@ export function PreviewPanel() {
               </motion.div>
             </LayoutGroup>
 
-            {Array.from({ length: pageBreakCount }, (_, i) => (
+            {Array.from({ length: pageBreakCount as number }, (_, i) => (
               <PageBreakLine key={i} pageNumber={i + 1} />
             ))}
           </div>

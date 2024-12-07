@@ -5,18 +5,21 @@ import * as Icons from "lucide-react";
 import {
   BasicInfo,
   getBorderRadiusValue,
-  GlobalSettings
+  GlobalSettings,
 } from "@/types/resume";
 
 interface BaseInfoProps {
-  basic: BasicInfo;
+  basic: BasicInfo | undefined;
   globalSettings: GlobalSettings | undefined;
 }
 
-export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
+export function BaseInfo({
+  basic = {} as BasicInfo,
+  globalSettings,
+}: BaseInfoProps) {
   const useIconMode = globalSettings?.useIconMode ?? false;
 
-  const getIcon = (iconName: string) => {
+  const getIcon = (iconName: string | undefined) => {
     const IconComponent = Icons[
       iconName as keyof typeof Icons
     ] as React.ElementType;
@@ -31,8 +34,8 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
           value: basic.email,
           icon: basic.icons?.email || "Mail",
           label: "电子邮箱",
-          visible: true
-        }
+          visible: true,
+        },
       ].filter((item) => Boolean(item.value && item.visible));
     }
 
@@ -51,7 +54,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
             : (basic[field.key] as string),
         icon: basic.icons?.[field.key] || "User",
         label: field.label,
-        visible: field.visible
+        visible: field.visible,
       }))
       .filter((item) => Boolean(item.value));
   }, [basic]);
@@ -65,8 +68,8 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
         value: field.value,
         icon: field.icon,
         label: field.label,
-        visible: true
-      })) || [])
+        visible: true,
+      })) || []),
   ];
 
   const getNameField = () => {
@@ -75,7 +78,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
     ) || {
       key: "name",
       label: "姓名",
-      visible: true
+      visible: true,
     };
     return nameField.visible !== false ? nameField : null;
   };
@@ -86,7 +89,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
     ) || {
       key: "title",
       label: "职位",
-      visible: true
+      visible: true,
     };
     return titleField.visible !== false ? titleField : null;
   };
@@ -106,10 +109,10 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
               borderRadius: getBorderRadiusValue(
                 basic.photoConfig || {
                   borderRadius: "none",
-                  customBorderRadius: 0
+                  customBorderRadius: 0,
                 }
               ),
-              overflow: "hidden"
+              overflow: "hidden",
             }}
           >
             <img
@@ -127,7 +130,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
           layout="position"
           className="font-bold text-gray-900"
           style={{
-            fontSize: `30px`
+            fontSize: `30px`,
           }}
         >
           {basic[nameField.key] as string}
@@ -140,7 +143,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
           layout="position"
           className="text-baseFont"
           style={{
-            fontSize: `${globalSettings?.headerSize || 18}px`
+            fontSize: `${globalSettings?.headerSize || 18}px`,
           }}
         >
           {basic[titleField.key] as string}
@@ -153,7 +156,7 @@ export function BaseInfo({ basic, globalSettings }: BaseInfoProps) {
         className="flex justify-center items-center flex-wrap gap-3"
         style={{
           fontSize: `${globalSettings?.baseFontSize || 14}px`,
-          color: "rgb(75, 85, 99)"
+          color: "rgb(75, 85, 99)",
         }}
       >
         {allFields.map((item, index) => (

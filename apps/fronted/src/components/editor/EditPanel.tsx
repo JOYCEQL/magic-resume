@@ -14,12 +14,12 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "../ui/tooltip";
 
 export function EditPanel() {
-  const { activeSection, menuSections, updateMenuSections } = useResumeStore();
-
+  const { activeResume, updateMenuSections } = useResumeStore();
+  const { activeSection, menuSections = [] } = activeResume || {};
   const renderFields = () => {
     switch (activeSection) {
       case "basic":
@@ -34,7 +34,7 @@ export function EditPanel() {
       case "skills":
         return <SkillPanel />;
       default:
-        if (activeSection.startsWith("custom")) {
+        if (activeSection?.startsWith("custom")) {
           return <CustomPanel sectionId={activeSection} />;
         } else {
           return <BasicPanel />;
@@ -85,7 +85,7 @@ export function EditPanel() {
                       if (s.id === activeSection) {
                         return {
                           ...s,
-                          title: e.target.value
+                          title: e.target.value,
                         };
                       }
                       return s;

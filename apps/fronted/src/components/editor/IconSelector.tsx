@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -71,7 +71,7 @@ import {
   Flag,
   Bookmark,
   ThumbsUp,
-  Zap
+  Zap,
 } from "lucide-react";
 
 interface IconOption {
@@ -97,7 +97,7 @@ const iconOptions: IconOption[] = [
     label: "手机",
     value: "Smartphone",
     icon: Smartphone,
-    category: "个人信息"
+    category: "个人信息",
   },
 
   // 教育背景类
@@ -105,7 +105,7 @@ const iconOptions: IconOption[] = [
     label: "学历",
     value: "GraduationCap",
     icon: GraduationCap,
-    category: "教育背景"
+    category: "教育背景",
   },
   { label: "学校", value: "School", icon: School, category: "教育背景" },
   { label: "专业", value: "Book", icon: Book, category: "教育背景" },
@@ -120,7 +120,7 @@ const iconOptions: IconOption[] = [
     label: "日期范围",
     value: "CalendarRange",
     icon: CalendarRange,
-    category: "工作经验"
+    category: "工作经验",
   },
   { label: "工作时间", value: "Clock", icon: Clock, category: "工作经验" },
 
@@ -137,13 +137,13 @@ const iconOptions: IconOption[] = [
     label: "口语",
     value: "MessageSquare",
     icon: MessageSquare,
-    category: "语言"
+    category: "语言",
   },
   {
     label: "交流",
     value: "MessagesSquare",
     icon: MessagesSquare,
-    category: "语言"
+    category: "语言",
   },
 
   // 项目经验类
@@ -184,7 +184,7 @@ const iconOptions: IconOption[] = [
   { label: "标记", value: "Flag", icon: Flag, category: "其他" },
   { label: "收藏", value: "Bookmark", icon: Bookmark, category: "其他" },
   { label: "点赞", value: "ThumbsUp", icon: ThumbsUp, category: "其他" },
-  { label: "技能", value: "Zap", icon: Zap, category: "其他" }
+  { label: "技能", value: "Zap", icon: Zap, category: "其他" },
 ];
 
 const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
@@ -199,7 +199,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
 
   const categories = [
     "全部",
-    ...Array.from(new Set(iconOptions.map((icon) => icon.category)))
+    ...Array.from(new Set(iconOptions.map((icon) => icon.category))),
   ];
 
   const filteredIcons = iconOptions.filter((icon) => {

@@ -1,15 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
+import { Reorder, AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Reorder, AnimatePresence, motion } from "framer-motion";
-import IconSelector from "../IconSelector";
 import PhotoUpload from "@/components/shared/PhotoSelector";
 import Field from "../Field";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicFieldType, CustomFieldType } from "@/types/resume";
 import { DEFAULT_FIELD_ORDER } from "@/config";
+import IconSelector from "../IconSelector";
 
 interface CustomFieldProps {
   field: CustomFieldType;
@@ -21,13 +21,13 @@ const itemAnimations = {
   initial: { opacity: 0, y: 0 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 0 },
-  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 }
+  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 },
 };
 
 const CustomField: React.FC<CustomFieldProps> = ({
   field,
   onUpdate,
-  onDelete
+  onDelete,
 }) => {
   return (
     <Reorder.Item
@@ -116,20 +116,21 @@ const CustomField: React.FC<CustomFieldProps> = ({
 };
 
 const BasicPanel: React.FC = () => {
-  const { basic, updateBasicInfo } = useResumeStore();
+  const { activeResume, updateBasicInfo } = useResumeStore();
+  const { basic } = activeResume || {};
   const [customFields, setCustomFields] = useState<CustomFieldType[]>(
     basic?.customFields?.map((field) => ({
       ...field,
-      visible: field.visible ?? true
+      visible: field.visible ?? true,
     })) || []
   );
   const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
-    if (!basic.fieldOrder) {
+    if (!basic?.fieldOrder) {
       return DEFAULT_FIELD_ORDER;
     }
     return basic.fieldOrder.map((field) => ({
       ...field,
-      visible: field.visible ?? true
+      visible: field.visible ?? true,
     }));
   });
 
@@ -137,7 +138,7 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newOrder);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newOrder
+      fieldOrder: newOrder,
     });
   };
 
@@ -148,7 +149,7 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newFields);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newFields
+      fieldOrder: newFields,
     });
   };
 
@@ -158,13 +159,13 @@ const BasicPanel: React.FC = () => {
       label: "",
       value: "",
       icon: "User",
-      visible: true
+      visible: true,
     };
     const updatedFields = [...customFields, fieldToAdd];
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -175,7 +176,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -184,7 +185,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -192,7 +193,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(newOrder);
     updateBasicInfo({
       ...basic,
-      customFields: newOrder
+      customFields: newOrder,
     });
   };
   const renderBasicField = (field: BasicFieldType) => {
@@ -241,8 +242,8 @@ const BasicPanel: React.FC = () => {
                     ...basic,
                     icons: {
                       ...(basic?.icons || {}),
-                      [field.key]: value
-                    }
+                      [field.key]: value,
+                    },
                   });
                 }}
               />
@@ -253,11 +254,11 @@ const BasicPanel: React.FC = () => {
             <div className="flex-1">
               <Field
                 label=""
-                value={(basic[field.key] as string) || ""}
+                value={(basic?.[field.key] as string) || ""}
                 onChange={(value) =>
                   updateBasicInfo({
                     ...basic,
-                    [field.key]: value
+                    [field.key]: value,
                   })
                 }
                 placeholder={`请输入${field.label}`}

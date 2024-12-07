@@ -1,14 +1,16 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
+import { useResumeStore } from "@/store/useResumeStore";
 
 const ExperiencePanel = () => {
-  const { experience = [], updateExperience } = useResumeStore();
+  const { activeResume, updateExperience, updateExperienceBatch } =
+    useResumeStore();
+  const { experience = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Experience = {
       id: crypto.randomUUID(),
@@ -16,7 +18,7 @@ const ExperiencePanel = () => {
       position: "高级前端工程师",
       date: "2020-至今",
       details: "负责公司核心产品...",
-      visible: true
+      visible: true,
     };
     updateExperience(newProject);
   };
@@ -32,7 +34,7 @@ const ExperiencePanel = () => {
         axis="y"
         values={experience}
         onReorder={(newOrder) => {
-          useResumeStore.setState({ experience: newOrder });
+          updateExperienceBatch(newOrder);
         }}
         className="space-y-3"
       >

@@ -6,11 +6,11 @@ import { Download, Loader2 } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { convertImagesToBase64 } from "@/utils";
 import { Button } from "@/components/ui/button";
-
 const PdfExport = () => {
   const [isExporting, setIsExporting] = useState(false);
 
-  const globalSettings = useResumeStore((state) => state.globalSettings);
+  const { activeResume } = useResumeStore();
+  const { globalSettings = {} } = activeResume || {};
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -60,13 +60,13 @@ const PdfExport = () => {
     const response = await fetch("/generate-pdf", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         content: pdfContent,
         styles: styles,
-        margin: globalSettings.pagePadding
-      })
+        margin: globalSettings.pagePadding,
+      }),
     });
 
     if (!response.ok) {

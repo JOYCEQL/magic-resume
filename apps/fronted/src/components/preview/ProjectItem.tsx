@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface ProjectItemProps {
   project: Project;
-  draggingProjectId: string | null;
+  draggingProjectId: string | null | undefined;
   globalSettings: GlobalSettings | undefined;
 }
 
@@ -24,18 +24,18 @@ const ProjectItem = React.forwardRef(
         animate={{
           opacity: 1,
           y: 0,
-          scale: isDragging ? 1.01 : 1
+          scale: isDragging ? 1.01 : 1,
         }}
         exit={{ opacity: 0, y: -20 }}
         transition={{
           type: "spring",
           stiffness: 500,
           damping: 50,
-          mass: 1
+          mass: 1,
         }}
         className={cn("relative rounded-lg  pl-0", isDragging && "z-10")}
         style={{
-          marginTop: `${globalSettings?.paragraphSpacing}px`
+          marginTop: `${globalSettings?.paragraphSpacing}px`,
         }}
         ref={ref}
       >
@@ -74,7 +74,7 @@ const ProjectItem = React.forwardRef(
               layout
               className={cn("font-semibold", "text-gray-800")}
               style={{
-                fontSize: `${globalSettings?.subheaderSize || 16}px`
+                fontSize: `${globalSettings?.subheaderSize || 16}px`,
               }}
             >
               {project.name || "未命名项目"}
@@ -83,7 +83,7 @@ const ProjectItem = React.forwardRef(
               layout
               className={cn("font-medium  text-baseFont")}
               style={{
-                fontSize: `${globalSettings?.baseFontSize || 14}px`
+                fontSize: `${globalSettings?.baseFontSize || 14}px`,
               }}
             >
               {project.role}
@@ -93,7 +93,7 @@ const ProjectItem = React.forwardRef(
             layout
             className={cn("text-baseFont")}
             style={{
-              fontSize: `${globalSettings?.baseFontSize || 14}px`
+              fontSize: `${globalSettings?.baseFontSize || 14}px`,
             }}
           >
             {project.date}
@@ -106,7 +106,7 @@ const ProjectItem = React.forwardRef(
             className={cn("whitespace-pre-wrap", "text-baseFont")}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
-              lineHeight: globalSettings?.lineHeight || 1.6
+              lineHeight: globalSettings?.lineHeight || 1.6,
             }}
           >
             <div dangerouslySetInnerHTML={{ __html: project.description }} />

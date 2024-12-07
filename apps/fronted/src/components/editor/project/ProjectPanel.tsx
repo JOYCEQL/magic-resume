@@ -7,8 +7,9 @@ import ProjectItem from "./ProjectItem";
 import { Project } from "@/types/resume";
 
 const ProjectPanel = () => {
-  const { projects = [], updateProjects } = useResumeStore();
-
+  const { activeResume, updateProjects, updateProjectsBatch } =
+    useResumeStore();
+  const { projects = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Project = {
       id: crypto.randomUUID(),
@@ -16,7 +17,7 @@ const ProjectPanel = () => {
       role: "Project Role",
       date: "",
       description: "",
-      visible: true
+      visible: true,
     };
     updateProjects(newProject);
   };
@@ -32,7 +33,7 @@ const ProjectPanel = () => {
         axis="y"
         values={projects}
         onReorder={(newOrder) => {
-          useResumeStore.setState({ projects: newOrder });
+          updateProjectsBatch(newOrder);
         }}
         className="space-y-3"
       >

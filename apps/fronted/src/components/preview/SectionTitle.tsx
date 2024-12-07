@@ -12,15 +12,15 @@ export function SectionTitle({
   type,
   title,
   themeColor,
-  globalSettings
+  globalSettings,
 }: SectionTitleProps) {
   const sectionTitleStyles = {
     fontSize: `${globalSettings?.headerSize || 18}px`,
     borderColor: themeColor,
-    color: themeColor
+    color: themeColor,
   };
-  const { menuSections } = useResumeStore();
-
+  const { activeResume } = useResumeStore();
+  const { menuSections = [] } = activeResume || {};
   const renderTitle = useMemo(() => {
     if (type === "custom") {
       return title;

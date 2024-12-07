@@ -3,7 +3,7 @@ import { GlobalSettings } from "@/types/resume";
 import { SectionTitle } from "./SectionTitle";
 
 interface SkillSectionProps {
-  skill: string;
+  skill: string | undefined;
   globalSettings: GlobalSettings | undefined;
   themeColor: string;
 }
@@ -11,7 +11,7 @@ interface SkillSectionProps {
 export function SkillSection({
   skill,
   globalSettings,
-  themeColor
+  themeColor,
 }: SkillSectionProps) {
   if (!skill) {
     return null;
@@ -21,7 +21,7 @@ export function SkillSection({
     <motion.div
       layout
       style={{
-        marginTop: `${globalSettings?.sectionSpacing || 24}px`
+        marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
     >
       <SectionTitle
@@ -31,14 +31,14 @@ export function SkillSection({
       />
       <div
         style={{
-          marginTop: `${globalSettings?.paragraphSpacing}px`
+          marginTop: `${globalSettings?.paragraphSpacing}px`,
         }}
       >
         <div
           className="text-baseFont"
           style={{
             fontSize: `${globalSettings?.baseFontSize || 14}px`,
-            lineHeight: globalSettings?.lineHeight || 1.6
+            lineHeight: globalSettings?.lineHeight || 1.6,
           }}
           dangerouslySetInnerHTML={{ __html: skill }}
         />

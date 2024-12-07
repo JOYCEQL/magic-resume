@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PhotoConfigDrawer from "./PhotoConfigDrawer";
 import { useResumeStore } from "@/store/useResumeStore";
-import { PhotoConfig } from "@/types/resume";
+import { BasicInfo, PhotoConfig, ResumeData } from "@/types/resume";
 
 interface Props {
   className?: string;
@@ -13,8 +13,8 @@ interface Props {
 
 const PhotoSelector: React.FC<Props> = ({ className }) => {
   const [showConfig, setShowConfig] = useState(false);
-  const { basic, updateBasicInfo } = useResumeStore();
-
+  const { updateBasicInfo, activeResume } = useResumeStore();
+  const { basic = {} as BasicInfo } = activeResume || {};
   const handlePhotoChange = (
     photo: string | undefined,
     config?: PhotoConfig
@@ -22,14 +22,14 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
     updateBasicInfo({
       ...basic,
       photo,
-      photoConfig: config
+      photoConfig: config,
     });
   };
 
   const handleConfigChange = (config: PhotoConfig) => {
     updateBasicInfo({
       ...basic,
-      photoConfig: config
+      photoConfig: config,
     });
   };
 
@@ -58,8 +58,8 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
                 ...basic,
                 photoConfig: {
                   ...basic.photoConfig,
-                  visible: !(basic.photoConfig?.visible ?? true)
-                }
+                  visible: !(basic.photoConfig?.visible ?? true),
+                },
               });
             }}
           >

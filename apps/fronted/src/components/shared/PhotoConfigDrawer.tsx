@@ -6,7 +6,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerFooter,
-  DrawerClose
+  DrawerClose,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,12 +16,11 @@ import {
   PhotoConfig,
   DEFAULT_CONFIG,
   getRatioMultiplier,
-  getBorderRadiusValue
+  getBorderRadiusValue,
 } from "@/types/resume";
 import { motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
 import { useResumeStore } from "@/store/useResumeStore";
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -37,10 +36,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   photo,
   config: initialConfig,
   onPhotoChange,
-  onConfigChange
+  onConfigChange,
 }) => {
-  const { basic, updateBasicInfo } = useResumeStore();
-
+  const { updateBasicInfo } = useResumeStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
   const [isDragging, setIsDragging] = useState(false);
@@ -100,7 +98,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       setImageUrl(result);
       localStorage.setItem("photo", result);
       updateBasicInfo({
-        photo: result
+        photo: result,
       });
     };
     reader.readAsDataURL(file);
@@ -118,7 +116,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     setImageUrl(url);
     setPreviewUrl(url);
     updateBasicInfo({
-      photo: url
+      photo: url,
     });
     localStorage.setItem("photo", url);
   };
@@ -244,7 +242,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
               width: `${config.width}px`,
               height: `${config.height}px`,
               borderRadius: getBorderRadiusValue(config),
-              maxWidth: "100%"
+              maxWidth: "100%",
             }}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}

@@ -5,17 +5,19 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
+
 interface EditorHeaderProps {
   isMobile?: boolean;
 }
 
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
-  const { menuSections, activeSection, setActiveSection } = useResumeStore();
+  const { activeResume, setActiveSection } = useResumeStore();
+  const { menuSections = [], activeSection } = activeResume || {};
   const themeConfig = getThemeConfig();
   const router = useRouter();
 
   const visibleSections = menuSections
-    .filter((section) => section.enabled)
+    ?.filter((section) => section.enabled)
     .sort((a, b) => a.order - b.order);
 
   return (
@@ -40,7 +42,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
 
           {/* 在移动端隐藏导航按钮 */}
           <div className="hidden md:flex items-center space-x-2">
-            {visibleSections.map((section) => (
+            {visibleSections?.map((section) => (
               <motion.button
                 key={section.id}
                 className={`px-4 py-1.5 rounded-lg text-sm flex items-center space-x-2 shrink-0 ${

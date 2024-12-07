@@ -6,7 +6,7 @@ import {
   AnimatePresence,
   motion,
   Reorder,
-  useDragControls
+  useDragControls,
 } from "framer-motion";
 import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -33,7 +33,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
   const handleChange = (field: keyof Project, value: string) => {
     onSave({
       ...project,
-      [field]: value
+      [field]: value,
     });
   };
 
@@ -76,7 +76,8 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
 };
 
 const ProjectItem = ({ project }: { project: Project }) => {
-  const { updateProjects, deleteProject } = useResumeStore();
+  const { updateProjects, deleteProject, setDraggingProjectId } =
+    useResumeStore();
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -92,7 +93,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
       setTimeout(() => {
         updateProjects({
           ...project,
-          visible: !project.visible
+          visible: !project.visible,
         });
         setIsUpdating(false);
       }, 10);
@@ -107,7 +108,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
       dragListener={false}
       dragControls={dragControls}
       onDragEnd={() => {
-        useResumeStore.getState().setDraggingProjectId(null);
+        setDraggingProjectId(null);
       }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
@@ -121,13 +122,13 @@ const ProjectItem = ({ project }: { project: Project }) => {
         onPointerDown={(event) => {
           if (expandedId === project.id) return;
           dragControls.start(event);
-          useResumeStore.getState().setDraggingProjectId(project.id);
+          setDraggingProjectId(project.id);
         }}
         onPointerUp={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
+          setDraggingProjectId(null);
         }}
         onPointerCancel={() => {
-          useResumeStore.getState().setDraggingProjectId(null);
+          setDraggingProjectId(null);
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
@@ -219,7 +220,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
             <motion.div
               initial={false}
               animate={{
-                rotate: expandedId === project.id ? 180 : 0
+                rotate: expandedId === project.id ? 180 : 0,
               }}
             >
               <ChevronDown

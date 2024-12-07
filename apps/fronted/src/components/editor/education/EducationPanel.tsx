@@ -5,11 +5,12 @@ import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EducationItem from "./EducationItem";
-import { Education, Project } from "@/types/resume";
+import { Education } from "@/types/resume";
 
-const ProjectPanel = () => {
-  const { education = [], updateEducation } = useResumeStore();
-
+const EducationPanel = () => {
+  const { activeResume, updateEducation, updateEducationBatch } =
+    useResumeStore();
+  const { education = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newEducation: Education = {
       id: crypto.randomUUID(),
@@ -19,7 +20,7 @@ const ProjectPanel = () => {
       startDate: "2015-09-01",
       endDate: "2019-06-30",
       description: "",
-      visible: true
+      visible: true,
     };
     updateEducation(newEducation);
   };
@@ -36,11 +37,11 @@ const ProjectPanel = () => {
         axis="y"
         values={education}
         onReorder={(newOrder) => {
-          useResumeStore.setState({ education: newOrder });
+          updateEducationBatch(newOrder);
         }}
         className="space-y-3"
       >
-        {education.map((education) => (
+        {(education || []).map((education) => (
           <EducationItem
             key={education.id}
             education={education}
@@ -55,4 +56,4 @@ const ProjectPanel = () => {
     </div>
   );
 };
-export default ProjectPanel;
+export default EducationPanel;

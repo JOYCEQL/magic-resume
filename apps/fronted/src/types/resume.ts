@@ -163,6 +163,14 @@ export const THEME_COLORS = [
   "#dc2626",
 ];
 
+export interface MenuSection {
+  id: string;
+  title: string;
+  icon: string;
+  enabled: boolean;
+  order: number;
+}
+
 export interface ResumeData {
   id: string;
   title: string;
@@ -178,13 +186,7 @@ export interface ResumeData {
   activeSection: string;
   colorTheme: string;
   draggingProjectId: string | null;
-  menuSections: {
-    id: string;
-    title: string;
-    icon: string;
-    enabled: boolean;
-    order: number;
-  }[];
+  menuSections: MenuSection[];
   globalSettings: GlobalSettings;
 }
 

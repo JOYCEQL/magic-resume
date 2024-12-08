@@ -19,7 +19,9 @@ import {
 
 export function EditPanel() {
   const { activeResume, updateMenuSections } = useResumeStore();
-  const { activeSection, menuSections = [] } = activeResume || {};
+  if (!activeResume) return;
+  const { activeSection = "", menuSections = [] } = activeResume || {};
+
   const renderFields = () => {
     switch (activeSection) {
       case "basic":

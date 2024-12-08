@@ -357,7 +357,7 @@ const HeadingSelect = ({ editor }) => {
   );
 };
 
-const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
+const RichTextEditor = ({ content = "", onChange }: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({

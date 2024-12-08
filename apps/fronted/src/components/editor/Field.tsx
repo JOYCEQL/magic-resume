@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,7 @@ const Field: React.FC<FieldProps> = ({
   type = "text",
   placeholder,
   required,
-  className
+  className,
 }) => {
   const renderLabel = () => (
     <span
@@ -96,7 +96,7 @@ const Field: React.FC<FieldProps> = ({
           {required && <span className="text-red-500">*</span>}
         </span>
         <motion.textarea
-          value={value}
+          value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={inputStyles}
@@ -114,7 +114,7 @@ const Field: React.FC<FieldProps> = ({
         {renderLabel()}
         <div className="mt-1.5">
           <RichTextEditor
-            content={value}
+            content={value || ""}
             onChange={onChange}
             placeholder={placeholder}
           />
@@ -136,7 +136,7 @@ const Field: React.FC<FieldProps> = ({
       </span>
       <Input
         type="text"
-        value={value}
+        value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={inputStyles}

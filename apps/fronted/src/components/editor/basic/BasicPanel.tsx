@@ -62,30 +62,42 @@ const CustomField: React.FC<CustomFieldProps> = ({
             onChange={(value) => onUpdate({ ...field, icon: value })}
           />
         </div>
-        <Field
-          label=""
-          value={field.label}
-          onChange={(value) => onUpdate({ ...field, label: value })}
-          placeholder="字段名称"
-          className={cn(
-            "bg-neutral-50 dark:bg-neutral-900",
-            "border-neutral-200 dark:border-neutral-700",
-            "focus:border-blue-500 dark:focus:border-blue-400",
-            "placeholder-neutral-400 dark:placeholder-neutral-500"
-          )}
-        />
-        <Field
-          label=""
-          value={field.value}
-          onChange={(value) => onUpdate({ ...field, value })}
-          placeholder="字段内容"
-          className={cn(
-            "bg-neutral-50 dark:bg-neutral-900",
-            "border-neutral-200 dark:border-neutral-700",
-            "focus:border-blue-500 dark:focus:border-blue-400",
-            "placeholder-neutral-400 dark:placeholder-neutral-500"
-          )}
-        />
+        <div className="col-span-2">
+          <Field
+            value={field.label ?? ""}
+            onChange={(value) =>
+              onUpdate({
+                ...field,
+                label: value,
+              })
+            }
+            placeholder="标签"
+            className={cn(
+              "bg-neutral-50 dark:bg-neutral-900",
+              "border-neutral-200 dark:border-neutral-700",
+              "focus:border-blue-500 dark:focus:border-blue-400",
+              "placeholder-neutral-400 dark:placeholder-neutral-500"
+            )}
+          />
+        </div>
+        <div className="col-span-2">
+          <Field
+            value={field.value ?? ""}
+            onChange={(value) =>
+              onUpdate({
+                ...field,
+                value: value,
+              })
+            }
+            placeholder="值"
+            className={cn(
+              "bg-neutral-50 dark:bg-neutral-900",
+              "border-neutral-200 dark:border-neutral-700",
+              "focus:border-blue-500 dark:focus:border-blue-400",
+              "placeholder-neutral-400 dark:placeholder-neutral-500"
+            )}
+          />
+        </div>
 
         {field.visible ? (
           <Eye
@@ -254,7 +266,7 @@ const BasicPanel: React.FC = () => {
             <div className="flex-1">
               <Field
                 label=""
-                value={(basic?.[field.key] as string) || ""}
+                value={(basic?.[field.key] as string) ?? ""}
                 onChange={(value) =>
                   updateBasicInfo({
                     ...basic,

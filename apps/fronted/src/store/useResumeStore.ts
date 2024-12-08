@@ -10,6 +10,7 @@ import {
   Project,
   CustomItem,
   ResumeData,
+  MenuSection,
 } from "../types/resume";
 
 interface ResumeStore {
@@ -400,9 +401,19 @@ export const useResumeStore = create<ResumeStore>()(
       },
 
       reorderSections: (newOrder) => {
-        const { activeResumeId } = get();
+        const { activeResumeId, resumes } = get();
         if (activeResumeId) {
-          get().updateResume(activeResumeId, { menuSections: newOrder });
+          const currentResume = resumes[activeResumeId];
+          const basicInfoSection = currentResume.menuSections.find(
+            (section) => section.id === "basic"
+          );
+          const reorderedSections = [
+            basicInfoSection,
+            ...newOrder.filter((section) => section.id !== "basic"),
+          ];
+          get().updateResume(activeResumeId, {
+            menuSections: reorderedSections as MenuSection[],
+          });
         }
       },
 

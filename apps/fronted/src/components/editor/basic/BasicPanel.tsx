@@ -62,42 +62,38 @@ const CustomField: React.FC<CustomFieldProps> = ({
             onChange={(value) => onUpdate({ ...field, icon: value })}
           />
         </div>
-        <div className="col-span-2">
-          <Field
-            value={field.label ?? ""}
-            onChange={(value) =>
-              onUpdate({
-                ...field,
-                label: value,
-              })
-            }
-            placeholder="标签"
-            className={cn(
-              "bg-neutral-50 dark:bg-neutral-900",
-              "border-neutral-200 dark:border-neutral-700",
-              "focus:border-blue-500 dark:focus:border-blue-400",
-              "placeholder-neutral-400 dark:placeholder-neutral-500"
-            )}
-          />
-        </div>
-        <div className="col-span-2">
-          <Field
-            value={field.value ?? ""}
-            onChange={(value) =>
-              onUpdate({
-                ...field,
-                value: value,
-              })
-            }
-            placeholder="值"
-            className={cn(
-              "bg-neutral-50 dark:bg-neutral-900",
-              "border-neutral-200 dark:border-neutral-700",
-              "focus:border-blue-500 dark:focus:border-blue-400",
-              "placeholder-neutral-400 dark:placeholder-neutral-500"
-            )}
-          />
-        </div>
+        <Field
+          value={field.label ?? ""}
+          onChange={(value) =>
+            onUpdate({
+              ...field,
+              label: value,
+            })
+          }
+          placeholder="标签"
+          className={cn(
+            "bg-neutral-50 dark:bg-neutral-900",
+            "border-neutral-200 dark:border-neutral-700",
+            "focus:border-blue-500 dark:focus:border-blue-400",
+            "placeholder-neutral-400 dark:placeholder-neutral-500"
+          )}
+        />
+        <Field
+          value={field.value}
+          onChange={(value) =>
+            onUpdate({
+              ...field,
+              value: value,
+            })
+          }
+          placeholder="值"
+          className={cn(
+            "bg-neutral-50 dark:bg-neutral-900",
+            "border-neutral-200 dark:border-neutral-700",
+            "focus:border-blue-500 dark:focus:border-blue-400",
+            "placeholder-neutral-400 dark:placeholder-neutral-500"
+          )}
+        />
 
         {field.visible ? (
           <Eye

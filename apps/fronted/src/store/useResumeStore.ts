@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { DEFAULT_FIELD_ORDER } from "@/config";
+import { getFileHandle, getConfig, verifyPermission } from "@/utils/fileSystem";
 import {
   BasicInfo,
   Education,
@@ -18,11 +19,12 @@ interface ResumeStore {
   activeResumeId: string | null;
   activeResume: ResumeData | null;
 
-  createResume: (templateId: string | null) => void;
-  deleteResume: (resumeId: string) => void;
+  createResume: (templateId: string | null) => string;
+  deleteResume: (resume: ResumeData) => void;
   duplicateResume: (resumeId: string) => void;
   updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
   setActiveResume: (resumeId: string) => void;
+  updateResumeFromFile: (resume: ResumeData) => void;
 
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
   updateEducation: (data: Education) => void;
@@ -201,20 +203,79 @@ const initialResumeState: Omit<ResumeData, "id" | "createdAt" | "updatedAt"> = {
   globalSettings: initialGlobalSettings,
 };
 
-export const useResumeStore = create<ResumeStore>()(
-  persist(
+// 同步简历到文件系统
+const syncResumeToFile = async (resumeData: ResumeData) => {
+  try {
+    const handle = await getFileHandle("syncDirectory");
+    if (!handle) {
+      console.warn("No directory handle found");
+      return;
+    }
+
+    const hasPermission = await verifyPermission(handle);
+    if (!hasPermission) {
+      console.warn("No permission to write to directory");
+      return;
+    }
+
+    const dirHandle = handle as FileSystemDirectoryHandle;
+    const fileName = `${resumeData.title}.json`;
+    const fileHandle = await dirHandle.getFileHandle(fileName, {
+      create: true,
+    });
+    const writable = await fileHandle.createWritable();
+    await writable.write(JSON.stringify(resumeData, null, 2));
+    await writable.close();
+  } catch (error) {
+    console.error("Error syncing resume to file:", error);
+  }
+};
+
+export const useResumeStore = create(
+  persist<ResumeStore>(
     (set, get) => ({
       resumes: {},
       activeResumeId: null,
       activeResume: null,
 
-      updateResume: (resumeId, data) =>
+      createResume: (templateId = null) => {
+        const newId = crypto.randomUUID();
+        const newResume: ResumeData = {
+          ...initialResumeState,
+          id: newId,
+          templateId,
+          title: "新简历" + newId.slice(0, 6),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        set((state) => ({
+          resumes: {
+            ...state.resumes,
+            [newId]: newResume,
+          },
+          activeResumeId: newId,
+          activeResume: newResume,
+        }));
+
+        syncResumeToFile(newResume);
+
+        return newId;
+      },
+
+      updateResume: (resumeId, data) => {
         set((state) => {
+          const resume = state.resumes[resumeId];
+          if (!resume) return state;
+
           const updatedResume = {
-            ...state.resumes[resumeId],
+            ...resume,
             ...data,
             updatedAt: new Date().toISOString(),
           };
+
+          syncResumeToFile(updatedResume);
+
           return {
             resumes: {
               ...state.resumes,
@@ -225,36 +286,46 @@ export const useResumeStore = create<ResumeStore>()(
                 ? updatedResume
                 : state.activeResume,
           };
-        }),
-
-      createResume: (templateId = null) => {
-        const newId = crypto.randomUUID();
-        const newResume: ResumeData = {
-          ...initialResumeState,
-          id: newId,
-          templateId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        get().updateResume(newId, newResume);
-        get().setActiveResume(newId);
+        });
       },
 
-      deleteResume: (resumeId) => {
-        const { resumes, activeResumeId } = get();
-        const { [resumeId]: _, ...remainingResumes } = resumes;
-        const newActiveResumeId =
-          activeResumeId === resumeId ? null : activeResumeId;
+      // 从文件更新，直接更新resumes
+      updateResumeFromFile: (resume) => {
+        set((state) => ({
+          resumes: {
+            ...state.resumes,
+            [resume.id]: resume,
+          },
+        }));
+      },
 
-        set({ resumes: remainingResumes });
+      deleteResume: (resume) => {
+        const resumeId = resume.id;
+        set((state) => {
+          const { [resumeId]: _, activeResume, ...rest } = state.resumes;
+          return {
+            resumes: rest,
+            activeResumeId: null,
+            activeResume: null,
+          };
+        });
 
-        if (newActiveResumeId) {
-          get().updateResume(newActiveResumeId, {
-            ...resumes[newActiveResumeId],
-          });
-        } else {
-          set({ activeResumeId: null, activeResume: null });
-        }
+        (async () => {
+          try {
+            const handle = await getFileHandle("syncDirectory");
+            if (!handle) return;
+
+            const hasPermission = await verifyPermission(handle);
+            if (!hasPermission) return;
+
+            const dirHandle = handle as FileSystemDirectoryHandle;
+            try {
+              await dirHandle.removeEntry(`${resume.title}.json`);
+            } catch (error) {}
+          } catch (error) {
+            console.error("Error deleting resume file:", error);
+          }
+        })();
       },
 
       duplicateResume: (resumeId) => {
@@ -277,13 +348,32 @@ export const useResumeStore = create<ResumeStore>()(
           set({ activeResume: resume, activeResumeId: resumeId });
         }
       },
+
       updateBasicInfo: (data) => {
-        const { activeResumeId, updateResume } = get();
-        if (activeResumeId) {
-          updateResume(activeResumeId, {
-            basic: { ...get().resumes[activeResumeId].basic, ...data },
-          });
-        }
+        set((state) => {
+          if (!state.activeResume || !state.activeResumeId) return state;
+
+          const updatedResume = {
+            ...state.activeResume,
+            basic: {
+              ...state.activeResume.basic,
+              ...data,
+            },
+            updatedAt: new Date().toISOString(),
+          };
+
+          const newState = {
+            ...state,
+            resumes: {
+              ...state.resumes,
+              [state.activeResumeId]: updatedResume,
+            },
+            activeResume: updatedResume,
+          };
+
+          syncResumeToFile(updatedResume);
+          return newState;
+        });
       },
 
       updateEducation: (education) => {
@@ -535,14 +625,19 @@ export const useResumeStore = create<ResumeStore>()(
           get().updateResume(activeResumeId, { customData: updatedCustomData });
         }
       },
+
       updateGlobalSettings: (settings: Partial<GlobalSettings>) => {
-        const { activeResumeId, updateResume } = get();
+        const { activeResumeId, updateResume, activeResume } = get();
         if (activeResumeId) {
           updateResume(activeResumeId, {
-            globalSettings: settings,
+            globalSettings: {
+              ...activeResume?.globalSettings,
+              ...settings,
+            },
           });
         }
       },
+
       setColorTheme: (colorTheme) => {
         const { activeResumeId, updateResume } = get();
         if (activeResumeId) {

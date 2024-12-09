@@ -10,7 +10,7 @@ import { PreviewPanel } from "@/components/preview/PreviewPanel";
 import {
   ResizableHandle,
   ResizablePanel,
-  ResizablePanelGroup
+  ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 const LAYOUT_CONFIG = {
@@ -27,10 +27,9 @@ const LAYOUT_CONFIG = {
   EDIT_FOCUSED_WITH_SIDE: [0, 100, 0],
   PREVIEW_FOCUSED_WITH_SIDE: [0, 0, 100],
   EDIT_FOCUSED_NO_SIDE: [0, 100, 0],
-  PREVIEW_FOCUSED_NO_SIDE: [0, 0, 100]
+  PREVIEW_FOCUSED_NO_SIDE: [0, 0, 100],
 };
 
-// 创建自定义拖拽手柄组件
 const DragHandle = ({ show = true }) => {
   if (!show) return null;
 

@@ -570,7 +570,6 @@ export function SidePanel() {
                 checked={globalSettings.useIconMode}
                 onCheckedChange={(checked) =>
                   updateGlobalSettings({
-                    ...globalSettings,
                     useIconMode: checked,
                   })
                 }

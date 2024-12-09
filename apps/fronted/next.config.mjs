@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 const nextConfig = {
   typescript: {

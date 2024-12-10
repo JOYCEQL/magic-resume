@@ -103,8 +103,8 @@ const ResumeWorkbench = () => {
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
             onClick={handleCreateResume}
           >
-            <Card className="border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col items-center justify-center">
-              <CardContent className="pt-6 text-center flex flex-col items-center justify-center h-full">
+            <Card className="relative border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col">
+              <CardContent className="flex-1 pt-6 text-center flex flex-col items-center justify-center">
                 <motion.div
                   className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center"
                   whileHover={{ rotate: 90 }}
@@ -136,51 +136,55 @@ const ResumeWorkbench = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Card className="h-[260px] sm:h-[300px] flex flex-col">
-                  <CardHeader className="pb-3 text-center flex-1 flex flex-col items-center justify-center">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/5 mb-4 flex items-center justify-center">
+                <Card className=" border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col">
+                  <CardContent className="group relative flex-1 pt-6 text-center flex flex-col items-center justify-center">
+                    <motion.div
+                      className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center"
+                      whileHover={{ rotate: 90 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-                    </div>
-                    <CardTitle className="text-base sm:text-lg line-clamp-1">
+                    </motion.div>
+                    <CardTitle className="text-base sm:text-lg">
                       {resume.title || "未命名简历"}
                     </CardTitle>
                     <CardDescription className="mt-2 text-xs sm:text-sm">
                       {new Date(resume.createdAt).toLocaleDateString()}
                     </CardDescription>
-                  </CardHeader>
-                  <CardFooter className="pt-0">
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full text-sm"
-                          size="sm"
-                          onClick={() => {
-                            setActiveResume(id);
-                            router.push(`/workbench/${id}`);
-                          }}
+                    <CardFooter className="absolute w-full bottom-2 pt-0 pb-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="grid grid-cols-2 gap-2 w-full">
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          编辑
-                        </Button>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full text-sm"
-                          size="sm"
-                          onClick={() => deleteResume(resume)}
+                          <Button
+                            variant="outline"
+                            className="w-full text-sm"
+                            size="sm"
+                            onClick={() => {
+                              setActiveResume(id);
+                              router.push(`/workbench/${id}`);
+                            }}
+                          >
+                            编辑
+                          </Button>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          删除
-                        </Button>
-                      </motion.div>
-                    </div>
-                  </CardFooter>
+                          <Button
+                            variant="outline"
+                            className="w-full text-sm"
+                            size="sm"
+                            onClick={() => deleteResume(resume)}
+                          >
+                            删除
+                          </Button>
+                        </motion.div>
+                      </div>
+                    </CardFooter>
+                  </CardContent>
                 </Card>
               </motion.div>
             ))}

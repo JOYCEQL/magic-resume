@@ -78,6 +78,9 @@ export interface BasicInfo {
     icon?: string;
     visible?: boolean;
   }>;
+  githubKey: string;
+  githubUseName: string;
+  githubContributionsVisible: boolean;
 }
 
 export interface Education {

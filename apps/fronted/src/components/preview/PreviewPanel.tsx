@@ -1,10 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
-import { useResumeStore } from "@/store/useResumeStore";
-import { cn } from "@/lib/utils";
 import { throttle } from "lodash";
-import { ResumeData, THEME_COLORS } from "@/types/resume";
+import GithubContribution from "@/components/shared/GithubContribution";
 import { BaseInfo } from "./BaseInfo";
 import { SectionTitle } from "./SectionTitle";
 import ProjectItem from "./ProjectItem";
@@ -13,6 +11,9 @@ import { EducationSection } from "./EducationSection";
 import { CustomSection } from "./CustomSection";
 import { SkillSection } from "./SkillPanel";
 
+import { cn } from "@/lib/utils";
+import { useResumeStore } from "@/store/useResumeStore";
+import { THEME_COLORS } from "@/types/resume";
 const getFontFamilyClass = (fontFamily: string) => {
   switch (fontFamily) {
     case "serif":
@@ -280,6 +281,15 @@ export function PreviewPanel() {
             <LayoutGroup>
               <motion.div layout ref={resumeContentRef}>
                 <BaseInfo basic={basic} globalSettings={globalSettings} />
+                {basic?.githubContributionsVisible && (
+                  <div className="mt-2">
+                    <GithubContribution
+                      githubKey={basic?.githubKey}
+                      username={basic?.githubUseName}
+                    />
+                  </div>
+                )}
+
                 {menuSections
                   .filter((section) => section.enabled)
                   .sort((a, b) => a.order - b.order)

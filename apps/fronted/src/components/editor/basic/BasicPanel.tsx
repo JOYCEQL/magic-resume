@@ -3,14 +3,15 @@ import React, { useState } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import PhotoUpload from "@/components/shared/PhotoSelector";
+import IconSelector from "../IconSelector";
 import Field from "../Field";
+import { cn } from "@/lib/utils";
+import { DEFAULT_FIELD_ORDER } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicFieldType, CustomFieldType } from "@/types/resume";
-import { DEFAULT_FIELD_ORDER } from "@/config";
-import IconSelector from "../IconSelector";
-
 interface CustomFieldProps {
   field: CustomFieldType;
   onUpdate: (field: CustomFieldType) => void;
@@ -347,7 +348,6 @@ const BasicPanel: React.FC = () => {
                 ))}
             </Reorder.Group>
           </AnimatePresence>
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -357,6 +357,60 @@ const BasicPanel: React.FC = () => {
               <PlusCircle className="w-4 h-4 mr-2" />
               添加自定义字段
             </Button>
+          </motion.div>
+        </motion.div>
+        <motion.div className="space-y-3">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center justify-between">
+              <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+                Github 贡献图
+              </motion.h3>
+
+              <Switch
+                checked={basic?.githubContributionsVisible}
+                onCheckedChange={(checked) =>
+                  updateBasicInfo({
+                    ...basic,
+                    githubContributionsVisible: checked,
+                  })
+                }
+              />
+            </div>
+
+            <div className="mt-4">
+              <div className="flex items-center ml-3 space-x-2">
+                <div className=" w-[110px]">Access Token</div>
+                <Input
+                  placeholder="请输入github access token"
+                  className="flex-1"
+                  value={basic?.githubKey}
+                  onChange={(e) =>
+                    updateBasicInfo({
+                      ...basic,
+                      githubKey: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex items-center ml-3 mt-4 space-x-2">
+                <div className="w-[110px]">UseName</div>
+                <Input
+                  className="flex-1"
+                  placeholder="请输入github username"
+                  value={basic?.githubUseName}
+                  onChange={(e) =>
+                    updateBasicInfo({
+                      ...basic,
+                      githubUseName: e.target.value,
+                    })
+                  }
+                />
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       </motion.div>

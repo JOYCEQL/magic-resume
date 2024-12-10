@@ -56,10 +56,8 @@ const SettingsPage = () => {
       const hasPermission = await verifyPermission(handle);
       if (hasPermission) {
         setDirectoryHandle(handle);
-        // 获取文件夹路径
         const path = handle.name;
         setFolderPath(path);
-        // 存储文件句柄和路径
         await storeFileHandle("syncDirectory", handle);
         await storeConfig("syncDirectoryPath", path);
       }

@@ -137,7 +137,6 @@ export function BaseInfo({
         </motion.h1>
       )}
 
-      {/* 职位 - 仅在可见时显示 */}
       {titleField && basic[titleField.key] && (
         <motion.h2
           layout="position"
@@ -153,7 +152,7 @@ export function BaseInfo({
       {/* 其他字段 */}
       <motion.div
         layout="position"
-        className="flex justify-center items-center flex-wrap gap-3"
+        className="flex justify-start items-center flex-wrap gap-3"
         style={{
           fontSize: `${globalSettings?.baseFontSize || 14}px`,
           color: "rgb(75, 85, 99)",

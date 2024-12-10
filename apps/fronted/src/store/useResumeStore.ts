@@ -102,6 +102,9 @@ const initialResumeState: Omit<ResumeData, "id" | "createdAt" | "updatedAt"> = {
       },
     ],
     photo: "/avatar.svg",
+    githubKey: "",
+    githubUseName: "",
+    githubContributionsVisible: false,
   },
   education: [
     {

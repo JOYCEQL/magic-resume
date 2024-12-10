@@ -1,6 +1,6 @@
 "use client";
-
-import { FileText, Settings, SettingsIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FileText, Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
@@ -8,7 +8,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -16,7 +15,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -58,8 +56,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <Sidebar collapsible={collapsible}>
           <SidebarHeader>
-            <div className="w-full justify-center  flex">
-              <Logo size={40} />
+            <div className="w-full   justify-center  flex">
+              <Logo
+                className="cursor-pointer"
+                size={40}
+                onClick={() => router.push("/")}
+              />
             </div>
           </SidebarHeader>
           <SidebarContent>

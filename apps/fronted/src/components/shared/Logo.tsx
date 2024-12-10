@@ -3,9 +3,10 @@ import React from "react";
 interface LogoProps {
   size?: number;
   className?: string;
+  onClick?: () => void;
 }
 
-const Logo: React.FC<LogoProps> = ({ size = 100, className = "" }) => {
+const Logo: React.FC<LogoProps> = ({ size = 100, className = "", onClick }) => {
   return (
     <svg
       width={size}
@@ -15,6 +16,7 @@ const Logo: React.FC<LogoProps> = ({ size = 100, className = "" }) => {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-label="Magic Resume Logo"
+      onClick={onClick}
     >
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">

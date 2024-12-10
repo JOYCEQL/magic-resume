@@ -503,7 +503,10 @@ export const useResumeStore = create(
           const reorderedSections = [
             basicInfoSection,
             ...newOrder.filter((section) => section.id !== "basic"),
-          ];
+          ].map((section, index) => ({
+            ...section,
+            order: index,
+          }));
           get().updateResume(activeResumeId, {
             menuSections: reorderedSections as MenuSection[],
           });

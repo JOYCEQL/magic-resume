@@ -10,7 +10,8 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ## 📸 项目截图
 
-![image](https://github.com/user-attachments/assets/a15092ca-d6c5-4f0a-9466-94fad510c2a7)
+![416shots_so](https://github.com/user-attachments/assets/b61f41e7-10be-46dd-98a7-02215bd94f05)
+
 
 
 ## ✨ 特性
@@ -27,7 +28,7 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ## 🛠️ 技术栈
 
-- Next.js 13+
+- Next.js 14+
 - TypeScript
 - Framer Motion
 - Tailwind CSS
@@ -95,9 +96,9 @@ pnpm -F fronted build
 
 ## 📞 联系方式
 
-- 作者：[JOYCEQL]
-- 邮箱：[18806723365@163.com]
-- 项目主页：[https://github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
+- 作者：JOYCEQL
+- 邮箱：18806723365@163.com
+- 项目主页：https://github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume)
 
 ## 🌟 支持项目
 

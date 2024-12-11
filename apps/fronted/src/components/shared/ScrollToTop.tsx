@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ const ScrollToTop = () => {
       {
         // 将观察点设置在页面30%的位置（即滚动70%时触发）
         rootMargin: "60% 0px -40% 0px",
-        threshold: 0
+        threshold: 0,
       }
     );
 
@@ -36,7 +37,7 @@ const ScrollToTop = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
 

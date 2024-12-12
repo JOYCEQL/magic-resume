@@ -108,6 +108,56 @@ const SettingsPage = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm mt-8">
+          <h2 className="text-xl font-semibold mb-4">OpenAI API Key</h2>
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="apiKey"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                API Key
+              </label>
+              <div className="relative">
+                <input
+                  type="textarea"
+                  id="apiKey"
+                  className="w-full h-[60px] px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 
+                    focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                  placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxx"
+                />
+              </div>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                您的API Key将被安全加密存储。获取API Key请访问：
+                <a
+                  href="https://platform.openai.com/api-keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  OpenAI API Keys
+                </a>
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                  transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                保存
+              </button>
+              <button
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 
+                  dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 
+                  transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              >
+                验证
+              </button>
+            </div>
+          </div>
+        </div> */}
       </div>
     </div>
   );

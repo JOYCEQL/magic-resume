@@ -4,7 +4,7 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import ScrollToTop from "../components/shared/ScrollToTop";
 import EditButton from "@/components/shared/EditButton";
 import dynamic from "next/dynamic";
-
+import CreateResume from "@/components/home/CreateResume";
 const AnimatedHero = dynamic(() => import("@/components/home/AnimatedHero"), {
   ssr: false,
   loading: () => (
@@ -70,8 +70,7 @@ export default function LandingPage() {
               告别繁琐的简历制作流程，让AI助手帮你完成专业简历
             </p>
 
-            {/* AI输入区域 */}
-            <div className="max-w-3xl mx-auto relative group">
+            {/* <div className="max-w-3xl mx-auto relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
               <div className="relative flex items-center bg-white dark:bg-gray-900 rounded-lg shadow-xl ring-1 ring-gray-900/5 dark:ring-white/10">
                 <input
@@ -79,11 +78,9 @@ export default function LandingPage() {
                   placeholder="例如：'我是一名3年经验的前端开发工程师，擅长React和TypeScript...'"
                   className="flex-1 px-6 py-4 bg-transparent border-none focus:outline-none text-gray-700 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-600"
                 />
-                <button className="px-6 py-4 bg-gradient-to-r from-blue-600 to-violet-600 text-white rounded-r-lg hover:opacity-90 transition-opacity font-medium">
-                  生成简历
-                </button>
+                <CreateResume></CreateResume>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="relative mt-20">
@@ -127,7 +124,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-12 border-t dark:border-white/5 border-gray-200 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-900/50" />
         <div className="max-w-7xl mx-auto px-6 relative">

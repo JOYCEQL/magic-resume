@@ -1,18 +1,13 @@
 import { motion } from "framer-motion";
 import { GlobalSettings } from "@/types/resume";
-import { SectionTitle } from "./SectionTitle";
+import SectionTitle from "./SectionTitle";
 
 interface SkillSectionProps {
   skill: string | undefined;
   globalSettings: GlobalSettings | undefined;
-  themeColor: string;
 }
 
-export function SkillSection({
-  skill,
-  globalSettings,
-  themeColor,
-}: SkillSectionProps) {
+const SkillSection = ({ skill, globalSettings }: SkillSectionProps) => {
   if (!skill) {
     return null;
   }
@@ -24,11 +19,7 @@ export function SkillSection({
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
     >
-      <SectionTitle
-        type="skills"
-        themeColor={themeColor}
-        globalSettings={globalSettings}
-      />
+      <SectionTitle type="skills" globalSettings={globalSettings} />
       <div
         style={{
           marginTop: `${globalSettings?.paragraphSpacing}px`,
@@ -45,4 +36,6 @@ export function SkillSection({
       </div>
     </motion.div>
   );
-}
+};
+
+export default SkillSection;

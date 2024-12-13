@@ -1,23 +1,20 @@
 "use client";
 import { motion } from "framer-motion";
-import { GlobalSettings } from "@/types/resume";
-import { SectionTitle } from "./SectionTitle";
-import { CustomItem } from "@/types/resume";
+import { GlobalSettings, CustomItem } from "@/types/resume";
+import SectionTitle from "./SectionTitle";
 
 interface CustomSectionProps {
   sectionId: string;
   title: string;
   items: CustomItem[];
   globalSettings: GlobalSettings | undefined;
-  themeColor: string;
 }
 
-export function CustomSection({
+const CustomSection = ({
   title,
   items,
   globalSettings,
-  themeColor
-}: CustomSectionProps) {
+}: CustomSectionProps) => {
   const visibleItems = items.filter((item) => {
     return item.visible && (item.title || item.description);
   });
@@ -26,20 +23,19 @@ export function CustomSection({
     <motion.div
       layout
       style={{
-        marginTop: `${globalSettings?.sectionSpacing || 24}px`
+        marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
     >
       <SectionTitle
         title={title}
         type="custom"
-        themeColor={themeColor}
         globalSettings={globalSettings}
       />
       {visibleItems.map((item) => (
         <div
           key={item.id}
           style={{
-            marginTop: `${globalSettings?.paragraphSpacing}px`
+            marginTop: `${globalSettings?.paragraphSpacing}px`,
           }}
         >
           <div className="flex justify-between items-start">
@@ -48,7 +44,7 @@ export function CustomSection({
                 <h4
                   className="font-semibold text-gray-800"
                   style={{
-                    fontSize: `${globalSettings?.subheaderSize || 16}px`
+                    fontSize: `${globalSettings?.subheaderSize || 16}px`,
                   }}
                 >
                   {item.title}
@@ -57,7 +53,7 @@ export function CustomSection({
                   layout
                   className={"font-medium text-baseFont"}
                   style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   }}
                 >
                   {item.subtitle}
@@ -68,7 +64,7 @@ export function CustomSection({
               <span
                 className="text-baseFont shrink-0 ml-4"
                 style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`
+                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
                 }}
               >
                 {item.dateRange}
@@ -80,7 +76,7 @@ export function CustomSection({
               className="text-baseFont mt-1"
               style={{
                 fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                lineHeight: globalSettings?.lineHeight || 1.6
+                lineHeight: globalSettings?.lineHeight || 1.6,
               }}
               dangerouslySetInnerHTML={{ __html: item.description }}
             />
@@ -89,4 +85,6 @@ export function CustomSection({
       ))}
     </motion.div>
   );
-}
+};
+
+export default CustomSection;

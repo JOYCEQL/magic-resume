@@ -2,22 +2,16 @@ import { useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 interface SectionTitleProps {
-  themeColor: string;
   globalSettings?: GlobalSettings;
   type: string;
   title?: string;
 }
 
-export function SectionTitle({
-  type,
-  title,
-  themeColor,
-  globalSettings,
-}: SectionTitleProps) {
+const SectionTitle = ({ type, title, globalSettings }: SectionTitleProps) => {
   const sectionTitleStyles = {
     fontSize: `${globalSettings?.headerSize || 18}px`,
-    borderColor: themeColor,
-    color: themeColor,
+    borderColor: globalSettings?.themeColor,
+    color: globalSettings?.themeColor,
   };
   const { activeResume } = useResumeStore();
   const { menuSections = [] } = activeResume || {};
@@ -37,4 +31,5 @@ export function SectionTitle({
       {renderTitle}
     </h3>
   );
-}
+};
+export default SectionTitle;

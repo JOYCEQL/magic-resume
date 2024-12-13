@@ -80,21 +80,22 @@ export function SidePanel() {
     toggleSectionVisibility,
     updateGlobalSettings,
     updateMenuSections,
-    setColorTheme,
+    setThemeColor,
     reorderSections,
     addCustomData,
   } = useResumeStore();
   const {
     menuSections = [],
     globalSettings = {},
-    colorTheme,
     activeSection,
   } = activeResume || {};
+
+  const { themeColor } = globalSettings;
 
   const debouncedSetColor = useMemo(
     () =>
       debounce((value) => {
-        setColorTheme(value);
+        setThemeColor(value);
       }, 100),
     []
   );
@@ -131,7 +132,6 @@ export function SidePanel() {
       animate={{ x: 0, opacity: 1 }}
     >
       <div className="p-4 space-y-4">
-        {/* 布局部分 */}
         <SettingCard icon={Layout} title="布局">
           {menuSections
             .filter((item) => item.id === "basic")
@@ -276,11 +276,11 @@ export function SidePanel() {
                   key={presetTheme}
                   className={cn(
                     "relative group aspect-square rounded-lg overflow-hidden border-2 transition-all duration-200",
-                    colorTheme === presetTheme
+                    themeColor === presetTheme
                       ? "border-black dark:border-white"
                       : "dark:border-neutral-800 dark:hover:border-neutral-700 border-gray-100 hover:border-gray-200"
                   )}
-                  onClick={() => setColorTheme(presetTheme)}
+                  onClick={() => setThemeColor(presetTheme)}
                 >
                   {/* 颜色展示 */}
                   <div
@@ -289,7 +289,7 @@ export function SidePanel() {
                   />
 
                   {/* 选中指示器 */}
-                  {colorTheme === presetTheme && (
+                  {themeColor === presetTheme && (
                     <motion.div
                       layoutId="theme-selected"
                       className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-white/20"
@@ -505,7 +505,7 @@ export function SidePanel() {
               <div className="flex items-center gap-4">
                 <Slider
                   value={[globalSettings?.pagePadding || 0]}
-                  min={20}
+                  min={0}
                   max={100}
                   step={1}
                   onValueChange={([value]) =>

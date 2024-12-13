@@ -13,7 +13,7 @@ import {
   ResumeData,
   MenuSection,
 } from "../types/resume";
-
+import { DEFAULT_TEMPLATES } from "@/config";
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
@@ -53,7 +53,8 @@ interface ResumeStore {
   ) => void;
   removeCustomItem: (sectionId: string, itemId: string) => void;
   updateGlobalSettings: (settings: Partial<GlobalSettings>) => void;
-  setColorTheme: (colorTheme: string) => void;
+  setThemeColor: (color: string) => void;
+  setTemplate: (templateId: string) => void;
 }
 
 const initialGlobalSettings: GlobalSettings = {
@@ -64,12 +65,15 @@ const initialGlobalSettings: GlobalSettings = {
   sectionSpacing: 10,
   headerSize: 18,
   subheaderSize: 16,
-  useIconMode: false,
+  useIconMode: true,
+  themeColor: "#2563eb",
 };
 
-const initialResumeState: Omit<ResumeData, "id" | "createdAt" | "updatedAt"> = {
+const initialResumeState: Omit<
+  ResumeData,
+  "id" | "createdAt" | "updatedAt" | "templateId"
+> = {
   title: "新建简历",
-  templateId: null,
   basic: {
     name: "张三",
     title: "高级前端工程师",
@@ -197,11 +201,10 @@ const initialResumeState: Omit<ResumeData, "id" | "createdAt" | "updatedAt"> = {
       enabled: true,
       order: 2,
     },
-    { id: "skills", title: "技能特长", icon: "⚡", enabled: true, order: 3 },
+    { id: "skills", title: "专业技能", icon: "⚡", enabled: true, order: 3 },
     { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 4 },
   ],
   customData: {},
-  colorTheme: "#2563eb",
   activeSection: "basic",
   globalSettings: initialGlobalSettings,
 };
@@ -242,28 +245,32 @@ export const useResumeStore = create(
       activeResume: null,
 
       createResume: (templateId = null) => {
-        const newId = crypto.randomUUID();
+        const id = crypto.randomUUID();
+        const template = templateId
+          ? DEFAULT_TEMPLATES.find((t) => t.id === templateId)
+          : DEFAULT_TEMPLATES[0];
+
         const newResume: ResumeData = {
           ...initialResumeState,
-          id: newId,
-          templateId,
-          title: "新简历" + newId.slice(0, 6),
+          id,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          templateId: template?.id,
+          title: `新建简历 ${id.slice(0, 6)}`,
         };
 
         set((state) => ({
           resumes: {
             ...state.resumes,
-            [newId]: newResume,
+            [id]: newResume,
           },
-          activeResumeId: newId,
+          activeResumeId: id,
           activeResume: newResume,
         }));
 
         syncResumeToFile(newResume);
 
-        return newId;
+        return id;
       },
 
       updateResume: (resumeId, data) => {
@@ -644,11 +651,44 @@ export const useResumeStore = create(
         }
       },
 
-      setColorTheme: (colorTheme) => {
+      setThemeColor: (color) => {
         const { activeResumeId, updateResume } = get();
         if (activeResumeId) {
-          updateResume(activeResumeId, { colorTheme });
+          updateResume(activeResumeId, {
+            globalSettings: {
+              ...get().activeResume?.globalSettings,
+              themeColor: color,
+            },
+          });
         }
+      },
+
+      setTemplate: (templateId) => {
+        const { activeResumeId, resumes } = get();
+        if (!activeResumeId) return;
+
+        const template = DEFAULT_TEMPLATES.find((t) => t.id === templateId);
+        if (!template) return;
+
+        const updatedResume = {
+          ...resumes[activeResumeId],
+          templateId,
+          globalSettings: {
+            ...resumes[activeResumeId].globalSettings,
+            themeColor: template.colorScheme.primary,
+            sectionSpacing: template.spacing.sectionGap,
+            paragraphSpacing: template.spacing.itemGap,
+            pagePadding: template.spacing.contentPadding,
+          },
+        };
+
+        set({
+          resumes: {
+            ...resumes,
+            [activeResumeId]: updatedResume,
+          },
+          activeResume: updatedResume,
+        });
       },
     }),
     {

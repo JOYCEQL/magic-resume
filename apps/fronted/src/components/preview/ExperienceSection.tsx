@@ -1,37 +1,31 @@
 import { motion } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
-import { SectionTitle } from "./SectionTitle";
+import SectionTitle from "./SectionTitle";
 
 interface ExperienceSectionProps {
   experience: Experience[];
   globalSettings: GlobalSettings | undefined;
-  themeColor: string;
 }
 
-export function ExperienceSection({
+const ExperienceSection = ({
   experience,
   globalSettings,
-  themeColor
-}: ExperienceSectionProps) {
+}: ExperienceSectionProps) => {
   return (
     <motion.div
       layout
       style={{
-        marginTop: `${globalSettings?.sectionSpacing || 24}px`
+        marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
     >
-      <SectionTitle
-        type="experience"
-        themeColor={themeColor}
-        globalSettings={globalSettings}
-      />
-      {experience.map(
+      <SectionTitle type="experience" globalSettings={globalSettings} />
+      {experience?.map(
         (exp) =>
           exp.visible && (
             <div
               key={exp.id}
               style={{
-                marginTop: `${globalSettings?.paragraphSpacing}px`
+                marginTop: `${globalSettings?.paragraphSpacing}px`,
               }}
             >
               <div className="flex justify-between items-start">
@@ -39,7 +33,7 @@ export function ExperienceSection({
                   <h4
                     className="font-semibold text-gray-800"
                     style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
                     }}
                   >
                     {exp.company}
@@ -47,7 +41,7 @@ export function ExperienceSection({
                   <p
                     className="font-medium  text-baseFont"
                     style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`
+                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
                     }}
                   >
                     {exp.position}
@@ -56,7 +50,7 @@ export function ExperienceSection({
                 <span
                   className="text-baseFont"
                   style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`
+                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   }}
                 >
                   {exp.date}
@@ -66,7 +60,7 @@ export function ExperienceSection({
                 className="text-baseFont"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6
+                  lineHeight: globalSettings?.lineHeight || 1.6,
                 }}
                 dangerouslySetInnerHTML={{ __html: exp.details }}
               />
@@ -75,4 +69,6 @@ export function ExperienceSection({
       )}
     </motion.div>
   );
-}
+};
+
+export default ExperienceSection;

@@ -8,8 +8,8 @@ export interface PhotoConfig {
 }
 
 export const DEFAULT_CONFIG: PhotoConfig = {
-  width: 96,
-  height: 96,
+  width: 56,
+  height: 56,
   aspectRatio: "1:1",
   borderRadius: "none",
   customBorderRadius: 0,
@@ -179,7 +179,7 @@ export interface ResumeData {
   title: string;
   createdAt: string;
   updatedAt: string;
-  templateId: string | null;
+  templateId: string | null | undefined;
   basic: BasicInfo;
   education: Education[];
   experience: Experience[];
@@ -187,7 +187,6 @@ export interface ResumeData {
   customData: Record<string, CustomItem[]>;
   skillContent: string;
   activeSection: string;
-  colorTheme: string;
   draggingProjectId: string | null;
   menuSections: MenuSection[];
   globalSettings: GlobalSettings;

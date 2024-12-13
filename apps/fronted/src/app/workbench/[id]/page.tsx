@@ -6,7 +6,7 @@ import { Eye, Edit2, Menu, PanelLeft, Minimize2 } from "lucide-react";
 import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
-import { PreviewPanel } from "@/components/preview/PreviewPanel";
+import PreviewPanel from "@/components/preview";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const LAYOUT_CONFIG = {
-  DEFAULT: [20, 35, 45],
+  DEFAULT: [18, 32, 50],
   SIDE_COLLAPSED: [0, 50, 50],
   EDIT_FOCUSED_WITH_SIDE: [0, 100, 0],
   PREVIEW_FOCUSED_WITH_SIDE: [0, 0, 100],
@@ -276,7 +276,7 @@ export default function Home() {
             <>
               <ResizablePanel
                 defaultSize={panelSizes[0]}
-                minSize={20}
+                minSize={18}
                 className={cn(
                   "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
                 )}
@@ -300,10 +300,13 @@ export default function Home() {
               <EditPanel />
             </div>
           </ResizablePanel>
-          <DragHandle />
-
+          {/* <DragHandle /> */}
           {/* 预览面板 */}
-          <ResizablePanel defaultSize={panelSizes[2]} className="bg-gray-100">
+          <ResizablePanel
+            collapsible={false}
+            defaultSize={panelSizes[2]}
+            className="bg-gray-100"
+          >
             <div className="h-full overflow-y-auto">
               <PreviewPanel />
             </div>

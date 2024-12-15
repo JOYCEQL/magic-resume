@@ -1,4 +1,4 @@
-import { Layout, LayoutTemplate } from "lucide-react";
+import { Layout, PanelsLeftBottom } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Sheet,
@@ -21,13 +21,7 @@ const TemplateSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          size="icon"
-          variant="secondary"
-          className="absolute top-[16px] right-6 shadow-lg"
-        >
-          <LayoutTemplate className="w-4 h-4" />
-        </Button>
+        <PanelsLeftBottom size={24} />
       </SheetTrigger>
       <SheetContent side="left" className="w-1/2 sm:max-w-1/2">
         <SheetHeader>

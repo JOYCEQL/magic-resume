@@ -1,156 +1,185 @@
-import React from "react";
+"use client";
+import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronRight } from "lucide-react";
-import ScrollToTop from "../components/shared/ScrollToTop";
-import EditButton from "@/components/shared/EditButton";
-import dynamic from "next/dynamic";
-import CreateResume from "@/components/home/CreateResume";
-const AnimatedHero = dynamic(() => import("@/components/home/AnimatedHero"), {
-  ssr: false,
-  loading: () => (
-    <div className="animate-pulse">
-      <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg mb-4"></div>
-    </div>
-  ),
-});
 
-const AnimatedFeatures = dynamic(
-  () => import("@/components/home/AnimatedFeatures"),
-  {
-    ssr: false,
-  }
-);
-
-export const metadata = {
-  title: "Magic Resume - AI驱动的智能简历系统",
-  description:
-    "使用AI技术，让简历制作变得简单。提供智能排版、专业模板、数据安全、多端同步等功能。",
-  keywords: "简历制作,AI简历,智能简历,在线简历",
-};
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/shared/Logo";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function LandingPage() {
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < 10) {
+        setIsVisible(true);
+        setLastScrollY(currentScrollY);
+        return;
+      }
+
+      if (currentScrollY > lastScrollY && currentScrollY > 200) {
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <div className="min-h-screen relative dark:bg-black dark:text-white bg-[#fafafa] text-gray-900">
-      <ScrollToTop />
-
-      {/* Header */}
-      <header
-        className="fixed top-0 w-full border-b backdrop-blur-xl z-40 transition-colors duration-300
-        dark:border-white/5 dark:bg-black/50 border-gray-200 bg-white/50"
-      >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 text-transparent bg-clip-text">
-              Magic Resume
-            </span>
-          </div>
-          <div className="flex items-center space-x-6">
-            <EditButton className="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-6 py-2 rounded-full hover:opacity-90 transition-opacity flex items-center space-x-2">
-              <span>开始制作</span>
-              <ChevronRight className="h-4 w-4" />
-            </EditButton>
-          </div>
-        </div>
-      </header>
-
-      {/* <AnimatedHero /> */}
-
-      <section className="py-24 px-6 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-black relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-slate-900/[0.04] dark:bg-grid-slate-400/[0.05] bg-[size:40px_40px]" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-full bg-gradient-to-tr from-blue-500/30 to-violet-500/30 dark:from-blue-500/10 dark:to-violet-500/10 blur-3xl opacity-20" />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-violet-600 text-transparent bg-clip-text inline-block">
-              AI智能简历新体验
-            </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-              告别繁琐的简历制作流程，让AI助手帮你完成专业简历
-            </p>
-
-            {/* <div className="max-w-3xl mx-auto relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-violet-600 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-              <div className="relative flex items-center bg-white dark:bg-gray-900 rounded-lg shadow-xl ring-1 ring-gray-900/5 dark:ring-white/10">
-                <input
-                  type="text"
-                  placeholder="例如：'我是一名3年经验的前端开发工程师，擅长React和TypeScript...'"
-                  className="flex-1 px-6 py-4 bg-transparent border-none focus:outline-none text-gray-700 dark:text-gray-300 placeholder-gray-400 dark:placeholder-gray-600"
-                />
-                <CreateResume></CreateResume>
+    <div className="min-h-screen bg-background">
+      <div className="fixed w-full z-50 flex justify-center">
+        <motion.div
+          className="w-[90%] max-w-5xl"
+          initial={{ y: 0, opacity: 1 }}
+          animate={{
+            y: isVisible ? 0 : -100,
+            opacity: isVisible ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.2,
+          }}
+        >
+          <div className="mt-4 rounded-full bg-background/70 backdrop-blur-[8px] border border-border/50">
+            <div className="relative flex items-center justify-between h-12 px-6">
+              <div className="flex items-center space-x-2">
+                <Logo size={32} />
+                <span className="font-bold text-base">Magic Resume</span>
               </div>
-            </div> */}
-          </div>
-
-          <div className="relative mt-20">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-violet-500 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-            <div className="relative rounded-xl overflow-hidden shadow-2xl">
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-30" />
-              <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent opacity-30" />
-              <Image
-                width={1280}
-                height={960}
-                src="/web-shot.png"
-                alt="resume-shot"
-                className="w-full h-auto transform hover:scale-[1.02] transition-transform duration-500"
-                style={{ objectFit: "cover" }}
-              />
+              <div className="flex items-center space-x-2">
+                <ThemeToggle>
+                  <div className="w-8 h-8 relative cursor-pointer rounded-md hover:bg-accent/50 flex items-center justify-center">
+                    <Sun className="h-[1.2rem] w-[1.2rem] absolute inset-0 m-auto rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="h-[1.2rem] w-[1.2rem] absolute inset-0 m-auto rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  </div>
+                </ThemeToggle>
+                <Link href="/dashboard">
+                  <Button
+                    variant="default"
+                    className="bg-primary hover:opacity-90 text-white h-8 text-sm rounded-full px-4"
+                  >
+                    开始使用
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </div>
 
-      <AnimatedFeatures />
-
-      {/* CTA Section */}
-      <section className="py-24 px-6 bg-gradient-to-br from-blue-50 to-violet-50 dark:from-blue-950/20 dark:to-violet-950/20 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-grid-slate-900/[0.03] dark:bg-grid-slate-400/[0.05] bg-[size:20px_20px]" />
-          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-blue-500 to-transparent opacity-20" />
-          <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-violet-500 to-transparent opacity-20" />
-        </div>
-
-        <div className="max-w-4xl mx-auto text-center relative">
-          <div className="space-y-8">
-            <EditButton
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-violet-600 text-white px-8 py-4 rounded-full hover:opacity-90 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 text-lg"
+      <section className="relative pt-32 pb-16">
+        <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+        <div className="max-w-5xl mx-auto px-4">
+          <motion.div
+            className="text-center space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h1
+              className="text-4xl md:text-6xl font-bold text-primary"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              免费开始使用
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </EditButton>
+              专注内容，隐私优先
+            </motion.h1>
+            <motion.p
+              className="text-lg text-muted-foreground max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              数据完全存储在本地，确保您的隐私安全。
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link href="/dashboard">
+                <Button size="lg" className="rounded-[10px] px-8">
+                  立即创建简历
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="mt-16 relative rounded-2xl overflow-hidden"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-violet-500/10 to-blue-500/10 rounded-2xl" />
+            <Image
+              width={1280}
+              height={720}
+              src="/web-shot.png"
+              alt="resume-shot"
+              className="w-full h-auto relative z-10 rounded-2xl shadow-2xl"
+              priority
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="py-24 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "简约设计",
+                description: "专注于内容创作，简洁的界面让您的思路更加清晰",
+                icon: "✨",
+              },
+              {
+                title: "本地存储",
+                description: "所有数据存储在本地，无需担心隐私泄露",
+                icon: "🔒",
+              },
+              {
+                title: "智能助手",
+                description: "AI助手帮您优化简历内容，提供专业建议",
+                icon: "🤖",
+              },
+            ].map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                className="relative p-6 rounded-2xl bg-card border group hover:shadow-lg transition-shadow duration-500"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-violet-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                <div className="relative">
+                  <div className="text-3xl mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="py-12 border-t dark:border-white/5 border-gray-200 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 dark:to-gray-900/50" />
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-sm text-gray-500">
-              {new Date().getFullYear()} Magic Resume. All rights reserved.
-            </div>
-            <div className="flex items-center space-x-8">
-              <a
-                href="#"
-                className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                隐私政策
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                使用条款
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                联系我们
-              </a>
-            </div>
+      <footer className="border-t py-8">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center text-sm text-muted-foreground">
+            <p> 2024 Magic Resume. All rights reserved.</p>
           </div>
         </div>
       </footer>

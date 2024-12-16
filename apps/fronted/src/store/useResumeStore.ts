@@ -26,6 +26,7 @@ interface ResumeStore {
   setActiveResume: (resumeId: string) => void;
   updateResumeFromFile: (resume: ResumeData) => void;
 
+  updateResumeTitle: (title: string) => void;
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
   updateEducation: (data: Education) => void;
   updateEducationBatch: (educations: Education[]) => void;
@@ -210,7 +211,10 @@ const initialResumeState: Omit<
 };
 
 // 同步简历到文件系统
-const syncResumeToFile = async (resumeData: ResumeData) => {
+const syncResumeToFile = async (
+  resumeData: ResumeData,
+  prevResume?: ResumeData
+) => {
   try {
     const handle = await getFileHandle("syncDirectory");
     if (!handle) {
@@ -225,6 +229,20 @@ const syncResumeToFile = async (resumeData: ResumeData) => {
     }
 
     const dirHandle = handle as FileSystemDirectoryHandle;
+
+    // If it's the same resume (same id) but title changed, delete the old file
+    if (
+      prevResume &&
+      prevResume.id === resumeData.id &&
+      prevResume.title !== resumeData.title
+    ) {
+      try {
+        await dirHandle.removeEntry(`${prevResume.title}.json`);
+      } catch (error) {
+        console.warn("Error deleting old file:", error);
+      }
+    }
+
     const fileName = `${resumeData.title}.json`;
     const fileHandle = await dirHandle.getFileHandle(fileName, {
       create: true,
@@ -281,10 +299,9 @@ export const useResumeStore = create(
           const updatedResume = {
             ...resume,
             ...data,
-            updatedAt: new Date().toISOString(),
           };
 
-          syncResumeToFile(updatedResume);
+          syncResumeToFile(updatedResume, resume);
 
           return {
             resumes: {
@@ -307,6 +324,13 @@ export const useResumeStore = create(
             [resume.id]: resume,
           },
         }));
+      },
+
+      updateResumeTitle: (title) => {
+        const { activeResumeId } = get();
+        if (activeResumeId) {
+          get().updateResume(activeResumeId, { title });
+        }
       },
 
       deleteResume: (resume) => {
@@ -361,7 +385,7 @@ export const useResumeStore = create(
 
       updateBasicInfo: (data) => {
         set((state) => {
-          if (!state.activeResume || !state.activeResumeId) return state;
+          if (!state.activeResume) return state;
 
           const updatedResume = {
             ...state.activeResume,
@@ -369,19 +393,18 @@ export const useResumeStore = create(
               ...state.activeResume.basic,
               ...data,
             },
-            updatedAt: new Date().toISOString(),
           };
 
           const newState = {
-            ...state,
             resumes: {
               ...state.resumes,
-              [state.activeResumeId]: updatedResume,
+              [state.activeResume.id]: updatedResume,
             },
             activeResume: updatedResume,
           };
 
-          syncResumeToFile(updatedResume);
+          syncResumeToFile(updatedResume, state.activeResume);
+
           return newState;
         });
       },

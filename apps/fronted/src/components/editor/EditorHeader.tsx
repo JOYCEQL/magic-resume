@@ -1,17 +1,18 @@
 "use client";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useResumeStore } from "@/store/useResumeStore";
-import { getThemeConfig } from "@/theme/themeConfig";
+import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
-
+import { useResumeStore } from "@/store/useResumeStore";
+import { getThemeConfig } from "@/theme/themeConfig";
 interface EditorHeaderProps {
   isMobile?: boolean;
 }
 
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
-  const { activeResume, setActiveSection } = useResumeStore();
+  const { activeResume, setActiveSection, updateResumeTitle } =
+    useResumeStore();
   const { menuSections = [], activeSection } = activeResume || {};
   const themeConfig = getThemeConfig();
   const router = useRouter();
@@ -26,7 +27,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
     >
-      <div className="flex items-center justify-between px-6 h-full">
+      <div className="flex items-center justify-between px-6 h-full pr-2">
         <div className="flex items-center space-x-6  scrollbar-hide">
           <motion.div
             className="flex items-center space-x-2 shrink-0 cursor-pointer"
@@ -62,8 +63,18 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
         </div>
 
         <div className="flex items-center space-x-3">
+          {/* 修改简历名称 */}
+          <Input
+            defaultValue={activeResume?.title || ""}
+            onBlur={(e) => {
+              updateResumeTitle(e.target.value || "未命名简历");
+            }}
+            className="w-60  text-sm"
+            placeholder="简历名称"
+          />
+
           <ThemeToggle></ThemeToggle>
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center ">
             <PdfExport />
           </div>
         </div>

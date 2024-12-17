@@ -33,7 +33,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
       case "experience":
         return (
           <ExperienceSection
-            experience={data.experience}
+            experiences={data.experience}
             globalSettings={data.globalSettings}
           />
         );
@@ -92,7 +92,7 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
       </div>
 
       <div
-        className="col-span-2 p-4 space-y-6"
+        className="col-span-2 p-4"
         style={{
           backgroundColor: colorScheme.background,
           color: colorScheme.text,

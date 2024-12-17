@@ -1,6 +1,7 @@
+"use client";
 import { motion } from "framer-motion";
-import { GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
+import { GlobalSettings } from "@/types/resume";
 
 interface SkillSectionProps {
   skill: string | undefined;

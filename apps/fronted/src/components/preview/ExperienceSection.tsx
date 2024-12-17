@@ -1,16 +1,59 @@
-import { motion } from "framer-motion";
+"use client";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 
 interface ExperienceSectionProps {
-  experience: Experience[];
-  globalSettings: GlobalSettings | undefined;
+  experiences?: Experience[];
+  globalSettings?: GlobalSettings;
 }
 
-const ExperienceSection = ({
-  experience,
+interface ExperienceItemProps {
+  experience: Experience;
+  globalSettings?: GlobalSettings;
+}
+
+const ExperienceItem: React.FC<ExperienceItemProps> = React.forwardRef(
+  ({ experience, globalSettings }, ref) => {
+    return (
+      <motion.div
+        style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}
+        layout
+      >
+        <motion.div
+          layout="position"
+          className="flex items-center justify-between"
+        >
+          <div className="font-medium text-baseFont">{experience.company}</div>
+          {experience.date && <div>{experience.date}</div>}
+        </motion.div>
+        {experience.position && (
+          <motion.div layout="position" className="font-medium text-baseFont">
+            {experience.position}
+          </motion.div>
+        )}
+        {experience.details && (
+          <motion.div
+            layout="position"
+            dangerouslySetInnerHTML={{ __html: experience.details }}
+          ></motion.div>
+        )}
+      </motion.div>
+    );
+  }
+);
+
+const ExperienceSection: React.FC<ExperienceSectionProps> = ({
+  experiences,
   globalSettings,
-}: ExperienceSectionProps) => {
+}) => {
+  if (!experiences?.length) return null;
+
+  const visibleExperiences = experiences.filter(
+    (experience) => experience.visible
+  );
+
   return (
     <motion.div
       layout
@@ -19,54 +62,17 @@ const ExperienceSection = ({
       }}
     >
       <SectionTitle type="experience" globalSettings={globalSettings} />
-      {experience?.map(
-        (exp) =>
-          exp.visible && (
-            <div
-              key={exp.id}
-              style={{
-                marginTop: `${globalSettings?.paragraphSpacing}px`,
-              }}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4
-                    className="font-semibold text-gray-800"
-                    style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
-                    }}
-                  >
-                    {exp.company}
-                  </h4>
-                  <p
-                    className="font-medium  text-baseFont"
-                    style={{
-                      fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                    }}
-                  >
-                    {exp.position}
-                  </p>
-                </div>
-                <span
-                  className="text-baseFont"
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  }}
-                >
-                  {exp.date}
-                </span>
-              </div>
-              <div
-                className="text-baseFont"
-                style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6,
-                }}
-                dangerouslySetInnerHTML={{ __html: exp.details }}
-              />
-            </div>
-          )
-      )}
+      <div>
+        <AnimatePresence mode="popLayout">
+          {visibleExperiences.map((experience) => (
+            <ExperienceItem
+              key={experience.id}
+              experience={experience}
+              globalSettings={globalSettings}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 };

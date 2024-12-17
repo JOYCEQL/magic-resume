@@ -14,7 +14,7 @@ interface ExperienceItemProps {
   globalSettings?: GlobalSettings;
 }
 
-const ExperienceItem: React.FC<ExperienceItemProps> = React.forwardRef(
+const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
   ({ experience, globalSettings }, ref) => {
     return (
       <motion.div
@@ -43,6 +43,8 @@ const ExperienceItem: React.FC<ExperienceItemProps> = React.forwardRef(
     );
   }
 );
+
+ExperienceItem.displayName = "ExperienceItem";
 
 const ExperienceSection: React.FC<ExperienceSectionProps> = ({
   experiences,

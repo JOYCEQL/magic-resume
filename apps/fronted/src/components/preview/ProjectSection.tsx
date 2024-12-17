@@ -63,7 +63,10 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
         <div className="font-medium text-baseFont">{project.role}</div>
       )}
       {project.description && (
-        <div className=" mt-2 whitespace-pre-wrap">{project.description}</div>
+        <div
+          className=" mt-2 whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: project.description }}
+        ></div>
       )}
     </div>
   );

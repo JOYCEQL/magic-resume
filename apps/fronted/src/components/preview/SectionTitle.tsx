@@ -1,3 +1,4 @@
+"use client";
 import { useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";

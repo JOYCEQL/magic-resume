@@ -36,7 +36,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
       case "experience":
         return (
           <ExperienceSection
-            experience={data.experience}
+            experiences={data.experience}
             globalSettings={data.globalSettings}
           />
         );

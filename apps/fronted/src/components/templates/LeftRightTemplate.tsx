@@ -35,7 +35,7 @@ const LeftRightTemplate: React.FC<LeftRightTemplateProps> = ({
       case "experience":
         return (
           <ExperienceSection
-            experience={data.experience}
+            experiences={data.experience}
             globalSettings={data.globalSettings}
           />
         );

@@ -1,6 +1,5 @@
 import { BasicFieldType } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
-
 export const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
   { id: "1", key: "name", label: "姓名", type: "text", visible: true },
 
@@ -23,7 +22,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     id: "classic",
     name: "经典模板",
     description: "传统简约的简历布局，适合大多数求职场景",
-    thumbnail: "",
+    thumbnail: "classic",
     layout: "classic",
     colorScheme: {
       primary: "#2563eb",
@@ -41,7 +40,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     id: "modern",
     name: "两栏布局",
     description: "经典两栏，突出个人特色",
-    thumbnail: "",
+    thumbnail: "modern",
     layout: "modern",
     colorScheme: {
       primary: "#059669",
@@ -59,7 +58,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     id: "left-right",
     name: "基础信息左右模板",
     description: "基础信息左右排版",
-    thumbnail: "",
+    thumbnail: "leftRight",
     layout: "left-right",
     colorScheme: {
       primary: "#7c3aed",

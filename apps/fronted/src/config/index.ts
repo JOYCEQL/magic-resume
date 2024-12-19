@@ -51,7 +51,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     spacing: {
       sectionGap: 32,
       itemGap: 20,
-      contentPadding: 0,
+      contentPadding: 1,
     },
   },
   {

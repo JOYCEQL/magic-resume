@@ -132,7 +132,7 @@ const PreviewPanel = () => {
         <div
           ref={startRef}
           className={cn(
-            "w-[210mm] min-h-[297mm]",
+            "w-[210mm] min-w-[210mm] min-h-[297mm]",
             "bg-white",
             "shadow-lg",
             "relative mx-auto"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Edit2, Menu, PanelLeft, Minimize2 } from "lucide-react";
 import { EditorHeader } from "@/components/editor/EditorHeader";
@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/tooltip";
 
 const LAYOUT_CONFIG = {
-  DEFAULT: [18, 32, 50],
-  SIDE_COLLAPSED: [0, 50, 50],
-  EDIT_FOCUSED_WITH_SIDE: [0, 100, 0],
-  PREVIEW_FOCUSED_WITH_SIDE: [0, 0, 100],
-  EDIT_FOCUSED_NO_SIDE: [0, 100, 0],
-  PREVIEW_FOCUSED_NO_SIDE: [0, 0, 100],
+  DEFAULT: [20, 32, 48],
+  SIDE_COLLAPSED: [50, 50],
+  EDIT_FOCUSED_WITH_SIDE: [18, 82, 0],
+  PREVIEW_FOCUSED_WITH_SIDE: [18, 0, 82],
+  EDIT_FOCUSED_NO_SIDE: [100, 0],
+  PREVIEW_FOCUSED_NO_SIDE: [0, 100],
 };
 
 const DragHandle = ({ show = true }) => {
@@ -56,53 +56,18 @@ const DragHandle = ({ show = true }) => {
   );
 };
 
-export default function Home() {
-  const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);
-  const [focusedPanel, setFocusedPanel] = useState<null | "edit" | "preview">(
-    null
-  );
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [isMobilePreview, setIsMobilePreview] = useState(false);
-  const [panelSizes, setPanelSizes] = useState(LAYOUT_CONFIG.DEFAULT);
-  const [layoutKey, setLayoutKey] = useState(0);
-
-  const updateLayout = (newSizes: number[]) => {
-    setPanelSizes(newSizes);
-    setLayoutKey((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    let newSizes;
-    if (sidePanelCollapsed) {
-      if (focusedPanel === "edit") {
-        newSizes = [...LAYOUT_CONFIG.EDIT_FOCUSED_NO_SIDE];
-      } else if (focusedPanel === "preview") {
-        newSizes = [...LAYOUT_CONFIG.PREVIEW_FOCUSED_NO_SIDE];
-      } else {
-        newSizes = [...LAYOUT_CONFIG.SIDE_COLLAPSED];
-      }
-    } else {
-      if (focusedPanel === "edit") {
-        newSizes = [...LAYOUT_CONFIG.EDIT_FOCUSED_WITH_SIDE];
-      } else if (focusedPanel === "preview") {
-        newSizes = [...LAYOUT_CONFIG.PREVIEW_FOCUSED_WITH_SIDE];
-      } else {
-        newSizes = [...LAYOUT_CONFIG.DEFAULT];
-      }
-    }
-    updateLayout([...newSizes]);
-  }, [sidePanelCollapsed, focusedPanel]);
-
-  const toggleSidePanel = () => {
-    setSidePanelCollapsed(!sidePanelCollapsed);
-  };
-
-  const togglePanelFocus = (panel: "edit" | "preview") => {
-    setFocusedPanel(focusedPanel === panel ? null : panel);
-  };
-
-  // 底部控制栏
-  const LayoutControls = () => (
+const LayoutControls = memo(
+  ({
+    sidePanelCollapsed,
+    focusedPanel,
+    toggleSidePanel,
+    togglePanelFocus,
+  }: {
+    sidePanelCollapsed: boolean;
+    focusedPanel: null | "edit" | "preview";
+    toggleSidePanel: () => void;
+    togglePanelFocus: (panel: "edit" | "preview") => void;
+  }) => (
     <div
       className={cn(
         "absolute bottom-6 left-1/2 -translate-x-1/2",
@@ -181,7 +146,56 @@ export default function Home() {
         </Tooltip>
       </TooltipProvider>
     </div>
+  )
+);
+
+LayoutControls.displayName = "LayoutControls";
+
+export default function Home() {
+  const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);
+  const [focusedPanel, setFocusedPanel] = useState<null | "edit" | "preview">(
+    null
   );
+
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const [isMobilePreview, setIsMobilePreview] = useState(false);
+  const [panelSizes, setPanelSizes] = useState(LAYOUT_CONFIG.DEFAULT);
+  const [layoutKey, setLayoutKey] = useState(0);
+
+  const updateLayout = (newSizes: number[]) => {
+    setPanelSizes(newSizes);
+    setLayoutKey((prev) => prev + 1);
+  };
+
+  useEffect(() => {
+    let newSizes;
+    if (sidePanelCollapsed) {
+      if (focusedPanel === "edit") {
+        newSizes = [100, 0];
+      } else if (focusedPanel === "preview") {
+        newSizes = [0, 100];
+      } else {
+        newSizes = [50, 50];
+      }
+    } else {
+      if (focusedPanel === "edit") {
+        newSizes = [18, 82, 0];
+      } else if (focusedPanel === "preview") {
+        newSizes = [18, 0, 82];
+      } else {
+        newSizes = [20, 32, 48];
+      }
+    }
+    updateLayout([...newSizes]);
+  }, [sidePanelCollapsed, focusedPanel]);
+
+  const toggleSidePanel = () => {
+    setSidePanelCollapsed(!sidePanelCollapsed);
+  };
+
+  const togglePanelFocus = (panel: "edit" | "preview") => {
+    setFocusedPanel(focusedPanel === panel ? null : panel);
+  };
 
   // 移动端控制栏
   const MobileControls = () => (
@@ -275,6 +289,8 @@ export default function Home() {
           {!sidePanelCollapsed && (
             <>
               <ResizablePanel
+                id="side-panel"
+                order={1}
                 defaultSize={panelSizes[0]}
                 minSize={18}
                 className={cn(
@@ -291,6 +307,8 @@ export default function Home() {
 
           {/* 编辑面板 */}
           <ResizablePanel
+            id="edit-panel"
+            order={2}
             defaultSize={panelSizes[1]}
             className={cn(
               "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
@@ -300,11 +318,14 @@ export default function Home() {
               <EditPanel />
             </div>
           </ResizablePanel>
-          {/* <DragHandle /> */}
+          <DragHandle />
           {/* 预览面板 */}
           <ResizablePanel
+            id="preview-panel"
+            order={3}
+            minSize={48}
             collapsible={false}
-            defaultSize={panelSizes[2]}
+            defaultSize={panelSizes ? panelSizes[2] : LAYOUT_CONFIG.DEFAULT[2]}
             className="bg-gray-100"
           >
             <div className="h-full overflow-y-auto">
@@ -313,7 +334,12 @@ export default function Home() {
           </ResizablePanel>
         </ResizablePanelGroup>
 
-        <LayoutControls />
+        <LayoutControls
+          sidePanelCollapsed={sidePanelCollapsed}
+          focusedPanel={focusedPanel}
+          toggleSidePanel={toggleSidePanel}
+          togglePanelFocus={togglePanelFocus}
+        />
       </div>
 
       {/* 移动端布局 */}

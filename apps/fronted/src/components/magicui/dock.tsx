@@ -2,14 +2,15 @@ import { cn } from "@/lib/utils";
 import React, { PropsWithChildren } from "react";
 import { motion } from "framer-motion";
 
-interface DockProps extends PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {
+interface DockProps
+  extends PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {
   className?: string;
 }
 
 export function Dock({ children, className, ...props }: DockProps) {
   // Convert children to array to handle them
   const childrenArray = React.Children.toArray(children);
-  
+
   // Find the index of TemplateSheet for splitting
   const templateSheetIndex = childrenArray.findIndex((child) => {
     if (React.isValidElement(child)) {
@@ -22,7 +23,9 @@ export function Dock({ children, className, ...props }: DockProps) {
           const content = trigger.props.children;
           if (React.isValidElement(content)) {
             const icon = content.props.children;
-            return React.isValidElement(icon) && icon.type?.name === "TemplateSheet";
+            return (
+              React.isValidElement(icon) && icon.type?.name === "TemplateSheet"
+            );
           }
         }
       }
@@ -36,7 +39,7 @@ export function Dock({ children, className, ...props }: DockProps) {
       <div
         {...props}
         className={cn(
-          "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-4 shadow-lg backdrop-blur-md dark:bg-slate-800/[0.7] dark:shadow-slate-900/20",
+          "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-2 shadow-lg backdrop-blur-md dark:bg-slate-800/[0.7] dark:shadow-slate-900/20",
           className
         )}
       >
@@ -95,7 +98,7 @@ export function DockIcon({ children, className, onClick }: DockIconProps) {
       whileHover={{ scale: 1.2 }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        "flex size-10 items-center justify-center rounded-lg bg-white text-neutral-700 shadow-sm transition-colors hover:bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:shadow-slate-900/20",
+        "flex size-8 items-center justify-center rounded-sm bg-white text-neutral-700 shadow-sm transition-colors hover:bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:shadow-slate-900/20",
         className
       )}
       onClick={onClick}

@@ -32,7 +32,7 @@ const TemplateSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <PanelsLeftBottom size={24} />
+        <PanelsLeftBottom size={20} />
       </SheetTrigger>
       <SheetContent side="left" className="w-1/2 sm:max-w-1/2">
         <SheetHeader>

@@ -1,8 +1,10 @@
+"use client";
 import { Layout, PanelsLeftBottom } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -11,6 +13,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
+import classic from "@/assets/images/template-cover/classic.png";
+import modern from "@/assets/images/template-cover/modern.png";
+import leftRight from "@/assets/images/template-cover/left-right.png";
+
+const templateImages: { [key: string]: any } = {
+  classic,
+  modern,
+  "left-right": leftRight,
+};
 
 const TemplateSheet = () => {
   const { activeResume, setTemplate } = useResumeStore();
@@ -27,6 +38,10 @@ const TemplateSheet = () => {
         <SheetHeader>
           <SheetTitle>选择模版</SheetTitle>
         </SheetHeader>
+
+        {/* 解决警告问题 */}
+        <SheetDescription></SheetDescription>
+
         <div className="grid grid-cols-4 gap-4 mt-4">
           {DEFAULT_TEMPLATES.map((t) => (
             <button
@@ -40,11 +55,11 @@ const TemplateSheet = () => {
               )}
             >
               <div className="absolute inset-0">
-                {/* <img
-                  src={t.preview}
+                <img
+                  src={templateImages[t.id].src}
                   alt={t.name}
-                  className="w-full h-full object-cover"
-                /> */}
+                  className="w-full  object-cover"
+                />
               </div>
               {t.id === currentTemplate.id && (
                 <motion.div

@@ -24,7 +24,7 @@ const PageBreakLine = React.memo(({ pageNumber }: { pageNumber: number }) => {
   const MM_TO_PX = 3.78;
 
   const TOP_MARGIN_MM = globalSettings?.pagePadding / MM_TO_PX;
-  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM;
+  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM;
   const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
 
   return (
@@ -63,35 +63,57 @@ const PreviewPanel = ({
   }, [activeResume?.templateId]);
 
   const startRef = useRef<HTMLDivElement>(null);
-
   const previewRef = React.useRef<HTMLDivElement>(null);
   const resumeContentRef = React.useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
 
-  useEffect(() => {
-    const updateContentHeight = throttle(() => {
-      if (resumeContentRef.current) {
-        setContentHeight(resumeContentRef.current.scrollHeight);
+  const updateContentHeight = () => {
+    if (resumeContentRef.current) {
+      const height = resumeContentRef.current.scrollHeight;
+      if (height > 0) {
+        setContentHeight(height);
       }
-    }, 100);
+    }
+  };
 
-    const resizeObserver = new ResizeObserver(updateContentHeight);
+  useEffect(() => {
+    const observer = new MutationObserver(updateContentHeight);
+    if (resumeContentRef.current) {
+      observer.observe(resumeContentRef.current, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
+
+      updateContentHeight();
+    }
+
+    const resizeObserver = new ResizeObserver(
+      throttle(updateContentHeight, 100)
+    );
     if (resumeContentRef.current) {
       resizeObserver.observe(resumeContentRef.current);
     }
 
+    const timeoutId = setTimeout(updateContentHeight, 100);
+
     return () => {
+      observer.disconnect();
       resizeObserver.disconnect();
-      updateContentHeight.cancel();
+      clearTimeout(timeoutId);
     };
-  }, []);
+  }, [activeResume]);
 
   const pageBreakCount = useMemo(() => {
-    if (!activeResume?.globalSettings?.pagePadding) return 0;
-    const A4_HEIGHT_MM = 297;
+    let TOP_MARGIN_MM;
     const MM_TO_PX = 3.78;
-    const TOP_MARGIN_MM = activeResume.globalSettings.pagePadding / MM_TO_PX;
-    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM;
+    const A4_HEIGHT_MM = 297;
+    if (activeResume?.globalSettings?.pagePadding) {
+      TOP_MARGIN_MM = activeResume.globalSettings.pagePadding / MM_TO_PX;
+    } else {
+      TOP_MARGIN_MM = 0;
+    }
+    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - TOP_MARGIN_MM;
     const pageHeightPx = CONTENT_HEIGHT_MM * MM_TO_PX;
     return Math.max(0, Math.ceil(contentHeight / pageHeightPx) - 1);
   }, [contentHeight, activeResume?.globalSettings?.pagePadding]);
@@ -103,7 +125,7 @@ const PreviewPanel = ({
       ref={previewRef}
       className="relative w-full h-full overflow-auto bg-gray-100"
     >
-      <div className="py-4 ml-4  px-4 min-h-screen flex justify-center scale-90 origin-top-left">
+      <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-90 origin-top-left">
         <div
           ref={startRef}
           className={cn(

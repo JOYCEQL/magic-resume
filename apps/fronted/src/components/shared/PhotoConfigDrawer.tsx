@@ -96,7 +96,11 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       const result = reader.result as string;
       setPreviewUrl(result);
       setImageUrl(result);
-      localStorage.setItem("photo", result);
+
+      const blob = new Blob([result], { type: "image/png" });
+      const blobUrl = URL.createObjectURL(blob);
+      localStorage.setItem("photo", blobUrl);
+      // localStorage.setItem("photo", result);
       updateBasicInfo({
         photo: result,
       });
@@ -118,7 +122,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     updateBasicInfo({
       photo: url,
     });
-    localStorage.setItem("photo", url);
+    const blob = new Blob([url], { type: "image/png" });
+    const blobUrl = URL.createObjectURL(blob);
+    localStorage.setItem("photo", blobUrl);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {

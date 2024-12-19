@@ -7,6 +7,7 @@ import {
   DrawerTitle,
   DrawerFooter,
   DrawerClose,
+  DrawerDescription,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   config: initialConfig,
   onPhotoChange,
   onConfigChange,
+  ...props
 }) => {
   const { updateBasicInfo } = useResumeStore();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -96,11 +98,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       const result = reader.result as string;
       setPreviewUrl(result);
       setImageUrl(result);
-
       const blob = new Blob([result], { type: "image/png" });
       const blobUrl = URL.createObjectURL(blob);
       localStorage.setItem("photo", blobUrl);
-      // localStorage.setItem("photo", result);
       updateBasicInfo({
         photo: result,
       });
@@ -237,6 +237,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
         <div className="mx-auto w-full max-w-md overflow-y-auto">
           <DrawerHeader>
             <DrawerTitle className="text-center">头像配置</DrawerTitle>
+            <DrawerDescription></DrawerDescription>
           </DrawerHeader>
           <div
             className={cn(

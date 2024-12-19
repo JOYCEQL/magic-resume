@@ -24,10 +24,8 @@ import {
 const LAYOUT_CONFIG = {
   DEFAULT: [20, 32, 48],
   SIDE_COLLAPSED: [50, 50],
-  EDIT_FOCUSED_WITH_SIDE: [18, 82, 0],
-  PREVIEW_FOCUSED_WITH_SIDE: [18, 0, 82],
-  EDIT_FOCUSED_NO_SIDE: [100, 0],
-  PREVIEW_FOCUSED_NO_SIDE: [0, 100],
+  EDIT_FOCUSED: [20, 80],
+  PREVIEW_FOCUSED: [20, 80],
 };
 
 const DragHandle = ({ show = true }) => {
@@ -59,14 +57,18 @@ const DragHandle = ({ show = true }) => {
 const LayoutControls = memo(
   ({
     sidePanelCollapsed,
-    focusedPanel,
+    editPanelCollapsed,
+    previewPanelCollapsed,
     toggleSidePanel,
-    togglePanelFocus,
+    toggleEditPanel,
+    togglePreviewPanel,
   }: {
     sidePanelCollapsed: boolean;
-    focusedPanel: null | "edit" | "preview";
+    editPanelCollapsed: boolean;
+    previewPanelCollapsed: boolean;
     toggleSidePanel: () => void;
-    togglePanelFocus: (panel: "edit" | "preview") => void;
+    toggleEditPanel: () => void;
+    togglePreviewPanel: () => void;
   }) => (
     <div
       className={cn(
@@ -102,21 +104,21 @@ const LayoutControls = memo(
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant={focusedPanel === "edit" ? "secondary" : "ghost"}
+              variant={editPanelCollapsed ? "secondary" : "ghost"}
               size="icon"
               className="h-9 w-9 rounded-full"
-              onClick={() => togglePanelFocus("edit")}
+              onClick={toggleEditPanel}
             >
-              {focusedPanel === "edit" ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
+              {editPanelCollapsed ? (
                 <Edit2 className="h-4 w-4" />
+              ) : (
+                <Minimize2 className="h-4 w-4" />
               )}
             </Button>
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
-              {focusedPanel === "edit" ? "退出编辑模式" : "专注编辑"}
+              {editPanelCollapsed ? "展开编辑面板" : "收起编辑面板"}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -126,21 +128,21 @@ const LayoutControls = memo(
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant={focusedPanel === "preview" ? "secondary" : "ghost"}
+              variant={previewPanelCollapsed ? "secondary" : "ghost"}
               size="icon"
               className="h-9 w-9 rounded-full"
-              onClick={() => togglePanelFocus("preview")}
+              onClick={togglePreviewPanel}
             >
-              {focusedPanel === "preview" ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
+              {previewPanelCollapsed ? (
                 <Eye className="h-4 w-4" />
+              ) : (
+                <Minimize2 className="h-4 w-4" />
               )}
             </Button>
           </TooltipTrigger>
           <TooltipContent>
             <p className="text-xs">
-              {focusedPanel === "preview" ? "退出预览模式" : "专注预览"}
+              {previewPanelCollapsed ? "展开预览面板" : "收起预览面板"}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -153,117 +155,76 @@ LayoutControls.displayName = "LayoutControls";
 
 export default function Home() {
   const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);
-  const [focusedPanel, setFocusedPanel] = useState<null | "edit" | "preview">(
-    null
-  );
-
-  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [isMobilePreview, setIsMobilePreview] = useState(false);
-  const [panelSizes, setPanelSizes] = useState(LAYOUT_CONFIG.DEFAULT);
-  const [layoutKey, setLayoutKey] = useState(0);
-
-  const updateLayout = (newSizes: number[]) => {
-    setPanelSizes(newSizes);
-    setLayoutKey((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    let newSizes;
-    if (sidePanelCollapsed) {
-      if (focusedPanel === "edit") {
-        newSizes = [100, 0];
-      } else if (focusedPanel === "preview") {
-        newSizes = [0, 100];
-      } else {
-        newSizes = [50, 50];
-      }
-    } else {
-      if (focusedPanel === "edit") {
-        newSizes = [18, 82, 0];
-      } else if (focusedPanel === "preview") {
-        newSizes = [18, 0, 82];
-      } else {
-        newSizes = [20, 32, 48];
-      }
-    }
-    updateLayout([...newSizes]);
-  }, [sidePanelCollapsed, focusedPanel]);
+  const [editPanelCollapsed, setEditPanelCollapsed] = useState(false);
+  const [previewPanelCollapsed, setPreviewPanelCollapsed] = useState(false);
+  const [panelSizes, setPanelSizes] = useState<number[]>(LAYOUT_CONFIG.DEFAULT);
 
   const toggleSidePanel = () => {
     setSidePanelCollapsed(!sidePanelCollapsed);
   };
 
-  const togglePanelFocus = (panel: "edit" | "preview") => {
-    setFocusedPanel(focusedPanel === panel ? null : panel);
+  const toggleEditPanel = () => {
+    setEditPanelCollapsed(!editPanelCollapsed);
   };
 
-  // 移动端控制栏
-  const MobileControls = () => (
-    <div
-      className={cn(
-        "fixed bottom-6 right-6 flex gap-2 md:hidden z-50",
-        "p-2 rounded-full",
-        "dark:bg-neutral-900/80 dark:border dark:border-neutral-800 bg-white/80 border border-gray-200",
-        "backdrop-blur-sm shadow-lg"
-      )}
-    >
-      <motion.button
-        className={cn(
-          "p-3 rounded-full",
-          "dark:hover:bg-neutral-800 hover:bg-gray-100"
-        )}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setShowMobileSidebar(true)}
-      >
-        <Menu className="h-5 w-5" />
-      </motion.button>
-      <motion.button
-        className={cn(
-          "p-3 rounded-full",
-          "dark:hover:bg-neutral-800 hover:bg-gray-100"
-        )}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsMobilePreview(!isMobilePreview)}
-      >
-        {isMobilePreview ? (
-          <Edit2 className="h-5 w-5" />
-        ) : (
-          <Eye className="h-5 w-5" />
-        )}
-      </motion.button>
-    </div>
-  );
+  const togglePreviewPanel = () => {
+    setPreviewPanelCollapsed(!previewPanelCollapsed);
+  };
 
-  // 移动端侧边栏
-  const MobileSidebar = () => (
-    <AnimatePresence>
-      {showMobileSidebar && (
-        <>
-          <motion.div
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowMobileSidebar(false)}
-          />
-          <motion.div
-            className={cn(
-              "fixed top-0 left-0 h-full w-80 z-50 md:hidden",
-              "dark:bg-neutral-900 bg-white"
-            )}
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", damping: 20 }}
-          >
-            <SidePanel />
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
+  const updateLayout = (sizes: number[]) => {
+    setPanelSizes(sizes);
+  };
+
+  useEffect(() => {
+    let newSizes = [];
+
+    // 侧边栏尺寸
+    newSizes.push(sidePanelCollapsed ? 0 : 20);
+
+    // 编辑区尺寸
+    if (editPanelCollapsed) {
+      newSizes.push(0);
+    } else {
+      if (sidePanelCollapsed) {
+        newSizes.push(50);
+      } else {
+        if (previewPanelCollapsed) {
+          newSizes.push(80);
+        } else {
+          newSizes.push(32);
+        }
+      }
+    }
+
+    // 预览区尺寸
+    if (previewPanelCollapsed) {
+      newSizes.push(0);
+    } else {
+      if (editPanelCollapsed && sidePanelCollapsed) {
+        newSizes.push(100);
+      } else {
+        if (editPanelCollapsed) {
+          newSizes.push(80);
+        } else {
+          newSizes.push(48);
+        }
+      }
+    }
+
+    // 确保总和为 100
+    const total = newSizes.reduce((a, b) => a + b, 0);
+    if (total < 100) {
+      const lastNonZeroIndex = newSizes
+        .map((size, index) => ({ size, index }))
+        .filter(({ size }) => size > 0)
+        .pop()?.index;
+
+      if (lastNonZeroIndex !== undefined) {
+        newSizes[lastNonZeroIndex] += 100 - total;
+      }
+    }
+    updateLayout([...newSizes]);
+  }, [sidePanelCollapsed, editPanelCollapsed, previewPanelCollapsed]);
 
   return (
     <main
@@ -277,7 +238,7 @@ export default function Home() {
       {/* 桌面端布局 */}
       <div className="hidden md:block h-[calc(100vh-64px)]">
         <ResizablePanelGroup
-          key={layoutKey}
+          key={panelSizes?.join("-")}
           direction="horizontal"
           className={cn(
             "h-full rounded-lg",
@@ -291,8 +252,8 @@ export default function Home() {
               <ResizablePanel
                 id="side-panel"
                 order={1}
-                defaultSize={panelSizes[0]}
-                minSize={18}
+                defaultSize={panelSizes?.[0]}
+                minSize={20}
                 className={cn(
                   "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
                 )}
@@ -306,57 +267,50 @@ export default function Home() {
           )}
 
           {/* 编辑面板 */}
-          <ResizablePanel
-            id="edit-panel"
-            order={2}
-            defaultSize={panelSizes[1]}
-            className={cn(
-              "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
-            )}
-          >
-            <div className="h-full">
-              <EditPanel />
-            </div>
-          </ResizablePanel>
-          <DragHandle />
+          {!editPanelCollapsed && (
+            <>
+              <ResizablePanel
+                id="edit-panel"
+                order={2}
+                defaultSize={panelSizes?.[1]}
+                className={cn(
+                  "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
+                )}
+              >
+                <div className="h-full">
+                  <EditPanel />
+                </div>
+              </ResizablePanel>
+              <DragHandle />
+            </>
+          )}
           {/* 预览面板 */}
-          <ResizablePanel
-            id="preview-panel"
-            order={3}
-            minSize={48}
-            collapsible={false}
-            defaultSize={panelSizes ? panelSizes[2] : LAYOUT_CONFIG.DEFAULT[2]}
-            className="bg-gray-100"
-          >
-            <div className="h-full overflow-y-auto">
-              <PreviewPanel />
-            </div>
-          </ResizablePanel>
+          {!previewPanelCollapsed && (
+            <ResizablePanel
+              id="preview-panel"
+              order={3}
+              collapsible={false}
+              defaultSize={panelSizes?.[2]}
+              className="bg-gray-100"
+            >
+              <div className="h-full overflow-y-auto">
+                <PreviewPanel
+                  sidePanelCollapsed={sidePanelCollapsed}
+                  editPanelCollapsed={editPanelCollapsed}
+                  previewPanelCollapsed={previewPanelCollapsed}
+                  toggleSidePanel={toggleSidePanel}
+                  toggleEditPanel={toggleEditPanel}
+                />
+              </div>
+            </ResizablePanel>
+          )}
         </ResizablePanelGroup>
-
-        <LayoutControls
-          sidePanelCollapsed={sidePanelCollapsed}
-          focusedPanel={focusedPanel}
-          toggleSidePanel={toggleSidePanel}
-          togglePanelFocus={togglePanelFocus}
-        />
       </div>
 
       {/* 移动端布局 */}
       <div className="md:hidden h-[calc(100vh-64px)]">
         <AnimatePresence mode="wait">
-          {isMobilePreview ? (
-            <motion.div
-              key="preview"
-              initial={{ opacity: 0, x: 300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 300 }}
-              transition={{ type: "spring", damping: 20 }}
-              className="h-full"
-            >
-              <PreviewPanel />
-            </motion.div>
-          ) : (
+          {previewPanelCollapsed ? (
             <motion.div
               key="edit"
               initial={{ opacity: 0, x: -300 }}
@@ -367,12 +321,26 @@ export default function Home() {
             >
               <EditPanel />
             </motion.div>
+          ) : (
+            <motion.div
+              key="preview"
+              initial={{ opacity: 0, x: 300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 300 }}
+              transition={{ type: "spring", damping: 20 }}
+              className="h-full"
+            >
+              <PreviewPanel
+                sidePanelCollapsed={sidePanelCollapsed}
+                editPanelCollapsed={editPanelCollapsed}
+                previewPanelCollapsed={previewPanelCollapsed}
+                toggleSidePanel={toggleSidePanel}
+                toggleEditPanel={toggleEditPanel}
+              />
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
-
-      <MobileControls />
-      <MobileSidebar />
     </main>
   );
 }

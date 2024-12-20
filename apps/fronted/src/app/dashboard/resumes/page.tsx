@@ -168,19 +168,19 @@ const ResumeWorkbench = () => {
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
             onClick={handleCreateResume}
           >
-            <Card className="relative border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col">
+            <Card className="relative border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col dark:bg-neutral-900">
               <CardContent className="flex-1 pt-6 text-center flex flex-col items-center justify-center">
                 <motion.div
-                  className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center"
+                  className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 dark:bg-primary/5 mx-auto flex items-center justify-center"
                   whileHover={{ rotate: 90 }}
                   transition={{ duration: 0.2 }}
                 >
                   <Plus className="text-primary w-6 h-6 sm:w-8 sm:h-8" />
                 </motion.div>
-                <CardTitle className="text-base sm:text-lg">
+                <CardTitle className="text-base sm:text-lg text-foreground dark:text-neutral-200">
                   创建新简历
                 </CardTitle>
-                <CardDescription className="mt-2 text-sm">
+                <CardDescription className="mt-2 text-sm text-muted-foreground dark:text-neutral-400">
                   从头开始创建
                 </CardDescription>
               </CardContent>
@@ -201,7 +201,7 @@ const ResumeWorkbench = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Card className=" border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col">
+                <Card className=" border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col dark:bg-neutral-900">
                   <CardContent className="group relative flex-1 pt-6 text-center flex flex-col items-center justify-center">
                     <motion.div
                       className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center"

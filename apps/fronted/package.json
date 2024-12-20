@@ -53,6 +53,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-resizable-panels": "^2.0.20",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.1",

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import { Plus, FileText } from "lucide-react";
+import { Plus, FileText, Settings, AlertCircle } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
-import { motion, AnimatePresence } from "framer-motion";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -29,6 +30,7 @@ const ResumeWorkbench = () => {
     updateResumeFromFile,
   } = useResumeStore();
   const router = useRouter();
+  const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
 
   useEffect(() => {
     const syncResumesFromFiles = async () => {
@@ -63,6 +65,22 @@ const ResumeWorkbench = () => {
     }
   }, [resumes, updateResume]);
 
+  useEffect(() => {
+    const loadSavedConfig = async () => {
+      try {
+        const handle = await getFileHandle("syncDirectory");
+        const path = await getConfig("syncDirectoryPath");
+        if (handle && path) {
+          setHasConfiguredFolder(true);
+        }
+      } catch (error) {
+        console.error("Error loading saved config:", error);
+      }
+    };
+
+    loadSavedConfig();
+  }, []);
+
   const handleCreateResume = () => {
     const newId = createResume(null);
     setActiveResume(newId);
@@ -75,6 +93,52 @@ const ResumeWorkbench = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
+      <motion.div
+        className="flex w-full items-center justify-center px-4"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        {hasConfiguredFolder ? (
+          <Alert className="mb-6" variant="default">
+            <AlertDescription className="flex items-center justify-between">
+              <span className="text-green-600">已设置备份文件夹</span>
+              <Button
+                size="sm"
+                className="ml-4 bg-green-500 hover:bg-green-600"
+                onClick={() => {
+                  router.push("/dashboard/settings");
+                }}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                去查看
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>注意</AlertTitle>
+            <AlertDescription className="flex items-center justify-between">
+              <span>
+                建议在设置里中配置简历历史文件夹，否则将无法备份和恢复数据,您的数据可能会在浏览器清除缓存后丢失
+              </span>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="ml-4"
+                onClick={() => {
+                  router.push("/dashboard/settings");
+                }}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                前往设置
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+      </motion.div>
+
       <motion.div
         className="h-[60px] border-b px-4 sm:px-6 flex items-center justify-between"
         initial={{ y: -20, opacity: 0 }}
@@ -90,8 +154,9 @@ const ResumeWorkbench = () => {
           </Button>
         </motion.div>
       </motion.div>
+
       <motion.div
-        className="flex-1 p-3 sm:p-6 overflow-auto"
+        className="flex-1 w-full p-3 sm:p-6 overflow-auto"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2 }}

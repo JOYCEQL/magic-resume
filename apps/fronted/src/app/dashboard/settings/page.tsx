@@ -1,4 +1,6 @@
 "use client";
+import { useState, useEffect } from "react";
+import { Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,9 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Folder } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useConfigStore } from "@/store/useConfigStore";
+
 import {
   getFileHandle,
   getConfig,

@@ -1,3 +1,4 @@
+import React from "react";
 import ClassicTemplate from "./ClassicTemplate";
 import ModernTemplate from "./ModernTemplate";
 import LeftRightTemplate from "./LeftRightTemplate";
@@ -13,14 +14,18 @@ const ResumeTemplateComponent: React.FC<TemplateProps> = ({
   data,
   template,
 }) => {
-  switch (template.layout) {
-    case "modern":
-      return <ModernTemplate data={data} template={template} />;
-    case "left-right":
-      return <LeftRightTemplate data={data} template={template} />;
-    default:
-      return <ClassicTemplate data={data} template={template} />;
-  }
+  const renderTemplate = () => {
+    switch (template.layout) {
+      case "modern":
+        return <ModernTemplate data={data} template={template} />;
+      case "left-right":
+        return <LeftRightTemplate data={data} template={template} />;
+      default:
+        return <ClassicTemplate data={data} template={template} />;
+    }
+  };
+
+  return renderTemplate();
 };
 
 export default ResumeTemplateComponent;

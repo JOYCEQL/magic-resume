@@ -121,7 +121,7 @@ const ResumeWorkbench = () => {
             <AlertTitle>注意</AlertTitle>
             <AlertDescription className="flex items-center justify-between">
               <span>
-                建议在设置里中配置简历历史文件夹，否则将无法备份和恢复数据,您的数据可能会在浏览器清除缓存后丢失
+                建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失
               </span>
               <Button
                 variant="destructive"

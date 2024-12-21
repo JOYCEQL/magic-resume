@@ -1,6 +1,11 @@
 "use client";
-import React from "react";
-import { Edit2, PanelRightClose, PanelRightOpen } from "lucide-react";
+import React, { useCallback } from "react";
+import {
+  Edit2,
+  PanelRightClose,
+  PanelRightOpen,
+  SpellCheck2,
+} from "lucide-react";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import {
   Tooltip,
@@ -11,6 +16,8 @@ import {
 import TemplateSheet from "@/components/shared/TemplateSheet";
 import { GITHUB_REPO_URL } from "@/config";
 import { cn } from "@/lib/utils";
+import { useGrammarCheck } from "@/hooks/useGrammarCheck";
+import { toast } from "sonner";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -19,6 +26,7 @@ interface PreviewDockProps {
   editPanelCollapsed: boolean;
   toggleSidePanel: () => void;
   toggleEditPanel: () => void;
+  resumeContentRef: React.RefObject<HTMLDivElement>;
 }
 
 const Icons = {
@@ -37,7 +45,22 @@ export const PreviewDock = ({
   editPanelCollapsed,
   toggleSidePanel,
   toggleEditPanel,
+  resumeContentRef,
 }: PreviewDockProps) => {
+  const { checkGrammar, isChecking } = useGrammarCheck();
+
+  const handleGrammarCheck = useCallback(async () => {
+    if (!resumeContentRef.current) return;
+
+    try {
+      const text = resumeContentRef.current.innerText;
+      await checkGrammar(text);
+      toast.success("语法检查完成");
+    } catch (error) {
+      toast.error("语法检查失败，请重试");
+    }
+  }, [checkGrammar, resumeContentRef]);
+
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");
   };
@@ -46,93 +69,117 @@ export const PreviewDock = ({
     <div className="fixed top-1/2 right-3 transform -translate-y-1/2">
       <TooltipProvider delayDuration={0}>
         <Dock>
-          <DockIcon>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className={cn(
-                    "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
-                    "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50"
-                  )}
-                >
-                  <TemplateSheet />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="left" sideOffset={10}>
-                <p>切换模版</p>
-              </TooltipContent>
-            </Tooltip>
-          </DockIcon>
-          <div className="w-full h-[1px] bg-gray-200" />
-          <DockIcon>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={toggleSidePanel}
-                  className={cn(
-                    "flex h-[30px] w-[30px] items-center justify-center rounded-sm transition-all",
-                    "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
-                    "active:scale-95",
-                    !sidePanelCollapsed && [
-                      "bg-primary text-primary-foreground",
-                      "hover:bg-primary/90 dark:hover:bg-primary/90",
-                      "shadow-sm",
-                    ]
-                  )}
-                >
-                  {sidePanelCollapsed && <PanelRightClose size={20} />}
-                  {!sidePanelCollapsed && <PanelRightOpen size={20} />}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="left" sideOffset={10}>
-                <p>{sidePanelCollapsed ? "展开侧边栏" : "收起侧边栏"}</p>
-              </TooltipContent>
-            </Tooltip>
-          </DockIcon>
-          <DockIcon>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={toggleEditPanel}
-                  className={cn(
-                    "flex h-[30px] w-[30px] items-center justify-center rounded-sm transition-all",
-                    "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
-                    "active:scale-95",
-                    !editPanelCollapsed && [
-                      "bg-primary text-primary-foreground",
-                      "hover:bg-primary/90 dark:hover:bg-primary/90",
-                      "shadow-sm",
-                    ]
-                  )}
-                >
-                  <Edit2 size={20} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="left" sideOffset={10}>
-                {editPanelCollapsed ? "展开编辑面板" : "收起编辑面板"}
-              </TooltipContent>
-            </Tooltip>
-          </DockIcon>
-          <div className="w-full h-[1px] bg-gray-200" />
-          <DockIcon>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleGoGitHub}
-                  className={cn(
-                    "flex h-[20px] w-[20px] items-center justify-center rounded-lg transition-all",
-                    "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
-                    "active:scale-95"
-                  )}
-                >
-                  <Icons.gitHub />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="left" sideOffset={10}>
-                <p>GitHub</p>
-              </TooltipContent>
-            </Tooltip>
-          </DockIcon>
+          <div className="flex flex-col gap-2">
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50"
+                    )}
+                  >
+                    <TemplateSheet />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  <p>切换模版</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                      "transition-all duration-200",
+                      isChecking && "animate-pulse"
+                    )}
+                    onClick={handleGrammarCheck}
+                  >
+                    <SpellCheck2
+                      className={cn("h-4 w-4", isChecking && "animate-spin")}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  <p>{isChecking ? "检查中..." : "AI语法纠错"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+            <div className="w-full h-[1px] bg-gray-200" />
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={toggleSidePanel}
+                    className={cn(
+                      "flex h-[30px] w-[30px] items-center justify-center rounded-sm transition-all",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                      "active:scale-95",
+                      !sidePanelCollapsed && [
+                        "bg-primary text-primary-foreground",
+                        "hover:bg-primary/90 dark:hover:bg-primary/90",
+                        "shadow-sm",
+                      ]
+                    )}
+                  >
+                    {sidePanelCollapsed && <PanelRightClose size={20} />}
+                    {!sidePanelCollapsed && <PanelRightOpen size={20} />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  <p>{sidePanelCollapsed ? "展开侧边栏" : "收起侧边栏"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={toggleEditPanel}
+                    className={cn(
+                      "flex h-[30px] w-[30px] items-center justify-center rounded-sm transition-all",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                      "active:scale-95",
+                      !editPanelCollapsed && [
+                        "bg-primary text-primary-foreground",
+                        "hover:bg-primary/90 dark:hover:bg-primary/90",
+                        "shadow-sm",
+                      ]
+                    )}
+                  >
+                    <Edit2 size={20} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  {editPanelCollapsed ? "展开编辑面板" : "收起编辑面板"}
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+            <div className="w-full h-[1px] bg-gray-200" />
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={handleGoGitHub}
+                    className={cn(
+                      "flex h-[20px] w-[20px] items-center justify-center rounded-lg transition-all",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                      "active:scale-95"
+                    )}
+                  >
+                    <Icons.gitHub />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  <p>GitHub</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
+          </div>
         </Dock>
       </TooltipProvider>
     </div>

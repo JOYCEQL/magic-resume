@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import Mark from "mark.js";
+import { useAIConfigStore } from "@/store/useAIConfigStore";
 
 export interface GrammarError {
   text: string;
@@ -49,6 +50,8 @@ export const useGrammarCheck = () => {
     setSelectedErrorIndex,
   } = useGrammarStore();
 
+  const { doubaoApiKey, doubaoModelId } = useAIConfigStore();
+
   const checkGrammar = async (text: string) => {
     setIsChecking(true);
     try {
@@ -58,33 +61,9 @@ export const useGrammarCheck = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "",
-          messages: [
-            {
-              role: "system",
-              content: `你是一个专业的中文简历语法检查助手。请完整检查以下文本中的语法语境错别字，包括：
-                1. 只考虑语法环境中的错别字
-                2. 标点符号使用错误
-
-                对每个发现的问题，请以JSON格式返回，格式如下：
-                {
-                  "errors": [
-                    {
-                      "text": "错误的文本",
-                      "message": "详细的错误说明",
-                      "type": "spelling"或"grammar",
-                      "suggestions": ["建议修改1", "建议修改2"]
-                    }
-                  ]
-                }
-
-                请确保返回的是可解析的JSON格式。`,
-            },
-            {
-              role: "user",
-              content: text,
-            },
-          ],
+          apiKey: doubaoApiKey,
+          model: doubaoModelId,
+          content: text,
         }),
       });
 
@@ -93,6 +72,7 @@ export const useGrammarCheck = () => {
       }
 
       const data = await response.json();
+
       const aiResponse = data.choices[0]?.message?.content;
 
       try {

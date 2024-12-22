@@ -6,7 +6,10 @@ import {
   PanelRightOpen,
   SpellCheck2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { Dock, DockIcon } from "@/components/magicui/dock";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -17,7 +20,7 @@ import TemplateSheet from "@/components/shared/TemplateSheet";
 import { GITHUB_REPO_URL } from "@/config";
 import { cn } from "@/lib/utils";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
-import { toast } from "sonner";
+import { useAIConfigStore } from "@/store/useAIConfigStore";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -47,10 +50,26 @@ export const PreviewDock = ({
   toggleEditPanel,
   resumeContentRef,
 }: PreviewDockProps) => {
+  const router = useRouter();
   const { checkGrammar, isChecking } = useGrammarCheck();
-
+  const { doubaoApiKey, doubaoModelId } = useAIConfigStore();
   const handleGrammarCheck = useCallback(async () => {
     if (!resumeContentRef.current) return;
+
+    if (!doubaoApiKey || !doubaoModelId) {
+      toast.error(
+        <>
+          <span>请先配置 ApiKey 和 模型Id</span>
+          <Button
+            className="p-0 h-auto text-white"
+            onClick={() => router.push("/dashboard/settings")}
+          >
+            去配置
+          </Button>
+        </>
+      );
+      return;
+    }
 
     try {
       const text = resumeContentRef.current.innerText;
@@ -59,7 +78,7 @@ export const PreviewDock = ({
     } catch (error) {
       toast.error("语法检查失败，请重试");
     }
-  }, [checkGrammar, resumeContentRef]);
+  }, [resumeContentRef, doubaoApiKey, doubaoModelId]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");

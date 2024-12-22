@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect } from "react";
 import { Plus, FileText, Settings, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,12 +10,12 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
+import { cn } from "@/lib/utils";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -92,6 +93,7 @@ const ResumeWorkbench = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
+      className="flex-1 space-y-6"
     >
       <motion.div
         className="flex w-full items-center justify-center px-4"
@@ -105,7 +107,7 @@ const ResumeWorkbench = () => {
               <span className="text-green-600">已设置备份文件夹</span>
               <Button
                 size="sm"
-                className="ml-4 bg-green-500 hover:bg-green-600"
+                className="ml-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
                 onClick={() => {
                   router.push("/dashboard/settings");
                 }}
@@ -140,49 +142,54 @@ const ResumeWorkbench = () => {
       </motion.div>
 
       <motion.div
-        className="h-[60px] border-b px-4 sm:px-6 flex items-center justify-between"
+        className="px-4 sm:px-6 flex items-center justify-between"
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <h1 className="text-lg sm:text-xl font-semibold">我的简历</h1>
+        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
+          我的简历
+        </h1>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button onClick={handleCreateResume} size="sm" className="sm:size-md">
+          <Button
+            onClick={handleCreateResume}
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-600 hover:to-purple-600"
+          >
             <Plus className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">新建简历</span>
-            <span className="sm:hidden">新建</span>
+            新建简历
           </Button>
         </motion.div>
       </motion.div>
 
       <motion.div
-        className="flex-1 w-full p-3 sm:p-6 overflow-auto"
+        className="flex-1 w-full p-3 sm:p-6"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2 }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
             onClick={handleCreateResume}
           >
-            <Card className="relative border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col dark:bg-neutral-900">
+            <Card
+              className={cn(
+                "relative border-2 border-dashed cursor-pointer h-[260px] transition-all duration-200",
+                "hover:border-indigo-500/20 hover:shadow-lg dark:bg-neutral-900"
+              )}
+            >
               <CardContent className="flex-1 pt-6 text-center flex flex-col items-center justify-center">
                 <motion.div
-                  className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 dark:bg-primary/5 mx-auto flex items-center justify-center"
+                  className="mb-4 p-4 rounded-full bg-indigo-50 dark:bg-indigo-950"
                   whileHover={{ rotate: 90 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Plus className="text-primary w-6 h-6 sm:w-8 sm:h-8" />
+                  <Plus className="h-8 w-8 text-indigo-500" />
                 </motion.div>
-                <CardTitle className="text-base sm:text-lg text-foreground dark:text-neutral-200">
-                  创建新简历
-                </CardTitle>
-                <CardDescription className="mt-2 text-sm text-muted-foreground dark:text-neutral-400">
-                  从头开始创建
-                </CardDescription>
+                <CardTitle className="text-xl">创建新简历</CardTitle>
+                <CardDescription className="mt-2">从头开始创建</CardDescription>
               </CardContent>
             </Card>
           </motion.div>
@@ -201,55 +208,64 @@ const ResumeWorkbench = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Card className=" border-dashed hover:border-primary/50 cursor-pointer h-[260px] sm:h-[300px] flex flex-col dark:bg-neutral-900">
-                  <CardContent className="group relative flex-1 pt-6 text-center flex flex-col items-center justify-center">
+                <Card
+                  className={cn(
+                    "group border-2 transition-all duration-200 h-[260px] flex flex-col",
+                    "hover:border-purple-500/20 hover:shadow-lg dark:bg-neutral-900"
+                  )}
+                >
+                  <CardContent className="relative flex-1 pt-6 text-center flex flex-col items-center">
                     <motion.div
-                      className="mb-4 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 mx-auto flex items-center justify-center"
+                      className="mb-4 p-4 rounded-full bg-purple-50 dark:bg-purple-950"
                       whileHover={{ rotate: 90 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+                      <FileText className="h-8 w-8 text-purple-500" />
                     </motion.div>
-                    <CardTitle className="text-base sm:text-lg">
+                    <CardTitle className="text-xl line-clamp-1">
                       {resume.title || "未命名简历"}
                     </CardTitle>
-                    <CardDescription className="mt-2 text-xs sm:text-sm">
-                      {new Date(resume.createdAt).toLocaleDateString()}
+                    <CardDescription className="mt-2 text-sm">
+                      创建于 {new Date(resume.createdAt).toLocaleDateString()}
                     </CardDescription>
-                    <CardFooter className="absolute w-full bottom-2 pt-0 pb-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <div className="grid grid-cols-2 gap-2 w-full">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full text-sm"
-                            size="sm"
-                            onClick={() => {
-                              setActiveResume(id);
-                              router.push(`/workbench/${id}`);
-                            }}
-                          >
-                            编辑
-                          </Button>
-                        </motion.div>
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            className="w-full text-sm"
-                            size="sm"
-                            onClick={() => deleteResume(resume)}
-                          >
-                            删除
-                          </Button>
-                        </motion.div>
-                      </div>
-                    </CardFooter>
                   </CardContent>
+                  <CardFooter className="pt-0 pb-4 px-4">
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full text-sm hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveResume(id);
+                            router.push(`/workbench/${id}`);
+                          }}
+                        >
+                          编辑
+                        </Button>
+                      </motion.div>
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full text-sm hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteResume(resume);
+                          }}
+                        >
+                          删除
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </CardFooter>
                 </Card>
               </motion.div>
             ))}

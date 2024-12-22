@@ -74,7 +74,7 @@ export const PreviewDock = ({
     try {
       const text = resumeContentRef.current.innerText;
       await checkGrammar(text);
-      toast.success("语法检查完成");
+      // toast.success("语法检查完成");
     } catch (error) {
       toast.error("语法检查失败，请重试");
     }

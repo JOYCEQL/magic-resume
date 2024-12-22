@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { toast } from "sonner";
 import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 
@@ -73,11 +74,16 @@ export const useGrammarCheck = () => {
 
       const data = await response.json();
 
+      if (data.error.code === "AuthenticationError") {
+        toast.error("ApiKey 或 模型Id 不正确");
+        throw new Error(data.error.message);
+      }
+
       const aiResponse = data.choices[0]?.message?.content;
 
       try {
         const grammarErrors = JSON.parse(aiResponse).errors;
-        console.log(grammarErrors, "grammarErrors");
+        toast.success("语法检查完成");
         setErrors(grammarErrors);
 
         const preview = document.getElementById("resume-preview");
@@ -93,11 +99,10 @@ export const useGrammarCheck = () => {
           });
         }
       } catch (parseError) {
-        console.error("Failed to parse AI response:", parseError);
+        toast.error(`解析AI响应失败: ${parseError}`);
         setErrors([]);
       }
     } catch (error) {
-      console.error("Grammar check error:", error);
       setErrors([]);
     } finally {
       setIsChecking(false);

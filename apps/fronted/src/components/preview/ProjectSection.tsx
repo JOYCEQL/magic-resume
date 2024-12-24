@@ -4,6 +4,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { Project, GlobalSettings } from "@/types/resume";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface ProjectItemProps {
   project: Project;
@@ -57,15 +58,19 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
   projects,
   globalSettings,
 }) => {
-  if (!projects?.length) return null;
+  const { setActiveSection } = useResumeStore();
 
   const visibleProjects = projects.filter((project) => project.visible);
 
   return (
     <motion.div
+      className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
+      }}
+      onClick={() => {
+        setActiveSection("projects");
       }}
     >
       <SectionTitle

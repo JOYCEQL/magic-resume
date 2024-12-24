@@ -52,26 +52,6 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             <span className="text-lg font-semibold">Magic Resume</span>
             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
           </motion.div>
-
-          {/* 在移动端隐藏导航按钮 */}
-          <div className="hidden md:flex items-center space-x-2">
-            {visibleSections?.map((section) => (
-              <motion.button
-                key={section.id}
-                className={`px-4 py-1.5 rounded-lg text-sm flex items-center space-x-2 shrink-0 ${
-                  activeSection === section.id
-                    ? "bg-indigo-500/10 text-indigo-500"
-                    : themeConfig.hover
-                }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setActiveSection(section.id)}
-              >
-                <span>{section.icon}</span>
-                <span>{section.title}</span>
-              </motion.button>
-            ))}
-          </div>
         </div>
 
         <div className="flex items-center space-x-3">

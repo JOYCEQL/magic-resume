@@ -8,6 +8,7 @@ import {
   GlobalSettings,
 } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface BaseInfoProps {
   basic: BasicInfo | undefined;
@@ -22,6 +23,7 @@ const BaseInfo = ({
   layout,
   template,
 }: BaseInfoProps) => {
+  const { setActiveSection } = useResumeStore();
   const useIconMode = globalSettings?.useIconMode ?? false;
 
   const getIcon = (iconName: string | undefined) => {
@@ -271,11 +273,14 @@ const BaseInfo = ({
     </div>
   );
 
-  if (layout === "between") {
-    return BetweenContent;
-  }
+  const containerClass =
+    "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
 
-  return CenterContent;
+  return (
+    <div className={containerClass} onClick={() => setActiveSection("basic")}>
+      {layout === "between" ? BetweenContent : CenterContent}
+    </div>
+  );
 };
 
 export default BaseInfo;

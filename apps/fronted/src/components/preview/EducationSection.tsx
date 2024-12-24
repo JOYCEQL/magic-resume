@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
+import { useResumeStore } from "@/store/useResumeStore";
 interface EducationSectionProps {
   education: Education[];
   globalSettings: GlobalSettings | undefined;
@@ -11,11 +12,22 @@ const EducationSection = ({
   education,
   globalSettings,
 }: EducationSectionProps) => {
+  const { setActiveSection } = useResumeStore();
   const visibleEducation = education?.filter((edu) => edu.visible);
   return (
     <motion.div
+      className="hover:cursor-pointer
+      hover:bg-gray-100
+      rounded-md
+      transition-all
+      duration-300
+      ease-in-out
+      hover:shadow-md"
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
+      }}
+      onClick={() => {
+        setActiveSection("education");
       }}
     >
       <SectionTitle

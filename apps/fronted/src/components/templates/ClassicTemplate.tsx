@@ -30,7 +30,13 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
         return (
           <>
             <BaseInfo basic={data.basic} globalSettings={data.globalSettings} />
-            {data.basic.githubContributionsVisible && <GithubContribution />}
+            {data.basic.githubContributionsVisible && (
+              <GithubContribution
+                className="mt-2"
+                githubKey={data.basic.githubKey}
+                username={data.basic.githubUseName}
+              />
+            )}
           </>
         );
       case "experience":

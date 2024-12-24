@@ -106,7 +106,7 @@ const initialResumeState: Omit<
         icon: "Github",
       },
     ],
-    photo: "/avatar.svg",
+    photo: "/avatar.png",
     githubKey: "",
     githubUseName: "",
     githubContributionsVisible: false,
@@ -194,7 +194,7 @@ const initialResumeState: Omit<
   ],
   menuSections: [
     { id: "basic", title: "基本信息", icon: "👤", enabled: true, order: 0 },
-    { id: "education", title: "教育经历", icon: "🎓", enabled: true, order: 1 },
+    { id: "skills", title: "专业技能", icon: "⚡", enabled: true, order: 1 },
     {
       id: "experience",
       title: "工作经验",
@@ -202,8 +202,9 @@ const initialResumeState: Omit<
       enabled: true,
       order: 2,
     },
-    { id: "skills", title: "专业技能", icon: "⚡", enabled: true, order: 3 },
-    { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 4 },
+
+    { id: "projects", title: "项目经历", icon: "🚀", enabled: true, order: 3 },
+    { id: "education", title: "教育经历", icon: "🎓", enabled: true, order: 4 },
   ],
   customData: {},
   activeSection: "basic",

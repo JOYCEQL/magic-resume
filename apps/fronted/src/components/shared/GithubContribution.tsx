@@ -130,6 +130,8 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(githubKey, "更新");
+
   useEffect(() => {
     async function loadContributions() {
       try {
@@ -180,7 +182,7 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
     if (username) {
       loadContributions();
     }
-  }, [username, year]);
+  }, [githubKey, username, year]);
 
   if (loading) {
     return <div className="animate-pulse bg-gray-200 h-32 rounded-md"></div>;

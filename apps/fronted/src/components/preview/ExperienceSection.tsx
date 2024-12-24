@@ -3,6 +3,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -50,17 +51,21 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
   experiences,
   globalSettings,
 }) => {
-  if (!experiences?.length) return null;
+  const { setActiveSection } = useResumeStore();
 
-  const visibleExperiences = experiences.filter(
+  const visibleExperiences = experiences?.filter(
     (experience) => experience.visible
   );
 
   return (
     <motion.div
+      className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
+      }}
+      onClick={() => {
+        setActiveSection("experience");
       }}
     >
       <SectionTitle type="experience" globalSettings={globalSettings} />

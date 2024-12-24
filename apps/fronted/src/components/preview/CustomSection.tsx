@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { GlobalSettings, CustomItem } from "@/types/resume";
+import { useResumeStore } from "@/store/useResumeStore";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -11,19 +12,25 @@ interface CustomSectionProps {
 }
 
 const CustomSection = ({
+  sectionId,
   title,
   items,
   globalSettings,
 }: CustomSectionProps) => {
+  const { setActiveSection } = useResumeStore();
   const visibleItems = items.filter((item) => {
     return item.visible && (item.title || item.description);
   });
 
   return (
     <motion.div
+      className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
+      }}
+      onClick={() => {
+        setActiveSection(sectionId);
       }}
     >
       <SectionTitle

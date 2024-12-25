@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/shared/Logo";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import GitHubStars from "@/components/shared/GitHubStars";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -62,6 +63,7 @@ export default function Header() {
                   <Moon className="h-[1.2rem] w-[1.2rem] absolute inset-0 m-auto rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 </div>
               </ThemeToggle>
+              <GitHubStars />
               <Link href="/dashboard">
                 <Button
                   variant="default"

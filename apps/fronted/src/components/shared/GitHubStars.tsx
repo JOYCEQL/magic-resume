@@ -28,7 +28,6 @@ export default function GitHubStars() {
         );
         const data: GitHubRepo = await response.json();
         const count = data.stargazers_count;
-        // 格式化数字，例如 1234 -> 1.2k
         setStars(
           count >= 1000 ? `${(count / 1000).toFixed(1)}k` : count.toString()
         );

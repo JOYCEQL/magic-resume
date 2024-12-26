@@ -69,14 +69,19 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
       try {
         const grammarErrors = JSON.parse(aiResponse);
+        console.log(grammarErrors, "grammarErrors");
         toast.success("语法检查完成");
-        set({ errors: grammarErrors });
+        if (grammarErrors.errors.length === 0) {
+          toast.success("无语法错误");
+          return;
+        }
+        set({ errors: grammarErrors.errors });
 
         const preview = document.getElementById("resume-preview");
         if (preview) {
           const marker = new Mark(preview);
           marker.unmark();
-          grammarErrors.forEach((error: GrammarError) => {
+          grammarErrors.errors.forEach((error: GrammarError) => {
             marker.mark(error.context || error.text || "", {
               className: "bg-yellow-200 dark:bg-yellow-900",
             });

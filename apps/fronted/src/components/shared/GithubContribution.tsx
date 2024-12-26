@@ -130,8 +130,6 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log(githubKey, "更新");
-
   useEffect(() => {
     async function loadContributions() {
       try {

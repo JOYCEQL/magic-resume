@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Bold,
@@ -29,7 +29,8 @@ import {
   PaintBucket,
   Type,
   ChevronDown,
-  Highlighter
+  Highlighter,
+  Wand2,
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ interface RichTextEditorProps {
   content?: string;
   onChange: (content: string) => void;
   placeholder?: string;
+  onPolish?: () => void;
 }
 
 const COLORS = [
@@ -57,7 +59,7 @@ const COLORS = [
   { label: "蓝色", value: "#0000FF" },
   { label: "紫色", value: "#6600FF" },
   { label: "紫红", value: "#CC00FF" },
-  { label: "粉色", value: "#FF00FF" }
+  { label: "粉色", value: "#FF00FF" },
 ];
 
 const BG_COLORS = COLORS;
@@ -86,7 +88,7 @@ const MenuButton = ({
   disabled = false,
   children,
   className = "",
-  tooltip
+  tooltip,
 }: MenuButtonProps) => {
   const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -155,7 +157,7 @@ const TextColorButton = ({ editor }) => {
               color: activeColor || "currentColor",
               filter: activeColor
                 ? "drop-shadow(0 1px 1px rgba(0,0,0,0.1))"
-                : "none"
+                : "none",
             }}
           />
           <span className="sr-only">文字颜色</span>
@@ -187,7 +189,7 @@ const TextColorButton = ({ editor }) => {
                 style={{
                   backgroundColor: color.value,
                   borderColor:
-                    color.value === "#FFFFFF" ? "#E2E8F0" : color.value
+                    color.value === "#FFFFFF" ? "#E2E8F0" : color.value,
                 }}
                 onClick={() => {
                   editor.chain().focus().setColor(color.value).run();
@@ -229,7 +231,7 @@ const BackgroundColorButton = ({ editor }) => {
                 color: activeBgColor ? "currentColor" : "currentColor",
                 filter: activeBgColor
                   ? "drop-shadow(0 1px 1px rgba(0,0,0,0.1))"
-                  : "none"
+                  : "none",
               }}
             />
             {activeBgColor && (
@@ -267,7 +269,7 @@ const BackgroundColorButton = ({ editor }) => {
                   ${activeBgColor === color.value ? "ring-2 ring-primary ring-offset-2" : ""}`}
                 style={{
                   backgroundColor: color.value,
-                  borderColor: "transparent"
+                  borderColor: "transparent",
                 }}
                 onClick={() => {
                   editor
@@ -320,7 +322,7 @@ const HeadingSelect = ({ editor }) => {
             { label: "正文", value: "p" },
             { label: "标题 1", value: "1" },
             { label: "标题 2", value: "2" },
-            { label: "标题 3", value: "3" }
+            { label: "标题 3", value: "3" },
           ].map((item) => (
             <Button
               key={item.value}
@@ -357,7 +359,11 @@ const HeadingSelect = ({ editor }) => {
   );
 };
 
-const RichTextEditor = ({ content = "", onChange }: RichTextEditorProps) => {
+const RichTextEditor = ({
+  content = "",
+  onChange,
+  onPolish,
+}: RichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -365,28 +371,28 @@ const RichTextEditor = ({ content = "", onChange }: RichTextEditorProps) => {
         orderedList: false,
         listItem: false,
         heading: {
-          levels: [1, 2, 3]
-        }
+          levels: [1, 2, 3],
+        },
       }),
       BulletList.configure({
         HTMLAttributes: {
-          class: "custom-list"
-        }
+          class: "custom-list",
+        },
       }),
       OrderedList.configure({
         HTMLAttributes: {
-          class: "custom-list-ordered"
-        }
+          class: "custom-list-ordered",
+        },
       }),
       ListItem,
       TextAlign.configure({
         types: ["heading", "paragraph"],
-        alignments: ["left", "center", "right", "justify"]
+        alignments: ["left", "center", "right", "justify"],
       }),
       TextStyle,
       Underline,
       Color,
-      Highlight.configure({ multicolor: true })
+      Highlight.configure({ multicolor: true }),
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -405,11 +411,17 @@ const RichTextEditor = ({ content = "", onChange }: RichTextEditorProps) => {
           "dark:prose-blockquote:border-neutral-700",
           "dark:prose-ul:text-neutral-300",
           "dark:prose-ol:text-neutral-300"
-        )
-      }
+        ),
+      },
     },
-    immediatelyRender: false
+    immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
 
   if (!editor) {
     return null;
@@ -530,21 +542,32 @@ const RichTextEditor = ({ content = "", onChange }: RichTextEditorProps) => {
 
         <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
 
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center space-x-1">
           <MenuButton
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().undo()}
             tooltip="撤销"
           >
-            <Undo className="h-5 w-5" />
+            <Undo className="h-4 w-4" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
             tooltip="重做"
           >
-            <Redo className="h-5 w-5" />
+            <Redo className="h-4 w-4" />
           </MenuButton>
+          {onPolish && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onPolish}
+              className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-pink-500 hover:to-purple-400 text-white border-none shadow-md transition-all duration-300"
+            >
+              <Wand2 className="h-4 w-4 mr-2" />
+              AI 润色
+            </Button>
+          )}
         </div>
       </div>
 

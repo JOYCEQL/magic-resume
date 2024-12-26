@@ -1,18 +1,8 @@
 "use client";
-
-import { motion, Reorder } from "framer-motion";
-import {
-  GripVertical,
-  Eye,
-  EyeOff,
-  Layout,
-  Type,
-  SpaceIcon,
-  Palette,
-  Plus,
-  Trash2,
-} from "lucide-react";
-import { useResumeStore } from "@/store/useResumeStore";
+import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { Layout, Type, SpaceIcon, Palette } from "lucide-react";
+import debounce from "lodash/debounce";
 import {
   Select,
   SelectContent,
@@ -22,12 +12,12 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LayoutSetting from "./layout/LayoutSetting";
+import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
-import debounce from "lodash/debounce";
-import { useMemo } from "react";
-import { Switch } from "../ui/switch";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
@@ -133,128 +123,15 @@ export function SidePanel() {
     >
       <div className="p-4 space-y-4">
         <SettingCard icon={Layout} title="布局">
-          {menuSections
-            .filter((item) => item.id === "basic")
-            .map((item) => (
-              <div
-                key={item.id}
-                className={cn(
-                  "rounded-lg group border mb-2  hover:border-primary",
-                  "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800",
-                  "hover:bg-gray-50 bg-white border-gray-100",
-                  activeSection === item.id &&
-                    "border-primary dark:border-primary text-primary"
-                )}
-              >
-                <div className="flex items-center p-3 pl-[32px] space-x-3 ">
-                  <span
-                    className={cn(
-                      "text-lg  ml-[12px]",
-                      "dark:text-neutral-300",
-                      "text-gray-600"
-                    )}
-                  >
-                    {item.icon}
-                  </span>
-                  <span
-                    className={cn("text-sm flex-1 cursor-pointer")}
-                    onClick={() => setActiveSection(item.id)}
-                  >
-                    {item.title}
-                  </span>
-                </div>
-              </div>
-            ))}
+          <LayoutSetting
+            menuSections={menuSections}
+            activeSection={activeSection}
+            setActiveSection={setActiveSection}
+            toggleSectionVisibility={toggleSectionVisibility}
+            updateMenuSections={updateMenuSections}
+            reorderSections={reorderSections}
+          />
 
-          <Reorder.Group
-            axis="y"
-            values={menuSections}
-            onReorder={reorderSections}
-            className="space-y-2 list-none"
-          >
-            {menuSections
-              .filter((item) => item.id !== "basic")
-              .map((item) => (
-                <Reorder.Item
-                  key={item.id}
-                  value={item}
-                  className={cn(
-                    "rounded-lg cursor-move group border  hover:border-primary",
-                    "dark:hover:bg-neutral-800  dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-primary",
-                    "hover:bg-gray-50 bg-white border-gray-100",
-                    activeSection === item.id &&
-                      "border-primary dark:border-primary text-primary"
-                  )}
-                  whileHover={{ scale: 1.01 }}
-                  whileDrag={{ scale: 1.02 }}
-                >
-                  <div className="flex items-center p-3 space-x-3">
-                    <GripVertical
-                      className={cn(
-                        "w-5 h-5  transition-opacity",
-                        "dark:text-neutral-400",
-                        "text-gray-400"
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "text-lg mr-2",
-                        "dark:text-neutral-300",
-                        "text-gray-600"
-                      )}
-                    >
-                      {item.icon}
-                    </span>
-                    <span
-                      className={cn("text-sm flex-1 cursor-pointer")}
-                      onClick={() => setActiveSection(item.id)}
-                    >
-                      {item.title}
-                    </span>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => toggleSectionVisibility(item.id)}
-                      className={cn(
-                        "p-1.5 rounded-md",
-                        "dark:hover:bg-neutral-700 dark:text-neutral-300",
-                        "hover:bg-gray-100 text-gray-600"
-                      )}
-                    >
-                      {item.enabled ? (
-                        <Eye className="w-4 h-4 text-primary" />
-                      ) : (
-                        <EyeOff className="w-4 h-4" />
-                      )}
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => {
-                        updateMenuSections(
-                          menuSections.filter(
-                            (section) => section.id !== item.id
-                          )
-                        );
-                        setActiveSection(
-                          menuSections[
-                            menuSections.findIndex((s) => s.id === item.id) - 1
-                          ].id
-                        );
-                      }}
-                      className={cn(
-                        "p-1.5 rounded-md text-primary",
-                        "dark:hover:bg-neutral-700 dark:text-neutral-300",
-                        "hover:bg-gray-100 text-gray-600"
-                      )}
-                    >
-                      <Trash2 className="w-4 h-4 text-red-400" />
-                    </motion.button>
-                  </div>
-                </Reorder.Item>
-              ))}
-          </Reorder.Group>
           <div className="space-y-2  py-4">
             <motion.button
               whileHover={{ scale: 1.01 }}

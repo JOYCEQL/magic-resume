@@ -1,0 +1,33 @@
+{
+  "home": {
+    "header": {
+      "title": "魔法简历",
+      "startButton": "开始使用"
+    },
+    "hero": {
+      "title": "开源免费，隐私优先",
+      "subtitle": "无需注册登录，数据完全存储在本地。",
+      "cta": "立即创建简历"
+    },
+    "features": {
+      "ai": {
+        "badge": "AI 智能纠错",
+        "title": "智能识别，专业建议",
+        "description": "内置智能语法检查，自动识别不恰当的表达，提供专业的修改建议，让您的简历更加出色。"
+      },
+      "storage": {
+        "badge": "本地存储",
+        "title": "数据安全，隐私优先",
+        "description": "所有简历数据完全存储在您的本地设备中，无需担心隐私泄露。支持数据导出备份，确保您的简历数据随时可用。无需注册登录，即可享受所有功能。"
+      },
+      "preview": {
+        "badge": "实时预览",
+        "title": "所见即所得",
+        "description": "边编辑边预览，实时查看简历效果。支持多种专业模板，让您的简历既美观又规范。快速导出PDF，随时投递简历。"
+      }
+    },
+    "footer": {
+      "copyright": "© 2024 Magic Resume. All rights reserved."
+    }
+  }
+}

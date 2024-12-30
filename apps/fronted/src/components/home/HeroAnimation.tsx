@@ -1,9 +1,7 @@
 "use client";
-
-import { motion } from "framer-motion";
 import { PropsWithChildren } from "react";
-
-export function HeroAnimation({ children }: PropsWithChildren) {
+import { motion } from "framer-motion";
+const HeroAnimation = ({ children }: PropsWithChildren) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -13,4 +11,5 @@ export function HeroAnimation({ children }: PropsWithChildren) {
       {children}
     </motion.div>
   );
-}
+};
+export default HeroAnimation;

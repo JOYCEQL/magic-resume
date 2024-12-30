@@ -1,13 +1,10 @@
 "use client";
-
-import { motion } from "framer-motion";
 import { PropsWithChildren } from "react";
-
+import { motion } from "framer-motion";
 interface FeaturesAnimationProps extends PropsWithChildren {
   index: number;
 }
-
-export function FeaturesAnimation({ children, index }: FeaturesAnimationProps) {
+const FeaturesAnimation = ({ children, index }: FeaturesAnimationProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,4 +15,5 @@ export function FeaturesAnimation({ children, index }: FeaturesAnimationProps) {
       {children}
     </motion.div>
   );
-}
+};
+export default FeaturesAnimation;

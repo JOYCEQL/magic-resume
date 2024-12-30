@@ -1,0 +1,33 @@
+{
+  "home": {
+    "header": {
+      "title": "Magic Resume",
+      "startButton": "Get Started"
+    },
+    "hero": {
+      "title": "Open Source, Privacy First",
+      "subtitle": "No registration required, all data stored locally.",
+      "cta": "Create Resume Now"
+    },
+    "features": {
+      "ai": {
+        "badge": "AI Smart Check",
+        "title": "Smart Detection, Professional Advice",
+        "description": "Built-in intelligent grammar check, automatically identifies inappropriate expressions, and provides professional modification suggestions to make your resume stand out."
+      },
+      "storage": {
+        "badge": "Local Storage",
+        "title": "Data Security, Privacy First",
+        "description": "All resume data is stored entirely on your local device, no need to worry about privacy leaks. Supports data export backup, ensuring your resume data is always available. No registration required to enjoy all features."
+      },
+      "preview": {
+        "badge": "Real-time Preview",
+        "title": "What You See Is What You Get",
+        "description": "Edit and preview simultaneously, see resume effects in real-time. Supports multiple professional templates, making your resume both beautiful and standardized. Quick PDF export for immediate resume submission."
+      }
+    },
+    "footer": {
+      "copyright": "© 2024 Magic Resume. All rights reserved."
+    }
+  }
+}

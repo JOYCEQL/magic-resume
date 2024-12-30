@@ -195,26 +195,6 @@
   animation-delay: 4s;
 }
 
-@layer utilities {
-  .bg-grid-slate-900\/\[0\.04\] {
-    background-image: linear-gradient(
-        to right,
-        rgb(15 23 42 / 0.04) 1px,
-        transparent 1px
-      ),
-      linear-gradient(to bottom, rgb(15 23 42 / 0.04) 1px, transparent 1px);
-  }
-
-  .bg-grid-slate-400\/\[0\.05\] {
-    background-image: linear-gradient(
-        to right,
-        rgb(148 163 184 / 0.05) 1px,
-        transparent 1px
-      ),
-      linear-gradient(to bottom, rgb(148 163 184 / 0.05) 1px, transparent 1px);
-  }
-}
-
 /* List styles */
 ul,
 ol {

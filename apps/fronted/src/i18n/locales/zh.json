@@ -33,7 +33,7 @@
       }
     },
     "footer": {
-      "copyright": "© 2024 Magic Resume. All rights reserved."
+      "copyright": " 2024 Magic Resume. All rights reserved."
     }
   },
   "dashboard": {
@@ -50,7 +50,29 @@
       "newResumeDescription": "创建一个新简历以开始。"
     },
     "settings": {
-      "title": "设置"
+      "title": "设置",
+      "syncDirectory": {
+        "title": "同步目录",
+        "description": "选择一个文件夹来同步和备份您的简历。",
+        "currentSyncFolder": "当前同步文件夹",
+        "noFolderConfigured": "尚未配置同步文件夹",
+        "changeFolder": "更改文件夹",
+        "selectFolder": "选择文件夹"
+      },
+      "aiConfig": {
+        "title": "AI 模型配置",
+        "description": "配置豆包大模型，让 AI 助手为你的简历提供智能优化和建议。",
+        "apiKey": {
+          "label": "豆包 API 密钥",
+          "placeholder": "请输入豆包 API 密钥",
+          "description": "在豆包开放平台获取 API 密钥"
+        },
+        "modelId": {
+          "label": "豆包模型 ID",
+          "placeholder": "请输入豆包模型 ID",
+          "description": "在豆包开放平台获取模型 ID"
+        }
+      }
     }
   }
 }

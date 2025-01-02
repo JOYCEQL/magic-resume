@@ -1,9 +1,9 @@
 "use client";
-
 import React, { useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { Plus, FileText, Settings, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +16,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;

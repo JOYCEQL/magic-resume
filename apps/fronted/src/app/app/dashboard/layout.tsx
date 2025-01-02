@@ -1,8 +1,9 @@
+import { ReactNode } from "react";
 import { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
-import { ReactNode } from "react";
 import Document from "@/components/Document";
+import { Providers } from "@/app/providers";
 import Client from "./client";
 type Props = {
   children: ReactNode;
@@ -26,7 +27,9 @@ export default async function LocaleLayout({ children }: Props) {
   return (
     <Document locale={locale}>
       <NextIntlClientProvider messages={messages}>
-        <Client>{children}</Client>
+        <Providers>
+          <Client>{children}</Client>
+        </Providers>
       </NextIntlClientProvider>
     </Document>
   );

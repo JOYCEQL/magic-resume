@@ -57,10 +57,10 @@ export default function Header() {
         initial={{ y: 0, opacity: 1 }}
         animate={{
           y: isVisible ? 0 : -100,
-          opacity: isVisible ? 1 : 0
+          opacity: isVisible ? 1 : 0,
         }}
         transition={{
-          duration: 0.2
+          duration: 0.2,
         }}
       >
         <div className="mt-4 rounded-full bg-background/70 backdrop-blur-[8px] border border-border/50">
@@ -79,7 +79,7 @@ export default function Header() {
                 </div>
               </ThemeToggle>
               <GitHubStars />
-              <Link href="/dashboard">
+              <Link href="/app/dashboard">
                 <Button
                   variant="default"
                   className="bg-primary hover:opacity-90 text-white h-8 text-sm rounded-full px-4"

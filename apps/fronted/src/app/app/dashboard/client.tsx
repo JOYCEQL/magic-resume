@@ -22,21 +22,23 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Logo from "@/components/shared/Logo";
-
-const sidebarItems = [
-  {
-    title: "简历",
-    url: "/dashboard/resumes",
-    icon: FileText,
-  },
-  {
-    title: "设置",
-    url: "/dashboard/settings",
-    icon: Settings,
-  },
-];
+import { useTranslations } from "next-intl";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  const t = useTranslations("dashboard");
+  const sidebarItems = [
+    {
+      title: t("sidebar.resumes"),
+      url: "/app/dashboard/resumes",
+      icon: FileText,
+    },
+    {
+      title: t("sidebar.settings"),
+      url: "/app/dashboard/settings",
+      icon: Settings,
+    },
+  ];
+
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(true);

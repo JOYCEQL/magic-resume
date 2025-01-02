@@ -1,27 +1,10 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Providers } from "./providers";
-import { Toaster } from "@/components/ui/sonner";
+import { ReactNode } from "react";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "魔法简历",
-  description: "极度自由的在线简历编辑器"
+type Props = {
+  children: ReactNode;
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-        <Toaster richColors position="top-center" />
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: Props) {
+  return children;
 }

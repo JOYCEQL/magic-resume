@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/hover-card";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface EditorHeaderProps {
   isMobile?: boolean;
@@ -28,7 +29,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
   const themeConfig = getThemeConfig();
   const { errors, selectError } = useGrammarCheck();
   const router = useRouter();
-
+  const t = useTranslations();
   const visibleSections = menuSections
     ?.filter((section) => section.enabled)
     .sort((a, b) => a.order - b.order);
@@ -46,10 +47,10 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              router.push("/dashboard");
+              router.push("/app/dashboard");
             }}
           >
-            <span className="text-lg font-semibold">Magic Resume</span>
+            <span className="text-lg font-semibold">{t("common.title")}</span>
             <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
           </motion.div>
         </div>

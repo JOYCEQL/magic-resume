@@ -1,4 +1,10 @@
 {
+  "common": {
+    "title": "魔法简历",
+    "dashboard": "仪表板",
+    "edit": "编辑",
+    "delete": "删除"
+  },
   "home": {
     "header": {
       "title": "魔法简历",
@@ -28,6 +34,23 @@
     },
     "footer": {
       "copyright": "© 2024 Magic Resume. All rights reserved."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "resumes": "简历",
+      "settings": "设置"
+    },
+    "resumes": {
+      "synced": "已备份文件夹",
+      "view": "去查看",
+      "myResume": "我的简历",
+      "create": "创建简历",
+      "newResume": "新建简历",
+      "newResumeDescription": "创建一个新简历以开始。"
+    },
+    "settings": {
+      "title": "设置"
     }
   }
 }

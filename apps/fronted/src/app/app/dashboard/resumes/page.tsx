@@ -16,6 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -32,6 +33,7 @@ const ResumeWorkbench = () => {
   } = useResumeStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
+  const t = useTranslations();
 
   useEffect(() => {
     const syncResumesFromFiles = async () => {
@@ -104,7 +106,9 @@ const ResumeWorkbench = () => {
         {hasConfiguredFolder ? (
           <Alert className="mb-6" variant="default">
             <AlertDescription className="flex items-center justify-between">
-              <span className="text-green-600">已设置备份文件夹</span>
+              <span className="text-green-600">
+                {t("dashboard.resumes.synced")}
+              </span>
               <Button
                 size="sm"
                 className="ml-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
@@ -113,7 +117,7 @@ const ResumeWorkbench = () => {
                 }}
               >
                 <Settings className="w-4 h-4 mr-2" />
-                去查看
+                {t("dashboard.resumes.view")}
               </Button>
             </AlertDescription>
           </Alert>
@@ -148,7 +152,7 @@ const ResumeWorkbench = () => {
         transition={{ duration: 0.3 }}
       >
         <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
-          我的简历
+          {t("dashboard.resumes.myResume")}
         </h1>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
@@ -156,7 +160,7 @@ const ResumeWorkbench = () => {
             className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-600 hover:to-purple-600"
           >
             <Plus className="mr-2 h-4 w-4" />
-            新建简历
+            {t("dashboard.resumes.create")}
           </Button>
         </motion.div>
       </motion.div>
@@ -188,8 +192,12 @@ const ResumeWorkbench = () => {
                 >
                   <Plus className="h-8 w-8 text-indigo-500" />
                 </motion.div>
-                <CardTitle className="text-xl">创建新简历</CardTitle>
-                <CardDescription className="mt-2">从头开始创建</CardDescription>
+                <CardTitle className="text-xl">
+                  {t("dashboard.resumes.newResume")}
+                </CardTitle>
+                <CardDescription className="mt-2">
+                  {t("dashboard.resumes.newResumeDescription")}
+                </CardDescription>
               </CardContent>
             </Card>
           </motion.div>
@@ -242,10 +250,10 @@ const ResumeWorkbench = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveResume(id);
-                            router.push(`/workbench/${id}`);
+                            router.push(`/app/workbench/${id}`);
                           }}
                         >
-                          编辑
+                          {t("common.edit")}
                         </Button>
                       </motion.div>
                       <motion.div
@@ -261,7 +269,7 @@ const ResumeWorkbench = () => {
                             deleteResume(resume);
                           }}
                         >
-                          删除
+                          {t("common.delete")}
                         </Button>
                       </motion.div>
                     </div>

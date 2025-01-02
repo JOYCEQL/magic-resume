@@ -1,4 +1,10 @@
 {
+  "common": {
+    "title": "Magic Resume",
+    "dashboard": "Dashboard",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
   "home": {
     "header": {
       "title": "Magic Resume",
@@ -28,6 +34,23 @@
     },
     "footer": {
       "copyright": "© 2024 Magic Resume. All rights reserved."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "resumes": "Resumes",
+      "settings": "Settings"
+    },
+    "resumes": {
+      "synced": "Synced Files",
+      "view": "View",
+      "myResume": "My Resumes",
+      "create": "Create Resume",
+      "newResume": "New Resume",
+      "newResumeDescription": "Create a new resume to get started."
+    },
+    "settings": {
+      "title": "Settings"
     }
   }
 }

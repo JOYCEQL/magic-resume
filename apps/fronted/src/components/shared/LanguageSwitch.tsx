@@ -6,16 +6,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { locales, localeNames } from "@/i18n/config";
+import updateLocale from "./UpdateLocale";
 
 export default function LanguageSwitch() {
   const locale = useLocale();
   const router = useRouter();
 
-  const handleLanguageChange = (newLocale: string) => {
+  const handleLanguageChange = async (newLocale: string) => {
     const currentPath = window.location.pathname;
     if (currentPath === `/${locale}`) {
       router.push(`/${newLocale}`);
@@ -23,6 +24,8 @@ export default function LanguageSwitch() {
       const newPath = currentPath.replace(`/${locale}/`, `/${newLocale}/`);
       router.push(newPath);
     }
+    await updateLocale(newLocale);
+    router.refresh();
   };
 
   return (

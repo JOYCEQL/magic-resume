@@ -3,8 +3,12 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { ReactNode } from "react";
 import Document from "@/components/Document";
+import { Providers } from "@/app/providers";
 type Props = {
   children: ReactNode;
+  params: {
+    locale: string;
+  };
 };
 export async function generateMetadata({
   params: { locale },
@@ -22,7 +26,7 @@ export default async function LocaleLayout({ children }: Props) {
   return (
     <Document locale={locale}>
       <NextIntlClientProvider messages={messages}>
-        {children}
+        <Providers>{children}</Providers>
       </NextIntlClientProvider>
     </Document>
   );

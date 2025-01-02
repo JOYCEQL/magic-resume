@@ -33,7 +33,7 @@
       }
     },
     "footer": {
-      "copyright": "© 2024 Magic Resume. All rights reserved."
+      "copyright": " 2024 Magic Resume. All rights reserved."
     }
   },
   "dashboard": {
@@ -44,13 +44,35 @@
     "resumes": {
       "synced": "Synced Files",
       "view": "View",
-      "myResume": "My Resumes",
+      "myResume": "Resumes",
       "create": "Create Resume",
       "newResume": "New Resume",
       "newResumeDescription": "Create a new resume to get started."
     },
     "settings": {
-      "title": "Settings"
+      "title": "Settings",
+      "syncDirectory": {
+        "title": "Sync Directory",
+        "description": "Choose a folder to sync and backup your resumes.",
+        "currentSyncFolder": "Current Sync Folder",
+        "noFolderConfigured": "No folder configured",
+        "changeFolder": "Change Folder",
+        "selectFolder": "Select Folder"
+      },
+      "aiConfig": {
+        "title": "AI Model Configuration",
+        "description": "Configure Doubao Large Model to provide intelligent optimization and suggestions for your resume.",
+        "apiKey": {
+          "label": "Doubao API Key",
+          "placeholder": "Please enter Doubao API Key",
+          "description": "Obtain API Key from Doubao Open Platform"
+        },
+        "modelId": {
+          "label": "Doubao Model ID",
+          "placeholder": "Please enter Doubao Model ID",
+          "description": "Obtain Model ID from Doubao Open Platform"
+        }
+      }
     }
   }
 }

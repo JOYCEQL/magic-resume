@@ -6,6 +6,9 @@ import Document from "@/components/Document";
 import Client from "./client";
 type Props = {
   children: ReactNode;
+  params: {
+    locale: string;
+  };
 };
 export async function generateMetadata({
   params: { locale },

@@ -23,6 +23,7 @@ import {
   storeConfig,
   verifyPermission,
 } from "@/utils/fileSystem";
+import { useTranslations } from "next-intl";
 
 const SettingsPage = () => {
   const [directoryHandle, setDirectoryHandle] =
@@ -31,6 +32,8 @@ const SettingsPage = () => {
 
   const { doubaoApiKey, doubaoModelId, setDoubaoApiKey, setDoubaoModelId } =
     useAIConfigStore();
+
+  const t = useTranslations();
 
   useEffect(() => {
     const loadSavedConfig = async () => {
@@ -92,7 +95,7 @@ const SettingsPage = () => {
     <div className="flex-1 space-y-6 px-4 pt-6 mx-auto">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
-          系统设置
+          {t("dashboard.settings.title")}
         </h2>
       </div>
       <Separator className="my-6" />
@@ -108,11 +111,10 @@ const SettingsPage = () => {
               <div className="p-2 rounded-lg bg-indigo-50 dark:bg-indigo-950">
                 <Folder className="h-5 w-5 text-indigo-500" />
               </div>
-              文件同步配置
+              {t("dashboard.settings.syncDirectory.title")}
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
-              选择一个文件夹存储你的简历数据，所有简历将以 JSON
-              格式保存，确保数据安全。
+              {t("dashboard.settings.syncDirectory.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -122,7 +124,9 @@ const SettingsPage = () => {
                   {folderPath ? (
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">
-                        当前同步文件夹
+                        {t(
+                          "dashboard.settings.syncDirectory.currentSyncFolder"
+                        )}
                       </Label>
                       <div className="flex items-center gap-2">
                         <Badge
@@ -137,7 +141,9 @@ const SettingsPage = () => {
                   ) : (
                     <div className="text-center py-6 bg-muted/30 rounded-lg">
                       <p className="text-sm text-muted-foreground">
-                        还没有配置同步文件夹哦～
+                        {t(
+                          "dashboard.settings.syncDirectory.noFolderConfigured"
+                        )}
                       </p>
                     </div>
                   )}
@@ -148,10 +154,12 @@ const SettingsPage = () => {
                   className={cn(
                     "shrink-0",
                     !folderPath &&
-                      "bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-600 hover:to-purple-600"
+                      "text-white hover:from-indigo-600 hover:to-purple-600"
                   )}
                 >
-                  {folderPath ? "更改文件夹" : "选择文件夹"}
+                  {folderPath
+                    ? t("dashboard.settings.syncDirectory.changeFolder")
+                    : t("dashboard.settings.syncDirectory.selectFolder")}
                 </Button>
               </div>
             </div>
@@ -169,10 +177,10 @@ const SettingsPage = () => {
               <div className="p-2 rounded-lg bg-purple-50 dark:bg-purple-950">
                 <Bot className="h-5 w-5 text-purple-500" />
               </div>
-              AI 模型配置
+              {t("dashboard.settings.aiConfig.title")}
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
-              配置豆包大模型，让 AI 助手为你的简历提供智能优化和建议。
+              {t("dashboard.settings.aiConfig.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -183,18 +191,22 @@ const SettingsPage = () => {
                     <div className="p-1.5 rounded-md bg-purple-50 dark:bg-purple-950">
                       <Key className="h-4 w-4 text-purple-500" />
                     </div>
-                    豆包 API 密钥
+                    {t("dashboard.settings.aiConfig.apiKey.label")}
                   </Label>
                   <Input
                     id="doubaoApiKey"
                     type="password"
                     value={doubaoApiKey}
                     onChange={handleApiKeyChange}
-                    placeholder="请输入豆包 API 密钥"
+                    placeholder={t(
+                      "dashboard.settings.aiConfig.apiKey.placeholder"
+                    )}
                     className="font-mono bg-muted/30"
                   />
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <span>在豆包开放平台获取 API 密钥</span>
+                    <span>
+                      {t("dashboard.settings.aiConfig.apiKey.description")}
+                    </span>
                     <ExternalLink className="h-3 w-3" />
                   </div>
                 </div>
@@ -204,18 +216,22 @@ const SettingsPage = () => {
                     <div className="p-1.5 rounded-md bg-purple-50 dark:bg-purple-950">
                       <Hash className="h-4 w-4 text-purple-500" />
                     </div>
-                    豆包模型 ID
+                    {t("dashboard.settings.aiConfig.modelId.label")}
                   </Label>
                   <Input
                     id="doubaoModelId"
                     type="text"
                     value={doubaoModelId}
                     onChange={handleModelIdChange}
-                    placeholder="请输入豆包模型 ID"
+                    placeholder={t(
+                      "dashboard.settings.aiConfig.modelId.placeholder"
+                    )}
                     className="font-mono bg-muted/30"
                   />
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <span>在豆包开放平台获取模型 ID</span>
+                    <span>
+                      {t("dashboard.settings.aiConfig.modelId.description")}
+                    </span>
                     <ExternalLink className="h-3 w-3" />
                   </div>
                 </div>

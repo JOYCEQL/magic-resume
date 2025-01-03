@@ -19,8 +19,7 @@ export async function POST(req: NextRequest) {
             {
               role: "system",
               content: `你是一个专业的中文简历语法检查助手。请完整检查以下文本中的语法语境错别字，包括：
-                1. 只考虑语法环境中的错别字
-                2. 标点符号使用错误
+                1. 只考虑语法组词中的错别字
 
                 对每个发现的问题，请以JSON格式返回，格式如下：
                 {

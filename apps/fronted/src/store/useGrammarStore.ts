@@ -69,8 +69,6 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
       try {
         const grammarErrors = JSON.parse(aiResponse);
-        console.log(grammarErrors, "grammarErrors");
-        toast.success("语法检查完成");
         if (grammarErrors.errors.length === 0) {
           toast.success("无语法错误");
           return;

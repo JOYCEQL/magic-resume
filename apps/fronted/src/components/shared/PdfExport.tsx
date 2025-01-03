@@ -4,6 +4,7 @@ import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 const getOptimizedStyles = () => {
   const styleCache = new Map();
@@ -70,6 +71,7 @@ const PdfExport = () => {
   const [isExporting, setIsExporting] = useState(false);
   const { activeResume } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
+  const t = useTranslations("pdfExport");
 
   const handleExport = async () => {
     const exportStartTime = performance.now();
@@ -118,10 +120,10 @@ const PdfExport = () => {
 
       window.URL.revokeObjectURL(url);
       console.log(`Total export took ${performance.now() - exportStartTime}ms`);
-      toast.success("PDF 导出成功！");
+      toast.success(t("toast.success"));
     } catch (error) {
       console.error("Export error:", error);
-      toast.error("PDF 导出失败，请重试");
+      toast.error(t("toast.error"));
     } finally {
       setIsExporting(false);
     }
@@ -140,7 +142,7 @@ const PdfExport = () => {
         ) : (
           <Download className="w-4 h-4" />
         )}
-        <span>{isExporting ? "导出中..." : "导出 PDF"}</span>
+        <span>{isExporting ? t("button.exporting") : t("button.default")}</span>
       </Button>
     </div>
   );

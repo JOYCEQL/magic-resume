@@ -13,6 +13,7 @@ import Field from "../Field";
 import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useResumeStore } from "@/store/useResumeStore";
+import { useTranslations } from "next-intl";
 
 interface ProjectEditorProps {
   experience: Experience;
@@ -25,6 +26,8 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
   onSave,
 }) => {
+  const t = useTranslations("workbench.experiencePanel");
+
   const handleChange = (field: keyof Experience, value: string) => {
     onSave({
       ...experience,
@@ -37,33 +40,33 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label="公司名称"
+            label={t("placeholders.company")}
             value={experience.company}
             onChange={(value) => handleChange("company", value)}
-            placeholder="项目名称"
+            placeholder={t("placeholders.company")}
             required
           />
           <Field
-            label="岗位"
+            label={t("placeholders.position")}
             value={experience.position}
             onChange={(value) => handleChange("position", value)}
-            placeholder="如：前端工程师"
+            placeholder={t("placeholders.position")}
             required
           />
         </div>
         <Field
-          label="开始时间-结束时间"
+          label={t("placeholders.date")}
           value={experience.date}
           onChange={(value) => handleChange("date", value)}
-          placeholder="如：2023.01 - 2023.06"
+          placeholder={t("placeholders.date")}
           required
         />
         <Field
-          label="主要职责"
+          label={t("placeholders.details")}
           value={experience.details}
           onChange={(value) => handleChange("details", value)}
           type="editor"
-          placeholder="简要描述项目的背景和目标..."
+          placeholder={t("placeholders.details")}
         />
       </div>
     </div>

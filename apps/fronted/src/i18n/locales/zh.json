@@ -74,5 +74,228 @@
         }
       }
     }
+  },
+  "pdfExport": {
+    "button": {
+      "exporting": "导出中...",
+      "default": "导出 PDF"
+    },
+    "toast": {
+      "success": "PDF 导出成功！",
+      "error": "PDF 导出失败，请重试"
+    }
+  },
+  "workbench": {
+    "sidePanel": {
+      "layout": {
+        "title": "布局",
+        "addCustomSection": "添加自定义模块"
+      },
+      "theme": {
+        "title": "主题色",
+        "custom": "自定义"
+      },
+      "typography": {
+        "title": "排版",
+        "font": {
+          "title": "字体",
+          "sans": "无衬线体",
+          "serif": "衬线体",
+          "mono": "等宽体"
+        },
+        "lineHeight": {
+          "title": "行高",
+          "normal": "默认",
+          "relaxed": "适中",
+          "loose": "宽松"
+        },
+        "baseFontSize": {
+          "title": "基础字号"
+        },
+        "headerSize": {
+          "title": "模块标题字号"
+        },
+        "subheaderSize": {
+          "title": "模块二级标题字号"
+        }
+      },
+      "spacing": {
+        "title": "间距",
+        "pagePadding": {
+          "title": "页边距"
+        },
+        "sectionSpacing": {
+          "title": "模块间距"
+        },
+        "paragraphSpacing": {
+          "title": "段落间距"
+        }
+      },
+      "mode": {
+        "title": "模式",
+        "useIconMode": {
+          "title": "简洁模式"
+        }
+      }
+    },
+    "basicPanel": {
+      "basicField": "基本信息",
+      "customField": "自定义字段",
+      "customFields": {
+        "placeholders": {
+          "label": "标签",
+          "value": "值"
+        },
+        "addButton": "添加自定义字段"
+      },
+      "basicFields": {
+        "name": "姓名",
+        "title": "职位",
+        "email": "邮箱",
+        "phone": "电话",
+        "website": "个人网站",
+        "location": "地址",
+        "birthDate": "出生日期",
+        "employementStatus": "求职状态"
+      },
+      "fieldVisibility": {
+        "show": "显示",
+        "hide": "隐藏"
+      },
+      "githubContributions": "GitHub 贡献"
+    },
+    "experiencePanel": {
+      "title": "工作经历",
+      "addButton": "添加工作经历",
+      "defaultProject": {
+        "company": "某科技有限公司",
+        "position": "高级前端工程师",
+        "date": "2020-至今",
+        "details": "负责公司核心产品..."
+      },
+      "placeholders": {
+        "company": "请输入公司名称",
+        "position": "请输入职位",
+        "date": "请输入工作时间",
+        "details": "请输入工作职责和成就"
+      }
+    },
+    "experienceItem": {
+      "labels": {
+        "company": "公司名称",
+        "position": "岗位",
+        "date": "工作时间",
+        "details": "工作职责"
+      },
+      "placeholders": {
+        "company": "请输入公司名称",
+        "position": "如：前端工程师",
+        "date": "如：2020-至今",
+        "details": "描述你在这份工作中的职责和成就"
+      },
+      "buttons": {
+        "edit": "编辑",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除"
+      },
+      "visibility": {
+        "show": "显示",
+        "hide": "隐藏"
+      }
+    },
+    "projectPanel": {
+      "title": "项目经历",
+      "addButton": "添加项目",
+      "defaultProject": {
+        "name": "个人项目",
+        "description": "项目描述",
+        "role": "负责内容",
+        "technologies": "技术栈",
+        "date": "2023.01 - 2023.06"
+      },
+      "placeholders": {
+        "name": "项目名称",
+        "description": "简要描述项目背景和目标",
+        "role": "你在项目中的角色和职责",
+        "technologies": "使用的技术和工具",
+        "date": "项目时间范围",
+        "link": "项目链接（可选）"
+      }
+    },
+    "projectItem": {
+      "labels": {
+        "name": "项目名称",
+        "role": "项目角色",
+        "date": "项目时间",
+        "description": "项目描述",
+        "link": "项目链接"
+      },
+      "placeholders": {
+        "name": "请输入项目名称",
+        "role": "你在项目中的角色",
+        "date": "项目时间范围",
+        "description": "简要描述项目背景和目标",
+        "link": "项目链接（可选）"
+      },
+      "buttons": {
+        "edit": "编辑",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除"
+      },
+      "visibility": {
+        "show": "显示",
+        "hide": "隐藏"
+      }
+    },
+    "educationPanel": {
+      "title": "教育背景",
+      "addButton": "添加教育经历",
+      "defaultProject": {
+        "school": "学校名称",
+        "degree": "学历",
+        "major": "专业",
+        "date": "2020.09 - 2024.06"
+      },
+      "placeholders": {
+        "school": "请输入学校名称",
+        "degree": "请选择学历",
+        "major": "请输入专业名称",
+        "date": "请输入就读时间范围"
+      }
+    },
+    "educationItem": {
+      "labels": {
+        "school": "学校名称",
+        "degree": "学历",
+        "major": "专业",
+        "date": "就读时间",
+        "description": "学校简介",
+        "gpa": "GPA",
+        "location": "所在地",
+        "startDate": "开始时间",
+        "endDate": "结束时间"
+      },
+      "placeholders": {
+        "school": "请输入学校名称",
+        "degree": "请选择学历",
+        "major": "请输入专业名称",
+        "date": "请输入就读时间范围",
+        "description": "请输入学校简介",
+        "gpa": "请输入GPA",
+        "location": "请输入所在地"
+      },
+      "buttons": {
+        "edit": "编辑",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除"
+      },
+      "visibility": {
+        "show": "显示",
+        "hide": "隐藏"
+      }
+    }
   }
 }

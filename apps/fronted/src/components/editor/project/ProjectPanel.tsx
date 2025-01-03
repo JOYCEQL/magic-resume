@@ -2,21 +2,23 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import ProjectItem from "./ProjectItem";
 import { Project } from "@/types/resume";
 
 const ProjectPanel = () => {
+  const t = useTranslations("workbench.projectPanel");
   const { activeResume, updateProjects, updateProjectsBatch } =
     useResumeStore();
   const { projects = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Project = {
       id: crypto.randomUUID(),
-      name: "Project Name",
-      role: "Project Role",
-      date: "",
-      description: "",
+      name: t("defaultProject.name"),
+      role: t("defaultProject.role"),
+      date: t("defaultProject.date"),
+      description: t("defaultProject.description"),
       visible: true,
     };
     updateProjects(newProject);
@@ -43,10 +45,11 @@ const ProjectPanel = () => {
 
         <Button onClick={handleCreateProject} className="w-full">
           <PlusCircle className="w-4 h-4 mr-2" />
-          添加
+          {t("addButton")}
         </Button>
       </Reorder.Group>
     </div>
   );
 };
+
 export default ProjectPanel;

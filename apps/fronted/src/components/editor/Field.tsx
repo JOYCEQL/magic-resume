@@ -144,6 +144,7 @@ const Field = ({
                 );
                 return;
               }
+              setShowPolishDialog(true);
             }}
           />
         </div>

@@ -3,21 +3,23 @@ import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 
 const ExperiencePanel = () => {
+  const t = useTranslations("workbench.experiencePanel");
   const { activeResume, updateExperience, updateExperienceBatch } =
     useResumeStore();
   const { experience = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Experience = {
       id: crypto.randomUUID(),
-      company: "某科技有限公司",
-      position: "高级前端工程师",
-      date: "2020-至今",
-      details: "负责公司核心产品...",
+      company: t("defaultProject.company"),
+      position: t("defaultProject.position"),
+      date: t("defaultProject.date"),
+      details: t("defaultProject.details"),
       visible: true,
     };
     updateExperience(newProject);
@@ -44,10 +46,11 @@ const ExperiencePanel = () => {
 
         <Button onClick={handleCreateProject} className="w-full">
           <PlusCircle className="w-4 h-4 mr-2" />
-          添加
+          {t("addButton")}
         </Button>
       </Reorder.Group>
     </div>
   );
 };
+
 export default ExperiencePanel;

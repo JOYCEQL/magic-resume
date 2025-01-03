@@ -3,20 +3,22 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import EducationItem from "./EducationItem";
 import { Education } from "@/types/resume";
 
 const EducationPanel = () => {
+  const t = useTranslations('workbench.educationPanel');
   const { activeResume, updateEducation, updateEducationBatch } =
     useResumeStore();
   const { education = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newEducation: Education = {
       id: crypto.randomUUID(),
-      school: "家里蹲大学",
-      major: "",
-      degree: "",
+      school: t('defaultProject.school'),
+      major: t('defaultProject.major'),
+      degree: t('defaultProject.degree'),
       startDate: "2015-09-01",
       endDate: "2019-06-30",
       description: "",
@@ -50,10 +52,11 @@ const EducationPanel = () => {
 
         <Button onClick={handleCreateProject} className="w-full">
           <PlusCircle className="w-4 h-4 mr-2" />
-          添加
+          {t('addButton')}
         </Button>
       </Reorder.Group>
     </div>
   );
 };
+
 export default EducationPanel;

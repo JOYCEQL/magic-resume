@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -30,6 +31,8 @@ const CustomField: React.FC<CustomFieldProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  const t = useTranslations("workbench.basicPanel");
+
   return (
     <Reorder.Item
       value={field}
@@ -71,7 +74,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
               label: value,
             })
           }
-          placeholder="标签"
+          placeholder={t("customFields.placeholders.label")}
           className={cn(
             "bg-neutral-50 dark:bg-neutral-900",
             "border-neutral-200 dark:border-neutral-700",
@@ -87,7 +90,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
               value: value,
             })
           }
-          placeholder="值"
+          placeholder={t("customFields.placeholders.value")}
           className={cn(
             "bg-neutral-50 dark:bg-neutral-900",
             "border-neutral-200 dark:border-neutral-700",
@@ -142,6 +145,7 @@ const BasicPanel: React.FC = () => {
       visible: field.visible ?? true,
     }));
   });
+  const t = useTranslations("workbench.basicPanel");
 
   const handleBasicReorder = (newOrder: BasicFieldType[]) => {
     setBasicFields(newOrder);
@@ -205,6 +209,7 @@ const BasicPanel: React.FC = () => {
       customFields: newOrder,
     });
   };
+
   const renderBasicField = (field: BasicFieldType) => {
     const selectedIcon = basic?.icons?.[field.key] || "User";
 
@@ -258,7 +263,7 @@ const BasicPanel: React.FC = () => {
               />
             )}
             <div className=" w-[80px] ml-[4px] text-sm font-medium text-neutral-700 dark:text-neutral-200">
-              {field.label}
+              {t(`basicFields.${field.key}`)}
             </div>
             <div className="flex-1">
               <Field
@@ -310,7 +315,7 @@ const BasicPanel: React.FC = () => {
       <motion.div className="space-y-6">
         <motion.div className="space-y-3">
           <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-            基本字段
+            {t("basicField")}
           </motion.h3>
           <AnimatePresence mode="popLayout">
             <Reorder.Group
@@ -327,7 +332,7 @@ const BasicPanel: React.FC = () => {
 
         <motion.div className="space-y-3">
           <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-            自定义字段
+            {t("customField")}
           </motion.h3>
           <AnimatePresence mode="popLayout">
             <Reorder.Group
@@ -355,7 +360,7 @@ const BasicPanel: React.FC = () => {
           >
             <Button onClick={addCustomField} className="w-full mt-4">
               <PlusCircle className="w-4 h-4 mr-2" />
-              添加自定义字段
+              {t("customFields.addButton")}
             </Button>
           </motion.div>
         </motion.div>
@@ -367,7 +372,7 @@ const BasicPanel: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-                Github 贡献图
+                {t("githubContributions")}
               </motion.h3>
 
               <Switch

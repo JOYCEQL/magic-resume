@@ -12,6 +12,7 @@ import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
+import { useTranslations } from "next-intl";
 
 interface Project {
   id: string;
@@ -30,6 +31,7 @@ interface ProjectEditorProps {
 }
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
+  const t = useTranslations("workbench.projectItem");
   const handleChange = (field: keyof Project, value: string) => {
     onSave({
       ...project,
@@ -42,33 +44,33 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label="项目名称"
+            label={t("labels.name")}
             value={project.name}
             onChange={(value) => handleChange("name", value)}
-            placeholder="项目名称"
+            placeholder={t("placeholders.name")}
             required
           />
           <Field
-            label="担任角色"
+            label={t("labels.role")}
             value={project.role}
             onChange={(value) => handleChange("role", value)}
-            placeholder="如：前端负责人"
+            placeholder={t("placeholders.role")}
             required
           />
         </div>
         <Field
-          label="项目时间"
+          label={t("labels.date")}
           value={project.date}
           onChange={(value) => handleChange("date", value)}
-          placeholder="如：2023.01 - 2023.06"
+          placeholder={t("placeholders.date")}
           required
         />
         <Field
-          label="项目描述"
+          label={t("labels.description")}
           value={project.description}
           onChange={(value) => handleChange("description", value)}
           type="editor"
-          placeholder="简要描述项目的背景和目标..."
+          placeholder={t("placeholders.description")}
         />
       </div>
     </div>

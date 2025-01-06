@@ -50,6 +50,7 @@ export interface BasicFieldType {
   label: string;
   type?: "date" | "textarea" | "text" | "editor";
   visible: boolean;
+  custom?: boolean;
 }
 
 export interface CustomFieldType {
@@ -58,6 +59,7 @@ export interface CustomFieldType {
   value: string;
   icon?: string;
   visible?: boolean;
+  custom?: boolean;
 }
 export interface BasicInfo {
   birthDate: string;
@@ -71,13 +73,7 @@ export interface BasicInfo {
   photo: string;
   photoConfig: PhotoConfig;
   fieldOrder?: BasicFieldType[];
-  customFields: Array<{
-    id: string;
-    label: string;
-    value: string;
-    icon?: string;
-    visible?: boolean;
-  }>;
+  customFields: CustomFieldType[];
   githubKey: string;
   githubUseName: string;
   githubContributionsVisible: boolean;

@@ -140,6 +140,7 @@
       }
     },
     "basicPanel": {
+      "avatar": "头像",
       "basicField": "基本信息",
       "customField": "自定义字段",
       "customFields": {
@@ -299,6 +300,46 @@
       }
     }
   },
+  "photoConfig": {
+    "title": "头像设置",
+    "description": "自定义您的简历头像",
+    "upload": {
+      "title": "上传头像",
+      "dragHint": "拖拽或点击上传图片",
+      "sizeLimit": "图片大小不能超过5MB",
+      "typeLimit": "请上传图片文件",
+      "urlPlaceholder": "输入图片链接"
+    },
+    "config": {
+      "aspectRatio": "宽高比",
+      "size": "尺寸",
+      "width": "宽度",
+      "height": "高度",
+      "border-radius": "圆角",
+      "widthPlaceholder": "宽度",
+      "heightPlaceholder": "高度",
+      "ratios": {
+        "1:1": "1:1 正方形",
+        "4:3": "4:3 横版",
+        "3:4": "3:4 竖版",
+        "16:9": "16:9 宽屏",
+        "custom": "自定义"
+      },
+      "borderRadius": {
+        "none": "无",
+        "medium": "中等",
+        "full": "圆形",
+        "custom": "自定义",
+        "customPlaceholder": "自定义圆角大小"
+      }
+    },
+    "actions": {
+      "reset": "重置",
+      "close": "关闭",
+      "cancel": "取消",
+      "removePhoto": "删除头像"
+    }
+  },
   "previewDock": {
     "switchTemplate": "切换模版",
     "grammarCheck": {
@@ -317,5 +358,8 @@
       "collapse": "收起编辑面板"
     },
     "github": "GitHub"
+  },
+  "templates": {
+    "switchTemplate": "切换模版"
   }
 }

@@ -1,5 +1,8 @@
 "use client";
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Upload, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Drawer,
   DrawerContent,
@@ -11,17 +14,16 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { Upload, X, Link as LinkIcon } from "lucide-react";
 import {
   PhotoConfig,
   DEFAULT_CONFIG,
   getRatioMultiplier,
   getBorderRadiusValue,
 } from "@/types/resume";
-import { motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
 import { useResumeStore } from "@/store/useResumeStore";
+import { cn } from "@/lib/utils";
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -40,6 +42,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   onConfigChange,
   ...props
 }) => {
+  const t = useTranslations("photoConfig");
   const { updateBasicInfo } = useResumeStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
@@ -84,12 +87,12 @@ const PhotoConfigDrawer: React.FC<Props> = ({
 
   const handleFile = (file: File) => {
     if (file.size > 5 * 1024 * 1024) {
-      alert("图片大小不能超过5MB");
+      alert(t("upload.sizeLimit"));
       return;
     }
 
     if (!file.type.startsWith("image/")) {
-      alert("请上传图片文件");
+      alert(t("upload.typeLimit"));
       return;
     }
 
@@ -236,7 +239,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       >
         <div className="mx-auto w-full max-w-md overflow-y-auto">
           <DrawerHeader>
-            <DrawerTitle className="text-center">头像配置</DrawerTitle>
+            <DrawerTitle className="text-center">{t("title")}</DrawerTitle>
             <DrawerDescription></DrawerDescription>
           </DrawerHeader>
           <div
@@ -299,18 +302,18 @@ const PhotoConfigDrawer: React.FC<Props> = ({
             />
           </div>
           <div className="p-6 space-y-6">
-            <span className="text-sm">点击或拖拽上传照片</span>
-            <span className="text-xs text-neutral-500 mt-1">
-              支持 jpg、png 格式，≤5MB
+            <span className="text-sm">{t("upload.dragHint")}</span>
+            <span className="ml-2 text-xs text-neutral-500 mt-1">
+              ({t("upload.sizeLimit")})
             </span>
           </div>
           <div className="p-6 space-y-6">
             <div className="space-y-3">
-              <h3 className="text-sm font-medium">在线链接(或base64)</h3>
+              <h3 className="text-sm font-medium">{t("upload.title")}</h3>
               <Textarea
                 value={imageUrl}
                 onChange={(e) => handleUrlChange(e.target.value)}
-                placeholder="请输入图片链接"
+                placeholder={t("upload.urlPlaceholder")}
                 className={cn(
                   "h-9",
                   "dark:bg-neutral-800 dark:border-neutral-700"
@@ -320,7 +323,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
 
             <div className="space-y-4">
               <div className="space-y-3">
-                <h3 className="text-sm font-medium">尺寸设置</h3>
+                <h3 className="text-sm font-medium">尺寸</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="relative">
                     <Input
@@ -377,13 +380,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       <Button
                         key={ratio}
                         size="sm"
-                        variant="outline"
-                        className={cn(
-                          "h-9",
-                          config.aspectRatio === ratio
-                            ? "bg-primary dark:text-white  text-white"
-                            : "dark:bg-[#262626] dark:text-white dark:border-none bg-transparent text-black border-neutral-200"
-                        )}
+                        variant={
+                          config.aspectRatio === ratio ? "default" : "outline"
+                        }
                         onClick={() => {
                           if (ratio !== "custom") {
                             const height = Math.round(
@@ -410,13 +409,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       <Button
                         key={radius}
                         size="sm"
-                        variant="outline"
-                        className={cn(
-                          "h-9",
-                          config.borderRadius === radius
-                            ? "bg-primary dark:text-white text-white"
-                            : "dark:bg-[#262626] dark:text-white bg-transparent text-black "
-                        )}
+                        variant={
+                          config.borderRadius === radius ? "default" : "outline"
+                        }
                         onClick={() =>
                           handleConfigChange({ borderRadius: radius })
                         }
@@ -431,19 +426,21 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       </Button>
                     )
                   )}
+                  {config.borderRadius === "custom" && (
+                    <Input
+                      type="number"
+                      value={config.customBorderRadius}
+                      onChange={(e) =>
+                        handleInputChange(e, "customBorderRadius")
+                      }
+                      onBlur={(e) => handleInputBlur(e, "customBorderRadius")}
+                      className={cn("h-9 mt-2", "dark:bg-neutral-800")}
+                      min={0}
+                      max={Math.min(config.width, config.height) / 2}
+                      placeholder="自定义圆角大小"
+                    />
+                  )}
                 </div>
-                {config.borderRadius === "custom" && (
-                  <Input
-                    type="number"
-                    value={config.customBorderRadius}
-                    onChange={(e) => handleInputChange(e, "customBorderRadius")}
-                    onBlur={(e) => handleInputBlur(e, "customBorderRadius")}
-                    className={cn("h-9 mt-2", "dark:bg-neutral-800")}
-                    min={0}
-                    max={Math.min(config.width, config.height) / 2}
-                    placeholder="自定义圆角大小"
-                  />
-                )}
               </div>
             </div>
           </div>
@@ -456,7 +453,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                   onClick={handleSave}
                   variant="destructive"
                 >
-                  关闭
+                  {t("actions.close")}
                 </Button>
               </DrawerClose>
             </div>

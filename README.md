@@ -97,7 +97,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 - Author: JOYCEQL
 - Email: 18806723365@163.com
-- Project Homepage: https://github.com/JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume
+- Project Homepage: https://github.com/JOYCEQL/magic-resume
 
 ## 🌟 Support
 

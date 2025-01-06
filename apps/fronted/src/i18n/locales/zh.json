@@ -43,12 +43,18 @@
       "settings": "设置"
     },
     "resumes": {
+      "created": "创建于",
       "synced": "已备份文件夹",
       "view": "去查看",
       "myResume": "我的简历",
       "create": "创建简历",
       "newResume": "新建简历",
-      "newResumeDescription": "创建一个新简历以开始。"
+      "newResumeDescription": "创建一个新简历以开始。",
+      "notice": {
+        "title": "注意",
+        "description": "建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失",
+        "goToSettings": "前往设置"
+      }
     },
     "settings": {
       "title": "设置",

@@ -43,12 +43,18 @@
       "settings": "Settings"
     },
     "resumes": {
+      "created": "Created At",
       "synced": "Synced Files",
       "view": "View",
       "myResume": "Resumes",
       "create": "Create Resume",
       "newResume": "New Resume",
-      "newResumeDescription": "Create a new resume to get started."
+      "newResumeDescription": "Create a new resume to get started.",
+      "notice": {
+        "title": "Attention",
+        "description": "It is recommended to configure a resume backup folder in the settings to prevent your data from being lost when the browser cache is cleared",
+        "goToSettings": "Go to Settings"
+      }
     },
     "settings": {
       "title": "Settings",

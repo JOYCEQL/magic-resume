@@ -123,11 +123,9 @@ const ResumeWorkbench = () => {
         ) : (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>注意</AlertTitle>
+            <AlertTitle>{t("dashboard.resumes.notice.title")}</AlertTitle>
             <AlertDescription className="flex items-center justify-between">
-              <span>
-                建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失
-              </span>
+              <span>{t("dashboard.resumes.notice.description")}</span>
               <Button
                 variant="destructive"
                 size="sm"
@@ -137,7 +135,7 @@ const ResumeWorkbench = () => {
                 }}
               >
                 <Settings className="w-4 h-4 mr-2" />
-                前往设置
+                {t("dashboard.resumes.notice.goToSettings")}
               </Button>
             </AlertDescription>
           </Alert>
@@ -233,7 +231,10 @@ const ResumeWorkbench = () => {
                       {resume.title || "未命名简历"}
                     </CardTitle>
                     <CardDescription className="mt-2 text-sm">
-                      创建于 {new Date(resume.createdAt).toLocaleDateString()}
+                      {t("dashboard.resumes.created")}
+                      <span className="ml-2">
+                        {new Date(resume.createdAt).toLocaleDateString()}
+                      </span>
                     </CardDescription>
                   </CardContent>
                   <CardFooter className="pt-0 pb-4 px-4">

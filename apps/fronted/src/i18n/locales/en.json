@@ -86,6 +86,25 @@
       "error": "PDF export failed, please try again"
     }
   },
+  "previewDock": {
+    "switchTemplate": "Switch Template",
+    "grammarCheck": {
+      "idle": "AI Grammar Check",
+      "checking": "Checking...",
+      "configurePrompt": "Please configure ApiKey and Model Id first",
+      "configureButton": "Configure",
+      "errorToast": "Grammar check failed, please try again"
+    },
+    "sidePanel": {
+      "expand": "Expand Sidebar",
+      "collapse": "Collapse Sidebar"
+    },
+    "editPanel": {
+      "expand": "Expand Edit Panel",
+      "collapse": "Collapse Edit Panel"
+    },
+    "github": "GitHub"
+  },
   "workbench": {
     "sidePanel": {
       "layout": {

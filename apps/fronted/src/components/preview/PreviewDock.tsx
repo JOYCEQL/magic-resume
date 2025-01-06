@@ -21,6 +21,7 @@ import { GITHUB_REPO_URL } from "@/config";
 import { cn } from "@/lib/utils";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
+import { useTranslations } from "next-intl";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -51,6 +52,7 @@ export const PreviewDock = ({
   resumeContentRef,
 }: PreviewDockProps) => {
   const router = useRouter();
+  const t = useTranslations("previewDock");
   const { checkGrammar, isChecking } = useGrammarCheck();
   const { doubaoApiKey, doubaoModelId } = useAIConfigStore();
   const handleGrammarCheck = useCallback(async () => {
@@ -59,12 +61,12 @@ export const PreviewDock = ({
     if (!doubaoApiKey || !doubaoModelId) {
       toast.error(
         <>
-          <span>请先配置 ApiKey 和 模型Id</span>
+          <span>{t("grammarCheck.configurePrompt")}</span>
           <Button
             className="p-0 h-auto text-white"
             onClick={() => router.push("/dashboard/settings")}
           >
-            去配置
+            {t("grammarCheck.configureButton")}
           </Button>
         </>
       );
@@ -75,9 +77,9 @@ export const PreviewDock = ({
       const text = resumeContentRef.current.innerText;
       await checkGrammar(text);
     } catch (error) {
-      toast.error("语法检查失败，请重试");
+      toast.error(t("grammarCheck.errorToast"));
     }
-  }, [resumeContentRef, doubaoApiKey, doubaoModelId]);
+  }, [resumeContentRef, doubaoApiKey, doubaoModelId, t]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");
@@ -101,7 +103,7 @@ export const PreviewDock = ({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="left" sideOffset={10}>
-                  <p>切换模版</p>
+                  <p>{t("switchTemplate")}</p>
                 </TooltipContent>
               </Tooltip>
             </DockIcon>
@@ -123,7 +125,11 @@ export const PreviewDock = ({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="left" sideOffset={10}>
-                  <p>{isChecking ? "检查中..." : "AI语法纠错"}</p>
+                  <p>
+                    {isChecking
+                      ? t("grammarCheck.checking")
+                      : t("grammarCheck.idle")}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </DockIcon>
@@ -149,7 +155,11 @@ export const PreviewDock = ({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="left" sideOffset={10}>
-                  <p>{sidePanelCollapsed ? "展开侧边栏" : "收起侧边栏"}</p>
+                  <p>
+                    {sidePanelCollapsed
+                      ? t("sidePanel.expand")
+                      : t("sidePanel.collapse")}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </DockIcon>
@@ -173,7 +183,9 @@ export const PreviewDock = ({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="left" sideOffset={10}>
-                  {editPanelCollapsed ? "展开编辑面板" : "收起编辑面板"}
+                  {editPanelCollapsed
+                    ? t("editPanel.expand")
+                    : t("editPanel.collapse")}
                 </TooltipContent>
               </Tooltip>
             </DockIcon>
@@ -193,7 +205,7 @@ export const PreviewDock = ({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="left" sideOffset={10}>
-                  <p>GitHub</p>
+                  <p>{t("github")}</p>
                 </TooltipContent>
               </Tooltip>
             </DockIcon>

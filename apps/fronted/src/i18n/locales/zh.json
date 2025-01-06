@@ -298,5 +298,24 @@
         "hide": "隐藏"
       }
     }
+  },
+  "previewDock": {
+    "switchTemplate": "切换模版",
+    "grammarCheck": {
+      "idle": "AI语法纠错",
+      "checking": "检查中...",
+      "configurePrompt": "请先配置 ApiKey 和 模型Id",
+      "configureButton": "去配置",
+      "errorToast": "语法检查失败，请重试"
+    },
+    "sidePanel": {
+      "expand": "展开侧边栏",
+      "collapse": "收起侧边栏"
+    },
+    "editPanel": {
+      "expand": "展开编辑面板",
+      "collapse": "收起编辑面板"
+    },
+    "github": "GitHub"
   }
 }

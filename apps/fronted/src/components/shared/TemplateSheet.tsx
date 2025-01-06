@@ -1,6 +1,7 @@
 "use client";
 import { Layout, PanelsLeftBottom } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   Sheet,
   SheetContent,
@@ -9,7 +10,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet-no-overlay";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -24,6 +24,7 @@ const templateImages: { [key: string]: any } = {
 };
 
 const TemplateSheet = () => {
+  const t = useTranslations("templates");
   const { activeResume, setTemplate } = useResumeStore();
   const currentTemplate =
     DEFAULT_TEMPLATES.find((t) => t.id === activeResume?.templateId) ||
@@ -36,7 +37,7 @@ const TemplateSheet = () => {
       </SheetTrigger>
       <SheetContent side="left" className="w-1/2 sm:max-w-1/2">
         <SheetHeader>
-          <SheetTitle>选择模版</SheetTitle>
+          <SheetTitle>{t("switchTemplate")}</SheetTitle>
         </SheetHeader>
 
         {/* 解决警告问题 */}

@@ -9,6 +9,7 @@ import {
 } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
 import { useResumeStore } from "@/store/useResumeStore";
+import { useTranslations } from "next-intl";
 
 interface BaseInfoProps {
   basic: BasicInfo | undefined;
@@ -23,6 +24,7 @@ const BaseInfo = ({
   layout,
   template,
 }: BaseInfoProps) => {
+  const t = useTranslations("workbench");
   const { setActiveSection } = useResumeStore();
   const useIconMode = globalSettings?.useIconMode ?? false;
 
@@ -46,6 +48,7 @@ const BaseInfo = ({
           icon: basic.icons?.email || "Mail",
           label: "电子邮箱",
           visible: true,
+          custom: false,
         },
       ].filter((item) => Boolean(item.value && item.visible));
     }
@@ -66,6 +69,7 @@ const BaseInfo = ({
         icon: basic.icons?.[field.key] || "User",
         label: field.label,
         visible: field.visible,
+        custom: field.custom,
       }))
       .filter((item) => Boolean(item.value));
   }, [basic]);
@@ -80,6 +84,7 @@ const BaseInfo = ({
         icon: field.icon,
         label: field.label,
         visible: true,
+        custom: true,
       })) || []),
   ];
 
@@ -179,7 +184,10 @@ const BaseInfo = ({
               </div>
             ) : (
               <div className="flex items-center gap-1">
-                <span>{item.label}:</span>
+                {!item.custom && (
+                  <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>
+                )}
+                {item.custom && <span>{item.label}:</span>}
                 <span suppressHydrationWarning>{item.value}</span>
               </div>
             )}

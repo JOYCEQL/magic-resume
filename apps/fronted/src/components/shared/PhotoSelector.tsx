@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PhotoConfigDrawer from "./PhotoConfigDrawer";
 import { useResumeStore } from "@/store/useResumeStore";
-import { BasicInfo, PhotoConfig, ResumeData } from "@/types/resume";
+import { BasicInfo, PhotoConfig } from "@/types/resume";
+import { useTranslations } from "next-intl";
 
 interface Props {
   className?: string;
 }
 
 const PhotoSelector: React.FC<Props> = ({ className }) => {
+  const t = useTranslations("workbench");
   const [showConfig, setShowConfig] = useState(false);
   const { updateBasicInfo, activeResume } = useResumeStore();
   const { basic = {} as BasicInfo } = activeResume || {};
@@ -38,7 +40,7 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Image className="w-4 h-4" />
-          <span className="text-sm font-medium">头像</span>
+          <span className="text-sm font-medium">{t("basicPanel.avatar")}</span>
         </div>
         <div className="flex gap-4">
           <Button

@@ -17,6 +17,7 @@ export default function LanguageSwitch() {
   const router = useRouter();
 
   const handleLanguageChange = async (newLocale: string) => {
+    await updateLocale(newLocale);
     const currentPath = window.location.pathname;
     if (currentPath === `/${locale}`) {
       router.push(`/${newLocale}`);
@@ -24,8 +25,6 @@ export default function LanguageSwitch() {
       const newPath = currentPath.replace(`/${locale}/`, `/${newLocale}/`);
       router.push(newPath);
     }
-    await updateLocale(newLocale);
-    router.refresh();
   };
 
   return (

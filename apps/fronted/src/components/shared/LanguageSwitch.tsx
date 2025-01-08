@@ -10,12 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { locales, localeNames } from "@/i18n/config";
-
 import { Link, usePathname } from "@/i18n/routing.public";
 
 export default function LanguageSwitch() {
   const locale = useLocale();
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <DropdownMenu>
@@ -30,7 +29,6 @@ export default function LanguageSwitch() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {locales.map((loc) => {
-          const pathname = usePathname();
           return (
             <DropdownMenuItem
               key={loc}

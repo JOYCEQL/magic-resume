@@ -2,14 +2,12 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-
-import { Button } from "@/components/ui/button";
 import Logo from "@/components/shared/Logo";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import GitHubStars from "@/components/shared/GitHubStars";
 import LanguageSwitch from "../shared/LanguageSwitch";
+import GoDashboard from "./GoDashboard";
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -79,14 +77,7 @@ export default function Header() {
                 </div>
               </ThemeToggle>
               <GitHubStars />
-              <Link href="/app/dashboard">
-                <Button
-                  variant="default"
-                  className="bg-primary hover:opacity-90 text-white h-8 text-sm rounded-full px-4"
-                >
-                  {t("header.startButton")}
-                </Button>
-              </Link>
+              <GoDashboard />
             </div>
           </div>
         </div>

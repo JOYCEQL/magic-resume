@@ -136,7 +136,7 @@ const Field = ({
                     <span>请先配置 ApiKey 和 模型Id</span>
                     <Button
                       className="p-0 h-auto text-white"
-                      onClick={() => router.push("/dashboard/settings")}
+                      onClick={() => router.push("/app/dashboard/settings")}
                     >
                       去配置
                     </Button>

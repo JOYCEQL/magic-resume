@@ -6,6 +6,7 @@ import Header from "@/components/home/Header";
 import FeaturesAnimation from "@/components/home/FeaturesAnimation";
 import HeroAnimation from "@/components/home/HeroAnimation";
 import { setRequestLocale } from "next-intl/server";
+import GoDashboard from "@/components/home/GoDashboard";
 
 type Props = {
   params: { locale: string };
@@ -29,14 +30,15 @@ export default function LandingPage({ params: { locale } }: Props) {
                 {t("hero.subtitle")}
               </p>
               <div className="mt-12">
-                <Link href="/dashboard">
+                <GoDashboard>
                   <Button
                     size="lg"
+                    type="submit"
                     className="rounded-full px-10 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     {t("hero.cta")}
                   </Button>
-                </Link>
+                </GoDashboard>
               </div>
             </HeroAnimation>
 

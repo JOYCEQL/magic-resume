@@ -131,7 +131,7 @@ const ResumeWorkbench = () => {
                 size="sm"
                 className="ml-4"
                 onClick={() => {
-                  router.push("/dashboard/settings");
+                  router.push("/app/dashboard/settings");
                 }}
               >
                 <Settings className="w-4 h-4 mr-2" />

@@ -64,7 +64,7 @@ export const PreviewDock = ({
           <span>{t("grammarCheck.configurePrompt")}</span>
           <Button
             className="p-0 h-auto text-white"
-            onClick={() => router.push("/dashboard/settings")}
+            onClick={() => router.push("/app/dashboard/settings")}
           >
             {t("grammarCheck.configureButton")}
           </Button>

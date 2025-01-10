@@ -8,6 +8,7 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import GitHubStars from "@/components/shared/GitHubStars";
 import LanguageSwitch from "../shared/LanguageSwitch";
 import GoDashboard from "./GoDashboard";
+import { Button } from "../ui/button";
 
 export default function Header() {
   const [mounted, setMounted] = useState(false);
@@ -77,7 +78,14 @@ export default function Header() {
                 </div>
               </ThemeToggle>
               <GitHubStars />
-              <GoDashboard />
+              <GoDashboard>
+                <Button
+                  type="submit"
+                  className="bg-primary hover:opacity-90 text-white h-8 text-sm rounded-full px-4"
+                >
+                  {t("header.startButton")}
+                </Button>
+              </GoDashboard>
             </div>
           </div>
         </div>

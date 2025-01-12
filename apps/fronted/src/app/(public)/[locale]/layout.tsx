@@ -24,7 +24,7 @@ export async function generateMetadata({
   params: { locale },
 }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "common" });
-  const baseUrl = "https://magic-resume.com";
+  const baseUrl = "https://magicv.art";
 
   return {
     title: t("title"),

@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { GoDashboardAction } from "@/actions/navigation";
 
 export default function GoDashboard({

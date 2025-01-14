@@ -33,6 +33,10 @@
         "description": "Edit and preview simultaneously, see resume effects in real-time. Supports multiple professional templates, making your resume both beautiful and standardized. Quick PDF export for immediate resume submission."
       }
     },
+    "news": {
+      "label": "News",
+      "content": "Now integrated with DeepSeek and Doubao AI models"
+    },
     "footer": {
       "copyright": " 2024 Magic Resume. All rights reserved."
     }

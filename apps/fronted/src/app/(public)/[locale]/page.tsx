@@ -47,14 +47,16 @@ export default function LandingPage({ params: { locale } }: Props) {
             </HeroAnimation>
 
             <div className="relative rounded-xl overflow-hidden bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-black p-2">
-              <Image
-                width={1280}
-                height={720}
-                src="/web-shot.png"
-                alt="resume-shot"
-                className="w-full h-auto block border-[1px] border-gray-200"
-                priority
-              />
+              <div className="rounded-lg overflow-hidden">
+                <Image
+                  width={1280}
+                  height={720}
+                  src="/web-shot.png"
+                  alt="resume-shot"
+                  className="w-full h-auto block border border-gray-200 dark:border-gray-800"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>

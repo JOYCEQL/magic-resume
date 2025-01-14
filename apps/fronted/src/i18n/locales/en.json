@@ -80,13 +80,13 @@
         "description": "Configure AI models to provide intelligent optimization and suggestions for your resume.",
         "selectedModel": "Select Model",
         "doubao": {
-          "title": "Doubao Settings",
+          "title": "Doubao",
           "description": "Obtain API Key from Volcengine Platform",
           "apiKey": "API Key",
           "modelId": "Model ID"
         },
         "deepseek": {
-          "title": "Deepseek Settings",
+          "title": "Deepseek",
           "description": "Obtain API Key from Deepseek Open Platform",
           "apiKey": "API Key",
           "modelId": "Model ID"

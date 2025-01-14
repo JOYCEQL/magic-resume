@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
+import { AI_MODEL_CONFIGS } from "@/config/ai";
+import { cn } from "@/lib/utils";
 
 export interface GrammarError {
   error: string;
@@ -38,7 +40,19 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     set((state) => ({ highlightKey: state.highlightKey + 1 })),
 
   checkGrammar: async (text: string) => {
-    const { doubaoApiKey, doubaoModelId } = useAIConfigStore.getState();
+    const {
+      selectedModel,
+      doubaoApiKey,
+      doubaoModelId,
+      deepseekApiKey,
+      deepseekModelId,
+    } = useAIConfigStore.getState();
+
+    const config = AI_MODEL_CONFIGS[selectedModel];
+    const apiKey = selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey;
+    const modelId =
+      selectedModel === "doubao" ? doubaoModelId : deepseekModelId;
+
     set({ isChecking: true });
 
     try {
@@ -49,8 +63,9 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         },
         body: JSON.stringify({
           content: text,
-          apiKey: doubaoApiKey,
-          model: doubaoModelId,
+          apiKey,
+          model: config.requiresModelId ? modelId : config.defaultModel,
+          modelType: selectedModel,
         }),
       });
 
@@ -70,6 +85,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       try {
         const grammarErrors = JSON.parse(aiResponse);
         if (grammarErrors.errors.length === 0) {
+          set({ errors: [] });
           toast.success("无语法错误");
           return;
         }
@@ -106,47 +122,33 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
   },
 
   selectError: (index: number) => {
-    const state = get();
-    const error = state.errors[index];
+    const { errors } = get();
+    const error = errors[index];
     if (!error) return;
 
     set({ selectedErrorIndex: index });
 
     const preview = document.getElementById("resume-preview");
-    if (preview) {
-      const marker = new Mark(preview);
-      marker.unmark();
+    if (!preview) return;
 
-      state.errors.forEach((error) => {
-        marker.mark(error.context || error.text || "", {
-          className: `grammar-error ${error.type || ""}`,
-          acrossElements: true,
-          separateWordSearch: false,
-          caseSensitive: true,
-        });
+    const marker = new Mark(preview);
+    marker.unmark();
+
+    errors.forEach((err, i) => {
+      marker.mark(err.context || err.text || "", {
+        className: cn(
+          "bg-yellow-200 dark:bg-yellow-900",
+          i === index && "bg-green-200 dark:bg-green-900"
+        ),
       });
+    });
 
-      const errorElements = preview.querySelectorAll(
-        `.grammar-error[data-markjs=true]`
-      );
-
-      errorElements.forEach((el) => {
-        el.classList.remove("active");
-      });
-
-      errorElements.forEach((el) => {
-        if (el.textContent === (error.context || error.text)) {
-          el.classList.add(`active-${state.highlightKey}`);
-
-          el.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-
-          setTimeout(() => {
-            el.classList.remove(`active-${state.highlightKey}`);
-          }, 2000);
-        }
+    const marks = preview.querySelectorAll("mark");
+    const selectedMark = marks[index];
+    if (selectedMark) {
+      selectedMark.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
       });
     }
   },

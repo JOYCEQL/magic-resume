@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { useTranslations } from "next-intl";
+import { AI_MODEL_CONFIGS } from "@/config/ai";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -54,11 +55,25 @@ export const PreviewDock = ({
   const router = useRouter();
   const t = useTranslations("previewDock");
   const { checkGrammar, isChecking } = useGrammarCheck();
-  const { doubaoApiKey, doubaoModelId } = useAIConfigStore();
+  const {
+    selectedModel,
+    doubaoApiKey,
+    doubaoModelId,
+    deepseekApiKey,
+    deepseekModelId,
+  } = useAIConfigStore();
+
   const handleGrammarCheck = useCallback(async () => {
     if (!resumeContentRef.current) return;
+    const config = AI_MODEL_CONFIGS[selectedModel];
+    const isConfigured =
+      selectedModel === "doubao"
+        ? doubaoApiKey && doubaoModelId
+        : config.requiresModelId
+          ? deepseekApiKey && deepseekModelId
+          : deepseekApiKey;
 
-    if (!doubaoApiKey || !doubaoModelId) {
+    if (!isConfigured) {
       toast.error(
         <>
           <span>{t("grammarCheck.configurePrompt")}</span>
@@ -79,7 +94,15 @@ export const PreviewDock = ({
     } catch (error) {
       toast.error(t("grammarCheck.errorToast"));
     }
-  }, [resumeContentRef, doubaoApiKey, doubaoModelId, t]);
+  }, [
+    resumeContentRef,
+    selectedModel,
+    doubaoApiKey,
+    doubaoModelId,
+    deepseekApiKey,
+    deepseekModelId,
+    t,
+  ]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
+import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
 
 interface AIPolishDialogProps {
@@ -29,12 +30,32 @@ export default function AIPolishDialog({
 }: AIPolishDialogProps) {
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
-  const { doubaoApiKey, doubaoModelId } = useAIConfigStore();
+  const {
+    selectedModel,
+    doubaoApiKey,
+    doubaoModelId,
+    deepseekApiKey,
+    deepseekModelId,
+  } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
 
   const handlePolish = async () => {
     try {
+      const config = AI_MODEL_CONFIGS[selectedModel];
+      const isConfigured =
+        selectedModel === "doubao"
+          ? doubaoApiKey && doubaoModelId
+          : config.requiresModelId
+            ? deepseekApiKey && deepseekModelId
+            : deepseekApiKey;
+
+      if (!isConfigured) {
+        toast.error("请先配置 AI 模型");
+        onOpenChange(false);
+        return;
+      }
+
       setIsPolishing(true);
       setPolishedContent("");
 
@@ -47,8 +68,14 @@ export default function AIPolishDialog({
         },
         body: JSON.stringify({
           content,
-          apiKey: doubaoApiKey,
-          model: doubaoModelId,
+          apiKey: selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey,
+          model:
+            selectedModel === "doubao"
+              ? doubaoModelId
+              : config.requiresModelId
+                ? deepseekModelId
+                : config.defaultModel,
+          modelType: selectedModel,
         }),
         signal: abortControllerRef.current.signal,
       });

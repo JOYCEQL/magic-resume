@@ -79,6 +79,26 @@
           "placeholder": "Please enter Doubao Model ID",
           "description": "Obtain Model ID from Doubao Open Platform"
         }
+      },
+      "sync": {
+        "title": "Sync Directory",
+        "description": "Choose a folder to sync and backup your resumes.",
+        "select": "Select Folder"
+      },
+      "ai": {
+        "title": "AI Model Configuration",
+        "description": "Configure AI models to provide intelligent optimization and suggestions for your resume.",
+        "selectedModel": "Select Model",
+        "doubao": {
+          "title": "Doubao Settings",
+          "apiKey": "API Key",
+          "modelId": "Model ID"
+        },
+        "deepseek": {
+          "title": "Deepseek Settings",
+          "apiKey": "API Key",
+          "modelId": "Model ID"
+        }
       }
     }
   },

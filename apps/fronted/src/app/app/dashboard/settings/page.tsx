@@ -236,12 +236,12 @@ const SettingsPage = () => {
                       <Key className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                       {t("dashboard.settings.ai.doubao.apiKey")}
                       <a
-                        href="https://www.doubao.com/"
+                        href="https://console.volcengine.com/ark"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline inline-flex items-center"
                       >
-                        {t("dashboard.settings.aiConfig.apiKey.description")}
+                        {t("dashboard.settings.ai.doubao.description")}
                         <ExternalLink className="h-3 w-3 ml-1" />
                       </a>
                     </Label>
@@ -251,9 +251,7 @@ const SettingsPage = () => {
                       onChange={(e) => handleApiKeyChange(e, "doubao")}
                       type="password"
                       className="h-11 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus-visible:ring-indigo-500"
-                      placeholder={t(
-                        "dashboard.settings.aiConfig.apiKey.placeholder"
-                      )}
+                      placeholder={t("dashboard.settings.ai.doubao.apiKey")}
                     />
                   </div>
                   <div className="space-y-2">
@@ -266,9 +264,7 @@ const SettingsPage = () => {
                       value={doubaoModelId}
                       onChange={(e) => handleModelIdChange(e, "doubao")}
                       className="h-11 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus-visible:ring-indigo-500"
-                      placeholder={t(
-                        "dashboard.settings.aiConfig.modelId.placeholder"
-                      )}
+                      placeholder={t("dashboard.settings.ai.doubao.modelId")}
                     />
                   </div>
                 </div>
@@ -297,7 +293,7 @@ const SettingsPage = () => {
                         rel="noopener noreferrer"
                         className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline inline-flex items-center"
                       >
-                        {t("dashboard.settings.aiConfig.apiKey.description")}
+                        {t("dashboard.settings.ai.deepseek.description")}
                         <ExternalLink className="h-3 w-3 ml-1" />
                       </a>
                     </Label>
@@ -307,12 +303,10 @@ const SettingsPage = () => {
                       onChange={(e) => handleApiKeyChange(e, "deepseek")}
                       type="password"
                       className="h-11 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus-visible:ring-indigo-500"
-                      placeholder={t(
-                        "dashboard.settings.aiConfig.apiKey.placeholder"
-                      )}
+                      placeholder={t("dashboard.settings.ai.deepseek.apiKey")}
                     />
                   </div>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label className="text-base flex items-center gap-2 text-slate-700 dark:text-slate-300">
                       <Hash className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                       {t("dashboard.settings.ai.deepseek.modelId")}
@@ -322,11 +316,9 @@ const SettingsPage = () => {
                       value={deepseekModelId}
                       onChange={(e) => handleModelIdChange(e, "deepseek")}
                       className="h-11 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus-visible:ring-indigo-500"
-                      placeholder={t(
-                        "dashboard.settings.aiConfig.modelId.placeholder"
-                      )}
+                      placeholder={t("dashboard.settings.ai.deepseek.modelId")}
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

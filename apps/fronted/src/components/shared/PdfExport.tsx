@@ -24,6 +24,7 @@ const getOptimizedStyles = () => {
             if (ruleText.includes("@keyframes")) return false;
             if (ruleText.includes("animation")) return false;
             if (ruleText.includes("transition")) return false;
+            if (ruleText.includes("hover")) return false;
             return true;
           })
           .map((rule) => rule.cssText)
@@ -104,6 +105,7 @@ const PdfExport = () => {
         body: JSON.stringify({
           content: clonedElement.outerHTML,
           styles,
+          margin: globalSettings.pagePadding,
         }),
       });
 

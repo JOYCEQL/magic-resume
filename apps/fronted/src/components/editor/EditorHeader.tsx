@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+import { AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -7,16 +9,12 @@ import ThemeToggle from "../shared/ThemeToggle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
-import { useEffect } from "react";
-import { toast } from "sonner";
 import {
   HoverCard,
   HoverCardTrigger,
   HoverCardContent,
 } from "@/components/ui/hover-card";
-import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
 
 interface EditorHeaderProps {
   isMobile?: boolean;

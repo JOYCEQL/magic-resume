@@ -1,12 +1,13 @@
-import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+
 import { Button } from "@/components/ui/button";
 import Header from "@/components/home/Header";
 import FeaturesAnimation from "@/components/home/FeaturesAnimation";
 import HeroAnimation from "@/components/home/HeroAnimation";
-import { setRequestLocale } from "next-intl/server";
 import GoDashboard from "@/components/home/GoDashboard";
+import NewsAlert from "@/components/home/NewsAlert";
 
 type Props = {
   params: { locale: string };
@@ -21,6 +22,9 @@ export default function LandingPage({ params: { locale } }: Props) {
       <section className="relative pt-32 pb-16">
         <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
         <div className="max-w-5xl mx-auto px-4">
+          <div className="flex justify-center mb-12">
+            <NewsAlert className="max-w-xl" />
+          </div>
           <div className="text-center space-y-6">
             <HeroAnimation>
               <h1 className="text-5xl md:text-7xl font-extrabold bg-clip-text text-primary ">

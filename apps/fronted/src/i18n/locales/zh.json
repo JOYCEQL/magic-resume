@@ -33,6 +33,10 @@
         "description": "边编辑边预览，实时查看简历效果。支持多种专业模板，让您的简历既美观又规范。快速导出PDF，随时投递简历。"
       }
     },
+    "news": {
+      "label": "新闻",
+      "content": "现已接入 DeepSeek, Doubao 大模型"
+    },
     "footer": {
       "copyright": " 2024 Magic Resume. All rights reserved."
     }

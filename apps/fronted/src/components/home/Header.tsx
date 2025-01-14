@@ -62,7 +62,7 @@ export default function Header() {
           duration: 0.2,
         }}
       >
-        <div className="mt-4 rounded-full bg-background/70 backdrop-blur-[8px] border border-border/50">
+        <div className="mt-4 rounded-full bg-background/70 backdrop-blur-[8px] border border-border/50 dark:border-white/10">
           <div className="relative flex items-center justify-between h-12 px-6">
             <div className="flex items-center space-x-2">
               <Logo size={32} />

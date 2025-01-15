@@ -16,7 +16,8 @@ const EducationSection = ({
   const visibleEducation = education?.filter((edu) => edu.visible);
   return (
     <motion.div
-      className="hover:cursor-pointer
+      className="
+      hover:cursor-pointer
       hover:bg-gray-100
       rounded-md
       transition-all

@@ -64,7 +64,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
 
   return (
     <motion.div
-      className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
+      className=" hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,

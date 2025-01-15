@@ -229,7 +229,7 @@ export default function Home() {
   return (
     <main
       className={cn(
-        "w-full h-screen overflow-hidden",
+        "w-full min-h-screen overflow-hidden",
         "bg-white text-gray-900",
         "dark:bg-neutral-900 dark:text-neutral-200"
       )}

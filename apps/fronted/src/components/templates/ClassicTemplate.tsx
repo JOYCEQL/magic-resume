@@ -30,6 +30,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
         return (
           <>
             <BaseInfo basic={data.basic} globalSettings={data.globalSettings} />
+
             {data.basic.githubContributionsVisible && (
               <GithubContribution
                 className="mt-2"
@@ -85,7 +86,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({
 
   return (
     <div
-      className="flex flex-col w-full"
+      className="flex flex-col w-full min-h-screen"
       style={{
         backgroundColor: colorScheme.background,
         color: colorScheme.text,

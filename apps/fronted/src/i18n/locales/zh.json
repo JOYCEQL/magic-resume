@@ -96,12 +96,18 @@
   },
   "pdfExport": {
     "button": {
+      "export": "导出",
+      "exportPdf": "导出 PDF(服务端)",
+      "exportJson": "导出JSON配置",
       "exporting": "导出中...",
-      "default": "导出 PDF"
+      "exportingJson": "导出中...",
+      "print": "浏览器打印"
     },
     "toast": {
-      "success": "PDF 导出成功！",
-      "error": "PDF 导出失败，请重试"
+      "success": "PDF导出成功",
+      "error": "PDF导出失败",
+      "jsonSuccess": "配置导出成功",
+      "jsonError": "配置导出失败"
     }
   },
   "workbench": {

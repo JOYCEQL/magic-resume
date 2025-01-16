@@ -239,6 +239,11 @@ const PdfExport = () => {
               .scale-90 {
                 transform: none !important;
               }
+              
+              .page-break-line {
+                display: none;
+              }
+
               ${Array.from(document.styleSheets)
                 .map((sheet) => {
                   try {

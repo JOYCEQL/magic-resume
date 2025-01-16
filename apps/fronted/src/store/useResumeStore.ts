@@ -57,6 +57,7 @@ interface ResumeStore {
   updateGlobalSettings: (settings: Partial<GlobalSettings>) => void;
   setThemeColor: (color: string) => void;
   setTemplate: (templateId: string) => void;
+  addResume: (resume: ResumeData) => string;
 }
 
 // 同步简历到文件系统
@@ -561,6 +562,18 @@ export const useResumeStore = create(
           },
           activeResume: updatedResume,
         });
+      },
+      addResume: (resume: ResumeData) => {
+        set((state) => ({
+          resumes: {
+            ...state.resumes,
+            [resume.id]: resume,
+          },
+          activeResumeId: resume.id,
+        }));
+
+        syncResumeToFile(resume);
+        return resume.id;
       },
     }),
     {

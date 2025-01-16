@@ -2,9 +2,15 @@
 import React, { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Plus, FileText, Settings, AlertCircle } from "lucide-react";
+import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
+import { useResumeStore } from "@/store/useResumeStore";
+import { cn } from "@/lib/utils";
+import { initialResumeState } from "@/config/initialResumeData";
 import {
   Card,
   CardContent,
@@ -12,27 +18,24 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import { useResumeStore } from "@/store/useResumeStore";
-import { cn } from "@/lib/utils";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
 };
 
 const ResumeWorkbench = () => {
+  const t = useTranslations();
   const {
     resumes,
-    createResume,
-    deleteResume,
     setActiveResume,
     updateResume,
     updateResumeFromFile,
+    addResume,
+    deleteResume,
+    createResume,
   } = useResumeStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
-  const t = useTranslations();
 
   useEffect(() => {
     const syncResumesFromFiles = async () => {
@@ -88,6 +91,39 @@ const ResumeWorkbench = () => {
     setActiveResume(newId);
   };
 
+  const handleImportJson = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        const content = await file.text();
+        const config = JSON.parse(content);
+
+        const newResume = {
+          ...initialResumeState,
+          ...config,
+          id: crypto.randomUUID(),
+          title: config.title || t("dashboard.resumes.untitled"),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        addResume(newResume);
+        toast.success(t("dashboard.resumes.importSuccess"));
+      } catch (error) {
+        console.error("Import error:", error);
+        toast.error(t("dashboard.resumes.importError"));
+      }
+    };
+
+    input.click();
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -103,14 +139,15 @@ const ResumeWorkbench = () => {
         transition={{ duration: 0.3, delay: 0.1 }}
       >
         {hasConfiguredFolder ? (
-          <Alert className="mb-6" variant="default">
+          <Alert className="mb-6 bg-green-50/50 dark:bg-green-950/30 border-green-200 dark:border-green-900">
             <AlertDescription className="flex items-center justify-between">
-              <span className="text-green-600">
+              <span className="text-green-700 dark:text-green-400">
                 {t("dashboard.resumes.synced")}
               </span>
               <Button
                 size="sm"
-                className="ml-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+                variant="outline"
+                className="ml-4 hover:bg-green-100 dark:hover:bg-green-900"
                 onClick={() => {
                   router.push("/app/dashboard/settings");
                 }}
@@ -121,15 +158,20 @@ const ResumeWorkbench = () => {
             </AlertDescription>
           </Alert>
         ) : (
-          <Alert variant="destructive" className="mb-6">
+          <Alert
+            variant="destructive"
+            className="mb-6 bg-red-50/50 dark:bg-red-950/30 border-red-200 dark:border-red-900"
+          >
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>{t("dashboard.resumes.notice.title")}</AlertTitle>
             <AlertDescription className="flex items-center justify-between">
-              <span>{t("dashboard.resumes.notice.description")}</span>
+              <span className="text-red-700 dark:text-red-400">
+                {t("dashboard.resumes.notice.description")}
+              </span>
               <Button
-                variant="destructive"
+                variant="outline"
                 size="sm"
-                className="ml-4"
+                className="ml-4 hover:bg-red-100 dark:hover:bg-red-900"
                 onClick={() => {
                   router.push("/app/dashboard/settings");
                 }}
@@ -148,18 +190,39 @@ const ResumeWorkbench = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
           {t("dashboard.resumes.myResume")}
         </h1>
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            onClick={handleCreateResume}
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-600 hover:to-purple-600"
+        <div className="flex items-center space-x-2">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <Plus className="mr-2 h-4 w-4" />
-            {t("dashboard.resumes.create")}
-          </Button>
-        </motion.div>
+            <Button
+              onClick={handleImportJson}
+              variant="outline"
+              className="hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {t("dashboard.resumes.import")}
+            </Button>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            <Button
+              onClick={handleCreateResume}
+              variant="default"
+              className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {t("dashboard.resumes.create")}
+            </Button>
+          </motion.div>
+        </div>
       </motion.div>
 
       <motion.div
@@ -177,22 +240,23 @@ const ResumeWorkbench = () => {
           >
             <Card
               className={cn(
-                "relative border-2 border-dashed cursor-pointer h-[260px] transition-all duration-200",
-                "hover:border-indigo-500/20 hover:shadow-lg dark:bg-neutral-900"
+                "relative border border-dashed cursor-pointer h-[260px] transition-all duration-200",
+                "hover:border-gray-400 hover:bg-gray-50",
+                "dark:hover:border-primary dark:hover:bg-primary/10"
               )}
             >
               <CardContent className="flex-1 pt-6 text-center flex flex-col items-center justify-center">
                 <motion.div
-                  className="mb-4 p-4 rounded-full bg-indigo-50 dark:bg-indigo-950"
+                  className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
                   whileHover={{ rotate: 90 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Plus className="h-8 w-8 text-indigo-500" />
+                  <Plus className="h-8 w-8 text-gray-600 dark:text-primary" />
                 </motion.div>
-                <CardTitle className="text-xl">
+                <CardTitle className="text-xl text-gray-900 dark:text-gray-100">
                   {t("dashboard.resumes.newResume")}
                 </CardTitle>
-                <CardDescription className="mt-2">
+                <CardDescription className="mt-2 text-gray-600 dark:text-gray-400">
                   {t("dashboard.resumes.newResumeDescription")}
                 </CardDescription>
               </CardContent>
@@ -215,22 +279,23 @@ const ResumeWorkbench = () => {
               >
                 <Card
                   className={cn(
-                    "group border-2 transition-all duration-200 h-[260px] flex flex-col",
-                    "hover:border-purple-500/20 hover:shadow-lg dark:bg-neutral-900"
+                    "group border transition-all duration-200 h-[260px] flex flex-col",
+                    "hover:border-gray-400 hover:bg-gray-50",
+                    "dark:hover:border-primary dark:hover:bg-primary/10"
                   )}
                 >
                   <CardContent className="relative flex-1 pt-6 text-center flex flex-col items-center">
                     <motion.div
-                      className="mb-4 p-4 rounded-full bg-purple-50 dark:bg-purple-950"
+                      className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
                       whileHover={{ rotate: 90 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <FileText className="h-8 w-8 text-purple-500" />
+                      <FileText className="h-8 w-8 text-gray-600 dark:text-primary" />
                     </motion.div>
-                    <CardTitle className="text-xl line-clamp-1">
+                    <CardTitle className="text-xl line-clamp-1 text-gray-900 dark:text-gray-100">
                       {resume.title || "未命名简历"}
                     </CardTitle>
-                    <CardDescription className="mt-2 text-sm">
+                    <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                       {t("dashboard.resumes.created")}
                       <span className="ml-2">
                         {new Date(resume.createdAt).toLocaleDateString()}
@@ -242,10 +307,15 @@ const ResumeWorkbench = () => {
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 17,
+                        }}
                       >
                         <Button
                           variant="outline"
-                          className="w-full text-sm hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-950"
+                          className="w-full text-sm hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -259,10 +329,15 @@ const ResumeWorkbench = () => {
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 17,
+                        }}
                       >
                         <Button
                           variant="outline"
-                          className="w-full text-sm hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                          className="w-full text-sm text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-500 dark:hover:bg-red-950/50 dark:hover:text-red-400"
                           size="sm"
                           onClick={(e) => {
                             e.stopPropagation();

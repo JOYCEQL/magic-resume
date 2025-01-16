@@ -50,10 +50,14 @@
       "created": "Created At",
       "synced": "Synced Files",
       "view": "View",
-      "myResume": "Resumes",
+      "myResume": "My Resumes",
       "create": "Create Resume",
       "newResume": "New Resume",
       "newResumeDescription": "Create a new resume to get started.",
+      "import": "Import JSON Config",
+      "untitled": "Untitled Resume",
+      "importSuccess": "Configuration imported successfully",
+      "importError": "Import failed, please check the file format",
       "notice": {
         "title": "Attention",
         "description": "It is recommended to configure a resume backup folder in the settings to prevent your data from being lost when the browser cache is cleared",
@@ -96,12 +100,18 @@
   },
   "pdfExport": {
     "button": {
+      "export": "Export",
+      "exportPdf": "Export PDF (Server)",
+      "exportJson": "Export JSON Config",
       "exporting": "Exporting...",
-      "default": "Export PDF"
+      "exportingJson": "Exporting...",
+      "print": "Browser Print"
     },
     "toast": {
-      "success": "PDF exported successfully!",
-      "error": "PDF export failed, please try again"
+      "success": "PDF exported successfully",
+      "error": "PDF export failed",
+      "jsonSuccess": "Configuration exported successfully",
+      "jsonError": "Configuration export failed"
     }
   },
   "previewDock": {

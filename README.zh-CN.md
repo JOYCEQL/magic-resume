@@ -5,7 +5,6 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
-[![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
@@ -61,11 +60,17 @@ pnpm dev:fronted
 
 4. 打开浏览器访问 `http://localhost:3000`
 
-## 📦 构建部署
+## 📦 构建和部署
 
 ```bash
 pnpm -F fronted build
 ```
+
+## ⚡ 使用 Vercel 部署
+
+你可以一键部署自己的 Magic Resume 实例：
+
+[![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 ## 🤝 贡献指南
 

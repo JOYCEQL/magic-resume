@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:fronted": "pnpm -F fronted dev",
-    "dev:background": "pnpm -F background start:dev"
+    "dev:fronted": "pnpm -F fronted dev"
   },
   "keywords": [],
   "author": "",

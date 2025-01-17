@@ -5,7 +5,6 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
@@ -66,6 +65,12 @@ pnpm dev:fronted
 ```bash
 pnpm -F fronted build
 ```
+
+## ⚡ Deploy with Vercel
+
+You can deploy your own instance of Magic Resume with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 ## 🤝 Contributing
 

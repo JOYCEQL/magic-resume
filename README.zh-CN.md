@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
+[![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
@@ -43,7 +44,7 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ```bash
 git clone https://github.com/yourusername/magic-resume.git
-cd magic-resume/fronted
+cd magic-resume
 ```
 
 2. 安装依赖
@@ -55,7 +56,7 @@ pnpm install
 3. 启动开发服务器
 
 ```bash
-pnpm dev
+pnpm dev:fronted
 ```
 
 4. 打开浏览器访问 `http://localhost:3000`
@@ -87,10 +88,9 @@ pnpm -F fronted build
 
 ## 🗺️ 路线图
 
+- [x] AI 辅助编写
+- [x] 多语言支持
 - [ ] 支持更多简历模板
-- [ ] 多语言支持
-- [ ] AI 辅助编写
-- [ ] 简历评分系统
 - [ ] 在线简历托管
 
 ## 📞 联系方式

@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
@@ -43,7 +44,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ```bash
 git clone https://github.com/yourusername/magic-resume.git
-cd magic-resume/fronted
+cd magic-resume
 ```
 
 2. Install dependencies
@@ -55,7 +56,7 @@ pnpm install
 3. Start development server
 
 ```bash
-pnpm dev
+pnpm dev:fronted
 ```
 
 4. Open browser and visit `http://localhost:3000`
@@ -87,10 +88,9 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 ## 🗺️ Roadmap
 
-- [ ] Support more resume templates
-- [ ] Multi-language support
-- [ ] AI-assisted writing
-- [ ] Resume scoring system
+- [x] AI-assisted writing
+- [x] Multi-language support
+- [ ] Support for more resume templates
 - [ ] Online resume hosting
 
 ## 📞 Contact

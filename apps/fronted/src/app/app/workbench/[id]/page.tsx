@@ -229,19 +229,19 @@ export default function Home() {
   return (
     <main
       className={cn(
-        "w-full min-h-screen overflow-hidden",
+        "w-full min-h-screen  overflow-hidden",
         "bg-white text-gray-900",
         "dark:bg-neutral-900 dark:text-neutral-200"
       )}
     >
       <EditorHeader />
       {/* 桌面端布局 */}
-      <div className="hidden md:block h-[calc(100vh-64px)]">
+      <div className="h-[calc(100vh-64px)]">
         <ResizablePanelGroup
           key={panelSizes?.join("-")}
           direction="horizontal"
           className={cn(
-            "h-full rounded-lg",
+            "h-full",
             "border border-gray-200 bg-white",
             "dark:border-neutral-800 dark:bg-neutral-900/50"
           )}
@@ -272,6 +272,7 @@ export default function Home() {
               <ResizablePanel
                 id="edit-panel"
                 order={2}
+                minSize={32}
                 defaultSize={panelSizes?.[1]}
                 className={cn(
                   "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
@@ -291,6 +292,7 @@ export default function Home() {
               order={3}
               collapsible={false}
               defaultSize={panelSizes?.[2]}
+              minSize={48}
               className="bg-gray-100"
             >
               <div className="h-full overflow-y-auto">

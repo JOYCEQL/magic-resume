@@ -121,10 +121,7 @@ const PreviewPanel = ({
   if (!activeResume) return null;
 
   return (
-    <div
-      ref={previewRef}
-      className="relative w-full h-full overflow-auto bg-gray-100"
-    >
+    <div ref={previewRef} className="relative w-full h-full  bg-gray-100">
       <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-90 origin-top-left">
         <div
           ref={startRef}

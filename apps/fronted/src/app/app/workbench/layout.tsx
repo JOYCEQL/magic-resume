@@ -25,7 +25,10 @@ export default async function LocaleLayout({ children }: Props) {
   const messages = await getMessages();
 
   return (
-    <Document locale={locale}>
+    <Document
+      locale={locale}
+      bodyClassName="overflow-y-hidden w-full min-w-[1600px]"
+    >
       <NextIntlClientProvider messages={messages}>
         <Providers>{children}</Providers>
         <Toaster position="top-center" richColors />

@@ -40,26 +40,63 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  /* 通用滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: transparent;
     border-radius: 4px;
   }
 
-  ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+  /* hide vertical scrollbar */
+  /* ::-webkit-scrollbar-thumb:vertical {
+    background: transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  *:hover::-webkit-scrollbar-thumb:vertical {
+    background: rgba(193, 193, 193, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:vertical:hover {
+    background: rgba(193, 193, 193, 0.8);
+  } */
+
+  /* show horizontal scrollbar */
+  ::-webkit-scrollbar-thumb:horizontal {
+    background: rgba(193, 193, 193, 0.5);
     border-radius: 4px;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
-  }
-
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+  ::-webkit-scrollbar-thumb:horizontal:hover {
+    background: rgba(193, 193, 193, 0.8);
   }
 
   .dark {
+    /* & ::-webkit-scrollbar-thumb:vertical {
+      background: transparent;
+    } */
+    /* 
+    & *:hover::-webkit-scrollbar-thumb:vertical {
+      background: rgba(102, 102, 102, 0.5);
+    }
+
+    & ::-webkit-scrollbar-thumb:vertical:hover {
+      background: rgba(102, 102, 102, 0.8);
+    } */
+
+    & ::-webkit-scrollbar-thumb:horizontal {
+      background: rgba(102, 102, 102, 0.5);
+    }
+
+    & ::-webkit-scrollbar-thumb:horizontal:hover {
+      background: rgba(102, 102, 102, 0.8);
+    }
+
     --background: 240 5.9% 10%;
     --foreground: 210 20% 98%;
     --card: 224 71.4% 4.1%;
@@ -85,44 +122,13 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    & ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    & ::-webkit-scrollbar-track {
-      background: #2d2d2d;
-      border-radius: 4px;
-    }
-
-    & ::-webkit-scrollbar-thumb {
-      background: #666;
-      border-radius: 4px;
-    }
-
-    & ::-webkit-scrollbar-thumb:hover {
-      background: #888;
-    }
-
-    & * {
-      scrollbar-width: thin;
-      scrollbar-color: #666 #2d2d2d;
-    }
-
     --sidebar-background: 240 5.9% 10%;
-
     --sidebar-foreground: 240 4.8% 95.9%;
-
     --sidebar-primary: 224.3 76.3% 48%;
-
     --sidebar-primary-foreground: 0 0% 100%;
-
     --sidebar-accent: 240 3.7% 15.9%;
-
     --sidebar-accent-foreground: 240 4.8% 95.9%;
-
     --sidebar-border: 240 3.7% 15.9%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -143,7 +149,7 @@
     @apply text-primary-foreground bg-primary;
   }
 
-  /* 解决chrome插件截图问题，对该项目无任何影响 */
+  /* Fix Chrome extension screenshot problem, no impact on this project */
   img,
   svg {
     @apply inline-block;

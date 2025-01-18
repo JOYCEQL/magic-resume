@@ -8,12 +8,13 @@ const inter = Inter({
 type Props = {
   children: ReactNode;
   locale: string;
+  bodyClassName?: string;
 };
 
-export default function Document({ children, locale }: Props) {
+export default function Document({ children, locale, bodyClassName }: Props) {
   return (
     <html className={inter.className} lang={locale} suppressHydrationWarning>
-      <body>{children}</body>
+      <body className={bodyClassName}>{children}</body>
     </html>
   );
 }

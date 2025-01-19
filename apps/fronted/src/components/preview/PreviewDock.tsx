@@ -5,8 +5,10 @@ import {
   PanelRightClose,
   PanelRightOpen,
   SpellCheck2,
+  Home,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
@@ -21,7 +23,6 @@ import { GITHUB_REPO_URL } from "@/config";
 import { cn } from "@/lib/utils";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { useTranslations } from "next-intl";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
@@ -70,8 +71,8 @@ export const PreviewDock = ({
       selectedModel === "doubao"
         ? doubaoApiKey && doubaoModelId
         : config.requiresModelId
-          ? deepseekApiKey && deepseekModelId
-          : deepseekApiKey;
+        ? deepseekApiKey && deepseekModelId
+        : deepseekApiKey;
 
     if (!isConfigured) {
       toast.error(
@@ -213,6 +214,24 @@ export const PreviewDock = ({
               </Tooltip>
             </DockIcon>
             <div className="w-full h-[1px] bg-gray-200" />
+            <DockIcon>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={cn(
+                      "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                      "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50"
+                    )}
+                    onClick={() => router.push("/app/dashboard")}
+                  >
+                    <Home className="h-4 w-4" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={10}>
+                  <p>{t("backToDashboard")}</p>
+                </TooltipContent>
+              </Tooltip>
+            </DockIcon>
             <DockIcon>
               <Tooltip>
                 <TooltipTrigger asChild>

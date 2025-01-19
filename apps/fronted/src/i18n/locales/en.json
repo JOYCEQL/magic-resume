@@ -119,19 +119,20 @@
     "grammarCheck": {
       "idle": "AI Grammar Check",
       "checking": "Checking...",
-      "configurePrompt": "Please configure ApiKey and Model Id first",
+      "configurePrompt": "Please configure ApiKey and ModelId first",
       "configureButton": "Configure",
       "errorToast": "Grammar check failed, please try again"
     },
     "sidePanel": {
-      "expand": "Expand Sidebar",
-      "collapse": "Collapse Sidebar"
+      "expand": "Expand Side Panel",
+      "collapse": "Collapse Side Panel"
     },
     "editPanel": {
       "expand": "Expand Edit Panel",
       "collapse": "Collapse Edit Panel"
     },
-    "github": "GitHub"
+    "github": "GitHub",
+    "backToDashboard": "Back to Dashboard"
   },
   "workbench": {
     "sidePanel": {

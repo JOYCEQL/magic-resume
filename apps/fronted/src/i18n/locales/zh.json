@@ -385,7 +385,8 @@
       "expand": "展开编辑面板",
       "collapse": "收起编辑面板"
     },
-    "github": "GitHub"
+    "github": "GitHub",
+    "backToDashboard": "返回仪表盘"
   },
   "templates": {
     "switchTemplate": "切换模版"

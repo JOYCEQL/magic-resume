@@ -1,7 +1,7 @@
-"use client";
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   BasicInfo,
   getBorderRadiusValue,
@@ -14,19 +14,18 @@ import { useTranslations } from "next-intl";
 interface BaseInfoProps {
   basic: BasicInfo | undefined;
   globalSettings: GlobalSettings | undefined;
-  layout?: "between" | "center";
   template?: ResumeTemplate;
 }
 
 const BaseInfo = ({
   basic = {} as BasicInfo,
   globalSettings,
-  layout,
   template,
 }: BaseInfoProps) => {
   const t = useTranslations("workbench");
   const { setActiveSection } = useResumeStore();
   const useIconMode = globalSettings?.useIconMode ?? false;
+  const layout = basic?.layout || "left";
 
   const getIcon = (iconName: string | undefined) => {
     const IconComponent = Icons[
@@ -113,36 +112,86 @@ const BaseInfo = ({
   const nameField = getNameField();
   const titleField = getTitleField();
 
-  const CenterContent = (
-    <div className="text-center space-y-4">
-      {basic.photo && basic.photoConfig?.visible && (
-        <motion.div layout="position" className="flex justify-center">
-          <div
-            style={{
-              width: `${basic.photoConfig?.width || 100}px`,
-              height: `${basic.photoConfig?.height || 100}px`,
-              borderRadius: getBorderRadiusValue(
-                basic.photoConfig || {
-                  borderRadius: "none",
-                  customBorderRadius: 0,
-                }
-              ),
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src={basic.photo}
-              alt={`${basic.name}'s photo`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </motion.div>
-      )}
+  const PhotoComponent = basic.photo && basic.photoConfig?.visible && (
+    <motion.div layout="position">
+      <div
+        style={{
+          width: `${basic.photoConfig?.width || 100}px`,
+          height: `${basic.photoConfig?.height || 100}px`,
+          borderRadius: getBorderRadiusValue(
+            basic.photoConfig || {
+              borderRadius: "none",
+              customBorderRadius: 0,
+            }
+          ),
+          overflow: "hidden",
+        }}
+      >
+        <img
+          src={basic.photo}
+          alt={`${basic.name}'s photo`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    </motion.div>
+  );
 
+  // 基础样式
+  const baseContainerClass =
+    "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
+  const baseFieldsClass = "flex flex-wrap gap-x-8 gap-y-2 w-full";
+  const baseFieldItemClass = "flex items-center whitespace-nowrap";
+  const baseNameTitleClass = "flex flex-col";
+
+  // 左对齐布局样式
+  const leftLayoutStyles = {
+    container: "flex items-start justify-between gap-6",
+    leftContent: "flex items-center gap-6",
+    fields: "justify-start",
+    nameTitle: "text-left",
+  };
+
+  // 右对齐布局样式
+  const rightLayoutStyles = {
+    container: "flex items-start justify-between gap-6 flex-row-reverse",
+    leftContent: "flex items-center gap-6",
+    fields: "justify-start",
+    nameTitle: "text-right",
+  };
+
+  // 居中布局样式
+  const centerLayoutStyles = {
+    container: "flex flex-col items-center gap-3",
+    leftContent: "flex flex-col items-center gap-4",
+    fields: "flex justify-start items-center flex-wrap gap-3",
+    nameTitle: "text-center",
+  };
+
+  // 根据布局选择样式
+  const getLayoutStyles = () => {
+    switch (layout) {
+      case "right":
+        return rightLayoutStyles;
+      case "center":
+        return centerLayoutStyles;
+      default:
+        return leftLayoutStyles;
+    }
+  };
+
+  const layoutStyles = getLayoutStyles();
+
+  const containerClass = cn(baseContainerClass, layoutStyles.container);
+  const leftContentClass = cn(layoutStyles.leftContent);
+  const fieldsContainerClass = cn(baseFieldsClass, layoutStyles.fields);
+  const nameTitleClass = cn(baseNameTitleClass, layoutStyles.nameTitle);
+
+  const NameTitleComponent = (
+    <div className={nameTitleClass}>
       {nameField && basic[nameField.key] && (
         <motion.h1
           layout="position"
-          className="font-bold "
+          className="font-bold"
           style={{
             fontSize: `30px`,
           }}
@@ -150,7 +199,6 @@ const BaseInfo = ({
           {basic[nameField.key] as string}
         </motion.h1>
       )}
-
       {titleField && basic[titleField.key] && (
         <motion.h2
           layout="position"
@@ -161,132 +209,53 @@ const BaseInfo = ({
           {basic[titleField.key] as string}
         </motion.h2>
       )}
-
-      <motion.div
-        layout="position"
-        className="flex justify-start items-center flex-wrap gap-3"
-        style={{
-          fontSize: `${globalSettings?.baseFontSize || 14}px`,
-        }}
-      >
-        {allFields.map((item, index) => (
-          <motion.div
-            key={item.key}
-            className="flex items-center"
-            style={{
-              width: isModernTemplate ? "100%" : "auto",
-            }}
-          >
-            {useIconMode ? (
-              <div className=" flex items-center gap-1">
-                {getIcon(item.icon)}
-                <span>{item.value}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1">
-                {!item.custom && (
-                  <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>
-                )}
-                {item.custom && <span>{item.label}:</span>}
-                <span suppressHydrationWarning>{item.value}</span>
-              </div>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
     </div>
   );
 
-  const BetweenContent = (
-    <div className="flex items-start justify-between">
-      <div className="flex  items-center  gap-4">
-        {basic.photo && basic.photoConfig?.visible && (
-          <motion.div layout="position">
-            <div
-              style={{
-                width: `${basic.photoConfig?.width || 100}px`,
-                height: `${basic.photoConfig?.height || 100}px`,
-                borderRadius: getBorderRadiusValue(
-                  basic.photoConfig || {
-                    borderRadius: "none",
-                    customBorderRadius: 0,
-                  }
-                ),
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src={basic.photo}
-                alt={`${basic.name}'s photo`}
-                className="w-full h-full object-cover"
-              />
+  const FieldsComponent = (
+    <motion.div
+      layout="position"
+      className={fieldsContainerClass}
+      style={{
+        fontSize: `${globalSettings?.baseFontSize || 14}px`,
+        color: "rgb(75, 85, 99)",
+        maxWidth: layout === "center" ? "none" : "400px",
+      }}
+    >
+      {allFields.map((item) => (
+        <motion.div
+          key={item.key}
+          className={cn(baseFieldItemClass)}
+          style={{
+            width: isModernTemplate ? "100%" : "auto",
+          }}
+        >
+          {useIconMode ? (
+            <div className="flex items-center gap-1">
+              {getIcon(item.icon)}
+              <span>{item.value}</span>
             </div>
-          </motion.div>
-        )}
-        <div className="flex flex-col justify-center">
-          {nameField && basic[nameField.key] && (
-            <motion.h1
-              layout="position"
-              className="font-bold "
-              style={{
-                fontSize: `30px`,
-              }}
-            >
-              {basic[nameField.key] as string}
-            </motion.h1>
+          ) : (
+            <div className="flex items-center gap-1">
+              {!item.custom && (
+                <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>
+              )}
+              {item.custom && <span>{item.label}:</span>}
+              <span suppressHydrationWarning>{item.value}</span>
+            </div>
           )}
-          {titleField && basic[titleField.key] && (
-            <motion.h2
-              layout="position"
-              style={{
-                fontSize: `${globalSettings?.headerSize || 18}px`,
-              }}
-            >
-              {basic[titleField.key] as string}
-            </motion.h2>
-          )}
-        </div>
-      </div>
-
-      <motion.div
-        layout="position"
-        className="grid grid-cols-2 gap-2"
-        style={{
-          fontSize: `${globalSettings?.baseFontSize || 14}px`,
-          color: "rgb(75, 85, 99)",
-        }}
-      >
-        {allFields.map((item, index) => (
-          <motion.div
-            key={item.key}
-            className="flex items-center"
-            style={{
-              width: isModernTemplate ? "100%" : "auto",
-            }}
-          >
-            {useIconMode ? (
-              <div className="flex items-center gap-1">
-                {getIcon(item.icon)}
-                <span>{item.value}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1">
-                <span>{item.label}:</span>
-                <span suppressHydrationWarning>{item.value}</span>
-              </div>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
-    </div>
+        </motion.div>
+      ))}
+    </motion.div>
   );
-
-  const containerClass =
-    "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
 
   return (
     <div className={containerClass} onClick={() => setActiveSection("basic")}>
-      {layout === "between" ? BetweenContent : CenterContent}
+      <div className={leftContentClass}>
+        {PhotoComponent}
+        {NameTitleComponent}
+      </div>
+      {FieldsComponent}
     </div>
   );
 };

@@ -168,9 +168,15 @@
       }
     },
     "basicPanel": {
-      "avatar": "头像",
-      "basicField": "基本信息",
+      "title": "基础信息",
+      "basicField": "基础字段",
       "customField": "自定义字段",
+      "githubContributions": "Github贡献",
+      "layout": "布局方式",
+      "layoutLeft": "居左",
+      "layoutCenter": "居中",
+      "layoutRight": "居右",
+      "avatar": "头像",
       "customFields": {
         "placeholders": {
           "label": "标签",
@@ -191,8 +197,7 @@
       "fieldVisibility": {
         "show": "显示",
         "hide": "隐藏"
-      },
-      "githubContributions": "GitHub 贡献"
+      }
     },
     "experiencePanel": {
       "title": "工作经历",

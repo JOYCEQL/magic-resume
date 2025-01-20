@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import PhotoUpload from "@/components/shared/PhotoSelector";
 import IconSelector from "../IconSelector";
+import AlignSelector from "./AlignSelector";
 import Field from "../Field";
 import { cn } from "@/lib/utils";
 import { DEFAULT_FIELD_ORDER } from "@/config";
@@ -303,123 +304,150 @@ const BasicPanel: React.FC = () => {
   };
 
   return (
-    <motion.div className="space-y-6 p-6" {...itemAnimations}>
-      <motion.div
-        initial={{ opacity: 0, y: 0 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-neutral-900 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
-      >
-        <PhotoUpload />
-      </motion.div>
+    <div className="space-y-6 p-6">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-lg font-medium">{t("layout")}</h2>
+          <div className=" bg-white dark:bg-neutral-900 rounded-lg">
+            <AlignSelector
+              value={basic?.layout || "left"}
+              onChange={(value) =>
+                updateBasicInfo({
+                  ...basic,
+                  layout: value,
+                })
+              }
+            />
+          </div>
+        </div>
 
-      <motion.div className="space-y-6">
-        <motion.div className="space-y-3">
-          <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-            {t("basicField")}
-          </motion.h3>
-          <AnimatePresence mode="popLayout">
-            <Reorder.Group
-              axis="y"
-              as="div"
-              values={basicFields}
-              onReorder={handleBasicReorder}
-              className="space-y-3"
-            >
-              {basicFields.map((field) => renderBasicField(field))}
-            </Reorder.Group>
-          </AnimatePresence>
-        </motion.div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-medium">{t("title")}</h2>
+          </div>
 
-        <motion.div className="space-y-3">
-          <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-            {t("customField")}
-          </motion.h3>
-          <AnimatePresence mode="popLayout">
-            <Reorder.Group
-              axis="y"
-              as="div"
-              values={customFields}
-              onReorder={handleCustomFieldsReorder}
-              className="space-y-3"
-            >
-              {Array.isArray(customFields) &&
-                customFields.map((field) => (
-                  <CustomField
-                    key={field.id}
-                    field={field}
-                    onUpdate={updateCustomField}
-                    onDelete={deleteCustomField}
-                  />
-                ))}
-            </Reorder.Group>
-          </AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Button onClick={addCustomField} className="w-full mt-4">
-              <PlusCircle className="w-4 h-4 mr-2" />
-              {t("customFields.addButton")}
-            </Button>
-          </motion.div>
-        </motion.div>
-        <motion.div className="space-y-3">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="flex items-center justify-between">
-              <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
-                {t("githubContributions")}
-              </motion.h3>
+          <div className="space-y-4">
+            <motion.div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-neutral-900 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
+              >
+                <PhotoUpload />
+              </motion.div>
 
-              <Switch
-                checked={basic?.githubContributionsVisible}
-                onCheckedChange={(checked) =>
-                  updateBasicInfo({
-                    ...basic,
-                    githubContributionsVisible: checked,
-                  })
-                }
-              />
-            </div>
+              <motion.div className="space-y-6">
+                <motion.div className="space-y-3">
+                  <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+                    {t("basicField")}
+                  </motion.h3>
+                  <AnimatePresence mode="popLayout">
+                    <Reorder.Group
+                      axis="y"
+                      as="div"
+                      values={basicFields}
+                      onReorder={handleBasicReorder}
+                      className="space-y-3"
+                    >
+                      {basicFields.map((field) => renderBasicField(field))}
+                    </Reorder.Group>
+                  </AnimatePresence>
+                </motion.div>
 
-            <div className="mt-4">
-              <div className="flex items-center ml-3 space-x-2">
-                <div className=" w-[110px]">Access Token</div>
-                <Input
-                  placeholder="请输入github access token"
-                  className="flex-1"
-                  value={basic?.githubKey}
-                  onChange={(e) =>
-                    updateBasicInfo({
-                      ...basic,
-                      githubKey: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="flex items-center ml-3 mt-4 space-x-2">
-                <div className="w-[110px]">UseName</div>
-                <Input
-                  className="flex-1"
-                  placeholder="请输入github username"
-                  value={basic?.githubUseName}
-                  onChange={(e) =>
-                    updateBasicInfo({
-                      ...basic,
-                      githubUseName: e.target.value,
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+                <motion.div className="space-y-3">
+                  <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+                    {t("customField")}
+                  </motion.h3>
+                  <AnimatePresence mode="popLayout">
+                    <Reorder.Group
+                      axis="y"
+                      as="div"
+                      values={customFields}
+                      onReorder={handleCustomFieldsReorder}
+                      className="space-y-3"
+                    >
+                      {Array.isArray(customFields) &&
+                        customFields.map((field) => (
+                          <CustomField
+                            key={field.id}
+                            field={field}
+                            onUpdate={updateCustomField}
+                            onDelete={deleteCustomField}
+                          />
+                        ))}
+                    </Reorder.Group>
+                  </AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <Button onClick={addCustomField} className="w-full mt-4">
+                      <PlusCircle className="w-4 h-4 mr-2" />
+                      {t("customFields.addButton")}
+                    </Button>
+                  </motion.div>
+                </motion.div>
+                <motion.div className="space-y-3">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <motion.h3 className="font-medium text-neutral-900 dark:text-neutral-200 px-1">
+                        {t("githubContributions")}
+                      </motion.h3>
+
+                      <Switch
+                        checked={basic?.githubContributionsVisible}
+                        onCheckedChange={(checked) =>
+                          updateBasicInfo({
+                            ...basic,
+                            githubContributionsVisible: checked,
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="flex items-center ml-3 space-x-2">
+                        <div className=" w-[110px]">Access Token</div>
+                        <Input
+                          placeholder="请输入github access token"
+                          className="flex-1"
+                          value={basic?.githubKey}
+                          onChange={(e) =>
+                            updateBasicInfo({
+                              ...basic,
+                              githubKey: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center ml-3 mt-4 space-x-2">
+                        <div className="w-[110px]">UseName</div>
+                        <Input
+                          className="flex-1"
+                          placeholder="请输入github username"
+                          value={basic?.githubUseName}
+                          onChange={(e) =>
+                            updateBasicInfo({
+                              ...basic,
+                              githubUseName: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

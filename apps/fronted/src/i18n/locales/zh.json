@@ -337,7 +337,7 @@
     "title": "头像设置",
     "description": "自定义您的简历头像",
     "upload": {
-      "title": "上传头像",
+      "title": "在线链接",
       "dragHint": "拖拽或点击上传图片",
       "sizeLimit": "图片大小不能超过5MB",
       "typeLimit": "请上传图片文件",

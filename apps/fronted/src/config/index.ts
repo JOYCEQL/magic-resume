@@ -35,6 +35,9 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       itemGap: 16,
       contentPadding: 32,
     },
+    basic: {
+      layout: "center",
+    },
   },
   {
     id: "modern",
@@ -53,6 +56,9 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       itemGap: 20,
       contentPadding: 1,
     },
+    basic: {
+      layout: "center",
+    },
   },
   {
     id: "left-right",
@@ -70,6 +76,9 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       sectionGap: 24,
       itemGap: 16,
       contentPadding: 32,
+    },
+    basic: {
+      layout: "left",
     },
   },
 ];

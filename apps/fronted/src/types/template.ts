@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 export interface ResumeTemplate {
   id: string;
   name: string;
@@ -14,5 +16,15 @@ export interface ResumeTemplate {
     sectionGap: number;
     itemGap: number;
     contentPadding: number;
+  };
+  basic: {
+    layout?: "left" | "center" | "right";
+  };
+}
+
+export interface TemplateConfig {
+  sectionTitle: {
+    className?: string;
+    styles: CSSProperties;
   };
 }

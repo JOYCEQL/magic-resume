@@ -553,6 +553,10 @@ export const useResumeStore = create(
             paragraphSpacing: template.spacing.itemGap,
             pagePadding: template.spacing.contentPadding,
           },
+          basic: {
+            ...resumes[activeResumeId].basic,
+            layout: template.basic.layout,
+          },
         };
 
         set({

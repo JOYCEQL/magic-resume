@@ -27,9 +27,9 @@ const LeftRightTemplate: React.FC<LeftRightTemplateProps> = ({
       case "basic":
         return (
           <BaseInfo
-            layout="between"
             basic={data.basic}
             globalSettings={data.globalSettings}
+            template={template}
           ></BaseInfo>
         );
       case "experience":

@@ -352,7 +352,7 @@
     "title": "Photo Settings",
     "description": "Customize your resume photo",
     "upload": {
-      "title": "Upload Photo",
+      "title": "Online Link",
       "dragHint": "Drag and drop or click to upload image",
       "sizeLimit": "Image size must not exceed 5MB",
       "typeLimit": "Please upload an image file",

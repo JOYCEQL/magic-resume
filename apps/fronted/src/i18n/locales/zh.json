@@ -168,11 +168,11 @@
       }
     },
     "basicPanel": {
-      "title": "基础信息",
+      "title": "关于我",
       "basicField": "基础字段",
       "customField": "自定义字段",
       "githubContributions": "Github贡献",
-      "layout": "布局方式",
+      "layout": "对齐方式",
       "layoutLeft": "居左",
       "layoutCenter": "居中",
       "layoutRight": "居右",
@@ -395,5 +395,26 @@
   },
   "templates": {
     "switchTemplate": "切换模版"
+  },
+  "aiPolishDialog": {
+    "title": "AI 润色",
+    "description": {
+      "polishing": "正在为您润色内容...",
+      "finished": "已经为您优化了内容，请查看效果"
+    },
+    "error": {
+      "configRequired": "请先配置 AI 模型",
+      "polishFailed": "润色失败",
+      "applied": "已应用润色内容"
+    },
+    "content": {
+      "original": "原始内容",
+      "polished": "润色后的内容"
+    },
+    "button": {
+      "regenerate": "重新生成",
+      "generating": "生成中...",
+      "apply": "应用内容"
+    }
   }
 }

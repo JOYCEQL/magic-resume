@@ -2,6 +2,8 @@
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
+
 import {
   Dialog,
   DialogContent,
@@ -28,6 +30,7 @@ export default function AIPolishDialog({
   content,
   onApply,
 }: AIPolishDialogProps) {
+  const t = useTranslations("aiPolishDialog");
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
   const {
@@ -47,11 +50,11 @@ export default function AIPolishDialog({
         selectedModel === "doubao"
           ? doubaoApiKey && doubaoModelId
           : config.requiresModelId
-            ? deepseekApiKey && deepseekModelId
-            : deepseekApiKey;
+          ? deepseekApiKey && deepseekModelId
+          : deepseekApiKey;
 
       if (!isConfigured) {
-        toast.error("请先配置 AI 模型");
+        toast.error(t("error.configRequired"));
         onOpenChange(false);
         return;
       }
@@ -73,8 +76,8 @@ export default function AIPolishDialog({
             selectedModel === "doubao"
               ? doubaoModelId
               : config.requiresModelId
-                ? deepseekModelId
-                : config.defaultModel,
+              ? deepseekModelId
+              : config.defaultModel,
           modelType: selectedModel,
         }),
         signal: abortControllerRef.current.signal,
@@ -113,7 +116,7 @@ export default function AIPolishDialog({
         return;
       }
       console.error("Polish error:", error);
-      toast.error("润色失败");
+      toast.error(t("error.polishFailed"));
       onOpenChange(false);
     } finally {
       setIsPolishing(false);
@@ -144,7 +147,7 @@ export default function AIPolishDialog({
   const handleApply = () => {
     onApply(polishedContent);
     handleClose();
-    toast.success("已应用润色内容");
+    toast.success(t("error.applied"));
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -185,7 +188,7 @@ export default function AIPolishDialog({
                 "dark:text-primary-400"
               )}
             />
-            AI 润色
+            {t("title")}
           </DialogTitle>
           <DialogDescription
             className={cn(
@@ -194,8 +197,8 @@ export default function AIPolishDialog({
             )}
           >
             {isPolishing
-              ? "正在为您润色内容..."
-              : "已经为您优化了内容，请查看效果"}
+              ? t("description.polishing")
+              : t("description.finished")}
           </DialogDescription>
         </DialogHeader>
 
@@ -214,7 +217,7 @@ export default function AIPolishDialog({
                   "text-neutral-600 dark:text-neutral-400"
                 )}
               >
-                原始内容
+                {t("content.original")}
               </span>
             </div>
             <div
@@ -249,7 +252,7 @@ export default function AIPolishDialog({
                   "text-primary dark:text-primary-400"
                 )}
               >
-                润色后的内容
+                {t("content.polished")}
               </span>
             </div>
             <div
@@ -281,10 +284,10 @@ export default function AIPolishDialog({
             {isPolishing ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                生成中...
+                {t("button.generating")}
               </div>
             ) : (
-              "重新生成"
+              t("button.regenerate")
             )}
           </Button>
 
@@ -293,7 +296,7 @@ export default function AIPolishDialog({
             disabled={!polishedContent || isPolishing}
             className="flex-1 bg-primary hover:bg-primary/90 text-white h-11 shadow-lg shadow-primary/20"
           >
-            应用内容
+            {t("button.apply")}
           </Button>
         </DialogFooter>
       </DialogContent>

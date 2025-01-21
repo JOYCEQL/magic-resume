@@ -12,5 +12,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       },
     },
+    {
+      url: "https://magicv.art/zh",
+      lastModified: new Date(),
+    },
+    {
+      url: "https://magicv.art/en",
+      lastModified: new Date(),
+    },
   ];
 }

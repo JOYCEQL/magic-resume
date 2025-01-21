@@ -188,9 +188,11 @@
       }
     },
     "basicPanel": {
+      "title": "About Me",
       "avatar": "Avatar",
       "basicField": "Basic",
       "customField": "Custom",
+      "layout": "Align",
       "customFields": {
         "placeholders": {
           "label": "Label",
@@ -346,6 +348,27 @@
         "show": "Show",
         "hide": "Hide"
       }
+    }
+  },
+  "aiPolishDialog": {
+    "title": "AI Polish",
+    "description": {
+      "polishing": "Polishing your content...",
+      "finished": "Content has been optimized, please check the result"
+    },
+    "error": {
+      "configRequired": "Please configure AI model first",
+      "polishFailed": "Polish failed",
+      "applied": "Polish content applied"
+    },
+    "content": {
+      "original": "Original Content",
+      "polished": "Polished Content"
+    },
+    "button": {
+      "regenerate": "Regenerate",
+      "generating": "Generating...",
+      "apply": "Apply Content"
     }
   },
   "photoConfig": {

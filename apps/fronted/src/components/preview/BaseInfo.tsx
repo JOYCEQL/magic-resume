@@ -218,7 +218,7 @@ const BaseInfo = ({
       className={fieldsContainerClass}
       style={{
         fontSize: `${globalSettings?.baseFontSize || 14}px`,
-        color: "rgb(75, 85, 99)",
+        color: isModernTemplate ? "#fff" : "rgb(75, 85, 99)",
         maxWidth: layout === "center" ? "none" : "400px",
       }}
     >

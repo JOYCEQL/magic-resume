@@ -27,7 +27,7 @@ export async function generateMetadata({
   const baseUrl = "https://magicv.art";
 
   return {
-    title: t("title"),
+    title: t("title") + " - " + t("subtitle"),
     description: t("description"),
     alternates: {
       canonical: `${baseUrl}/${locale}`,

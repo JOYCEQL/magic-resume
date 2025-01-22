@@ -6,6 +6,7 @@ import ProjectSection from "../preview/ProjectSection";
 import CustomSection from "../preview/CustomSection";
 import { ResumeData } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
+import GithubContribution from "../shared/GithubContribution";
 
 interface LeftRightTemplateProps {
   data: ResumeData;
@@ -26,11 +27,20 @@ const LeftRightTemplate: React.FC<LeftRightTemplateProps> = ({
     switch (sectionId) {
       case "basic":
         return (
-          <BaseInfo
-            basic={data.basic}
-            globalSettings={data.globalSettings}
-            template={template}
-          ></BaseInfo>
+          <>
+            <BaseInfo
+              basic={data.basic}
+              globalSettings={data.globalSettings}
+              template={template}
+            ></BaseInfo>
+            {data.basic.githubContributionsVisible && (
+              <GithubContribution
+                className="mt-2"
+                githubKey={data.basic.githubKey}
+                username={data.basic.githubUseName}
+              />
+            )}
+          </>
         );
       case "experience":
         return (

@@ -26,7 +26,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
   onSave,
 }) => {
-  const t = useTranslations("workbench.experiencePanel");
+  const t = useTranslations("workbench.experienceItem");
 
   const handleChange = (field: keyof Experience, value: string) => {
     onSave({
@@ -40,29 +40,26 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label={t("placeholders.company")}
+            label={t("labels.company")}
             value={experience.company}
             onChange={(value) => handleChange("company", value)}
             placeholder={t("placeholders.company")}
-            required
           />
           <Field
-            label={t("placeholders.position")}
+            label={t("labels.position")}
             value={experience.position}
             onChange={(value) => handleChange("position", value)}
             placeholder={t("placeholders.position")}
-            required
           />
         </div>
         <Field
-          label={t("placeholders.date")}
+          label={t("labels.date")}
           value={experience.date}
           onChange={(value) => handleChange("date", value)}
           placeholder={t("placeholders.date")}
-          required
         />
         <Field
-          label={t("placeholders.details")}
+          label={t("labels.details")}
           value={experience.details}
           onChange={(value) => handleChange("details", value)}
           type="editor"

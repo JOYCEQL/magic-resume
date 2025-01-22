@@ -24,7 +24,23 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           layout="position"
           className="flex items-center justify-between"
         >
-          <h3 className="font-medium">{project.name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-medium">{project.name}</h3>
+            {project.link && (
+              <a
+                href={
+                  project.link.startsWith("http")
+                    ? project.link
+                    : `https://${project.link}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 hover:underline"
+              >
+                {project.link}
+              </a>
+            )}
+          </div>
           {project.date && <div>{project.date}</div>}
         </motion.div>
         {project.role && (

@@ -21,6 +21,7 @@ interface Project {
   date: string;
   description: string;
   visible: boolean;
+  link?: string;
 }
 
 interface ProjectEditorProps {
@@ -48,23 +49,28 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
             value={project.name}
             onChange={(value) => handleChange("name", value)}
             placeholder={t("placeholders.name")}
-            required
           />
           <Field
             label={t("labels.role")}
             value={project.role}
             onChange={(value) => handleChange("role", value)}
             placeholder={t("placeholders.role")}
-            required
           />
         </div>
-        <Field
-          label={t("labels.date")}
-          value={project.date}
-          onChange={(value) => handleChange("date", value)}
-          placeholder={t("placeholders.date")}
-          required
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <Field
+            label={t("labels.link")}
+            value={project.link || ""}
+            onChange={(value) => handleChange("link", value)}
+            placeholder={t("placeholders.link")}
+          />
+          <Field
+            label={t("labels.date")}
+            value={project.date}
+            onChange={(value) => handleChange("date", value)}
+            placeholder={t("placeholders.date")}
+          />
+        </div>
         <Field
           label={t("labels.description")}
           value={project.description}

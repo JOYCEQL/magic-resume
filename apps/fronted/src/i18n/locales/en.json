@@ -271,7 +271,7 @@
         "description": "Briefly describe project background and goals",
         "role": "Your role and responsibilities in the project",
         "date": "Project time range",
-        "link": "Project link (optional)"
+        "link": "Project link "
       }
     },
     "projectItem": {
@@ -289,7 +289,7 @@
         "date": "Project time range",
         "description": "Briefly describe project background and goals",
         "technologies": "Technologies and tools used",
-        "link": "Project link (optional)"
+        "link": "Project link"
       },
       "buttons": {
         "edit": "Edit",

@@ -77,7 +77,7 @@ export interface BasicInfo {
   githubKey: string;
   githubUseName: string;
   githubContributionsVisible: boolean;
-  layout?: 'left' | 'center' | 'right';
+  layout?: "left" | "center" | "right";
 }
 
 export interface Education {
@@ -115,6 +115,7 @@ export interface Project {
   date: string;
   description: string;
   visible: boolean;
+  link?: string;
 }
 
 export type GlobalSettings = {

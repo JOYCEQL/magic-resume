@@ -62,8 +62,8 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
   },
   {
     id: "left-right",
-    name: "基础信息左右模板",
-    description: "基础信息左右排版",
+    name: "模块标题背景色",
+    description: "模块标题背景鲜明，突出美观特色",
     thumbnail: "leftRight",
     layout: "left-right",
     colorScheme: {

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FileText, Settings } from "lucide-react";
+import { Cog, FileText, SwatchBook } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
@@ -33,9 +33,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       icon: FileText,
     },
     {
+      title: t("sidebar.templates"),
+      url: "/app/dashboard/templates",
+      icon: SwatchBook,
+    },
+    {
       title: t("sidebar.settings"),
       url: "/app/dashboard/settings",
-      icon: Settings,
+      icon: Cog,
     },
   ];
 

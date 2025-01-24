@@ -185,12 +185,28 @@
   }
 }
 
+@keyframes gradient-xy {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
 
 .animate-tilt {
   animation: tilt 10s infinite linear;
+}
+
+.animate-gradient-xy {
+  animation: gradient-xy 15s ease infinite;
 }
 
 .animation-delay-2000 {

@@ -45,7 +45,8 @@
   "dashboard": {
     "sidebar": {
       "resumes": "简历",
-      "settings": "设置"
+      "settings": "设置",
+      "templates": "模板"
     },
     "resumes": {
       "created": "创建于",
@@ -96,6 +97,23 @@
           "apiKey": "API 密钥",
           "modelId": "模型 ID"
         }
+      }
+    },
+    "templates": {
+      "title": "模板",
+      "useTemplate": "使用此模板",
+      "switchTemplate": "切换模版",
+      "classic": {
+        "name": "经典模板",
+        "description": "传统简约的简历布局，适合大多数求职场景"
+      },
+      "modern": {
+        "name": "两栏布局",
+        "description": "经典两栏，突出个人特色"
+      },
+      "leftRight": {
+        "name": "模块标题背景色",
+        "description": "模块标题背景鲜明，突出美观特色"
       }
     }
   },
@@ -394,9 +412,6 @@
     "github": "GitHub",
     "backToDashboard": "返回仪表盘"
   },
-  "templates": {
-    "switchTemplate": "切换模版"
-  },
   "aiPolishDialog": {
     "title": "AI 润色",
     "description": {
@@ -417,5 +432,8 @@
       "generating": "生成中...",
       "apply": "应用内容"
     }
+  },
+  "templates": {
+    "switchTemplate": "切换模板"
   }
 }

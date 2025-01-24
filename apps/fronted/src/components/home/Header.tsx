@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Logo from "@/components/shared/Logo";
 import ThemeToggle from "@/components/shared/ThemeToggle";
-import GitHubStars from "@/components/shared/GitHubStars";
+import { GitHubStars } from "@/components/shared/GitHubStars";
 import LanguageSwitch from "../shared/LanguageSwitch";
 import GoDashboard from "./GoDashboard";
 import { Button } from "../ui/button";

@@ -15,7 +15,7 @@ const initialGlobalSettings: GlobalSettings = {
 export const initialResumeState = {
   title: "新建简历",
   basic: {
-    name: "张三",
+    name: "魔方简历",
     title: "高级前端工程师",
     employementStatus: "全职",
     email: "zhangsan@example.com",
@@ -108,8 +108,13 @@ export const initialResumeState = {
       name: "抖音创作者中台",
       role: "前端负责人",
       date: "2022.06 - 2023.12",
-      description:
-        "基于 React 的创作者数据分析和内容管理平台，服务百万级创作者群体，包含数据分析、内容管理、收益管理等多个子系统。",
+      description: `<ul class="custom-list">
+        <li>基于 React 开发的创作者数据分析和内容管理平台，服务百万级创作者群体</li>
+        <li>包含数据分析、内容管理、收益管理等多个子系统</li>
+        <li>使用 Redux 进行状态管理，实现复杂数据流的高效处理</li>
+        <li>采用 Ant Design 组件库，确保界面设计的一致性和用户体验</li>
+        <li>实施代码分割和懒加载策略，优化大规模应用的加载性能</li>
+      </ul>`,
       visible: true,
     },
     {
@@ -117,8 +122,13 @@ export const initialResumeState = {
       name: "微信小程序开发者工具",
       role: "核心开发者",
       date: "2020.03 - 2021.06",
-      description:
-        "为开发者提供小程序开发、调试和发布的一站式解决方案。基于 Electron 构建的跨平台桌面应用。",
+      description: `<ul class="custom-list">
+        <li>为开发者提供小程序开发、调试和发布的一站式解决方案</li>
+        <li>基于 Electron 构建的跨平台桌面应用</li>
+        <li>支持多平台开发，包括 Windows、macOS 和 Linux</li>
+        <li>提供实时的错误日志和性能分析工具</li>
+        <li>集成第三方插件和 SDK，支持开发者自定义功能</li>
+      </ul>`,
       visible: true,
     },
     {
@@ -126,8 +136,13 @@ export const initialResumeState = {
       name: "前端监控平台",
       role: "技术负责人",
       date: "2021.09 - 2022.03",
-      description:
-        "一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能。",
+      description: `<ul class="custom-list">
+        <li>一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能。</li>
+        <li>基于 Vue 和 Element UI 构建，提供实时的监控数据和可视化分析工具。</li>
+        <li>支持多种监控指标，包括错误日志、性能指标、用户行为分析等。</li>
+        <li>提供详细的错误日志和性能分析工具，帮助开发者定位和优化问题。</li>
+        <li>集成第三方插件和 SDK，支持开发者自定义功能。</li>
+      </ul>`,
       visible: true,
     },
   ],

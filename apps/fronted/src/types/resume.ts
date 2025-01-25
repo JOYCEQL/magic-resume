@@ -8,8 +8,8 @@ export interface PhotoConfig {
 }
 
 export const DEFAULT_CONFIG: PhotoConfig = {
-  width: 56,
-  height: 56,
+  width: 90,
+  height: 120,
   aspectRatio: "1:1",
   borderRadius: "none",
   customBorderRadius: 0,

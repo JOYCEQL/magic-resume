@@ -139,23 +139,24 @@ const BaseInfo = ({
   // 基础样式
   const baseContainerClass =
     "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
-  const baseFieldsClass = "flex flex-wrap gap-x-8 gap-y-2 w-full";
-  const baseFieldItemClass = "flex items-center whitespace-nowrap";
+  const baseFieldsClass = "w-full";
+  const baseFieldItemClass =
+    "flex items-center whitespace-nowrap overflow-hidden";
   const baseNameTitleClass = "flex flex-col";
 
   // 左对齐布局样式
   const leftLayoutStyles = {
-    container: "flex items-start justify-between gap-6",
-    leftContent: "flex items-center gap-6",
-    fields: "justify-start",
+    container: "flex items-center justify-between gap-6",
+    leftContent: "flex  items-center gap-6 w-[400px]",
+    fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
     nameTitle: "text-left",
   };
 
   // 右对齐布局样式
   const rightLayoutStyles = {
-    container: "flex items-start justify-between gap-6 flex-row-reverse",
-    leftContent: "flex items-center gap-6",
-    fields: "justify-start",
+    container: "flex items-center justify-between gap-6 flex-row-reverse",
+    leftContent: "flex justify-end items-center gap-6 w-[400px]",
+    fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
     nameTitle: "text-right",
   };
 
@@ -219,7 +220,7 @@ const BaseInfo = ({
       style={{
         fontSize: `${globalSettings?.baseFontSize || 14}px`,
         color: isModernTemplate ? "#fff" : "rgb(75, 85, 99)",
-        maxWidth: layout === "center" ? "none" : "400px",
+        maxWidth: layout === "center" ? "none" : "600px",
       }}
     >
       {allFields.map((item) => (
@@ -227,7 +228,7 @@ const BaseInfo = ({
           key={item.key}
           className={cn(baseFieldItemClass)}
           style={{
-            width: isModernTemplate ? "100%" : "auto",
+            width: isModernTemplate ? "100%" : "",
           }}
         >
           {useIconMode ? (
@@ -236,12 +237,18 @@ const BaseInfo = ({
               <span>{item.value}</span>
             </div>
           ) : (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 overflow-hidden">
               {!item.custom && (
-                <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>
+                <span className="shrink-0 w-20 text-right">
+                  {t(`basicPanel.basicFields.${item.key}`)}:
+                </span>
               )}
-              {item.custom && <span>{item.label}:</span>}
-              <span suppressHydrationWarning>{item.value}</span>
+              {item.custom && (
+                <span className="shrink-0 w-20 text-right">{item.label}:</span>
+              )}
+              <span className="truncate" suppressHydrationWarning>
+                {item.value}
+              </span>
             </div>
           )}
         </motion.div>

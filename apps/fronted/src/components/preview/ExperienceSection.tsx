@@ -40,6 +40,10 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           <motion.div
             layout="position"
             dangerouslySetInnerHTML={{ __html: experience.details }}
+            style={{
+              fontSize: `${globalSettings?.baseFontSize || 14}px`,
+              lineHeight: globalSettings?.lineHeight || 1.6,
+            }}
           ></motion.div>
         )}
       </motion.div>

@@ -26,11 +26,13 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           layout="position"
           className="flex items-center justify-between"
         >
-          <div className="font-medium text-baseFont">{experience.company}</div>
-          {experience.date && <div>{experience.date}</div>}
+          <div className="font-bold text-baseFont">{experience.company}</div>
+          {experience.date && (
+            <div className="text-subtitleFont">{experience.date}</div>
+          )}
         </motion.div>
         {experience.position && (
-          <motion.div layout="position" className="font-medium text-baseFont">
+          <motion.div layout="position" className="text-subtitleFont">
             {experience.position}
           </motion.div>
         )}

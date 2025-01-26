@@ -25,7 +25,7 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           className="flex items-center justify-between"
         >
           <div className="flex items-center gap-2">
-            <h3 className="font-medium">{project.name}</h3>
+            <h3 className="font-bold">{project.name}</h3>
             {project.link && (
               <a
                 href={
@@ -41,10 +41,12 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               </a>
             )}
           </div>
-          {project.date && <div>{project.date}</div>}
+          {project.date && (
+            <div className="text-subtitleFont">{project.date}</div>
+          )}
         </motion.div>
         {project.role && (
-          <motion.div layout="position" className="font-medium text-baseFont">
+          <motion.div layout="position" className=" text-subtitleFont">
             {project.role}
           </motion.div>
         )}

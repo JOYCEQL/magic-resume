@@ -48,7 +48,7 @@ const EducationSection = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <h4
-                    className="font-semibold text-gray-800"
+                    className="font-bold text-gray-800"
                     style={{
                       fontSize: `${globalSettings?.subheaderSize || 16}px`,
                     }}
@@ -57,7 +57,7 @@ const EducationSection = ({
                   </h4>
                   {edu.location && (
                     <span
-                      className="text-baseFont"
+                      className="text-subtitleFont"
                       style={{
                         fontSize: `${globalSettings?.baseFontSize || 14}px`,
                       }}
@@ -67,7 +67,7 @@ const EducationSection = ({
                   )}
                 </div>
                 <p
-                  className="font-medium  text-baseFont"
+                  className=" text-subtitleFont"
                   style={{
                     fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   }}
@@ -77,13 +77,15 @@ const EducationSection = ({
                 </p>
               </div>
               <span
-                className="text-baseFont shrink-0 ml-4"
+                className="text-subtitleFont shrink-0 ml-4"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                 }}
                 suppressHydrationWarning
               >
-                {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(edu.endDate).toLocaleDateString()}`}
+                {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(
+                  edu.endDate
+                ).toLocaleDateString()}`}
               </span>
             </div>
             {edu.description && (

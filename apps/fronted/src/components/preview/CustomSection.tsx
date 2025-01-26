@@ -51,7 +51,7 @@ const CustomSection = ({
               <div className="space-y-1">
                 <div>
                   <h4
-                    className="font-semibold text-gray-800"
+                    className="font-bold text-gray-800"
                     style={{
                       fontSize: `${globalSettings?.subheaderSize || 16}px`,
                     }}

@@ -31,7 +31,9 @@ const BaseInfo = ({
     const IconComponent = Icons[
       iconName as keyof typeof Icons
     ] as React.ElementType;
-    return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
+    return IconComponent ? (
+      <IconComponent className="w-4 h-4 text-muted-foreground" />
+    ) : null;
   };
 
   const isModernTemplate = React.useMemo(() => {
@@ -139,7 +141,7 @@ const BaseInfo = ({
   // 基础样式
   const baseContainerClass =
     "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
-  const baseFieldsClass = "w-full";
+  const baseFieldsClass = "";
   const baseFieldItemClass =
     "flex items-center whitespace-nowrap overflow-hidden";
   const baseNameTitleClass = "flex flex-col";
@@ -147,7 +149,7 @@ const BaseInfo = ({
   // 左对齐布局样式
   const leftLayoutStyles = {
     container: "flex items-center justify-between gap-6",
-    leftContent: "flex  items-center gap-6 w-[400px]",
+    leftContent: "flex  items-center gap-6 ",
     fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
     nameTitle: "text-left",
   };
@@ -155,7 +157,7 @@ const BaseInfo = ({
   // 右对齐布局样式
   const rightLayoutStyles = {
     container: "flex items-center justify-between gap-6 flex-row-reverse",
-    leftContent: "flex justify-end items-center gap-6 w-[400px]",
+    leftContent: "flex justify-end items-center gap-6 ",
     fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
     nameTitle: "text-right",
   };

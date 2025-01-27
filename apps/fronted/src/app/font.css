@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "MiSans VF";
+  src: url("/fonts/MiSansVF.tff") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

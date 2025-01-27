@@ -31,9 +31,7 @@ const BaseInfo = ({
     const IconComponent = Icons[
       iconName as keyof typeof Icons
     ] as React.ElementType;
-    return IconComponent ? (
-      <IconComponent className="w-4 h-4 text-muted-foreground" />
-    ) : null;
+    return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
   };
 
   const isModernTemplate = React.useMemo(() => {
@@ -166,7 +164,7 @@ const BaseInfo = ({
   const centerLayoutStyles = {
     container: "flex flex-col items-center gap-3",
     leftContent: "flex flex-col items-center gap-4",
-    fields: "flex justify-start items-center flex-wrap gap-3",
+    fields: "w-full flex justify-start items-center flex-wrap gap-3",
     nameTitle: "text-center",
   };
 

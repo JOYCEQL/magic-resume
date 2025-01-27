@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Metadata } from "next";
 import "./globals.css";
+import "./font.css";
 
 type Props = {
   children: ReactNode;

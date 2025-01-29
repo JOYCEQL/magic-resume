@@ -221,6 +221,7 @@ const PdfExport = () => {
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
+                font-family: "MiSans VF", sans-serif !important;
               }
 
               #print-content {
@@ -286,8 +287,8 @@ const PdfExport = () => {
   const loadingText = isExporting
     ? t("button.exporting")
     : isExportingJson
-      ? t("button.exportingJson")
-      : "";
+    ? t("button.exportingJson")
+    : "";
 
   return (
     <>

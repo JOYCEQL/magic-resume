@@ -15,7 +15,7 @@ const initialGlobalSettings: GlobalSettings = {
 export const initialResumeState = {
   title: "新建简历",
   basic: {
-    name: "魔方简历",
+    name: "魔方",
     title: "高级前端工程师",
     employementStatus: "全职",
     email: "zhangsan@example.com",
@@ -37,12 +37,6 @@ export const initialResumeState = {
         label: "个人网站",
         value: "https://zhangsan.dev",
         icon: "Globe",
-      },
-      {
-        id: "github",
-        label: "GitHub",
-        value: "https://github.com/zhangsan",
-        icon: "Github",
       },
     ],
     photo: "/avatar.png",

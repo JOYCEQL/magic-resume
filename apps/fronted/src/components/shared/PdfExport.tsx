@@ -199,6 +199,14 @@ const PdfExport = () => {
           <head>
             <title>Print Resume</title>
             <style>
+              @font-face {
+                font-family: "MiSans VF";
+                src: url("/fonts/MiSans-VF.ttf") format("woff2");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+              }
+
               @page {
                 size: A4;
                 margin: 0;

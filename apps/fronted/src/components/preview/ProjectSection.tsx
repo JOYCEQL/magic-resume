@@ -13,6 +13,11 @@ interface ProjectItemProps {
 
 const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
   ({ project, globalSettings }, ref) => {
+    const centerSubtitle = globalSettings?.centerSubtitle;
+
+    // 根据centerSubtitle判断网格布局为几列
+    const gridColumns = centerSubtitle ? 3 : 2;
+
     return (
       <motion.div
         layout
@@ -22,11 +27,11 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
       >
         <motion.div
           layout="position"
-          className="flex items-center justify-between"
+          className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
           <div className="flex items-center gap-2">
             <h3 className="font-bold">{project.name}</h3>
-            {project.link && (
+            {project.link && !centerSubtitle && (
               <a
                 href={
                   project.link.startsWith("http")
@@ -41,14 +46,33 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               </a>
             )}
           </div>
+          {project.role && globalSettings?.centerSubtitle && (
+            <motion.div layout="position" className=" text-subtitleFont">
+              {project.role}
+            </motion.div>
+          )}
           {project.date && (
             <div className="text-subtitleFont">{project.date}</div>
           )}
         </motion.div>
-        {project.role && (
+        {project.role && !centerSubtitle && (
           <motion.div layout="position" className=" text-subtitleFont">
             {project.role}
           </motion.div>
+        )}
+        {project.link && centerSubtitle && (
+          <a
+            href={
+              project.link.startsWith("http")
+                ? project.link
+                : `https://${project.link}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            {project.link}
+          </a>
         )}
         {project.description && (
           <motion.div

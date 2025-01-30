@@ -203,6 +203,9 @@
         "title": "Mode",
         "useIconMode": {
           "title": "Icon Mode"
+        },
+        "centerSubtitle": {
+          "title": "Center Subtitle"
         }
       }
     },

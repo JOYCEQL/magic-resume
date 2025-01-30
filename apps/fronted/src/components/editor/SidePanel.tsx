@@ -451,19 +451,37 @@ export function SidePanel() {
 
         {/* 模式设置 */}
         <SettingCard icon={Zap} title={t("mode.title")}>
-          <div className="space-y-2">
-            <Label className="text-gray-600 dark:text-neutral-300">
-              {t("mode.useIconMode.title")}
-            </Label>
-            <div className="flex items-center gap-4">
-              <Switch
-                checked={globalSettings.useIconMode}
-                onCheckedChange={(checked) =>
-                  updateGlobalSettings({
-                    useIconMode: checked,
-                  })
-                }
-              />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-gray-600 dark:text-neutral-300">
+                {t("mode.useIconMode.title")}
+              </Label>
+              <div className="flex items-center gap-4">
+                <Switch
+                  checked={globalSettings.useIconMode}
+                  onCheckedChange={(checked) =>
+                    updateGlobalSettings({
+                      useIconMode: checked,
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-gray-600 dark:text-neutral-300">
+                {t("mode.centerSubtitle.title")}
+              </Label>
+              <div className="flex items-center gap-4">
+                <Switch
+                  checked={globalSettings.centerSubtitle}
+                  onCheckedChange={(checked) =>
+                    updateGlobalSettings({
+                      centerSubtitle: checked,
+                    })
+                  }
+                />
+              </div>
             </div>
           </div>
         </SettingCard>

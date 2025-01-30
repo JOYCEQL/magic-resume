@@ -129,6 +129,7 @@ export type GlobalSettings = {
   headerSize?: number | undefined;
   subheaderSize?: number | undefined;
   useIconMode?: boolean | undefined;
+  centerSubtitle?: boolean | undefined;
 };
 
 export interface ResumeTheme {

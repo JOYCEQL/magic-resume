@@ -183,6 +183,9 @@
         "title": "模式",
         "useIconMode": {
           "title": "图标模式"
+        },
+        "centerSubtitle": {
+          "title": "副标题居中"
         }
       }
     },

@@ -44,56 +44,44 @@ const EducationSection = ({
               marginTop: `${globalSettings?.paragraphSpacing}px`,
             }}
           >
-            <div className="flex justify-between items-start">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h4
-                    className="font-bold text-gray-800"
-                    style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
-                    }}
-                  >
-                    {edu.school}
-                  </h4>
-                  {edu.location && (
-                    <span
-                      className="text-subtitleFont"
-                      style={{
-                        fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                      }}
-                    >
-                      · {edu.location}
-                    </span>
-                  )}
-                </div>
-                <p
-                  className=" text-subtitleFont"
-                  style={{
-                    fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  }}
-                >
+            <motion.div
+              layout="position"
+              className={`grid grid-cols-${globalSettings?.centerSubtitle ? "3" : "2"} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+            >
+              <div className="font-bold text-baseFont flex items-center gap-2">
+                <span>{edu.school}</span>
+                {edu.location && (
+                  <span className="text-subtitleFont">· {edu.location}</span>
+                )}
+              </div>
+              
+              {globalSettings?.centerSubtitle && (
+                <motion.div layout="position" className="text-subtitleFont">
                   {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                   {edu.gpa && ` · GPA ${edu.gpa}`}
-                </p>
-              </div>
-              <span
-                className="text-subtitleFont shrink-0 ml-4"
-                style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                }}
-                suppressHydrationWarning
-              >
+                </motion.div>
+              )}
+
+              <span className="text-subtitleFont shrink-0" suppressHydrationWarning>
                 {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(
                   edu.endDate
                 ).toLocaleDateString()}`}
               </span>
-            </div>
+            </motion.div>
+
+            {!globalSettings?.centerSubtitle && (
+              <motion.div layout="position" className="text-subtitleFont mt-1">
+                {[edu.major, edu.degree].filter(Boolean).join(" · ")}
+                {edu.gpa && ` · GPA ${edu.gpa}`}
+              </motion.div>
+            )}
+
             {edu.description && (
-              <div
-                className="text-baseFont"
+              <motion.div
+                layout="position"
+                className="mt-2 text-gray-600"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6,
                 }}
                 dangerouslySetInnerHTML={{ __html: edu.description }}
               />

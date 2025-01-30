@@ -17,6 +17,9 @@ interface ExperienceItemProps {
 
 const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
   ({ experience, globalSettings }, ref) => {
+    const centerSubtitle = globalSettings?.centerSubtitle;
+    const gridColumns = centerSubtitle ? 3 : 2;
+
     return (
       <motion.div
         style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}
@@ -24,14 +27,19 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
       >
         <motion.div
           layout="position"
-          className="flex items-center justify-between"
+          className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
           <div className="font-bold text-baseFont">{experience.company}</div>
+          {experience.position && centerSubtitle && (
+            <motion.div layout="position" className="text-subtitleFont">
+              {experience.position}
+            </motion.div>
+          )}
           {experience.date && (
             <div className="text-subtitleFont">{experience.date}</div>
           )}
         </motion.div>
-        {experience.position && (
+        {experience.position && !centerSubtitle && (
           <motion.div layout="position" className="text-subtitleFont">
             {experience.position}
           </motion.div>

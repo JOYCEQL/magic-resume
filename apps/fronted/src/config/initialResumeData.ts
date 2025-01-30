@@ -10,6 +10,7 @@ const initialGlobalSettings: GlobalSettings = {
   subheaderSize: 16,
   useIconMode: true,
   themeColor: "#2563eb",
+  centerSubtitle: true,
 };
 
 export const initialResumeState = {
@@ -53,7 +54,7 @@ export const initialResumeState = {
       startDate: "2013-09",
       endDate: "2017-06",
       visible: true,
-      gpa: "3.8/4.0",
+      gpa: "",
       location: "北京",
       description: `<ul class="custom-list">
         <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>

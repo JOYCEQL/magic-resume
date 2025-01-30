@@ -239,13 +239,9 @@ const BaseInfo = ({
           ) : (
             <div className="flex items-center gap-2 overflow-hidden">
               {!item.custom && (
-                <span className="shrink-0 w-20 text-right">
-                  {t(`basicPanel.basicFields.${item.key}`)}:
-                </span>
+                <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>
               )}
-              {item.custom && (
-                <span className="shrink-0 w-20 text-right">{item.label}:</span>
-              )}
+              {item.custom && <span>{item.label}:</span>}
               <span className="truncate" suppressHydrationWarning>
                 {item.value}
               </span>

@@ -46,7 +46,9 @@ const EducationSection = ({
           >
             <motion.div
               layout="position"
-              className={`grid grid-cols-${globalSettings?.centerSubtitle ? "3" : "2"} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+              className={`grid grid-cols-${
+                globalSettings?.centerSubtitle ? "3" : "2"
+              } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
             >
               <div className="font-bold text-baseFont flex items-center gap-2">
                 <span>{edu.school}</span>
@@ -54,7 +56,7 @@ const EducationSection = ({
                   <span className="text-subtitleFont">· {edu.location}</span>
                 )}
               </div>
-              
+
               {globalSettings?.centerSubtitle && (
                 <motion.div layout="position" className="text-subtitleFont">
                   {[edu.major, edu.degree].filter(Boolean).join(" · ")}
@@ -62,7 +64,10 @@ const EducationSection = ({
                 </motion.div>
               )}
 
-              <span className="text-subtitleFont shrink-0" suppressHydrationWarning>
+              <span
+                className="text-subtitleFont shrink-0"
+                suppressHydrationWarning
+              >
                 {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(
                   edu.endDate
                 ).toLocaleDateString()}`}
@@ -79,7 +84,7 @@ const EducationSection = ({
             {edu.description && (
               <motion.div
                 layout="position"
-                className="mt-2 text-gray-600"
+                className="mt-2"
                 style={{
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                 }}

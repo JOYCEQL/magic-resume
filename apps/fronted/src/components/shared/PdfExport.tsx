@@ -209,7 +209,7 @@ const PdfExport = () => {
 
               @page {
                 size: A4;
-                margin: 0;
+                margin: ${pagePadding}px;
                 padding: 0;
               }
               * {
@@ -229,7 +229,7 @@ const PdfExport = () => {
 
               #resume-preview {
                 padding: 0 !important;
-                margin: ${pagePadding}px !important;
+                margin: 0 !important;
                 font-family: "MiSans VF", sans-serif !important;
               }
 

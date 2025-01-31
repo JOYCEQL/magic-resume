@@ -46,27 +46,28 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             required
           />
           <Field
-            label={t("labels.location")}
-            value={education.location || ""}
-            onChange={(value) => handleChange("location", value)}
-            placeholder={t("placeholders.location")}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <Field
             label={t("labels.major")}
             value={education.major}
             onChange={(value) => handleChange("major", value)}
             placeholder={t("placeholders.major")}
             required
           />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.degree")}
             value={education.degree}
             onChange={(value) => handleChange("degree", value)}
             placeholder={t("placeholders.degree")}
             required
+          />
+
+          <Field
+            label={t("labels.gpa")}
+            value={education.gpa || ""}
+            onChange={(value) => handleChange("gpa", value)}
+            placeholder={t("placeholders.gpa")}
           />
         </div>
 
@@ -88,13 +89,6 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             required
           />
         </div>
-
-        <Field
-          label={t("labels.gpa")}
-          value={education.gpa || ""}
-          onChange={(value) => handleChange("gpa", value)}
-          placeholder={t("placeholders.gpa")}
-        />
 
         <Field
           label={t("labels.description")}

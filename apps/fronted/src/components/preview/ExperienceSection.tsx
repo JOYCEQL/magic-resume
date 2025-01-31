@@ -29,7 +29,14 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           layout="position"
           className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
-          <div className="font-bold text-baseFont">{experience.company}</div>
+          <div
+            className="font-bold"
+            style={{
+              fontSize: `${globalSettings?.subheaderSize || 16}px`,
+            }}
+          >
+            {experience.company}
+          </div>
           {experience.position && centerSubtitle && (
             <motion.div layout="position" className="text-subtitleFont">
               {experience.position}

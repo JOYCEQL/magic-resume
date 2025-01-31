@@ -185,7 +185,11 @@ const TextColorButton = ({ editor }) => {
               <button
                 key={color.value}
                 className={`h-8 w-8 rounded-md border hover:scale-110 transition-transform relative
-                  ${activeColor === color.value ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                  ${
+                    activeColor === color.value
+                      ? "ring-2 ring-primary ring-offset-2"
+                      : ""
+                  }`}
                 style={{
                   backgroundColor: color.value,
                   borderColor:
@@ -266,7 +270,11 @@ const BackgroundColorButton = ({ editor }) => {
               <button
                 key={color.value}
                 className={`h-8 w-8 rounded-md border hover:scale-110 transition-transform relative
-                  ${activeBgColor === color.value ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                  ${
+                    activeBgColor === color.value
+                      ? "ring-2 ring-primary ring-offset-2"
+                      : ""
+                  }`}
                 style={{
                   backgroundColor: color.value,
                   borderColor: "transparent",
@@ -306,10 +314,10 @@ const HeadingSelect = ({ editor }) => {
             {editor.isActive("heading", { level: 1 })
               ? "标题 1"
               : editor.isActive("heading", { level: 2 })
-                ? "标题 2"
-                : editor.isActive("heading", { level: 3 })
-                  ? "标题 3"
-                  : "正文"}
+              ? "标题 2"
+              : editor.isActive("heading", { level: 3 })
+              ? "标题 3"
+              : "正文"}
           </span>
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
@@ -470,13 +478,6 @@ const RichTextEditor = ({
           >
             <UnderlineIcon className="h-5 w-5" />
           </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            isActive={editor.isActive("strike")}
-            tooltip="删除线"
-          >
-            <Strikethrough className="h-5 w-5" />
-          </MenuButton>
           <TextColorButton editor={editor} tooltip="文字颜色" />
           <BackgroundColorButton editor={editor} />
         </div>
@@ -530,13 +531,6 @@ const RichTextEditor = ({
             tooltip="有序列表"
           >
             <ListOrdered className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            isActive={editor.isActive("blockquote")}
-            tooltip="引用"
-          >
-            <Quote className="h-5 w-5" />
           </MenuButton>
         </div>
 

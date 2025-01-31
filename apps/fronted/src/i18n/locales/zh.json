@@ -164,7 +164,7 @@
           "title": "模块标题字号"
         },
         "subheaderSize": {
-          "title": "模块二级标题字号"
+          "title": "模块项一级标题字号"
         }
       },
       "spacing": {
@@ -330,7 +330,6 @@
         "date": "就读时间",
         "description": "学校简介",
         "gpa": "GPA",
-        "location": "所在地",
         "startDate": "开始时间",
         "endDate": "结束时间"
       },
@@ -340,8 +339,7 @@
         "major": "请输入专业名称",
         "date": "请输入就读时间范围",
         "description": "请输入学校简介",
-        "gpa": "请输入GPA",
-        "location": "请输入所在地"
+        "gpa": "请输入GPA"
       },
       "buttons": {
         "edit": "编辑",

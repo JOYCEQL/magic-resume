@@ -30,7 +30,14 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
           <div className="flex items-center gap-2">
-            <h3 className="font-bold">{project.name}</h3>
+            <h3
+              className="font-bold"
+              style={{
+                fontSize: `${globalSettings?.subheaderSize || 16}px`,
+              }}
+            >
+              {project.name}
+            </h3>
             {project.link && !centerSubtitle && (
               <a
                 href={

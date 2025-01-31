@@ -50,7 +50,12 @@ const EducationSection = ({
                 globalSettings?.centerSubtitle ? "3" : "2"
               } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
             >
-              <div className="font-bold text-baseFont flex items-center gap-2">
+              <div
+                className="font-bold"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
                 <span>{edu.school}</span>
                 {edu.location && (
                   <span className="text-subtitleFont">· {edu.location}</span>

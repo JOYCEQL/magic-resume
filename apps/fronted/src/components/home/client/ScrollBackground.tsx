@@ -13,7 +13,6 @@ export default function ScrollBackground() {
       <motion.div
         className="absolute inset-0 opacity-[0.15]"
         style={{
-          backgroundImage: "url('/patterns/grid.svg')",
           backgroundSize: "30px 30px",
           y: scrollY,
         }}

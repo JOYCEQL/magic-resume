@@ -204,6 +204,7 @@ export function SidePanel() {
               </div>
               <motion.input
                 type="color"
+                value={themeColor}
                 onChange={(e) => debouncedSetColor(e.target.value)}
                 className="w-[40px] h-[40px] rounded-lg cursor-pointer overflow-hidden hover:scale-105 transition-transform"
               />

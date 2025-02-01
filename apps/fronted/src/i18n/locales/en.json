@@ -10,36 +10,59 @@
   "home": {
     "header": {
       "title": "Magic Resume",
-      "startButton": "Get Started"
+      "startButton": "Get Started",
+      "features": "Features",
+      "pricing": "Pricing",
+      "about": "About",
+      "login": "Login",
+      "register": "Register",
+      "dashboard": "Dashboard"
     },
     "hero": {
-      "title": "Open Source, Privacy First",
-      "subtitle": "No registration required, all data stored locally.",
-      "cta": "Create Resume Now"
+      "badge": "Smart Resume Creation",
+      "title": "Make Resume Creation Simple and Smart",
+      "subtitle": "Magic Resume uses AI technology to help you quickly create professional resumes. No registration required, free to use, with secure data storage.",
+      "cta": "Get Started",
+      "secondary": "Browse Templates"
     },
     "features": {
+      "title": "Why Choose Magic Resume?",
+      "subtitle": "We provide an all-in-one resume solution to make your job search journey smoother",
       "ai": {
         "badge": "AI Smart Check",
         "title": "Smart Detection, Professional Advice",
-        "description": "Built-in intelligent grammar check, automatically identifies inappropriate expressions, and provides professional modification suggestions to make your resume stand out."
+        "description": "Built-in intelligent grammar check, automatically identifies inappropriate expressions, and provides professional modification suggestions to make your resume stand out.",
+        "item1": "Smart polishing and optimization suggestions",
+        "item2": "Automatic error correction and grammar check",
+        "item3": "Personalized content recommendations"
       },
       "storage": {
         "badge": "Local Storage",
         "title": "Data Security, Privacy First",
-        "description": "All resume data is stored entirely on your local device, no need to worry about privacy leaks. Supports data export backup, ensuring your resume data is always available. No registration required to enjoy all features."
+        "description": "All resume data is stored entirely on your local device, no need to worry about privacy leaks. Supports data export backup, ensuring your resume data is always available.",
+        "item1": "No registration required",
+        "item2": "Data fully stored locally",
+        "item3": "Support data export backup"
       },
       "preview": {
         "badge": "Real-time Preview",
         "title": "What You See Is What You Get",
-        "description": "Edit and preview simultaneously, see resume effects in real-time. Supports multiple professional templates, making your resume both beautiful and standardized. Quick PDF export for immediate resume submission."
+        "description": "Edit and preview simultaneously, see resume effects in real-time. Supports multiple professional templates, making your resume both beautiful and standardized. Quick PDF export for immediate resume submission.",
+        "item1": "Real-time preview of editing effects",
+        "item2": "Multiple export format support"
       }
     },
     "news": {
       "label": "News",
-      "content": "Now integrated with DeepSeek and Doubao AI models"
+      "content": "New AI Resume Enhancement Feature is Live"
     },
     "footer": {
-      "copyright": " 2024 Magic Resume. All rights reserved."
+      "copyright": " 2025 Magic Resume. All rights reserved."
+    },
+    "cta": {
+      "title": "Start Your New Career Chapter",
+      "description": "Start using Magic Resume now to create an impressive resume",
+      "button": "Start Using for Free"
     }
   },
   "dashboard": {

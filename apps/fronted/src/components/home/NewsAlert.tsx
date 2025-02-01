@@ -20,7 +20,6 @@ export default function NewsAlert({ className }: NewsAlertProps) {
         className
       )}
     >
-      <div className="flex items-center gap-1 text-black font-semibold">🎉</div>
       <span className="text-slate-600 dark:text-white/80 whitespace-nowrap">
         {t("news.content")}
       </span>

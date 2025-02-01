@@ -1,20 +1,37 @@
 "use client";
+
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useResumeStore } from "@/store/useResumeStore";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { DEFAULT_TEMPLATES } from "@/config";
+import { useResumeStore } from "@/store/useResumeStore";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import classic from "@/assets/images/template-cover/classic.png";
 import modern from "@/assets/images/template-cover/modern.png";
 import leftRight from "@/assets/images/template-cover/left-right.png";
-import { cn } from "@/lib/utils";
 
 const templateImages: { [key: string]: any } = {
   classic,
   modern,
   "left-right": leftRight,
+};
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
 };
 
 export default function TemplatesPage() {
@@ -50,51 +67,63 @@ export default function TemplatesPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {DEFAULT_TEMPLATES.map((template) => {
-          const templateKey =
-            template.id === "left-right" ? "leftRight" : template.id;
-          return (
-            <Card
-              key={template.id}
-              className="group overflow-hidden hover:shadow-lg transition-all duration-300 relative aspect-[3/4] max-w-[280px]"
-            >
-              <div className="absolute inset-0">
-                <Image
-                  src={templateImages[template.id]}
-                  alt={t(`${templateKey}.name`)}
-                  fill
-                  className="object-cover"
-                />
-                {/* 渐变遮罩 */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-              </div>
+    <div className="container mx-auto py-6 px-4">
+      <div className="flex flex-col space-y-8">
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
+        </div>
 
-              {/* 内容区域 */}
-              <div className="absolute inset-x-0 bottom-0 p-4 text-white z-10">
-                <h3 className="text-lg font-semibold mb-1">
-                  {t(`${templateKey}.name`)}
-                </h3>
-                <p className="text-sm text-gray-200 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
-                  {t(`${templateKey}.description`)}
-                </p>
-                <div className="relative overflow-hidden rounded-md">
-                  <Button
-                    className={cn(
-                      "w-full bg-white/20 backdrop-blur-sm transition-colors duration-300 relative z-10",
-                      "before:absolute before:inset-0 before:bg-white/30 before:translate-x-[-100%] before:group-hover:translate-x-0 before:transition-transform before:duration-300 before:z-[-1]"
-                    )}
-                    onClick={() => handleCreateResume(template.id)}
-                  >
-                    {t("useTemplate")}
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {DEFAULT_TEMPLATES.map((template) => {
+            const templateKey =
+              template.id === "left-right" ? "leftRight" : template.id;
+            return (
+              <motion.div key={template.id} variants={item}>
+                <Card
+                  className={cn(
+                    "group cursor-pointer overflow-hidden transition-all hover:shadow-lg max-w-[280px] mx-auto",
+                    "border-2 hover:border-primary"
+                  )}
+                >
+                  <CardContent className="p-4">
+                    <div className="relative aspect-[210/297] w-full overflow-hidden rounded-lg bg-gray-100">
+                      <Image
+                        src={templateImages[template.id]}
+                        alt={t(`${templateKey}.name`)}
+                        fill
+                        className="object-contain transition-transform duration-300 group-hover:scale-105 p-1"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+                        <h3 className="text-lg font-semibold">
+                          {t(`${templateKey}.name`)}
+                        </h3>
+                        <p className="text-sm text-gray-200 mt-1">
+                          {t(`${templateKey}.description`)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <Button
+                        className="w-full"
+                        onClick={() => handleCreateResume(template.id)}
+                      >
+                        {t("useTemplate")}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </div>
   );

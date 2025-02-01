@@ -25,7 +25,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     thumbnail: "classic",
     layout: "classic",
     colorScheme: {
-      primary: "#2563eb",
+      primary: "#000000",
       secondary: "#4b5563",
       background: "#ffffff",
       text: "#1f2937",
@@ -46,13 +46,13 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     thumbnail: "modern",
     layout: "modern",
     colorScheme: {
-      primary: "#059669",
+      primary: "#000000",
       secondary: "#6b7280",
       background: "#ffffff",
       text: "#111827",
     },
     spacing: {
-      sectionGap: 32,
+      sectionGap: 20,
       itemGap: 20,
       contentPadding: 1,
     },
@@ -67,7 +67,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     thumbnail: "leftRight",
     layout: "left-right",
     colorScheme: {
-      primary: "#7c3aed",
+      primary: "#000000",
       secondary: "#9ca3af",
       background: "#ffffff",
       text: "#374151",

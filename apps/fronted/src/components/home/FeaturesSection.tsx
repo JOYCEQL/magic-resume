@@ -6,11 +6,7 @@ const features = [
   {
     title: "features.ai.title",
     description: "features.ai.description",
-    items: [
-      "features.ai.item1",
-      "features.ai.item2",
-      "features.ai.item3",
-    ],
+    items: ["features.ai.item1", "features.ai.item2", "features.ai.item3"],
   },
   {
     title: "features.storage.title",
@@ -24,10 +20,7 @@ const features = [
   {
     title: "features.preview.title",
     description: "features.preview.description",
-    items: [
-      "features.preview.item1",
-      "features.preview.item2",
-    ],
+    items: ["features.preview.item1", "features.preview.item2"],
   },
 ];
 
@@ -54,10 +47,10 @@ export default function FeaturesSection() {
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent rounded-2xl -z-10 transition-transform duration-300 group-hover:scale-105" />
                 <div className="h-[360px] p-8 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-[0_0_18px_1px_rgba(140,140,140,0.12)] transition-all duration-300 group-hover:border-[#A700FF] dark:group-hover:border-[#A700FF] flex flex-col">
-                  <h3 className="text-2xl font-bold mb-4">{t(feature.title)}</h3>
-                  <p className="text-muted-foreground mb-8">
-                    {t(feature.description)}
-                  </p>
+                  <h3 className="text-2xl font-bold mb-12">
+                    {t(feature.title)}
+                  </h3>
+
                   <ul className="space-y-3">
                     {feature.items.map((item, i) => (
                       <li key={i} className="flex items-start gap-3">

@@ -89,7 +89,7 @@ export function GitHubStars() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
           >
-            {stars.toLocaleString()}
+            {stars?.toLocaleString()}
           </motion.span>
         </>
       )}

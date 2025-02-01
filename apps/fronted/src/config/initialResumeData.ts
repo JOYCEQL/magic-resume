@@ -9,7 +9,7 @@ const initialGlobalSettings: GlobalSettings = {
   headerSize: 18,
   subheaderSize: 16,
   useIconMode: true,
-  themeColor: "#2563eb",
+  themeColor: "#000000",
   centerSubtitle: true,
 };
 

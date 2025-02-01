@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Download, Loader2, FileJson, Printer } from "lucide-react";
+import {
+  Download,
+  Loader2,
+  FileJson,
+  Printer,
+  ChevronDown,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
@@ -317,6 +323,7 @@ const PdfExport = () => {
               <>
                 <Download className="w-4 h-4" />
                 <span>{t("button.export")}</span>
+                <ChevronDown className="w-4 h-4 ml-1" />
               </>
             )}
           </Button>
@@ -326,13 +333,13 @@ const PdfExport = () => {
             <Download className="w-4 h-4 mr-2" />
             {t("button.exportPdf")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleJsonExport} disabled={isLoading}>
-            <FileJson className="w-4 h-4 mr-2" />
-            {t("button.exportJson")}
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={handlePrint} disabled={isLoading}>
             <Printer className="w-4 h-4 mr-2" />
             {t("button.print")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleJsonExport} disabled={isLoading}>
+            <FileJson className="w-4 h-4 mr-2" />
+            {t("button.exportJson")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

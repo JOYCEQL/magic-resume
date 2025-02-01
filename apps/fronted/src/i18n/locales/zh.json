@@ -120,11 +120,11 @@
   "pdfExport": {
     "button": {
       "export": "导出",
-      "exportPdf": "导出 PDF(服务端)",
-      "exportJson": "导出JSON配置",
+      "exportPdf": "PDF(服务端)",
+      "exportJson": "JSON配置",
       "exporting": "导出中...",
       "exportingJson": "导出中...",
-      "print": "浏览器打印"
+      "print": "PDF(浏览器打印)"
     },
     "toast": {
       "success": "PDF导出成功",

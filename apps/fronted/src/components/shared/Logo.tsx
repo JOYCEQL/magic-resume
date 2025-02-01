@@ -1,13 +1,32 @@
 "use client";
 import React from "react";
+import { useTheme } from "next-themes";
 
 interface LogoProps {
   size?: number;
   className?: string;
   onClick?: () => void;
+  startColor?: string;
+  endColor?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ size = 100, className = "", onClick }) => {
+const Logo: React.FC<LogoProps> = ({
+  size = 100,
+  className = "",
+  onClick,
+  startColor,
+  endColor,
+}) => {
+  const { theme } = useTheme();
+
+  // 默认使用主题色
+  const defaultStartColor = theme === "dark" ? "#A700FF" : "#000000";
+  const defaultEndColor = theme === "dark" ? "#4F46E5" : "#171717";
+
+  // 使用传入的颜色或默认颜色
+  const gradientStartColor = startColor || defaultStartColor;
+  const gradientEndColor = endColor || defaultEndColor;
+
   return (
     <svg
       width={size}
@@ -21,8 +40,8 @@ const Logo: React.FC<LogoProps> = ({ size = 100, className = "", onClick }) => {
     >
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#8B5CF6" />
-          <stop offset="100%" stopColor="#4F46E5" />
+          <stop offset="0%" stopColor={gradientStartColor} />
+          <stop offset="100%" stopColor={gradientEndColor} />
         </linearGradient>
         <filter id="glow">
           <feGaussianBlur stdDeviation="2" result="coloredBlur" />
@@ -32,37 +51,26 @@ const Logo: React.FC<LogoProps> = ({ size = 100, className = "", onClick }) => {
           </feMerge>
         </filter>
       </defs>
-      <circle cx="50" cy="50" r="50" fill="url(#gradient)" />
 
-      <path
-        d="M35 25H65C67.7614 25 70 27.2386 70 30V70C70 72.7614 67.7614 75 65 75H35C32.2386 75 30 72.7614 30 70V30C30 27.2386 32.2386 25 35 25Z"
-        fill="white"
-      />
-      <path
-        d="M38 35H62M38 45H62M38 55H52"
-        stroke="#E2E8F0"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-
-      <path
-        d="M30 40C40 35 60 65 70 60"
-        stroke="#8B5CF6"
-        strokeWidth="3"
-        strokeLinecap="round"
+      {/* 背景圆角矩形 */}
+      <rect
+        x="5"
+        y="5"
+        width="90"
+        height="90"
+        rx="24"
+        fill="url(#gradient)"
         filter="url(#glow)"
-      >
-        <animate
-          attributeName="d"
-          values="M30 40C40 35 60 65 70 60; M30 60C40 65 60 35 70 40; M30 40C40 35 60 65 70 60"
-          dur="4s"
-          repeatCount="indefinite"
-        />
-      </path>
+      />
 
+      {/* 字母 R */}
       <path
-        d="M65.5 34.5L61.75 38.25L69.25 45.75L73 42L65.5 34.5ZM58 42L34.5 65.5V73H42L65.5 49.5L58 42ZM43.7 67.5L37.5 61.3L55.9 42.9L62.1 49.1L43.7 67.5Z"
-        fill="#4F46E5"
+        d="M35 30 L35 70 L35 30 L60 30 C67 30 70 35 70 40 C70 45 67 50 60 50 L35 50 L60 70"
+        stroke="white"
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
       />
     </svg>
   );

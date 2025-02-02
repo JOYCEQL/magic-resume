@@ -141,7 +141,7 @@ const BaseInfo = ({
     "hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md";
   const baseFieldsClass = "";
   const baseFieldItemClass =
-    "flex items-center whitespace-nowrap overflow-hidden";
+    "flex items-center whitespace-nowrap overflow-hidden text-baseFont";
   const baseNameTitleClass = "flex flex-col";
 
   // 左对齐布局样式

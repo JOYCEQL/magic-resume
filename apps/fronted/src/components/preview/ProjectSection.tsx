@@ -82,6 +82,7 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
         {project.description && (
           <motion.div
             layout="position"
+            className="mt-2 text-baseFont"
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
               lineHeight: globalSettings?.lineHeight || 1.6,

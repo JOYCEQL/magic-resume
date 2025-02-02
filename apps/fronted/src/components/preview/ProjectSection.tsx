@@ -20,13 +20,11 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
 
     return (
       <motion.div
-        layout
         style={{
           marginTop: `${globalSettings?.paragraphSpacing}px`,
         }}
       >
         <motion.div
-          layout="position"
           className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
           <div className="flex items-center gap-2">
@@ -114,7 +112,6 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
   return (
     <motion.div
       className=" hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
-      layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
@@ -126,7 +123,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
         type="projects"
         globalSettings={globalSettings}
       ></SectionTitle>
-      <div>
+      <motion.div layout="position">
         <AnimatePresence mode="popLayout">
           {visibleProjects.map((project) => (
             <ProjectItem
@@ -136,7 +133,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
             />
           ))}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

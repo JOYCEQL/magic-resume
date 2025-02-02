@@ -14,7 +14,6 @@ const SkillSection = ({ skill, globalSettings }: SkillSectionProps) => {
 
   return (
     <motion.div
-      layout
       className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
@@ -24,20 +23,21 @@ const SkillSection = ({ skill, globalSettings }: SkillSectionProps) => {
       }}
     >
       <SectionTitle type="skills" globalSettings={globalSettings} />
-      <div
+      <motion.div
         style={{
           marginTop: `${globalSettings?.paragraphSpacing}px`,
         }}
       >
-        <div
+        <motion.div
           className="text-baseFont"
+          layout="position"
           style={{
             fontSize: `${globalSettings?.baseFontSize || 14}px`,
             lineHeight: globalSettings?.lineHeight || 1.6,
           }}
           dangerouslySetInnerHTML={{ __html: skill }}
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

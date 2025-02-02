@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ScrollBackground from "./client/ScrollBackground";
 import AnimatedFeature from "./client/AnimatedFeature";
+import GoDashboard from "./GoDashboard";
 
 export default function CTASection() {
   const t = useTranslations("home");
@@ -18,12 +19,12 @@ export default function CTASection() {
             <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
               {t("cta.description")}
             </p>
-            <Button size="lg" className="gap-2 text-lg px-12">
-              <Link href="/app/dashboard" className="flex items-center gap-2">
+            <GoDashboard>
+              <Button type="submit" size="lg" className="gap-2 text-lg px-12">
                 {t("cta.button")}
                 <ArrowRight className="w-5 h-5" />
-              </Link>
-            </Button>
+              </Button>
+            </GoDashboard>
           </div>
         </AnimatedFeature>
       </div>

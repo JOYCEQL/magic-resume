@@ -12,6 +12,7 @@ import LanguageSwitch from "@/components/shared/LanguageSwitch";
 import { GitHubStars } from "@/components/shared/GitHubStars";
 import ScrollHeader from "./client/ScrollHeader";
 import MobileMenu from "./client/MobileMenu";
+import GoDashboard from "./GoDashboard";
 
 export default function LandingHeader() {
   const t = useTranslations("home");
@@ -37,13 +38,15 @@ export default function LandingHeader() {
                 </div>
               </ThemeToggle>
               <GitHubStars />
-              <Button
-                size="sm"
-                className="bg-primary hover:opacity-90 text-white h-8 text-sm px-6"
-                asChild
-              >
-                <Link href="/app/dashboard">{t("header.startButton")}</Link>
-              </Button>
+
+              <GoDashboard>
+                <Button
+                  type="submit"
+                  className="bg-primary hover:opacity-90 text-white h-8 text-sm  px-4"
+                >
+                  {t("header.startButton")}
+                </Button>
+              </GoDashboard>
             </div>
 
             {/* Mobile Menu Button */}

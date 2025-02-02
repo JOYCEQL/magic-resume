@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
 import ScrollBackground from "./client/ScrollBackground";
 import AnimatedFeature from "./client/AnimatedFeature";
+import GoDashboard from "./GoDashboard";
 
 export default function HeroSection() {
   const t = useTranslations("home");
@@ -29,21 +30,27 @@ export default function HeroSection() {
                   {t("hero.subtitle")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="gap-2 text-lg px-8">
-                    <Link href="/app/dashboard" className="flex items-center gap-2">
+                  <GoDashboard>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="gap-2 text-lg px-8"
+                    >
                       {t("hero.cta")}
                       <ArrowRight className="w-5 h-5" />
-                    </Link>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="gap-2 text-lg px-8"
-                  >
-                    <Link href="/app/dashboard/templates" className="flex items-center gap-2">
+                    </Button>
+                  </GoDashboard>
+
+                  <GoDashboard type="templates">
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="outline"
+                      className="gap-2 text-lg px-8"
+                    >
                       {t("hero.secondary")}
-                    </Link>
-                  </Button>
+                    </Button>
+                  </GoDashboard>
                 </div>
               </div>
             </div>

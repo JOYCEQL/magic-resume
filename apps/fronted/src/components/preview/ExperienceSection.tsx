@@ -23,7 +23,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
     return (
       <motion.div
         style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}
-        layout
+        layout="position"
       >
         <motion.div
           layout="position"
@@ -81,10 +81,10 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
   return (
     <motion.div
       className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
-      layout
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
+      layout
       onClick={() => {
         setActiveSection("experience");
       }}

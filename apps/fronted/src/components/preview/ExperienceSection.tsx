@@ -53,6 +53,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
         )}
         {experience.details && (
           <motion.div
+            className="mt-2 text-baseFont"
             layout="position"
             dangerouslySetInnerHTML={{ __html: experience.details }}
             style={{

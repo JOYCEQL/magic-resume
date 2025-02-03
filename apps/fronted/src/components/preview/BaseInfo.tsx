@@ -226,7 +226,7 @@ const BaseInfo = ({
       {allFields.map((item) => (
         <motion.div
           key={item.key}
-          className={cn(baseFieldItemClass)}
+          className={cn(baseFieldItemClass, isModernTemplate && "text-[#fff]")}
           style={{
             width: isModernTemplate ? "100%" : "",
           }}

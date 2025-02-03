@@ -81,7 +81,7 @@ export function SidePanel() {
     activeSection,
   } = activeResume || {};
 
-  const { themeColor } = globalSettings;
+  const { themeColor = THEME_COLORS[0] } = globalSettings;
   const t = useTranslations("workbench.sidePanel");
 
   const fontOptions = [

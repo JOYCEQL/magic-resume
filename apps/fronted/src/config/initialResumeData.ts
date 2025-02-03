@@ -55,7 +55,6 @@ export const initialResumeState = {
       endDate: "2017-06",
       visible: true,
       gpa: "",
-      location: "北京",
       description: `<ul class="custom-list">
         <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>
         <li>专业排名前 5%，连续三年获得一等奖学金</li>

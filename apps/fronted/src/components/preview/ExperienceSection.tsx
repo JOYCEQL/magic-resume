@@ -26,7 +26,6 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
         layout="position"
       >
         <motion.div
-          layout="position"
           className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
         >
           <div
@@ -38,7 +37,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
             {experience.company}
           </div>
           {experience.position && centerSubtitle && (
-            <motion.div layout="position" className="text-subtitleFont">
+            <motion.div className="text-subtitleFont">
               {experience.position}
             </motion.div>
           )}
@@ -47,14 +46,13 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           )}
         </motion.div>
         {experience.position && !centerSubtitle && (
-          <motion.div layout="position" className="text-subtitleFont">
+          <motion.div className="text-subtitleFont">
             {experience.position}
           </motion.div>
         )}
         {experience.details && (
           <motion.div
             className="mt-2 text-baseFont"
-            layout="position"
             dangerouslySetInnerHTML={{ __html: experience.details }}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
@@ -85,7 +83,6 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
-      layout
       onClick={() => {
         setActiveSection("experience");
       }}

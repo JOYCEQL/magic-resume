@@ -49,9 +49,9 @@ const TemplateSheet = () => {
               key={t.id}
               onClick={() => setTemplate(t.id)}
               className={cn(
-                "relative group rounded-lg overflow-hidden border transition-all duration-200 hover:scale-[1.02]",
+                "relative group rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02]",
                 t.id === currentTemplate.id
-                  ? "border-black dark:border-white"
+                  ? "border-primary dark:border-primary shadow-lg dark:shadow-primary/30"
                   : "dark:border-neutral-800 dark:hover:border-neutral-700 border-gray-100 hover:border-gray-200"
               )}
             >
@@ -63,9 +63,9 @@ const TemplateSheet = () => {
               {t.id === currentTemplate.id && (
                 <motion.div
                   layoutId="template-selected"
-                  className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-white/20"
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-white/30"
                 >
-                  <Layout className="w-6 h-6 text-white" />
+                  <Layout className="w-6 h-6 text-white dark:text-primary" />
                 </motion.div>
               )}
             </button>

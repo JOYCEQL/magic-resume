@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && pnpm -F fronted build",
+  "buildCommand": "pnpm install && pnpm -F fronted build",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "regions": ["hkg1"],

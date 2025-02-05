@@ -16,7 +16,6 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ![782shots_so](https://github.com/user-attachments/assets/dda52f82-10eb-4f8d-a643-a11c3c4da35f)
 
-
 ## ✨ Features
 
 - 🚀 Built with Next.js 14+
@@ -56,7 +55,7 @@ pnpm install
 3. Start development server
 
 ```bash
-pnpm dev:fronted
+pnpm dev
 ```
 
 4. Open browser and visit `http://localhost:3000`
@@ -64,7 +63,7 @@ pnpm dev:fronted
 ## 📦 Build and Deploy
 
 ```bash
-pnpm -F fronted build
+pnpm build
 ```
 
 ## ⚡ Deploy with Vercel
@@ -72,7 +71,6 @@ pnpm -F fronted build
 You can deploy your own instance of Magic Resume with one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
-
 
 ## 📝 License
 

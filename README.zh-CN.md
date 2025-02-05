@@ -16,7 +16,6 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ![782shots_so](https://github.com/user-attachments/assets/d59f7582-799c-468d-becf-59ee6453acfd)
 
-
 ## ✨ 特性
 
 - 🚀 基于 Next.js 14+ 构建
@@ -56,7 +55,7 @@ pnpm install
 3. 启动开发服务器
 
 ```bash
-pnpm dev:fronted
+pnpm dev
 ```
 
 4. 打开浏览器访问 `http://localhost:3000`
@@ -64,7 +63,7 @@ pnpm dev:fronted
 ## 📦 构建和部署
 
 ```bash
-pnpm -F fronted build
+pnpm   build
 ```
 
 ## ⚡ 使用 Vercel 部署
@@ -72,7 +71,6 @@ pnpm -F fronted build
 你可以一键部署自己的 Magic Resume 实例：
 
 [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
-
 
 ## 📝 开源协议
 

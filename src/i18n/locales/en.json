@@ -60,6 +60,31 @@
       "title": "Start Your New Career Chapter",
       "description": "Start using Magic Resume now to create an impressive resume",
       "button": "Start Using for Free"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "question": "Is Magic Resume free to use?",
+          "answer": "Magic Resume is currently free, meeting basic resume creation needs. The open-source version's features will remain unchanged, and the PDF export feature will always be free."
+        },
+        {
+          "question": "Is my resume data secure?",
+          "answer": "Yes, very secure. Magic Resume uses local storage, meaning all your data is stored on your own device with no cloud storage, ensuring complete privacy protection."
+        },
+        {
+          "question": "What export formats are supported?",
+          "answer": "We currently support PDF export, ensuring your resume maintains consistent formatting on any device. We plan to support more export formats in the future."
+        },
+        {
+          "question": "How can I sync across devices?",
+          "answer": "We provide JSON configuration export, allowing you to save your resume settings in JSON format, accessible anytime, anywhere, on any device."
+        },
+        {
+          "question": "How customizable is it?",
+          "answer": "We offer rich customization options, including colors, layouts, and more, allowing you to adjust your resume style according to personal preferences and industry requirements."
+        }
+      ]
     }
   },
   "dashboard": {

@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@radix-ui/react-accordion':
-    specifier: ^1.2.1
+    specifier: ^1.2.2
     version: 1.2.2(@types/react-dom@18.3.5)(@types/react@18.3.18)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-alert-dialog':
     specifier: ^1.1.2
@@ -93,7 +93,7 @@ dependencies:
     specifier: ^10.1.0
     version: 10.1.0(puppeteer-core@23.11.1)
   class-variance-authority:
-    specifier: ^0.7.0
+    specifier: ^0.7.1
     version: 0.7.1
   clsx:
     specifier: ^2.1.1
@@ -153,7 +153,7 @@ dependencies:
     specifier: ^1.7.1
     version: 1.7.4(react-dom@18.3.1)(react@18.3.1)
   tailwind-merge:
-    specifier: ^2.3.0
+    specifier: ^2.6.0
     version: 2.6.0
   tailwindcss-animate:
     specifier: ^1.0.7

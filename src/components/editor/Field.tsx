@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronUpIcon, ChevronDownIcon } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import RichTextEditor from "../shared/rich-editor/RichEditor";
 import AIPolishDialog from "../shared/ai/AIPolishDialog";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
+import { AI_MODEL_CONFIGS } from "@/config/ai";
 
 interface FieldProps {
   label?: string;
@@ -44,7 +46,14 @@ const Field = ({
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [showPolishDialog, setShowPolishDialog] = useState(false);
   const router = useRouter();
-  const { doubaoModelId, doubaoApiKey } = useAIConfigStore();
+  const {
+    doubaoModelId,
+    doubaoApiKey,
+    selectedModel,
+    deepseekApiKey,
+    deepseekModelId,
+  } = useAIConfigStore();
+  const t = useTranslations();
 
   const currentDate = useMemo(
     () => (value ? new Date(value) : undefined),
@@ -236,15 +245,23 @@ const Field = ({
             onChange={onChange}
             placeholder={placeholder}
             onPolish={() => {
-              if (!doubaoApiKey || !doubaoModelId) {
+              const config = AI_MODEL_CONFIGS[selectedModel];
+              const isConfigured =
+                selectedModel === "doubao"
+                  ? doubaoApiKey && doubaoModelId
+                  : config.requiresModelId
+                  ? deepseekApiKey && deepseekModelId
+                  : deepseekApiKey;
+
+              if (!isConfigured) {
                 toast.error(
                   <>
-                    <span>请先配置 ApiKey 和 模型Id</span>
+                    <span>{t("previewDock.grammarCheck.configurePrompt")}</span>
                     <Button
                       className="p-0 h-auto text-white"
                       onClick={() => router.push("/app/dashboard/settings")}
                     >
-                      去配置
+                      {t("previewDock.grammarCheck.configureButton")}
                     </Button>
                   </>
                 );

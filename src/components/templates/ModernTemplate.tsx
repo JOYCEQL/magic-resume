@@ -60,9 +60,10 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
         );
       default:
         if (sectionId in data.customData) {
+          const sectionTitle = data.menuSections.find(s => s.id === sectionId)?.title || sectionId;
           return (
             <CustomSection
-              title={sectionId}
+              title={sectionTitle}
               key={sectionId}
               sectionId={sectionId}
               items={data.customData[sectionId]}

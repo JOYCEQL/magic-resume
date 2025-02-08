@@ -15,6 +15,7 @@ interface BaseInfoProps {
   basic: BasicInfo | undefined;
   globalSettings: GlobalSettings | undefined;
   template?: ResumeTemplate;
+  showTitle?: boolean;
 }
 
 const BaseInfo = ({

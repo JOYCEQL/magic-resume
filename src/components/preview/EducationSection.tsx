@@ -3,14 +3,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
+
 interface EducationSectionProps {
-  education: Education[];
-  globalSettings: GlobalSettings | undefined;
+  education?: Education[];
+  globalSettings?: GlobalSettings;
+  showTitle?: boolean;
 }
 
 const EducationSection = ({
   education,
   globalSettings,
+  showTitle = true,
 }: EducationSectionProps) => {
   const { setActiveSection } = useResumeStore();
   const visibleEducation = education?.filter((edu) => edu.visible);
@@ -34,6 +37,7 @@ const EducationSection = ({
       <SectionTitle
         type="education"
         globalSettings={globalSettings}
+        showTitle={showTitle}
       ></SectionTitle>
       <AnimatePresence mode="popLayout">
         {visibleEducation?.map((edu) => (
@@ -57,9 +61,6 @@ const EducationSection = ({
                 }}
               >
                 <span>{edu.school}</span>
-                {edu.location && (
-                  <span className="text-subtitleFont">· {edu.location}</span>
-                )}
               </div>
 
               {globalSettings?.centerSubtitle && (

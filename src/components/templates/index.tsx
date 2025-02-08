@@ -2,6 +2,7 @@ import React from "react";
 import ClassicTemplate from "./ClassicTemplate";
 import ModernTemplate from "./ModernTemplate";
 import LeftRightTemplate from "./LeftRightTemplate";
+import TimelineTemplate from "./TimelineTemplate";
 import { ResumeData } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
 
@@ -12,7 +13,7 @@ interface TemplateProps {
 
 const ResumeTemplateComponent: React.FC<TemplateProps> = ({
   data,
-  template,
+  template
 }) => {
   const renderTemplate = () => {
     switch (template.layout) {
@@ -20,6 +21,8 @@ const ResumeTemplateComponent: React.FC<TemplateProps> = ({
         return <ModernTemplate data={data} template={template} />;
       case "left-right":
         return <LeftRightTemplate data={data} template={template} />;
+      case "timeline":
+        return <TimelineTemplate data={data} template={template} />;
       default:
         return <ClassicTemplate data={data} template={template} />;
     }

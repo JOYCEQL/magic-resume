@@ -100,19 +100,21 @@ ProjectItem.displayName = "ProjectItem";
 interface ProjectSectionProps {
   projects: Project[];
   globalSettings?: GlobalSettings;
+  showTitle?: boolean;
 }
 
 const ProjectSection: React.FC<ProjectSectionProps> = ({
   projects,
   globalSettings,
+  showTitle = true,
 }) => {
   const { setActiveSection } = useResumeStore();
 
-  const visibleProjects = projects.filter((project) => project.visible);
+  const visibleProjects = projects?.filter((project) => project.visible);
 
   return (
     <motion.div
-      className=" hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
+      className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
       style={{
         marginTop: `${globalSettings?.sectionSpacing || 24}px`,
       }}
@@ -123,7 +125,8 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
       <SectionTitle
         type="projects"
         globalSettings={globalSettings}
-      ></SectionTitle>
+        showTitle={showTitle}
+      />
       <motion.div layout="position">
         <AnimatePresence mode="popLayout">
           {visibleProjects.map((project) => (

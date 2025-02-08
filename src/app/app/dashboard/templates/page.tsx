@@ -12,11 +12,13 @@ import { cn } from "@/lib/utils";
 import classic from "@/assets/images/template-cover/classic.png";
 import modern from "@/assets/images/template-cover/modern.png";
 import leftRight from "@/assets/images/template-cover/left-right.png";
+import timeline from "@/assets/images/template-cover/timeline.png";
 
 const templateImages: { [key: string]: any } = {
   classic,
   modern,
   "left-right": leftRight,
+  timeline,
 };
 
 const container = {

@@ -25,6 +25,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 
+const DEFAULT_AVATAR = "/avatar.png";
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -70,8 +72,8 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   useEffect(() => {
     if (isOpen) {
       setConfig(initialConfig || DEFAULT_CONFIG);
-      setPreviewUrl(photo);
-      setImageUrl(photo || "");
+      setPreviewUrl(photo || DEFAULT_AVATAR);
+      setImageUrl(photo === DEFAULT_AVATAR ? "" : photo || "");
     }
 
     const handleClick = (e: MouseEvent) => {
@@ -120,7 +122,14 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   };
 
   const handleUrlChange = async (e: string) => {
-    const url = e;
+    const url = e.trim();
+    setImageUrl(url);
+
+    if (!url) {
+      handleRemovePhoto();
+      return;
+    }
+
     try {
       // images.weserv.nl proxy
       const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(
@@ -128,21 +137,32 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       )}`;
 
       const img = new Image();
+      img.crossOrigin = "anonymous";
 
       await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
+        const timer = setTimeout(() => {
+          reject(new Error("加载超时"));
+        }, 10000);
+
+        img.onload = () => {
+          clearTimeout(timer);
+          resolve(undefined);
+        };
+        img.onerror = () => {
+          clearTimeout(timer);
+          reject(new Error("图片加载失败"));
+        };
         img.src = proxyUrl;
       });
 
-      setImageUrl(proxyUrl);
       setPreviewUrl(proxyUrl);
       updateBasicInfo({
         photo: proxyUrl,
       });
+      onPhotoChange(proxyUrl, config);
     } catch (error) {
-      console.error("图片加载失败:", error);
       toast.error("图片链接无效或无法访问，请尝试使用其他图片链接");
+      handleRemovePhoto();
     }
   };
 
@@ -169,11 +189,15 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   };
 
   const handleRemovePhoto = () => {
-    setPreviewUrl(undefined);
+    setPreviewUrl(DEFAULT_AVATAR);
     setImageUrl("");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
+    updateBasicInfo({
+      photo: DEFAULT_AVATAR,
+    });
+    onPhotoChange(DEFAULT_AVATAR, config);
   };
 
   const handleConfigChange = (updates: Partial<PhotoConfig>) => {

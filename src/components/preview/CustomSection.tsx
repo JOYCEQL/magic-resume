@@ -8,7 +8,8 @@ interface CustomSectionProps {
   sectionId: string;
   title: string;
   items: CustomItem[];
-  globalSettings: GlobalSettings | undefined;
+  globalSettings?: GlobalSettings;
+  showTitle?: boolean;
 }
 
 const CustomSection = ({
@@ -16,9 +17,10 @@ const CustomSection = ({
   title,
   items,
   globalSettings,
+  showTitle = true,
 }: CustomSectionProps) => {
   const { setActiveSection } = useResumeStore();
-  const visibleItems = items.filter((item) => {
+  const visibleItems = items?.filter((item) => {
     return item.visible && (item.title || item.description);
   });
 
@@ -39,6 +41,7 @@ const CustomSection = ({
         title={title}
         type="custom"
         globalSettings={globalSettings}
+        showTitle={showTitle}
       />
       <AnimatePresence mode="popLayout">
         {visibleItems.map((item) => (

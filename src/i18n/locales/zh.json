@@ -162,6 +162,10 @@
       "leftRight": {
         "name": "模块标题背景色",
         "description": "模块标题背景鲜明，突出美观特色"
+      },
+      "timeline": {
+        "name": "时间轴布局",
+        "description": "时间轴风格，突出经历的时间顺序"
       }
     }
   },

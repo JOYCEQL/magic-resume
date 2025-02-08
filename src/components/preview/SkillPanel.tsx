@@ -5,11 +5,12 @@ import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 
 interface SkillSectionProps {
-  skill: string | undefined;
-  globalSettings: GlobalSettings | undefined;
+  skill?: string;
+  globalSettings?: GlobalSettings;
+  showTitle?: boolean;
 }
 
-const SkillSection = ({ skill, globalSettings }: SkillSectionProps) => {
+const SkillSection = ({ skill, globalSettings, showTitle = true }: SkillSectionProps) => {
   const { setActiveSection } = useResumeStore();
 
   return (
@@ -22,7 +23,7 @@ const SkillSection = ({ skill, globalSettings }: SkillSectionProps) => {
         setActiveSection("skills");
       }}
     >
-      <SectionTitle type="skills" globalSettings={globalSettings} />
+      {showTitle && <SectionTitle type="skills" globalSettings={globalSettings} />}
       <motion.div
         style={{
           marginTop: `${globalSettings?.paragraphSpacing}px`,

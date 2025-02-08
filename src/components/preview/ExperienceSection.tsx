@@ -8,6 +8,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 interface ExperienceSectionProps {
   experiences?: Experience[];
   globalSettings?: GlobalSettings;
+  showTitle?: boolean;
 }
 
 interface ExperienceItemProps {
@@ -70,6 +71,7 @@ ExperienceItem.displayName = "ExperienceItem";
 const ExperienceSection: React.FC<ExperienceSectionProps> = ({
   experiences,
   globalSettings,
+  showTitle = true,
 }) => {
   const { setActiveSection } = useResumeStore();
 
@@ -87,10 +89,12 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         setActiveSection("experience");
       }}
     >
-      <SectionTitle type="experience" globalSettings={globalSettings} />
+      {showTitle && (
+        <SectionTitle type="experience" globalSettings={globalSettings} />
+      )}
       <div>
         <AnimatePresence mode="popLayout">
-          {visibleExperiences.map((experience) => (
+          {visibleExperiences?.map((experience) => (
             <ExperienceItem
               key={experience.id}
               experience={experience}

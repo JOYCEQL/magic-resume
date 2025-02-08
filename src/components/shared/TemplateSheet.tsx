@@ -8,7 +8,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet-no-overlay";
 import { cn } from "@/lib/utils";
 import { DEFAULT_TEMPLATES } from "@/config";
@@ -16,11 +16,13 @@ import { useResumeStore } from "@/store/useResumeStore";
 import classic from "@/assets/images/template-cover/classic.png";
 import modern from "@/assets/images/template-cover/modern.png";
 import leftRight from "@/assets/images/template-cover/left-right.png";
+import timeline from "@/assets/images/template-cover/timeline.png";
 
 const templateImages: { [key: string]: any } = {
   classic,
   modern,
   "left-right": leftRight,
+  timeline
 };
 
 const TemplateSheet = () => {

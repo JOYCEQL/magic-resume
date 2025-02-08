@@ -9,9 +9,10 @@ interface SectionTitleProps {
   globalSettings?: GlobalSettings;
   type: string;
   title?: string;
+  showTitle?: boolean;
 }
 
-const SectionTitle = ({ type, title, globalSettings }: SectionTitleProps) => {
+const SectionTitle = ({ type, title, globalSettings, showTitle = true }: SectionTitleProps) => {
   const { activeResume } = useResumeStore();
   const { menuSections = [], templateId = "default" } = activeResume || {};
 
@@ -45,6 +46,7 @@ const SectionTitle = ({ type, title, globalSettings }: SectionTitleProps) => {
   );
 
   const renderTemplateTitle = () => {
+    if (!showTitle) return null;
     switch (templateId) {
       case "modern":
         return (

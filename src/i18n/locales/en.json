@@ -146,19 +146,23 @@
     },
     "templates": {
       "title": "Templates",
-      "useTemplate": "Use This Template",
+      "useTemplate": "Use Template",
       "switchTemplate": "Switch Template",
       "classic": {
-        "name": "Classic Template",
-        "description": "Traditional and minimalist resume layout, suitable for most job applications"
+        "name": "Classic",
+        "description": "Traditional and minimalist layout, suitable for most job applications"
       },
       "modern": {
-        "name": "Two-Column Layout",
-        "description": "Classic two-column design highlighting personal features"
+        "name": "Two Column",
+        "description": "Classic two-column layout, highlighting personal characteristics"
       },
       "leftRight": {
-        "name": "Colored Section Headers",
-        "description": "Distinctive section headers with background colors for visual appeal"
+        "name": "Section Title Background",
+        "description": "Distinctive section titles with background color"
+      },
+      "timeline": {
+        "name": "Timeline Layout",
+        "description": "Timeline style, emphasizing chronological order of experiences"
       }
     }
   },

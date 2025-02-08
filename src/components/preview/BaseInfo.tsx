@@ -205,7 +205,7 @@ const BaseInfo = ({
         <motion.h2
           layout="position"
           style={{
-            fontSize: `${globalSettings?.headerSize || 18}px`,
+            fontSize: "18px",
           }}
         >
           {basic[titleField.key] as string}

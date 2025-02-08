@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import {
   Drawer,
   DrawerContent,
@@ -118,16 +119,31 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     }
   };
 
-  const handleUrlChange = (e: string) => {
+  const handleUrlChange = async (e: string) => {
     const url = e;
-    setImageUrl(url);
-    setPreviewUrl(url);
-    updateBasicInfo({
-      photo: url,
-    });
-    const blob = new Blob([url], { type: "image/png" });
-    const blobUrl = URL.createObjectURL(blob);
-    localStorage.setItem("photo", blobUrl);
+    try {
+      // images.weserv.nl proxy
+      const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(
+        url
+      )}`;
+
+      const img = new Image();
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = proxyUrl;
+      });
+
+      setImageUrl(proxyUrl);
+      setPreviewUrl(proxyUrl);
+      updateBasicInfo({
+        photo: proxyUrl,
+      });
+    } catch (error) {
+      console.error("图片加载失败:", error);
+      toast.error("图片链接无效或无法访问，请尝试使用其他图片链接");
+    }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -419,10 +435,10 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                         {radius === "none"
                           ? "无"
                           : radius === "medium"
-                            ? "中等"
-                            : radius === "full"
-                              ? "圆形"
-                              : "自定义"}
+                          ? "中等"
+                          : radius === "full"
+                          ? "圆形"
+                          : "自定义"}
                       </Button>
                     )
                   )}

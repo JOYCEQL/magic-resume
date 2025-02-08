@@ -36,7 +36,10 @@ const TimelineTemplate: React.FC<TimelineTemplateProps> = ({
       />
       <div
         className="text-xl font-bold mb-4"
-        style={{ color: data.globalSettings.themeColor }}
+        style={{
+          color: data.globalSettings.themeColor,
+          fontSize: `${data.globalSettings.headerSize || 20}px`,
+        }}
       >
         {title}
       </div>

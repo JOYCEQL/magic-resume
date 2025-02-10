@@ -24,7 +24,7 @@ const PageBreakLine = React.memo(({ pageNumber }: { pageNumber: number }) => {
   const MM_TO_PX = 3.78;
 
   const TOP_MARGIN_MM = globalSettings?.pagePadding / MM_TO_PX;
-  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM;
+  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM + TOP_MARGIN_MM + TOP_MARGIN_MM;
   const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
 
   return (

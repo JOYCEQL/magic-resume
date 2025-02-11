@@ -10,7 +10,7 @@ WORKDIR /app
 # Install dependencies only when needed
 FROM base AS deps
 COPY package.json pnpm-lock.yaml* ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --force
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install  --frozen-lockfile --force
 
 # Rebuild the source code only when needed
 FROM base AS builder

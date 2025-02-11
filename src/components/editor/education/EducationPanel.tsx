@@ -1,12 +1,13 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { useResumeStore } from "@/store/useResumeStore";
-import { Reorder } from "framer-motion";
-import { PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import {v4 as uuid} from 'uuid';
+import {cn} from "@/lib/utils";
+import {useResumeStore} from "@/store/useResumeStore";
+import {Reorder} from "framer-motion";
+import {PlusCircle} from "lucide-react";
+import {useTranslations} from "next-intl";
+import {Button} from "@/components/ui/button";
 import EducationItem from "./EducationItem";
-import { Education } from "@/types/resume";
+import {Education} from "@/types/resume";
 
 const EducationPanel = () => {
   const t = useTranslations('workbench.educationPanel');
@@ -15,7 +16,7 @@ const EducationPanel = () => {
   const { education = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newEducation: Education = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       school: t('defaultProject.school'),
       major: t('defaultProject.major'),
       degree: t('defaultProject.degree'),

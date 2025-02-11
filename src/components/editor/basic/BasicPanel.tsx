@@ -1,19 +1,21 @@
 "use client";
-import React, { useState } from "react";
-import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
-import { Reorder, AnimatePresence, motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
+import {v4 as uuid} from 'uuid';
+import React, {useState} from "react";
+import {Eye, EyeOff, GripVertical, PlusCircle, Trash2} from "lucide-react";
+import {AnimatePresence, motion, Reorder} from "framer-motion";
+import {useTranslations} from "next-intl";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Switch} from "@/components/ui/switch";
 import PhotoUpload from "@/components/shared/PhotoSelector";
 import IconSelector from "../IconSelector";
 import AlignSelector from "./AlignSelector";
 import Field from "../Field";
-import { cn } from "@/lib/utils";
-import { DEFAULT_FIELD_ORDER } from "@/config";
-import { useResumeStore } from "@/store/useResumeStore";
-import { BasicFieldType, CustomFieldType } from "@/types/resume";
+import {cn} from "@/lib/utils";
+import {DEFAULT_FIELD_ORDER} from "@/config";
+import {useResumeStore} from "@/store/useResumeStore";
+import {BasicFieldType, CustomFieldType} from "@/types/resume";
+
 interface CustomFieldProps {
   field: CustomFieldType;
   onUpdate: (field: CustomFieldType) => void;
@@ -169,7 +171,7 @@ const BasicPanel: React.FC = () => {
 
   const addCustomField = () => {
     const fieldToAdd: CustomFieldType = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       label: "",
       value: "",
       icon: "User",

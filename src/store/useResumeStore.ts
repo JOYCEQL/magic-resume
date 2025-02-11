@@ -1,20 +1,20 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { DEFAULT_FIELD_ORDER } from "@/config";
-import { getFileHandle, getConfig, verifyPermission } from "@/utils/fileSystem";
+import {create} from "zustand";
+import {v4 as uuid} from 'uuid';
+import {persist} from "zustand/middleware";
+import {DEFAULT_TEMPLATES} from "@/config";
+import {getFileHandle, verifyPermission} from "@/utils/fileSystem";
 import {
   BasicInfo,
+  CustomItem,
   Education,
   Experience,
   GlobalSettings,
-  DEFAULT_CONFIG,
-  Project,
-  CustomItem,
-  ResumeData,
   MenuSection,
+  Project,
+  ResumeData,
 } from "../types/resume";
-import { DEFAULT_TEMPLATES } from "@/config";
-import { initialResumeState } from "@/config/initialResumeData";
+import {initialResumeState} from "@/config/initialResumeData";
+
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
@@ -113,7 +113,7 @@ export const useResumeStore = create(
       activeResume: null,
 
       createResume: (templateId = null) => {
-        const id = crypto.randomUUID();
+        const id = uuid()
         const template = templateId
           ? DEFAULT_TEMPLATES.find((t) => t.id === templateId)
           : DEFAULT_TEMPLATES[0];
@@ -213,7 +213,7 @@ export const useResumeStore = create(
       },
 
       duplicateResume: (resumeId) => {
-        const newId = crypto.randomUUID();
+        const newId = uuid();
         const originalResume = get().resumes[resumeId];
         const duplicatedResume = {
           ...originalResume,
@@ -428,7 +428,7 @@ export const useResumeStore = create(
             ...currentResume.customData,
             [sectionId]: [
               {
-                id: crypto.randomUUID(),
+                id: uuid(),
                 title: "未命名模块",
                 subtitle: "",
                 dateRange: "",
@@ -471,7 +471,7 @@ export const useResumeStore = create(
             [sectionId]: [
               ...(currentResume.customData[sectionId] || []),
               {
-                id: crypto.randomUUID(),
+                id: uuid(),
                 title: "未命名模块",
                 subtitle: "",
                 dateRange: "",

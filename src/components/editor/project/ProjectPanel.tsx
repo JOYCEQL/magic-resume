@@ -1,11 +1,12 @@
-import { cn } from "@/lib/utils";
-import { useResumeStore } from "@/store/useResumeStore";
-import { Reorder } from "framer-motion";
-import { PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import {cn} from "@/lib/utils";
+import {v4 as uuid} from 'uuid';
+import {useResumeStore} from "@/store/useResumeStore";
+import {Reorder} from "framer-motion";
+import {PlusCircle} from "lucide-react";
+import {useTranslations} from "next-intl";
+import {Button} from "@/components/ui/button";
 import ProjectItem from "./ProjectItem";
-import { Project } from "@/types/resume";
+import {Project} from "@/types/resume";
 
 const ProjectPanel = () => {
   const t = useTranslations("workbench.projectPanel");
@@ -14,7 +15,7 @@ const ProjectPanel = () => {
   const { projects = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Project = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: t("defaultProject.name"),
       role: t("defaultProject.role"),
       date: t("defaultProject.date"),

@@ -1,23 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import { useResumeStore } from "@/store/useResumeStore";
-import { cn } from "@/lib/utils";
-import { initialResumeState } from "@/config/initialResumeData";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import {v4 as uuid} from 'uuid';
+import React, {useEffect} from "react";
+import {useTranslations} from "next-intl";
+import {useRouter} from "next/navigation";
+import {AlertCircle, FileText, Plus, Settings, Upload} from "lucide-react";
+import {AnimatePresence, motion} from "framer-motion";
+import {toast} from "sonner";
+import {Button} from "@/components/ui/button";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {getConfig, getFileHandle, verifyPermission} from "@/utils/fileSystem";
+import {useResumeStore} from "@/store/useResumeStore";
+import {cn} from "@/lib/utils";
+import {initialResumeState} from "@/config/initialResumeData";
+import {Card, CardContent, CardDescription, CardFooter, CardTitle,} from "@/components/ui/card";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -107,7 +102,7 @@ const ResumeWorkbench = () => {
         const newResume = {
           ...initialResumeState,
           ...config,
-          id: crypto.randomUUID(),
+          id: uuid(),
           title: config.title || t("dashboard.resumes.untitled"),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

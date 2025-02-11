@@ -1,12 +1,13 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { Reorder } from "framer-motion";
-import { PlusCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import {v4 as uuid} from 'uuid';
+import {cn} from "@/lib/utils";
+import {Reorder} from "framer-motion";
+import {PlusCircle} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {useTranslations} from "next-intl";
 import ExperienceItem from "./ExperienceItem";
-import { Experience } from "@/types/resume";
-import { useResumeStore } from "@/store/useResumeStore";
+import {Experience} from "@/types/resume";
+import {useResumeStore} from "@/store/useResumeStore";
 
 const ExperiencePanel = () => {
   const t = useTranslations("workbench.experiencePanel");
@@ -15,7 +16,7 @@ const ExperiencePanel = () => {
   const { experience = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Experience = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       company: t("defaultProject.company"),
       position: t("defaultProject.position"),
       date: t("defaultProject.date"),

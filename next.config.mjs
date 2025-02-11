@@ -1,4 +1,6 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -7,6 +9,7 @@ const config = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: "standalone",
   async rewrites() {
     return [
       {

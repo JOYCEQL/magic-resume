@@ -6,7 +6,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+[English](./README.md) | 简体中文
 
 </div>
 
@@ -71,6 +71,40 @@ pnpm   build
 你可以一键部署自己的 Magic Resume 实例：
 
 [![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
+
+## 🐳 Docker 部署
+
+### Docker Compose
+
+1. 确保你已经安装了 Docker 和 Docker Compose
+
+2. 在项目根目录运行：
+
+```bash
+docker-compose up -d
+```
+
+这将会：
+
+- 自动构建应用镜像
+- 在后台启动容器
+
+### 环境变量配置
+
+如果需要配置环境变量，可以：
+
+1. 使用 docker-compose.yml（推荐）：
+
+```yaml
+environment:
+  - KEY=VALUE
+```
+
+2. 或在 docker run 命令中指定：
+
+```bash
+docker run -p 3000:3000 -e KEY=VALUE magic-resume
+```
 
 ## 📝 开源协议
 

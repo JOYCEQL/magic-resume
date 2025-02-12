@@ -6,7 +6,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-[English](./README.md) | [简体中文](./README.zh-CN.md)
+English | [简体中文](./README.zh-CN.md)
 
 </div>
 
@@ -71,6 +71,23 @@ pnpm build
 You can deploy your own instance of Magic Resume with one click:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
+
+## 🐳 Docker Deployment
+
+### Docker Compose
+
+1. Ensure you have Docker and Docker Compose installed
+
+2. Run the following command in the project root directory:
+
+```bash
+docker-compose up -d
+```
+
+This will:
+
+- Automatically build the application image
+- Start the container in the background
 
 ## 📝 License
 

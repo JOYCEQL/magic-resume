@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
@@ -28,7 +28,7 @@ export default function AIPolishDialog({
   open,
   onOpenChange,
   content,
-  onApply,
+  onApply
 }: AIPolishDialogProps) {
   const t = useTranslations("aiPolishDialog");
   const [isPolishing, setIsPolishing] = useState(false);
@@ -38,7 +38,7 @@ export default function AIPolishDialog({
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    deepseekModelId,
+    deepseekModelId
   } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
@@ -67,7 +67,7 @@ export default function AIPolishDialog({
       const response = await fetch("/api/polish", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           content,
@@ -78,9 +78,9 @@ export default function AIPolishDialog({
               : config.requiresModelId
               ? deepseekModelId
               : config.defaultModel,
-          modelType: selectedModel,
+          modelType: selectedModel
         }),
-        signal: abortControllerRef.current.signal,
+        signal: abortControllerRef.current.signal
       });
 
       if (!response.ok) {

@@ -92,9 +92,10 @@
   },
   "dashboard": {
     "sidebar": {
-      "resumes": "简历",
-      "settings": "设置",
-      "templates": "模板"
+      "resumes": "我的简历",
+      "settings": "通用设置",
+      "templates": "简历模板",
+      "ai": "AI服务商"
     },
     "resumes": {
       "created": "创建于",
@@ -131,19 +132,19 @@
       },
       "ai": {
         "title": "AI 配置",
-        "description": "配置 AI 模型，让 AI 助手为你的简历提供智能优化和建议。",
-        "selectedModel": "选择模型",
+        "currentModel": "当前使用的模型",
+        "selectModel": "选择模型",
+        "getApiKey": "获取 API Key",
         "doubao": {
           "title": "豆包",
           "description": "在火山引擎获取 API 密钥",
-          "apiKey": "API 密钥",
+          "apiKey": "API Key",
           "modelId": "模型 ID"
         },
         "deepseek": {
-          "title": "Deepseek",
-          "description": "在 Deepseek 开放平台获取 API 密钥",
-          "apiKey": "API 密钥",
-          "modelId": "模型 ID"
+          "title": "DeepSeek",
+          "description": "在 DeepSeek 开放平台获取 API 密钥",
+          "apiKey": "API Key"
         }
       }
     },

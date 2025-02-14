@@ -91,7 +91,8 @@
     "sidebar": {
       "resumes": "Resumes",
       "settings": "Settings",
-      "templates": "Templates"
+      "templates": "Templates",
+      "ai": "AI Config"
     },
     "resumes": {
       "created": "Created At",
@@ -127,20 +128,20 @@
         "select": "Select Folder"
       },
       "ai": {
-        "title": "AI Model Configuration",
-        "description": "Configure AI models to provide intelligent optimization and suggestions for your resume.",
-        "selectedModel": "Select Model",
+        "title": "AI Configuration",
+        "currentModel": "Current Model",
+        "selectModel": "Select Model",
+        "getApiKey": "Get API Key",
         "doubao": {
           "title": "Doubao",
-          "description": "Obtain API Key from Volcengine Platform",
-          "apiKey": "API Key",
+          "description": "Get API key from Volcengine",
+          "apiKey": "Doubao API Key",
           "modelId": "Model ID"
         },
         "deepseek": {
-          "title": "Deepseek",
-          "description": "Obtain API Key from Deepseek Open Platform",
-          "apiKey": "API Key",
-          "modelId": "Model ID"
+          "title": "DeepSeek",
+          "description": "Get API key from DeepSeek Platform",
+          "apiKey": "DeepSeek API Key"
         }
       }
     },
@@ -187,7 +188,7 @@
     "grammarCheck": {
       "idle": "AI Grammar Check",
       "checking": "Checking...",
-      "configurePrompt": "Please configure ApiKey and ModelId first",
+      "configurePrompt": "Please configure AI Model",
       "configureButton": "Configure",
       "errorToast": "Grammar check failed, please try again"
     },

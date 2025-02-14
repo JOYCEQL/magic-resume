@@ -75,6 +75,11 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
       const data = await response.json();
 
+      if (data.error) {
+        toast.error(data.error.message);
+        throw new Error(data.error.message);
+      }
+
       if (data.error?.code === "AuthenticationError") {
         toast.error("ApiKey 或 模型Id 不正确");
         throw new Error(data.error.message);

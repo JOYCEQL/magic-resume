@@ -28,11 +28,10 @@ export const useAIConfigStore = create<AIConfigState>()(
       setDoubaoApiKey: (apiKey: string) => set({ doubaoApiKey: apiKey }),
       setDoubaoModelId: (modelId: string) => set({ doubaoModelId: modelId }),
       setDeepseekApiKey: (apiKey: string) => set({ deepseekApiKey: apiKey }),
-      setDeepseekModelId: (modelId: string) =>
-        set({ deepseekModelId: modelId }),
+      setDeepseekModelId: (modelId: string) => set({ deepseekModelId: modelId })
     }),
     {
-      name: "ai-config-storage",
+      name: "ai-config-storage"
     }
   )
 );

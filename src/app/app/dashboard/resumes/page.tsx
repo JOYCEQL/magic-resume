@@ -7,16 +7,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
-import { cn } from "@/lib/utils";
 import { initialResumeState } from "@/config/initialResumeData";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 
 const ResumesList = () => {
@@ -32,7 +32,7 @@ const ResumeWorkbench = () => {
     updateResumeFromFile,
     addResume,
     deleteResume,
-    createResume,
+    createResume
   } = useResumeStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
@@ -110,7 +110,7 @@ const ResumeWorkbench = () => {
           id: crypto.randomUUID(),
           title: config.title || t("dashboard.resumes.untitled"),
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
         };
 
         addResume(newResume);
@@ -272,7 +272,7 @@ const ResumeWorkbench = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{
                   duration: 0.3,
-                  delay: index * 0.1,
+                  delay: index * 0.1
                 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -310,7 +310,7 @@ const ResumeWorkbench = () => {
                         transition={{
                           type: "spring",
                           stiffness: 400,
-                          damping: 17,
+                          damping: 17
                         }}
                       >
                         <Button
@@ -332,7 +332,7 @@ const ResumeWorkbench = () => {
                         transition={{
                           type: "spring",
                           stiffness: 400,
-                          damping: 17,
+                          damping: 17
                         }}
                       >
                         <Button

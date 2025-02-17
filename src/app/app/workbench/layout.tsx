@@ -1,7 +1,7 @@
+import { ReactNode } from "react";
 import { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
-import { ReactNode } from "react";
 import Document from "@/components/Document";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -12,11 +12,11 @@ type Props = {
   };
 };
 export async function generateMetadata({
-  params: { locale },
+  params: { locale }
 }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "common" });
   return {
-    title: t("title") + " - " + t("dashboard"),
+    title: t("title") + " - " + t("dashboard")
   };
 }
 export default async function LocaleLayout({ children }: Props) {

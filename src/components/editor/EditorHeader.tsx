@@ -12,7 +12,7 @@ import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import {
   HoverCard,
   HoverCardTrigger,
-  HoverCardContent,
+  HoverCardContent
 } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 
@@ -113,12 +113,12 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             onBlur={(e) => {
               updateResumeTitle(e.target.value || "未命名简历");
             }}
-            className="w-60  text-sm"
+            className="w-60  text-sm hidden md:block"
             placeholder="简历名称"
           />
 
           <ThemeToggle></ThemeToggle>
-          <div className="hidden md:flex items-center ">
+          <div className="md:flex items-center ">
             <PdfExport />
           </div>
         </div>

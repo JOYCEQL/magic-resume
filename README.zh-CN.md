@@ -89,23 +89,6 @@ docker-compose up -d
 - 自动构建应用镜像
 - 在后台启动容器
 
-### 环境变量配置
-
-如果需要配置环境变量，可以：
-
-1. 使用 docker-compose.yml（推荐）：
-
-```yaml
-environment:
-  - KEY=VALUE
-```
-
-2. 或在 docker run 命令中指定：
-
-```bash
-docker run -p 3000:3000 -e KEY=VALUE magic-resume
-```
-
 ## 📝 开源协议
 
 本项目采用 Apache 2.0 协议 - 查看 [LICENSE](LICENSE) 了解详情

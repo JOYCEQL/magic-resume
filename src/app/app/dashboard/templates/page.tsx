@@ -1,24 +1,26 @@
 "use client";
-
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { DEFAULT_TEMPLATES } from "@/config";
+
 import { useResumeStore } from "@/store/useResumeStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+
 import classic from "@/assets/images/template-cover/classic.png";
 import modern from "@/assets/images/template-cover/modern.png";
 import leftRight from "@/assets/images/template-cover/left-right.png";
 import timeline from "@/assets/images/template-cover/timeline.png";
 
+import { cn } from "@/lib/utils";
+import { DEFAULT_TEMPLATES } from "@/config";
+
 const templateImages: { [key: string]: any } = {
   classic,
   modern,
   "left-right": leftRight,
-  timeline,
+  timeline
 };
 
 const container = {
@@ -26,14 +28,14 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-    },
-  },
+      staggerChildren: 0.1
+    }
+  }
 };
 
 const item = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0 }
 };
 
 export default function TemplatesPage() {
@@ -56,12 +58,12 @@ export default function TemplatesPage() {
           themeColor: template.colorScheme.primary,
           sectionSpacing: template.spacing.sectionGap,
           paragraphSpacing: template.spacing.itemGap,
-          pagePadding: template.spacing.contentPadding,
+          pagePadding: template.spacing.contentPadding
         },
         basic: {
           ...resume.basic,
-          layout: template.basic.layout,
-        },
+          layout: template.basic.layout
+        }
       });
     }
 

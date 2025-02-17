@@ -5,12 +5,14 @@ import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import Document from "@/components/Document";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
+
 type Props = {
   children: ReactNode;
   params: {
     locale: string;
   };
 };
+
 export async function generateMetadata({
   params: { locale }
 }: Props): Promise<Metadata> {
@@ -19,6 +21,7 @@ export async function generateMetadata({
     title: t("title") + " - " + t("dashboard")
   };
 }
+
 export default async function LocaleLayout({ children }: Props) {
   const locale = await getLocale();
 
@@ -27,7 +30,7 @@ export default async function LocaleLayout({ children }: Props) {
   return (
     <Document
       locale={locale}
-      bodyClassName="overflow-y-hidden w-full min-w-[1600px]"
+      bodyClassName="overflow-y-hidden w-full md:min-w-[1600px]"
     >
       <NextIntlClientProvider messages={messages}>
         <Providers>{children}</Providers>

@@ -236,7 +236,7 @@ export default function Home() {
     >
       <EditorHeader />
       {/* 桌面端布局 */}
-      <div className="h-[calc(100vh-64px)]">
+      <div className="hidden md:block h-[calc(100vh-64px)]">
         <ResizablePanelGroup
           key={panelSizes?.join("-")}
           direction="horizontal"
@@ -311,37 +311,15 @@ export default function Home() {
 
       {/* 移动端布局 */}
       <div className="md:hidden h-[calc(100vh-64px)]">
-        <AnimatePresence mode="wait">
-          {previewPanelCollapsed ? (
-            <motion.div
-              key="edit"
-              initial={{ opacity: 0, x: -300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -300 }}
-              transition={{ type: "spring", damping: 20 }}
-              className="h-full"
-            >
-              <EditPanel />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="preview"
-              initial={{ opacity: 0, x: 300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 300 }}
-              transition={{ type: "spring", damping: 20 }}
-              className="h-full"
-            >
-              <PreviewPanel
-                sidePanelCollapsed={sidePanelCollapsed}
-                editPanelCollapsed={editPanelCollapsed}
-                previewPanelCollapsed={previewPanelCollapsed}
-                toggleSidePanel={toggleSidePanel}
-                toggleEditPanel={toggleEditPanel}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="h-full overflow-y-auto">
+          <PreviewPanel
+            sidePanelCollapsed={true}
+            editPanelCollapsed={true}
+            previewPanelCollapsed={false}
+            toggleSidePanel={toggleSidePanel}
+            toggleEditPanel={toggleEditPanel}
+          />
+        </div>
       </div>
     </main>
   );

@@ -7,7 +7,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-[English](./README.en-US.md) | 简体中文
+简体中文 | [English](./README.en-US.md) 
 
 </div>
 

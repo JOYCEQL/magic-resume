@@ -6,7 +6,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-English | [简体中文](./README.md)
+[简体中文](./README.md) | English  
 
 </div>
 

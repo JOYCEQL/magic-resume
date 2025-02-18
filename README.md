@@ -43,7 +43,7 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 1. 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/magic-resume.git
+git clone git@github.com:JOYCEQL/magic-resume.git
 cd magic-resume
 ```
 

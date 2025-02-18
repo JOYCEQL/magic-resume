@@ -42,7 +42,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 1. Clone the project
 
 ```bash
-git clone https://github.com/yourusername/magic-resume.git
+git clone git@github.com:JOYCEQL/magic-resume.git
 cd magic-resume
 ```
 

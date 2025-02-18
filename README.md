@@ -87,7 +87,7 @@ docker-compose up -d
 ### Docker Hub
 最新版本的 Magic Resume 已经发布在 Docker Hub：
 
-![Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
+[Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
 
 ```bash
 docker pull siyueqingchen/magic-resume

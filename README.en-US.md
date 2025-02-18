@@ -92,7 +92,7 @@ This will:
 ### Docker Hub
 The latest version of Magic Resume is available on Docker Hub:
 
-![Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
+[Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
 
 ```bash
 docker pull siyueqingchen/magic-resume

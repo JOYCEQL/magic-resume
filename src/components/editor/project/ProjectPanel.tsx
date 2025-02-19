@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import ProjectItem from "./ProjectItem";
 import { Project } from "@/types/resume";
+import { generateUUID } from "@/utils/uuid";
 
 const ProjectPanel = () => {
   const t = useTranslations("workbench.projectPanel");
@@ -14,7 +15,7 @@ const ProjectPanel = () => {
   const { projects = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Project = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       name: t("defaultProject.name"),
       role: t("defaultProject.role"),
       date: t("defaultProject.date"),

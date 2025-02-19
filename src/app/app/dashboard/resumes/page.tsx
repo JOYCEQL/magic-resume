@@ -6,11 +6,6 @@ import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
-import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import { useResumeStore } from "@/store/useResumeStore";
-import { initialResumeState } from "@/config/initialResumeData";
 import {
   Card,
   CardContent,
@@ -18,7 +13,13 @@ import {
   CardFooter,
   CardTitle
 } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
+import { useResumeStore } from "@/store/useResumeStore";
+import { initialResumeState } from "@/config/initialResumeData";
 
+import { generateUUID } from "@/utils/uuid";
 const ResumesList = () => {
   return <ResumeWorkbench />;
 };
@@ -107,8 +108,7 @@ const ResumeWorkbench = () => {
         const newResume = {
           ...initialResumeState,
           ...config,
-          id: crypto.randomUUID(),
-          title: config.title || t("dashboard.resumes.untitled"),
+          id: generateUUID(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };

@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { DEFAULT_FIELD_ORDER } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicFieldType, CustomFieldType } from "@/types/resume";
+import { generateUUID } from "@/utils/uuid";
 interface CustomFieldProps {
   field: CustomFieldType;
   onUpdate: (field: CustomFieldType) => void;
@@ -24,13 +25,13 @@ const itemAnimations = {
   initial: { opacity: 0, y: 0 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 0 },
-  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 },
+  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 }
 };
 
 const CustomField: React.FC<CustomFieldProps> = ({
   field,
   onUpdate,
-  onDelete,
+  onDelete
 }) => {
   const t = useTranslations("workbench.basicPanel");
 
@@ -72,7 +73,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           onChange={(value) =>
             onUpdate({
               ...field,
-              label: value,
+              label: value
             })
           }
           placeholder={t("customFields.placeholders.label")}
@@ -88,7 +89,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           onChange={(value) =>
             onUpdate({
               ...field,
-              value: value,
+              value: value
             })
           }
           placeholder={t("customFields.placeholders.value")}
@@ -134,7 +135,7 @@ const BasicPanel: React.FC = () => {
   const [customFields, setCustomFields] = useState<CustomFieldType[]>(
     basic?.customFields?.map((field) => ({
       ...field,
-      visible: field.visible ?? true,
+      visible: field.visible ?? true
     })) || []
   );
   const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
@@ -143,7 +144,7 @@ const BasicPanel: React.FC = () => {
     }
     return basic.fieldOrder.map((field) => ({
       ...field,
-      visible: field.visible ?? true,
+      visible: field.visible ?? true
     }));
   });
   const t = useTranslations("workbench.basicPanel");
@@ -152,7 +153,7 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newOrder);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newOrder,
+      fieldOrder: newOrder
     });
   };
 
@@ -163,23 +164,23 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newFields);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newFields,
+      fieldOrder: newFields
     });
   };
 
   const addCustomField = () => {
     const fieldToAdd: CustomFieldType = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       label: "",
       value: "",
       icon: "User",
-      visible: true,
+      visible: true
     };
     const updatedFields = [...customFields, fieldToAdd];
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields,
+      customFields: updatedFields
     });
   };
 
@@ -190,7 +191,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields,
+      customFields: updatedFields
     });
   };
 
@@ -199,7 +200,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields,
+      customFields: updatedFields
     });
   };
 
@@ -207,7 +208,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(newOrder);
     updateBasicInfo({
       ...basic,
-      customFields: newOrder,
+      customFields: newOrder
     });
   };
 
@@ -257,8 +258,8 @@ const BasicPanel: React.FC = () => {
                     ...basic,
                     icons: {
                       ...(basic?.icons || {}),
-                      [field.key]: value,
-                    },
+                      [field.key]: value
+                    }
                   });
                 }}
               />
@@ -273,7 +274,7 @@ const BasicPanel: React.FC = () => {
                 onChange={(value) =>
                   updateBasicInfo({
                     ...basic,
-                    [field.key]: value,
+                    [field.key]: value
                   })
                 }
                 placeholder={`请输入${field.label}`}
@@ -314,7 +315,7 @@ const BasicPanel: React.FC = () => {
               onChange={(value) =>
                 updateBasicInfo({
                   ...basic,
-                  layout: value,
+                  layout: value
                 })
               }
             />
@@ -404,7 +405,7 @@ const BasicPanel: React.FC = () => {
                         onCheckedChange={(checked) =>
                           updateBasicInfo({
                             ...basic,
-                            githubContributionsVisible: checked,
+                            githubContributionsVisible: checked
                           })
                         }
                       />
@@ -420,7 +421,7 @@ const BasicPanel: React.FC = () => {
                           onChange={(e) =>
                             updateBasicInfo({
                               ...basic,
-                              githubKey: e.target.value,
+                              githubKey: e.target.value
                             })
                           }
                         />
@@ -434,7 +435,7 @@ const BasicPanel: React.FC = () => {
                           onChange={(e) =>
                             updateBasicInfo({
                               ...basic,
-                              githubUseName: e.target.value,
+                              githubUseName: e.target.value
                             })
                           }
                         />

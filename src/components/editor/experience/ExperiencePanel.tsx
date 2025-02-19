@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
+import { generateUUID } from "@/utils/uuid";
 
 const ExperiencePanel = () => {
   const t = useTranslations("workbench.experiencePanel");
@@ -15,7 +16,7 @@ const ExperiencePanel = () => {
   const { experience = [] } = activeResume || {};
   const handleCreateProject = () => {
     const newProject: Experience = {
-      id: crypto.randomUUID(),
+      id: generateUUID(),
       company: t("defaultProject.company"),
       position: t("defaultProject.position"),
       date: t("defaultProject.date"),

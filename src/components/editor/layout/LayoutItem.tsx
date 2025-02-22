@@ -22,7 +22,7 @@ const LayoutItem = ({
   setActiveSection,
   toggleSectionVisibility,
   updateMenuSections,
-  menuSections,
+  menuSections
 }: LayoutItemProps) => {
   const dragControls = useDragControls();
 
@@ -36,8 +36,9 @@ const LayoutItem = ({
           activeSection === item.id &&
             "border-primary dark:border-primary text-primary"
         )}
+        onClick={() => setActiveSection(item.id)}
       >
-        <div className="flex items-center p-3 pl-[32px] space-x-3 ">
+        <div className="flex items-center p-3 pl-[32px] space-x-3">
           <span
             className={cn(
               "text-lg  ml-[12px]",
@@ -47,10 +48,7 @@ const LayoutItem = ({
           >
             {item.icon}
           </span>
-          <span
-            className={cn("text-sm flex-1 cursor-pointer")}
-            onClick={() => setActiveSection(item.id)}
-          >
+          <span className={cn("text-sm flex-1 cursor-pointer")}>
             {item.title}
           </span>
         </div>
@@ -93,7 +91,10 @@ const LayoutItem = ({
         />
       </div>
 
-      <div className="flex select-none items-center p-3 space-x-3 flex-1 ">
+      <div
+        className="flex select-none items-center p-3 space-x-3 flex-1  cursor-pointer"
+        onClick={() => setActiveSection(item.id)}
+      >
         <div className="flex flex-1 items-center">
           <span
             className={cn(
@@ -104,16 +105,14 @@ const LayoutItem = ({
           >
             {item.icon}
           </span>
-          <span
-            className={cn("text-sm flex-1 cursor-pointer")}
-            onClick={() => setActiveSection(item.id)}
-          >
-            {item.title}
-          </span>
+          <span className="text-sm flex-1">{item.title}</span>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => toggleSectionVisibility(item.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSectionVisibility(item.id);
+            }}
             className={cn(
               "p-1.5 rounded-md mr-2",
               "dark:hover:bg-neutral-700 dark:text-neutral-300",
@@ -130,7 +129,8 @@ const LayoutItem = ({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               updateMenuSections(
                 menuSections.filter((section) => section.id !== item.id)
               );

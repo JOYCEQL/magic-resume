@@ -19,14 +19,15 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
         response_format: {
-          type: "json_object",
+          type: "json_object"
         },
         messages: [
           {
             role: "system",
-            content: `你是一个专业的中文简历错别字检查助手。请帮助检查以下文本，以下是要求：
-              1.仅需考虑组词中的错别字，不要考虑语法和格式错误。
-              2.对每个发现的问题，请按JSON格式返回
+            content: `你是一个专业的中文简历错别字检查助手。请完整检查以下文本，不要遗漏，以下是要求：
+              1.所有考虑中文语境下的语法组词错误，包括拼写错误，语境用词错误，专业术语错误。
+              2.验证是否有遗漏文字未检查
+              3.对每个发现的问题，请按JSON格式返回
 
               以下是示例格式：
               {
@@ -40,14 +41,14 @@ export async function POST(req: NextRequest) {
                 ]
               }
 
-              请确保返回的格式可以正常解析`,
+              请确保返回的格式可以正常解析`
           },
           {
             role: "user",
-            content: content,
-          },
-        ],
-      }),
+            content: content
+          }
+        ]
+      })
     });
 
     const data = await response.json();

@@ -29,53 +29,36 @@ export default function FeaturesSection() {
   const t = useTranslations("home");
   const [activeFeature, setActiveFeature] = useState(0);
   const [progress, setProgress] = useState(0);
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isTransitioning = useRef(false);
 
-  useEffect(() => {
-    return () => {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  const advanceToNextFeature = useCallback(() => {
-    setActiveFeature((prev) => (prev + 1) % features[0].items.length);
-    isTransitioning.current = false;
-  }, []);
-
-  useEffect(() => {
-    setProgress(0);
-    isTransitioning.current = false;
-
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current);
+  const clearTimers = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
+  }, []);
+
+  const startAutoProgress = useCallback(() => {
+    clearTimers();
+
+    setProgress(0);
 
     const updateInterval = 50;
-    const progressStep = (updateInterval / SLIDE_DURATION) * 100;
+    const progressIncrement = (updateInterval / SLIDE_DURATION) * 100;
 
-    progressIntervalRef.current = setInterval(() => {
-      setProgress((prevProgress) => {
-        const newProgress = prevProgress + progressStep;
+    intervalRef.current = setInterval(() => {
+      setProgress((prev) => {
+        const newProgress = prev + progressIncrement;
 
         if (newProgress >= 100) {
-          if (progressIntervalRef.current) {
-            clearInterval(progressIntervalRef.current);
-          }
-
-          timeoutRef.current = setTimeout(() => {
-            advanceToNextFeature();
-          }, 500);
+          clearInterval(intervalRef.current as NodeJS.Timeout);
+          intervalRef.current = null;
 
           return 100;
         }
@@ -85,32 +68,28 @@ export default function FeaturesSection() {
     }, updateInterval);
 
     timeoutRef.current = setTimeout(() => {
-      advanceToNextFeature();
-    }, SLIDE_DURATION + 1000);
+      timeoutRef.current = setTimeout(() => {
+        setActiveFeature((prev) => (prev + 1) % features[0].items.length);
+      }, 300);
+    }, SLIDE_DURATION);
+  }, [clearTimers]);
 
-    return () => {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [activeFeature, advanceToNextFeature]);
+  useEffect(() => {
+    startAutoProgress();
 
-  const handleSlideChange = (index: number) => {
-    if (index === activeFeature) return;
+    return clearTimers;
+  }, [activeFeature, startAutoProgress, clearTimers]);
 
-    if (progressIntervalRef.current) {
-      clearInterval(progressIntervalRef.current);
-    }
+  const handleSlideChange = useCallback(
+    (index: number) => {
+      if (index === activeFeature) return;
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+      clearTimers();
 
-    setActiveFeature(index);
-  };
+      setActiveFeature(index);
+    },
+    [activeFeature, clearTimers]
+  );
 
   const calculateCircleProgress = (percent: number) => {
     const radius = 10;

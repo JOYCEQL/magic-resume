@@ -31,6 +31,7 @@ export default function FeaturesSection() {
   const [progress, setProgress] = useState(0);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isTransitioning = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -45,10 +46,12 @@ export default function FeaturesSection() {
 
   const advanceToNextFeature = useCallback(() => {
     setActiveFeature((prev) => (prev + 1) % features[0].items.length);
+    isTransitioning.current = false;
   }, []);
 
   useEffect(() => {
     setProgress(0);
+    isTransitioning.current = false;
 
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current);

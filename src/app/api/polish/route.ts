@@ -5,18 +5,53 @@ import { AI_MODEL_CONFIGS } from "@/config/ai";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { apiKey, model, content, modelType } = body;
+    const { apiKey, model, content, modelType, baseURL } = body;
 
-    const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
-    if (!modelConfig) {
-      throw new Error("Invalid model type");
+    // 参数验证
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "API Key 不能为空" },
+        { status: 400 }
+      );
     }
 
-    const response = await fetch(modelConfig.url, {
+    if (modelType === "custom" && !baseURL) {
+      return NextResponse.json(
+        { error: "自定义服务商需要提供 Base URL" },
+        { status: 400 }
+      );
+    }
+
+    // 动态配置请求参数
+    let requestUrl: string;
+    let finalModel: string;
+
+    if (modelType === "custom") {
+      requestUrl = baseURL;
+      finalModel = model;
+    } else {
+      const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
+      if (!modelConfig) {
+        return NextResponse.json(
+          { error: "不支持的模型类型" },
+          { status: 400 }
+        );
+      }
+      requestUrl = modelConfig.url;
+      finalModel = modelConfig.requiresModelId 
+        ? model 
+        : modelConfig.defaultModel!;
+    }
+
+    // 发起流式请求
+    const response = await fetch(requestUrl, {
       method: "POST",
-      headers: modelConfig.headers(apiKey),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
       body: JSON.stringify({
-        model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
+        model: finalModel,
         messages: [
           {
             role: "system",
@@ -41,63 +76,74 @@ export async function POST(req: Request) {
       }),
     });
 
+    // 处理流式响应
     const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      async start(controller) {
-        if (!response.body) {
-          controller.close();
-          return;
-        }
+    return new Response(
+      new ReadableStream({
+        async start(controller) {
+          if (!response.body) {
+            controller.close();
+            return;
+          }
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
 
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-              controller.close();
-              break;
-            }
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) {
+                controller.close();
+                break;
+              }
 
-            const chunk = decoder.decode(value);
-            const lines = chunk
-              .split("\n")
-              .filter((line) => line.trim() !== "");
+              const chunk = decoder.decode(value);
+              const lines = chunk
+                .split("\n")
+                .filter(line => line.trim() !== "");
 
-            for (const line of lines) {
-              if (line.includes("[DONE]")) continue;
-              if (!line.startsWith("data:")) continue;
+              for (const line of lines) {
+                if (line.includes("[DONE]")) continue;
+                if (!line.startsWith("data:")) continue;
 
-              try {
-                const data = JSON.parse(line.slice(5));
-                const content = data.choices[0]?.delta?.content;
-                if (content) {
-                  controller.enqueue(encoder.encode(content));
+                try {
+                  const data = JSON.parse(line.slice(5));
+                  const content = data.choices[0]?.delta?.content;
+                  if (content) {
+                    controller.enqueue(encoder.encode(content));
+                  }
+                } catch (e) {
+                  console.error("JSON 解析错误:", {
+                    line,
+                    error: e instanceof Error ? e.message : String(e)
+                  });
                 }
-              } catch (e) {
-                console.error("Error parsing JSON:", e);
               }
             }
+          } catch (error) {
+            console.error("流式读取错误:", error);
+            controller.error(error);
           }
-        } catch (error) {
-          console.error("Stream reading error:", error);
-          controller.error(error);
+        },
+        cancel() {
+          reader.cancel();
         }
-      },
-    });
-
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
+      }),
+      {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+        },
+      }
+    );
   } catch (error) {
-    console.error("Polish error:", error);
+    console.error("简历优化失败:", {
+      error: error instanceof Error ? error.message : "未知错误",
+      timestamp: new Date().toISOString()
+    });
     return NextResponse.json(
-      { error: "Failed to polish content" },
+      { error: "内部服务器错误" },
       { status: 500 }
     );
   }

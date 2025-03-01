@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import DeepSeekLogo from "@/components/ai/icon/IconDeepseek";
 import IconDoubao from "@/components/ai/icon/IconDoubao";
+import IconCustom from "@/components/ai/icon/IconCustom"; // 新增自定义图标
 import {
   Select,
   SelectContent,
@@ -17,15 +18,26 @@ import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 
 const AISettingsPage = () => {
+  const t = useTranslations();
   const {
+    // 原有状态
+    selectedModel,
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
+    // 新增自定义状态
+    customApiKey,
+    customBaseURL,
+    customModelId,
+    // 原有 setter
+    setSelectedModel,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
-    selectedModel,
-    setSelectedModel
+    // 新增自定义 setter
+    setCustomApiKey,
+    setCustomBaseURL,
+    setCustomModelId
   } = useAIConfigStore();
 
   const [currentModel, setCurrentModel] = useState("");
@@ -34,30 +46,26 @@ const AISettingsPage = () => {
     setCurrentModel(selectedModel);
   }, [selectedModel]);
 
-  const t = useTranslations();
-
-  const handleApiKeyChange = async (
+  // 统一处理 API Key 输入
+  const handleApiKeyChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek"
+    type: AIModelType
   ) => {
-    const newApiKey = e.target.value;
-    if (type === "doubao") {
-      setDoubaoApiKey(newApiKey);
-    } else {
-      setDeepseekApiKey(newApiKey);
+    const value = e.target.value;
+    switch (type) {
+      case "doubao":
+        setDoubaoApiKey(value);
+        break;
+      case "deepseek":
+        setDeepseekApiKey(value);
+        break;
+      case "custom":
+        setCustomApiKey(value);
+        break;
     }
   };
 
-  const handleModelIdChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek"
-  ) => {
-    const newModelId = e.target.value;
-    if (type === "doubao") {
-      setDoubaoModelId(newModelId);
-    }
-  };
-
+  // 模型列表配置
   const models = [
     {
       id: "deepseek",
@@ -78,12 +86,24 @@ const AISettingsPage = () => {
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
       isConfigured: !!(doubaoApiKey && doubaoModelId)
+    },
+    // 新增自定义服务商
+    {
+      id: "custom",
+      name: t("dashboard.settings.ai.custom.title"),
+      description: t("dashboard.settings.ai.custom.description"),
+      icon: IconCustom,
+      link: "#",
+      color: "text-gray-500",
+      bgColor: "bg-gray-50 dark:bg-gray-950/50",
+      isConfigured: !!(customApiKey && customBaseURL && customModelId)
     }
   ];
 
   return (
     <div className="mx-auto py-4 px-4">
       <div className="flex gap-8">
+        {/* 左侧边栏 */}
         <div className="w-64 space-y-6">
           <div>
             <Label className="text-sm mb-2 block text-muted-foreground">
@@ -114,7 +134,7 @@ const AISettingsPage = () => {
 
           <div className="h-[1px] bg-gray-200 dark:bg-gray-800" />
 
-          {/* 配置模型列表 */}
+          {/* 模型切换列表 */}
           <div className="flex flex-col space-y-1">
             {models.map((model) => {
               const Icon = model.icon;
@@ -154,11 +174,13 @@ const AISettingsPage = () => {
           </div>
         </div>
 
+        {/* 右侧配置面板 */}
         <div className="flex-1 max-w-2xl">
           {models.map(
             (model) =>
               model.id === currentModel && (
                 <div key={model.id} className="space-y-8">
+                  {/* 标题和描述 */}
                   <div>
                     <h2 className="text-2xl font-semibold flex items-center gap-2">
                       <div className={cn("shrink-0", model.color)}>
@@ -171,31 +193,36 @@ const AISettingsPage = () => {
                     </p>
                   </div>
 
+                  {/* 配置表单 */}
                   <div className="space-y-6">
+                    {/* API Key 输入 */}
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <Label className="text-base font-medium">
                           {t(`dashboard.settings.ai.${model.id}.apiKey`)}
                         </Label>
-                        <a
-                          href={model.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
-                        >
-                          {t("dashboard.settings.ai.getApiKey")}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
+                        {model.id !== "custom" && (  // 自定义服务商不显示链接
+                          <a
+                            href={model.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
+                          >
+                            {t("dashboard.settings.ai.getApiKey")}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        )}
                       </div>
                       <Input
                         value={
-                          model.id === "doubao" ? doubaoApiKey : deepseekApiKey
+                          model.id === "doubao"
+                            ? doubaoApiKey
+                            : model.id === "deepseek"
+                            ? deepseekApiKey
+                            : customApiKey
                         }
                         onChange={(e) =>
-                          handleApiKeyChange(
-                            e,
-                            model.id as "doubao" | "deepseek"
-                          )
+                          handleApiKeyChange(e, model.id as AIModelType)
                         }
                         type="password"
                         placeholder={t(
@@ -210,14 +237,15 @@ const AISettingsPage = () => {
                       />
                     </div>
 
-                    {currentModel === "doubao" && (
+                    {/* 豆包模型专属字段 */}
+                    {model.id === "doubao" && (
                       <div className="space-y-4">
                         <Label className="text-base font-medium">
                           {t("dashboard.settings.ai.doubao.modelId")}
                         </Label>
                         <Input
                           value={doubaoModelId}
-                          onChange={(e) => handleModelIdChange(e, "doubao")}
+                          onChange={(e) => setDoubaoModelId(e.target.value)}
                           placeholder={t(
                             "dashboard.settings.ai.doubao.modelId"
                           )}
@@ -230,6 +258,48 @@ const AISettingsPage = () => {
                         />
                       </div>
                     )}
+
+                    {/* 自定义服务商专属字段 */}
+                    {model.id === "custom" && (
+                      <>
+                        <div className="space-y-4">
+                          <Label className="text-base font-medium">
+                            {t("dashboard.settings.ai.custom.baseURL")}
+                          </Label>
+                          <Input
+                            value={customBaseURL}
+                            onChange={(e) => setCustomBaseURL(e.target.value)}
+                            placeholder={t(
+                              "dashboard.settings.ai.custom.baseURL.placeholder"
+                            )}
+                            className={cn(
+                              "h-11",
+                              "bg-white dark:bg-gray-900",
+                              "border-gray-200 dark:border-gray-800",
+                              "focus:ring-2 focus:ring-primary/20"
+                            )}
+                          />
+                        </div>
+                        <div className="space-y-4">
+                          <Label className="text-base font-medium">
+                            {t("dashboard.settings.ai.custom.modelId")}
+                          </Label>
+                          <Input
+                            value={customModelId}
+                            onChange={(e) => setCustomModelId(e.target.value)}
+                            placeholder={t(
+                              "dashboard.settings.ai.custom.modelId.placeholder"
+                            )}
+                            className={cn(
+                              "h-11",
+                              "bg-white dark:bg-gray-900",
+                              "border-gray-200 dark:border-gray-800",
+                              "focus:ring-2 focus:ring-primary/20"
+                            )}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               )
@@ -241,3 +311,6 @@ const AISettingsPage = () => {
 };
 
 export default AISettingsPage;
+
+// 类型定义（放在文件底部）
+type AIModelType = "doubao" | "deepseek" | "custom";

@@ -1,7 +1,7 @@
 
 <div align="center">
 
-# ✨ Magic Resume ✨
+# ✨ Magic Resume - 支持自定义AI服务商✨
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)

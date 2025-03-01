@@ -25,13 +25,13 @@ const itemAnimations = {
   initial: { opacity: 0, y: 0 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: 0 },
-  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 }
+  transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 },
 };
 
 const CustomField: React.FC<CustomFieldProps> = ({
   field,
   onUpdate,
-  onDelete
+  onDelete,
 }) => {
   const t = useTranslations("workbench.basicPanel");
 
@@ -44,11 +44,11 @@ const CustomField: React.FC<CustomFieldProps> = ({
       <motion.div
         {...itemAnimations}
         className={cn(
-          "grid grid-cols-[auto_auto_1fr_1fr_auto_auto] gap-3 items-center p-3",
+          "grid grid-cols-[auto,auto,1fr,1fr,auto] gap-3 items-center p-3",
           "bg-white dark:bg-neutral-800 rounded-xl",
           "border border-neutral-100 dark:border-neutral-700",
           "transition-all duration-200",
-          " hover:border-neutral-200 dark:hover:border-neutral-600",
+          "hover:border-neutral-200 dark:hover:border-neutral-600",
           !field.visible && "!opacity-60"
         )}
       >
@@ -73,7 +73,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           onChange={(value) =>
             onUpdate({
               ...field,
-              label: value
+              label: value,
             })
           }
           placeholder={t("customFields.placeholders.label")}
@@ -89,7 +89,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           onChange={(value) =>
             onUpdate({
               ...field,
-              value: value
+              value: value,
             })
           }
           placeholder={t("customFields.placeholders.value")}
@@ -101,29 +101,37 @@ const CustomField: React.FC<CustomFieldProps> = ({
           )}
         />
 
-        {field.visible ? (
-          <Eye
-            className="w-4 h-4 cursor-pointer text-primary"
+        <div className="flex items-center space-x-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "shrink-0 h-8 px-2",
+              "text-neutral-500 dark:text-neutral-400",
+              "hover:text-neutral-700 dark:hover:text-neutral-200"
+            )}
             onClick={() => onUpdate({ ...field, visible: !field.visible })}
-          />
-        ) : (
-          <EyeOff
-            className="w-4 h-4 cursor-pointer"
-            onClick={() => onUpdate({ ...field, visible: !field.visible })}
-          />
-        )}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => onDelete(field.id)}
-          className={cn(
-            "p-2 rounded-lg transition-colors",
-            "hover:bg-red-100 dark:hover:bg-red-900/40",
-            "text-red-500 bg-red-50 dark:bg-red-900/20"
-          )}
-        >
-          <Trash2 className="w-4 h-4" />
-        </motion.button>
+          >
+            {field.visible ? (
+              <Eye className="w-4 h-4 text-primary" />
+            ) : (
+              <EyeOff className="w-4 h-4" />
+            )}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDelete(field.id)}
+            className={cn(
+              "shrink-0 h-8 px-2",
+              "text-neutral-500 dark:text-neutral-400",
+              "hover:text-red-600 dark:hover:text-red-400"
+            )}
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
+          </Button>
+        </div>
       </motion.div>
     </Reorder.Item>
   );
@@ -135,7 +143,7 @@ const BasicPanel: React.FC = () => {
   const [customFields, setCustomFields] = useState<CustomFieldType[]>(
     basic?.customFields?.map((field) => ({
       ...field,
-      visible: field.visible ?? true
+      visible: field.visible ?? true,
     })) || []
   );
   const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
@@ -144,7 +152,7 @@ const BasicPanel: React.FC = () => {
     }
     return basic.fieldOrder.map((field) => ({
       ...field,
-      visible: field.visible ?? true
+      visible: field.visible ?? true,
     }));
   });
   const t = useTranslations("workbench.basicPanel");
@@ -153,7 +161,7 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newOrder);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newOrder
+      fieldOrder: newOrder,
     });
   };
 
@@ -164,7 +172,24 @@ const BasicPanel: React.FC = () => {
     setBasicFields(newFields);
     updateBasicInfo({
       ...basic,
-      fieldOrder: newFields
+      fieldOrder: newFields,
+    });
+  };
+
+  const deleteBasicField = (fieldId: string) => {
+    const fieldToDelete = basicFields.find((field) => field.id === fieldId);
+    if (
+      fieldToDelete &&
+      (fieldToDelete.key === "name" || fieldToDelete.key === "title")
+    ) {
+      return;
+    }
+
+    const updatedFields = basicFields.filter((field) => field.id !== fieldId);
+    setBasicFields(updatedFields);
+    updateBasicInfo({
+      ...basic,
+      fieldOrder: updatedFields,
     });
   };
 
@@ -174,13 +199,13 @@ const BasicPanel: React.FC = () => {
       label: "",
       value: "",
       icon: "User",
-      visible: true
+      visible: true,
     };
     const updatedFields = [...customFields, fieldToAdd];
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -191,7 +216,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -200,7 +225,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(updatedFields);
     updateBasicInfo({
       ...basic,
-      customFields: updatedFields
+      customFields: updatedFields,
     });
   };
 
@@ -208,7 +233,7 @@ const BasicPanel: React.FC = () => {
     setCustomFields(newOrder);
     updateBasicInfo({
       ...basic,
-      customFields: newOrder
+      customFields: newOrder,
     });
   };
 
@@ -221,10 +246,7 @@ const BasicPanel: React.FC = () => {
         id={field.id}
         key={field.id}
         className="group touch-none list-none"
-        dragListener={
-          // 姓名和职位禁用拖拽
-          field.key !== "name" && field.key !== "title"
-        }
+        dragListener={field.key !== "name" && field.key !== "title"}
       >
         <motion.div
           {...itemAnimations}
@@ -258,8 +280,8 @@ const BasicPanel: React.FC = () => {
                     ...basic,
                     icons: {
                       ...(basic?.icons || {}),
-                      [field.key]: value
-                    }
+                      [field.key]: value,
+                    },
                   });
                 }}
               />
@@ -274,7 +296,7 @@ const BasicPanel: React.FC = () => {
                 onChange={(value) =>
                   updateBasicInfo({
                     ...basic,
-                    [field.key]: value
+                    [field.key]: value,
                   })
                 }
                 placeholder={`请输入${field.label}`}
@@ -283,22 +305,39 @@ const BasicPanel: React.FC = () => {
             </div>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "shrink-0 h-8 px-2",
-              "text-neutral-500 dark:text-neutral-400",
-              "hover:text-neutral-700 dark:hover:text-neutral-200"
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "shrink-0 h-8 px-2",
+                "text-neutral-500 dark:text-neutral-400",
+                "hover:text-neutral-700 dark:hover:text-neutral-200"
+              )}
+              onClick={() => toggleFieldVisibility(field.id, !field.visible)}
+            >
+              {field.visible ? (
+                <Eye className="w-4 h-4 text-primary" />
+              ) : (
+                <EyeOff className="w-4 h-4" />
+              )}
+            </Button>
+
+            {field.key !== "name" && field.key !== "title" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "shrink-0 h-8 px-2",
+                  "text-neutral-500 dark:text-neutral-400",
+                  "hover:text-red-600 dark:hover:text-red-400"
+                )}
+                onClick={() => deleteBasicField(field.id)}
+              >
+                <Trash2 className="w-4 h-4 text-red-400" />
+              </Button>
             )}
-            onClick={() => toggleFieldVisibility(field.id, !field.visible)}
-          >
-            {field.visible ? (
-              <Eye className="w-4 h-4 text-primary" />
-            ) : (
-              <EyeOff className="w-4 h-4" />
-            )}
-          </Button>
+          </div>
         </motion.div>
       </Reorder.Item>
     );
@@ -315,7 +354,7 @@ const BasicPanel: React.FC = () => {
               onChange={(value) =>
                 updateBasicInfo({
                   ...basic,
-                  layout: value
+                  layout: value,
                 })
               }
             />
@@ -405,7 +444,7 @@ const BasicPanel: React.FC = () => {
                         onCheckedChange={(checked) =>
                           updateBasicInfo({
                             ...basic,
-                            githubContributionsVisible: checked
+                            githubContributionsVisible: checked,
                           })
                         }
                       />
@@ -421,7 +460,7 @@ const BasicPanel: React.FC = () => {
                           onChange={(e) =>
                             updateBasicInfo({
                               ...basic,
-                              githubKey: e.target.value
+                              githubKey: e.target.value,
                             })
                           }
                         />
@@ -435,7 +474,7 @@ const BasicPanel: React.FC = () => {
                           onChange={(e) =>
                             updateBasicInfo({
                               ...basic,
-                              githubUseName: e.target.value
+                              githubUseName: e.target.value,
                             })
                           }
                         />

@@ -265,8 +265,8 @@
         "phone": "电话",
         "website": "个人网站",
         "location": "地址",
-        "birthDate": "出生日期",
-        "employementStatus": "求职状态"
+        "birthDate": "生日",
+        "employementStatus": "状态"
       },
       "fieldVisibility": {
         "show": "显示",

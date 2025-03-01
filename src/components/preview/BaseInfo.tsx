@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ const BaseInfo = ({
   template
 }: BaseInfoProps) => {
   const t = useTranslations("workbench");
+  const locale = useLocale();
   const { setActiveSection } = useResumeStore();
   const useIconMode = globalSettings?.useIconMode ?? false;
   const layout = basic?.layout || "left";
@@ -64,7 +65,7 @@ const BaseInfo = ({
         key: field.key,
         value:
           field.key === "birthDate" && basic[field.key]
-            ? new Date(basic[field.key] as string).toLocaleDateString()
+            ? new Date(basic[field.key] as string).toLocaleDateString(locale)
             : (basic[field.key] as string),
         icon: basic.icons?.[field.key] || "User",
         label: field.label,

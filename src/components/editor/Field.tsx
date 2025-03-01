@@ -112,7 +112,11 @@ const Field = ({
   if (type === "date") {
     const formatDate = (date: Date | undefined) => {
       if (!date) return "";
-      return format(date, "yyyy/MM/dd");
+      return date.toLocaleDateString(["zh-CN", "en-US"], {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
     };
 
     const handleYearInput = (e: React.ChangeEvent<HTMLInputElement>) => {

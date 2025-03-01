@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
+import { useLocale } from "next-intl";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -16,6 +17,7 @@ const EducationSection = ({
   showTitle = true,
 }: EducationSectionProps) => {
   const { setActiveSection } = useResumeStore();
+  const locale = useLocale();
   const visibleEducation = education?.filter((edu) => edu.visible);
   return (
     <motion.div
@@ -74,9 +76,9 @@ const EducationSection = ({
                 className="text-subtitleFont shrink-0"
                 suppressHydrationWarning
               >
-                {`${new Date(edu.startDate).toLocaleDateString()} - ${new Date(
-                  edu.endDate
-                ).toLocaleDateString()}`}
+                {`${new Date(edu.startDate).toLocaleDateString(
+                  locale
+                )} - ${new Date(edu.endDate).toLocaleDateString(locale)}`}
               </span>
             </motion.div>
 

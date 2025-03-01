@@ -147,9 +147,9 @@
           "description": "Connect your own AI service provider",
           "apiKey": "API Key",
           "baseURL": "Base URL",
-          "baseURL.placeholder": "https://your-base-url/v1/chat/completions",
+          "baseURLplaceholder": "https://your-base-url/v1/chat/completions",
           "modelId": "Model ID",
-          "modelId.placeholder": "Enter your model name"
+          "modelIdplaceholder": "Enter your model name"
         }
       }
     },

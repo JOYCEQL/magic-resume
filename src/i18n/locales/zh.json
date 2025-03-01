@@ -138,21 +138,25 @@
           "title": "豆包",
           "description": "在火山引擎获取 API 密钥",
           "apiKey": "API Key",
-          "modelId": "模型 ID"
+          "apiKey.placeholder": "从火山引擎控制台获取API密钥",
+          "modelId": "模型 ID",
+          "modelId.placeholder": "输入您的豆包模型ID"
         },
         "deepseek": {
           "title": "DeepSeek",
           "description": "在 DeepSeek 开放平台获取 API 密钥",
-          "apiKey": "API Key"
+          "apiKey": "API Key",
+          "apiKey.placeholder": "从深度求索平台获取API密钥"
         },
         "custom": {
           "title": "自定义服务商",
           "description": "连接您自定义的AI服务提供商",
           "apiKey": "API密钥",
+          "apiKey.placeholder": "输入自定义服务商API密钥",
           "baseURL": "基础URL",
-          "baseURL.placeholder": "示例：https://your-base-url/v1/chat/completions",
+          "baseURL.placeholder": "示例：https://api.example.com/v1",
           "modelId": "模型ID",
-          "modelId.placeholder": "输入您的模型名称"
+          "modelId.placeholder": "输入模型名称如gpt-4"
         }
       }
     },

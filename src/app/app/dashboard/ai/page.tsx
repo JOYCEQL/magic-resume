@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import DeepSeekLogo from "@/components/ai/icon/IconDeepseek";
 import IconDoubao from "@/components/ai/icon/IconDoubao";
-import IconCustom from "@/components/ai/icon/IconCustom"; // 新增自定义图标
+import IconCustom from "@/components/ai/icon/IconCustom";
 import {
   Select,
   SelectContent,
@@ -20,21 +20,17 @@ import { cn } from "@/lib/utils";
 const AISettingsPage = () => {
   const t = useTranslations();
   const {
-    // 原有状态
     selectedModel,
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    // 新增自定义状态
     customApiKey,
     customBaseURL,
     customModelId,
-    // 原有 setter
     setSelectedModel,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
-    // 新增自定义 setter
     setCustomApiKey,
     setCustomBaseURL,
     setCustomModelId
@@ -87,7 +83,6 @@ const AISettingsPage = () => {
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
       isConfigured: !!(doubaoApiKey && doubaoModelId)
     },
-    // 新增自定义服务商
     {
       id: "custom",
       name: t("dashboard.settings.ai.custom.title"),
@@ -201,7 +196,7 @@ const AISettingsPage = () => {
                         <Label className="text-base font-medium">
                           {t(`dashboard.settings.ai.${model.id}.apiKey`)}
                         </Label>
-                        {model.id !== "custom" && (  // 自定义服务商不显示链接
+                        {model.id !== "custom" && (
                           <a
                             href={model.link}
                             target="_blank"
@@ -225,9 +220,11 @@ const AISettingsPage = () => {
                           handleApiKeyChange(e, model.id as AIModelType)
                         }
                         type="password"
-                        placeholder={t(
-                          `dashboard.settings.ai.${model.id}.apiKey`
-                        )}
+                        placeholder={
+                          model.id === "custom"
+                            ? t("dashboard.settings.ai.custom.apiKey.placeholder")
+                            : t(`dashboard.settings.ai.${model.id}.apiKey.placeholder`)
+                        }
                         className={cn(
                           "h-11",
                           "bg-white dark:bg-gray-900",
@@ -247,7 +244,7 @@ const AISettingsPage = () => {
                           value={doubaoModelId}
                           onChange={(e) => setDoubaoModelId(e.target.value)}
                           placeholder={t(
-                            "dashboard.settings.ai.doubao.modelId"
+                            "dashboard.settings.ai.doubao.modelId.placeholder"
                           )}
                           className={cn(
                             "h-11",
@@ -312,5 +309,4 @@ const AISettingsPage = () => {
 
 export default AISettingsPage;
 
-// 类型定义（放在文件底部）
 type AIModelType = "doubao" | "deepseek" | "custom";

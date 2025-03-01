@@ -61,15 +61,23 @@ export const PreviewDock = ({
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    deepseekModelId
+    deepseekModelId,
+    // 新增自定义服务商状态
+    customApiKey,
+    customBaseURL,
+    customModelId,
   } = useAIConfigStore();
 
   const handleGrammarCheck = useCallback(async () => {
     if (!resumeContentRef.current) return;
     const config = AI_MODEL_CONFIGS[selectedModel];
+    
+    // 修复后的配置检查逻辑
     const isConfigured =
       selectedModel === "doubao"
         ? doubaoApiKey && doubaoModelId
+        : selectedModel === "custom"  // 新增自定义服务商检查
+        ? customApiKey && customBaseURL && customModelId // 需要同时验证三个参数
         : config.requiresModelId
         ? deepseekApiKey && deepseekModelId
         : deepseekApiKey;
@@ -102,7 +110,12 @@ export const PreviewDock = ({
     doubaoModelId,
     deepseekApiKey,
     deepseekModelId,
-    t
+    customApiKey,  // 新增依赖
+    customBaseURL, // 新增依赖
+    customModelId, // 新增依赖
+    t,
+    router,
+    checkGrammar
   ]);
 
   const handleGoGitHub = () => {

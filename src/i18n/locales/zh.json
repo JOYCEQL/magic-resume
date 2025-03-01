@@ -134,29 +134,29 @@
         "currentModel": "当前使用的模型",
         "selectModel": "选择模型",
         "getApiKey": "获取 API Key",
-        "doubao": {
-          "title": "豆包",
-          "description": "在火山引擎获取 API 密钥",
-          "apiKey": "API Key",
-          "apiKey.placeholder": "从火山引擎控制台获取API密钥",
-          "modelId": "模型 ID",
-          "modelId.placeholder": "输入您的豆包模型ID"
-        },
         "deepseek": {
           "title": "DeepSeek",
-          "description": "在 DeepSeek 开放平台获取 API 密钥",
-          "apiKey": "API Key",
-          "apiKey.placeholder": "从深度求索平台获取API密钥"
+          "description": "使用深度求索的大模型服务",
+          "apiKey": "API密钥",
+          "apiKeyDescription": "请前往深度求索开放平台获取您的API密钥"
+        },
+        "doubao": {
+          "title": "豆包",
+          "description": "使用火山引擎的AI服务",
+          "apiKey": "API密钥",
+          "apiKeyDescription": "从火山引擎控制台获取您的API密钥",
+          "modelId": "模型ID",
+          "modelIdDescription": "请输入您在火山引擎创建的模型ID"
         },
         "custom": {
           "title": "自定义服务商",
-          "description": "连接您自定义的AI服务提供商",
+          "description": "连接您自己的AI服务提供商",
           "apiKey": "API密钥",
-          "apiKey.placeholder": "输入自定义服务商API密钥",
-          "baseURL": "基础URL",
-          "baseURL.placeholder": "示例：https://api.example.com/v1",
-          "modelId": "模型ID",
-          "modelId.placeholder": "输入模型名称如gpt-4"
+          "apiKeyDescription": "输入您的自定义服务商API密钥",
+          "baseURL": "服务地址",
+          "baseURLDescription": "示例：https://api.your-service.com/v1",
+          "modelId": "模型名称",
+          "modelIdDescription": "输入模型名称（如：gpt-4）"
         }
       }
     },

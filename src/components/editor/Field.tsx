@@ -52,6 +52,10 @@ const Field = ({
     selectedModel,
     deepseekApiKey,
     deepseekModelId,
+    // 新增自定义服务商状态
+    customApiKey,
+    customBaseURL,
+    customModelId,
   } = useAIConfigStore();
   const t = useTranslations();
 
@@ -250,9 +254,13 @@ const Field = ({
             placeholder={placeholder}
             onPolish={() => {
               const config = AI_MODEL_CONFIGS[selectedModel];
+              
+              // 修复配置检查逻辑
               const isConfigured =
                 selectedModel === "doubao"
                   ? doubaoApiKey && doubaoModelId
+                  : selectedModel === "custom"
+                  ? customApiKey && customBaseURL && customModelId // 检查自定义服务商所有参数
                   : config.requiresModelId
                   ? deepseekApiKey && deepseekModelId
                   : deepseekApiKey;

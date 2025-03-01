@@ -144,6 +144,15 @@
           "title": "DeepSeek",
           "description": "在 DeepSeek 开放平台获取 API 密钥",
           "apiKey": "API Key"
+        },
+        "custom": {
+          "title": "自定义服务商",
+          "description": "连接您自定义的AI服务提供商",
+          "apiKey": "API密钥",
+          "baseURL": "基础URL",
+          "baseURL.placeholder": "示例：https://your-base-url/v1/chat/completions",
+          "modelId": "模型ID",
+          "modelId.placeholder": "输入您的模型名称"
         }
       }
     },

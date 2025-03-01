@@ -18,7 +18,7 @@ export const initialResumeState = {
   basic: {
     name: "魔方",
     title: "高级前端工程师",
-    employementStatus: "全职",
+    employementStatus: "离职",
     email: "zhangsan@example.com",
     phone: "13800138000",
     location: "北京市朝阳区",

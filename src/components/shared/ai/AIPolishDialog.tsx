@@ -38,7 +38,10 @@ export default function AIPolishDialog({
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    deepseekModelId
+    deepseekModelId,
+    customApiKey,
+    customBaseURL,
+    customModelId
   } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
@@ -46,9 +49,13 @@ export default function AIPolishDialog({
   const handlePolish = async () => {
     try {
       const config = AI_MODEL_CONFIGS[selectedModel];
+      
+      // 修复配置检查逻辑
       const isConfigured =
         selectedModel === "doubao"
           ? doubaoApiKey && doubaoModelId
+          : selectedModel === "custom"
+          ? customApiKey && customBaseURL && customModelId
           : config.requiresModelId
           ? deepseekApiKey && deepseekModelId
           : deepseekApiKey;
@@ -71,14 +78,16 @@ export default function AIPolishDialog({
         },
         body: JSON.stringify({
           content,
-          apiKey: selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey,
+          apiKey: 
+            selectedModel === "doubao" ? doubaoApiKey :
+            selectedModel === "custom" ? customApiKey :
+            deepseekApiKey,
           model:
-            selectedModel === "doubao"
-              ? doubaoModelId
-              : config.requiresModelId
-              ? deepseekModelId
-              : config.defaultModel,
-          modelType: selectedModel
+            selectedModel === "doubao" ? doubaoModelId :
+            selectedModel === "custom" ? customModelId :
+            config.requiresModelId ? deepseekModelId : config.defaultModel,
+          modelType: selectedModel,
+          baseURL: selectedModel === "custom" ? customBaseURL : undefined
         }),
         signal: abortControllerRef.current.signal
       });

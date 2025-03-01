@@ -4,6 +4,7 @@ import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
+import type { AIModelType } from "@/store/useAIConfigStore";
 
 export interface GrammarError {
   error: string;
@@ -18,6 +19,8 @@ interface GrammarStore {
   errors: GrammarError[];
   selectedErrorIndex: number | null;
   highlightKey: number;
+  
+  // 操作方法
   setErrors: (errors: GrammarError[]) => void;
   setIsChecking: (isChecking: boolean) => void;
   setSelectedErrorIndex: (index: number | null) => void;
@@ -42,16 +45,32 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
   checkGrammar: async (text: string) => {
     const {
       selectedModel,
+      // 原有服务商配置
       doubaoApiKey,
       doubaoModelId,
       deepseekApiKey,
       deepseekModelId,
+      // 新增自定义服务商配置
+      customApiKey,
+      customBaseURL,
+      customModelId,
     } = useAIConfigStore.getState();
 
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey = selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey;
-    const modelId =
-      selectedModel === "doubao" ? doubaoModelId : deepseekModelId;
+    // 动态获取配置参数
+    let apiKey: string;
+    let modelId: string;
+    let baseURL: string | undefined;
+
+    if (selectedModel === "custom") {
+      apiKey = customApiKey;
+      modelId = customModelId;
+      baseURL = customBaseURL;
+    } else {
+      const config = AI_MODEL_CONFIGS[selectedModel];
+      apiKey = selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey;
+      modelId = selectedModel === "doubao" ? doubaoModelId : deepseekModelId;
+      baseURL = undefined; // 非自定义服务商不需要 baseURL
+    }
 
     set({ isChecking: true });
 
@@ -64,8 +83,9 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         body: JSON.stringify({
           content: text,
           apiKey,
-          model: config.requiresModelId ? modelId : config.defaultModel,
+          model: modelId,
           modelType: selectedModel,
+          baseURL, // 新增 baseURL 参数
         }),
       });
 
@@ -75,13 +95,13 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
       const data = await response.json();
 
+      // 错误处理增强
       if (data.error) {
-        toast.error(data.error.message);
-        throw new Error(data.error.message);
-      }
-
-      if (data.error?.code === "AuthenticationError") {
-        toast.error("ApiKey 或 模型Id 不正确");
+        const errorMessage = selectedModel === "custom" 
+          ? "自定义服务商配置错误" 
+          : "API 密钥或模型 ID 不正确";
+        
+        toast.error(errorMessage);
         throw new Error(data.error.message);
       }
 
@@ -96,6 +116,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         }
         set({ errors: grammarErrors.errors });
 
+        // 高亮逻辑
         const preview = document.getElementById("resume-preview");
         if (preview) {
           const marker = new Mark(preview);
@@ -111,6 +132,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         set({ errors: [] });
       }
     } catch (error) {
+      console.error("Grammar check failed:", error);
       set({ errors: [] });
     } finally {
       set({ isChecking: false });
@@ -139,6 +161,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     const marker = new Mark(preview);
     marker.unmark();
 
+    // 高亮所有错误，当前选中项特殊样式
     errors.forEach((err, i) => {
       marker.mark(err.context || err.text || "", {
         className: cn(
@@ -148,6 +171,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       });
     });
 
+    // 滚动到选中错误
     const marks = preview.querySelectorAll("mark");
     const selectedMark = marks[index];
     if (selectedMark) {

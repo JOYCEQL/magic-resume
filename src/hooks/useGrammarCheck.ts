@@ -1,11 +1,6 @@
+// src/hooks/useGrammarCheck.ts
 import { useGrammarStore } from "@/store/useGrammarStore";
-
-export interface GrammarError {
-  text: string;
-  message: string;
-  type: "spelling" | "grammar";
-  suggestions: string[];
-}
+import type { GrammarError } from "@/store/useGrammarStore"; // 从 store 导入类型
 
 export const useGrammarCheck = () => {
   const {

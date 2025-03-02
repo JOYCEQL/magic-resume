@@ -141,6 +141,15 @@
           "title": "DeepSeek",
           "description": "Get API key from DeepSeek Platform",
           "apiKey": "DeepSeek API Key"
+        },
+        "custom": {
+          "title": "Custom Provider",
+          "description": "Connect your own AI service provider",
+          "apiKey": "API Key",
+          "baseURL": "Base URL",
+          "baseURLplaceholder": "https://your-base-url/v1/chat/completions",
+          "modelId": "Model ID",
+          "modelIdplaceholder": "Enter your model name"
         }
       }
     },

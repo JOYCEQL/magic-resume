@@ -5,22 +5,54 @@ import { AI_MODEL_CONFIGS } from "@/config/ai";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { apiKey, model, content, modelType } = body;
+    const { apiKey, model, content, modelType, baseURL } = body;
 
-    const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
-    if (!modelConfig) {
-      throw new Error("Invalid model type");
+    // 参数校验
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "API Key 不能为空" },
+        { status: 400 }
+      );
     }
 
-    const response = await fetch(modelConfig.url, {
-      method: "POST",
-      headers: modelConfig.headers(apiKey),
+    if (modelType === "custom" && !baseURL) {
+      return NextResponse.json(
+        { error: "自定义服务商需要提供 Base URL" },
+        { status: 400 }
+      );
+    }
 
+    // 动态配置请求参数
+    let requestUrl: string;
+    let finalModel: string;
+
+    if (modelType === "custom") {
+      requestUrl = baseURL;
+      finalModel = model; // 直接使用用户输入的模型ID
+    } else {
+      const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
+      if (!modelConfig) {
+        return NextResponse.json(
+          { error: "不支持的模型类型" },
+          { status: 400 }
+        );
+      }
+      requestUrl = modelConfig.url;
+      finalModel = modelConfig.requiresModelId 
+        ? model 
+        : modelConfig.defaultModel!;
+    }
+
+    // 统一请求配置
+    const response = await fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`, // 统一使用 Bearer Token
+      },
       body: JSON.stringify({
-        model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-        response_format: {
-          type: "json_object"
-        },
+        model: finalModel,
+        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
@@ -51,12 +83,33 @@ export async function POST(req: NextRequest) {
       })
     });
 
+    // 处理错误响应
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("API 请求失败:", {
+        status: response.status,
+        error: errorData,
+        requestUrl,
+        modelType
+      });
+      return NextResponse.json(
+        { 
+          error: "服务商请求失败",
+          details: errorData 
+        },
+        { status: 502 } // 标记为网关错误
+      );
+    }
+
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error in grammar check:", error);
+    console.error("语法检查失败:", {
+      error: error instanceof Error ? error.message : "未知错误",
+      timestamp: new Date().toISOString()
+    });
     return NextResponse.json(
-      { error: "Failed to check grammar" },
+      { error: "内部服务器错误" },
       { status: 500 }
     );
   }

@@ -1,9 +1,7 @@
-<div align="center">
-  
-## ✨Magic Resume✨
 
-### 支持自定义AI服务商
-魔法简历
+<div align="center">
+
+# ✨ Magic Resume ✨
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
@@ -117,6 +115,7 @@ docker pull siyueqingchen/magic-resume
 
 - [x] AI 辅助编写
 - [x] 多语言支持
+- [x] 支持自定义AI
 - [ ] 支持更多简历模板
 - [ ] 更多格式导出
 - [ ] 智能一页

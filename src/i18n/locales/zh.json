@@ -242,11 +242,11 @@
       }
     },
     "basicPanel": {
-      "title": "关于我",
+      "title": "资料",
       "basicField": "基础字段",
       "customField": "自定义字段",
       "githubContributions": "Github贡献",
-      "layout": "对齐方式",
+      "layout": "布局",
       "layoutLeft": "居左",
       "layoutCenter": "居中",
       "layoutRight": "居右",
@@ -413,7 +413,10 @@
       "dragHint": "拖拽或点击上传图片",
       "sizeLimit": "图片大小不能超过5MB",
       "typeLimit": "请上传图片文件",
-      "urlPlaceholder": "输入图片链接"
+      "urlPlaceholder": "输入图片链接",
+      "invalidUrl": "图片链接无效或无法访问，请尝试使用其他图片链接",
+      "timeout": "加载超时",
+      "loadError": "图片加载失败"
     },
     "config": {
       "aspectRatio": "宽高比",

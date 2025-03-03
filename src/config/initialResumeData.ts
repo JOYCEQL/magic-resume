@@ -309,7 +309,7 @@ export const initialResumeStateEn = {
     },
     {
       id: "projects",
-      title: "Experience",
+      title: "Projects",
       icon: "🚀",
       enabled: true,
       order: 3,

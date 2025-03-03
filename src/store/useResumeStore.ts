@@ -115,12 +115,13 @@ export const useResumeStore = create(
       activeResume: null,
 
       createResume: (templateId = null) => {
-        // 判断当前语言环境
         const locale =
-          typeof window !== "undefined"
-            ? window.navigator.language.split("-")[0]
-            : "en";
-        console.log("locale", locale);
+          typeof document !== "undefined"
+            ? document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("NEXT_LOCALE="))
+                ?.split("=")[1] || "zh"
+            : "zh";
 
         const initialResumeData =
           locale === "en" ? initialResumeStateEn : initialResumeState;

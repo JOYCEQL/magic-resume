@@ -259,7 +259,7 @@
       }
     },
     "basicPanel": {
-      "title": "About Me",
+      "title": "Profile",
       "avatar": "Avatar",
       "basicField": "Basic",
       "customField": "Custom",
@@ -450,7 +450,10 @@
       "dragHint": "Drag and drop or click to upload image",
       "sizeLimit": "Image size must not exceed 5MB",
       "typeLimit": "Please upload an image file",
-      "urlPlaceholder": "Enter image link"
+      "urlPlaceholder": "Enter image link",
+      "invalidUrl": "Invalid image URL or inaccessible, please try another image link",
+      "timeout": "Loading timeout",
+      "loadError": "Failed to load image"
     },
     "config": {
       "aspectRatio": "Aspect Ratio",

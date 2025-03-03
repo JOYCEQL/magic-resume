@@ -131,7 +131,6 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     }
 
     try {
-      // images.weserv.nl proxy
       const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(
         url
       )}`;
@@ -141,7 +140,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
 
       await new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
-          reject(new Error("加载超时"));
+          reject(new Error(t("upload.timeout")));
         }, 10000);
 
         img.onload = () => {
@@ -150,7 +149,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
         };
         img.onerror = () => {
           clearTimeout(timer);
-          reject(new Error("图片加载失败"));
+          reject(new Error(t("upload.loadError")));
         };
         img.src = proxyUrl;
       });
@@ -161,7 +160,11 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       });
       onPhotoChange(proxyUrl, config);
     } catch (error) {
-      toast.error("图片链接无效或无法访问，请尝试使用其他图片链接");
+      toast.error(
+        t("upload.invalidUrl", {
+          defaultMessage: "图片链接无效或无法访问，请尝试使用其他图片链接",
+        })
+      );
       handleRemovePhoto();
     }
   };
@@ -363,7 +366,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
 
             <div className="space-y-4">
               <div className="space-y-3">
-                <h3 className="text-sm font-medium">尺寸</h3>
+                <h3 className="text-sm font-medium">{t("config.size")}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="relative">
                     <Input
@@ -376,7 +379,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       )}
                       min={24}
                       max={200}
-                      placeholder="宽度"
+                      placeholder={t("config.widthPlaceholder")}
                     />
                     <div
                       className={cn(
@@ -398,7 +401,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       )}
                       min={24}
                       max={200}
-                      placeholder="高度"
+                      placeholder={t("config.heightPlaceholder")}
                     />
                     <div
                       className={cn(
@@ -413,7 +416,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-medium">纵横比</h3>
+                <h3 className="text-sm font-medium">
+                  {t("config.aspectRatio")}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {(["1:1", "4:3", "3:4", "16:9", "custom"] as const).map(
                     (ratio) => (
@@ -434,7 +439,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                           }
                         }}
                       >
-                        {ratio === "custom" ? "自定义" : ratio}
+                        {ratio === "custom" ? t("config.ratios.custom") : ratio}
                       </Button>
                     )
                   )}
@@ -442,7 +447,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-medium">圆角</h3>
+                <h3 className="text-sm font-medium">
+                  {t("config.border-radius")}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {(["none", "medium", "full", "custom"] as const).map(
                     (radius) => (
@@ -457,12 +464,12 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                         }
                       >
                         {radius === "none"
-                          ? "无"
+                          ? t("config.borderRadius.none")
                           : radius === "medium"
-                          ? "中等"
+                          ? t("config.borderRadius.medium")
                           : radius === "full"
-                          ? "圆形"
-                          : "自定义"}
+                          ? t("config.borderRadius.full")
+                          : t("config.borderRadius.custom")}
                       </Button>
                     )
                   )}
@@ -477,7 +484,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       className={cn("h-9 mt-2", "dark:bg-neutral-800")}
                       min={0}
                       max={Math.min(config.width, config.height) / 2}
-                      placeholder="自定义圆角大小"
+                      placeholder={t("config.borderRadius.customPlaceholder")}
                     />
                   )}
                 </div>

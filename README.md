@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # ✨ Magic Resume ✨
@@ -7,11 +6,11 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-简体中文 | [English](./README.en-US.md) 
+简体中文 | [English](./README.en-US.md)
 
 </div>
 
-Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 Next.js 和 Framer Motion 构建，支持实时预览和自定义主题。
+Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 Next.js 和 Motion 构建，支持实时预览和自定义主题。
 
 ## 📸 项目截图
 
@@ -33,8 +32,10 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 - Next.js 14+
 - TypeScript
-- Framer Motion
+- Motion
+- Tiptap
 - Tailwind CSS
+- Zustand
 - Shadcn/ui
 - Lucide Icons
 
@@ -64,10 +65,10 @@ pnpm dev
 ## 📦 构建打包
 
 ```bash
-pnpm   build
+pnpm build
 ```
 
-## ⚡ 使用 Vercel 部署
+## ⚡ Vercel 部署
 
 你可以一键部署自己的 Magic Resume 实例：
 
@@ -84,7 +85,14 @@ pnpm   build
 ```bash
 docker-compose up -d
 ```
+
+这将会：
+
+- 自动构建应用镜像
+- 在后台启动容器
+
 ### Docker Hub
+
 最新版本的 Magic Resume 已经发布在 Docker Hub：
 
 [Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
@@ -92,11 +100,6 @@ docker-compose up -d
 ```bash
 docker pull siyueqingchen/magic-resume
 ```
-
-这将会：
-
-- 自动构建应用镜像
-- 在后台启动容器
 
 ## 📝 开源协议
 
@@ -109,6 +112,7 @@ docker pull siyueqingchen/magic-resume
 - [Zustand](https://zustand-demo.pmnd.rs/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Framer Motion](https://www.framer.com/motion/)
+- [TipTap](https://tiptap.dev/)
 - [Lucide Icons](https://lucide.dev/)
 
 ## 🗺️ 路线图
@@ -122,7 +126,10 @@ docker pull siyueqingchen/magic-resume
 
 ## 📞 联系方式
 
+可以通过以下方式关注最新动态:
+
 - 作者：JOYCEQL
+- 推特：@GuangzhouY81070
 - 邮箱：18806723365@163.com
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

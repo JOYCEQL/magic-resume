@@ -150,6 +150,7 @@
     "templates": {
       "title": "模板",
       "useTemplate": "使用此模板",
+      "preview": "预览",
       "switchTemplate": "切换模版",
       "classic": {
         "name": "经典模板",

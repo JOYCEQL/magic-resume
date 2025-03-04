@@ -6,7 +6,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
-[简体中文](./README.md) | English  
+[简体中文](./README.md) | English
 
 </div>
 
@@ -32,8 +32,10 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 - Next.js 14+
 - TypeScript
-- Framer Motion
+- Motion
+- Tiptap
 - Tailwind CSS
+- Zustand
 - Shadcn/ui
 - Lucide Icons
 
@@ -90,6 +92,7 @@ This will:
 - Start the container in the background
 
 ### Docker Hub
+
 The latest version of Magic Resume is available on Docker Hub:
 
 [Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
@@ -97,6 +100,7 @@ The latest version of Magic Resume is available on Docker Hub:
 ```bash
 docker pull siyueqingchen/magic-resume
 ```
+
 ## 📝 License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
@@ -108,6 +112,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - [Zustand](https://zustand-demo.pmnd.rs/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Framer Motion](https://www.framer.com/motion/)
+- [TipTap](https://tiptap.dev/)
 - [Lucide Icons](https://lucide.dev/)
 
 ## 🗺️ Roadmap
@@ -121,7 +126,10 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 ## 📞 Contact
 
+You can follow the latest updates via:
+
 - Author: JOYCEQL
+- X: @GuangzhouY81070
 - Email: 18806723365@163.com
 - Project Homepage: https://github.com/JOYCEQL/magic-resume
 

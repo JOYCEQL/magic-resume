@@ -75,11 +75,13 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
       </div>
 
       <div className="mt-2 relative overflow-hidden">
-        <img
-          src={basic.photo}
-          alt="Selected"
-          className="w-[48px] h-[48px] object-cover rounded"
-        />
+        {basic.photo && (
+          <img
+            src={basic.photo}
+            alt="Selected"
+            className="w-[48px] h-[48px] object-cover rounded"
+          />
+        )}
       </div>
 
       <PhotoConfigDrawer

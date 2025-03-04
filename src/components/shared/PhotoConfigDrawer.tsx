@@ -72,7 +72,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   useEffect(() => {
     if (isOpen) {
       setConfig(initialConfig || DEFAULT_CONFIG);
-      setPreviewUrl(photo || DEFAULT_AVATAR);
+      setPreviewUrl(photo === "" ? "" : photo || DEFAULT_AVATAR);
       setImageUrl(photo === DEFAULT_AVATAR ? "" : photo || "");
     }
 
@@ -192,15 +192,21 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   };
 
   const handleRemovePhoto = () => {
-    setPreviewUrl(DEFAULT_AVATAR);
+    setPreviewUrl("");
     setImageUrl("");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
+
     updateBasicInfo({
-      photo: DEFAULT_AVATAR,
+      photo: "",
     });
-    onPhotoChange(DEFAULT_AVATAR, config);
+
+    onPhotoChange("", config);
+
+    setTimeout(() => {
+      setPreviewUrl("");
+    }, 0);
   };
 
   const handleConfigChange = (updates: Partial<PhotoConfig>) => {
@@ -301,7 +307,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            {previewUrl ? (
+            {previewUrl && previewUrl !== "" ? (
               <div className="relative h-full group">
                 <img
                   src={previewUrl}

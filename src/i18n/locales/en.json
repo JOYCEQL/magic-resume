@@ -147,6 +147,7 @@
     "templates": {
       "title": "Templates",
       "useTemplate": "Use Template",
+      "preview": "Preview",
       "switchTemplate": "Switch Template",
       "classic": {
         "name": "Classic",

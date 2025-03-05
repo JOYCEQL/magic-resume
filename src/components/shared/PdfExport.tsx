@@ -111,17 +111,22 @@ const PdfExport = () => {
         optimizeImages(clonedElement),
       ]);
 
-      const response = await fetch("/generate-pdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: clonedElement.outerHTML,
-          styles,
-          margin: globalSettings.pagePadding,
-        }),
-      });
+      const response = await fetch(
+        "http://1255612844-0z3iovadu8.ap-chengdu.tencentscf.com/generate-pdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: clonedElement.outerHTML,
+            styles,
+            margin: globalSettings.pagePadding,
+          }),
+          // 允许跨域请求
+          mode: "cors",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`PDF generation failed: ${response.status}`);

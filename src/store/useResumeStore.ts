@@ -17,7 +17,6 @@ import {
   initialResumeStateEn,
 } from "@/config/initialResumeData";
 import { generateUUID } from "@/utils/uuid";
-import { getLocale } from "next-intl/server";
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
@@ -25,7 +24,7 @@ interface ResumeStore {
 
   createResume: (templateId: string | null) => string;
   deleteResume: (resume: ResumeData) => void;
-  duplicateResume: (resumeId: string) => void;
+  duplicateResume: (resumeId: string) => string;
   updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
   setActiveResume: (resumeId: string) => void;
   updateResumeFromFile: (resume: ResumeData) => void;
@@ -235,8 +234,17 @@ export const useResumeStore = create(
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        get().updateResume(newId, duplicatedResume);
-        get().setActiveResume(newId);
+
+        set((state) => ({
+          resumes: {
+            ...state.resumes,
+            [newId]: duplicatedResume,
+          },
+          activeResumeId: newId,
+          activeResume: duplicatedResume,
+        }));
+
+        return newId;
       },
 
       setActiveResume: (resumeId) => {

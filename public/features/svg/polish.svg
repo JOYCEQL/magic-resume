@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="300" height="200" rx="10" fill="#FFFFFF" />
+  
+  <!-- 顶部区域 -->
+  <g transform="translate(15, 15)">
+    <!-- AI标识 -->
+    <rect x="0" y="0" width="24" height="16" rx="3" fill="#3B82F6"/>
+    <text x="12" y="11" font-family="Arial" font-size="8" font-weight="bold" fill="white" text-anchor="middle">AI</text>
+    
+    <!-- 标题 -->
+    <text x="30" y="11" font-family="Arial" font-size="10" font-weight="bold" fill="#333333">智能润色</text>
+  </g>
+  
+  <!-- 副标题 -->
+  <text x="15" y="40" font-family="Arial" font-size="8" fill="#666666">AI已为您优化内容，提升表达力和专业度</text>
+  
+  <!-- 内容区域 -->
+  <g transform="translate(15, 50)">
+    <!-- 左侧：原始内容 -->
+    <g>
+      <text x="0" y="10" font-family="Arial" font-size="8" font-weight="bold" fill="#666666">• 原始内容</text>
+      
+      <rect x="0" y="15" width="125" height="110" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1"/>
+      
+      <!-- 原始内容文本 -->
+      <foreignObject x="5" y="20" width="115" height="100">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 7px; color: #64748B; line-height: 1.5;">
+          <div style="margin-bottom: 5px;">我负责了一个前端监控项目。这个项目使用了Vue和Element UI。它可以监控错误和性能。我还加了一些第三方的工具。</div>
+          <div style="margin-bottom: 5px;">项目特点：</div>
+          <div>• 可以看到错误日志</div>
+          <div>• 有图表展示</div>
+          <div>• 支持报警功能</div>
+          <div>• 可以和其他系统集成</div>
+        </div>
+      </foreignObject>
+    </g>
+    
+    <!-- 中间箭头 -->
+    <g transform="translate(130, 60)">
+      <path d="M0 10H20" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M15 5L20 10L15 15" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+    <!-- 右侧：润色后内容 -->
+    <g transform="translate(155, 0)">
+      <text x="0" y="10" font-family="Arial" font-size="8" font-weight="bold" fill="#3B82F6">• 润色后的内容</text>
+      
+      <rect x="0" y="15" width="125" height="110" rx="4" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+      
+      <!-- 润色后内容文本 -->
+      <foreignObject x="5" y="20" width="115" height="100">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial; font-size: 7px; color: #1D4ED8; line-height: 1.5;">
+          <div style="margin-bottom: 5px;"><b>主导开发企业级前端监控解决方案</b>，基于Vue框架与Element UI组件库构建，实现了全面的错误追踪与性能分析功能，并成功整合多种第三方工具提升系统能力。</div>
+          <div style="margin-bottom: 5px;"><b>核心成果：</b></div>
+          <div>• <b>构建完整错误日志系统</b>，支持详细追踪与分析</div>
+          <div>• <b>设计直观数据可视化</b>，提供实时监控面板</div>
+          <div>• <b>实现智能告警机制</b>，支持多渠道通知</div>
+          <div>• <b>开发灵活API接口</b>，无缝对接企业现有系统</div>
+        </div>
+      </foreignObject>
+    </g>
+  </g>
+</svg>

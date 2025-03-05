@@ -13,11 +13,11 @@ const features = [
     items: [
       {
         title: "features.ai.item1",
-        image: "/features/polish.png",
+        image: "/features/svg/polish.svg",
       },
       {
         title: "features.ai.item2",
-        image: "/features/grammar.png",
+        image: "/features/svg/grammar.svg",
       },
     ],
   },

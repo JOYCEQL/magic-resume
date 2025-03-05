@@ -37,6 +37,7 @@
       "storage": {
         "badge": "Local Storage",
         "title": "Data Security, Privacy First",
+        "description": "All resume data is fully stored locally, no need to worry about privacy leaks. Support data export backup, ensure your resume data is always available.",
         "item1": "No sign-up needed",
         "item2": "Data fully stored locally",
         "item3": "Support data export backup"

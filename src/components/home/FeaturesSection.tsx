@@ -272,13 +272,18 @@ export default function FeaturesSection() {
                 <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-blue-600/15 z-10"></div>
 
-                  <Image
-                    src={features[0].items[activeFeatures[0]].image}
-                    alt={t(features[0].items[activeFeatures[0]].title)}
-                    fill
-                    className="object-contain z-1"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+                  <div
+                    key={activeFeatures[0]}
+                    className="animate-fade-in w-full h-full"
+                  >
+                    <Image
+                      src={features[0].items[activeFeatures[0]].image}
+                      alt={t(features[0].items[activeFeatures[0]].title)}
+                      fill
+                      className="object-contain z-1 transition-transform duration-300 ease-in-out"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
                 </div>
 
                 <div className="absolute inset-0 -z-10 blur-2xl opacity-70">
@@ -367,13 +372,18 @@ export default function FeaturesSection() {
                 <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-green-600/15 z-10"></div>
 
-                  <Image
-                    src={features[1].items[activeFeatures[1]].image}
-                    alt={t(features[1].items[activeFeatures[1]].title)}
-                    fill
-                    className="object-contain z-1"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+                  <div
+                    key={activeFeatures[1]}
+                    className="animate-fade-in w-full h-full"
+                  >
+                    <Image
+                      src={features[1].items[activeFeatures[1]].image}
+                      alt={t(features[1].items[activeFeatures[1]].title)}
+                      fill
+                      className="object-contain z-1 transition-transform duration-300 ease-in-out"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                  </div>
                 </div>
 
                 <div className="absolute inset-0 -z-10 blur-2xl opacity-70">

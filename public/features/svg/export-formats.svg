@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="300" height="200" rx="10" fill="#FFFFFF" />
+  
+  <!-- 顶部区域 -->
+  <g transform="translate(15, 15)">
+    <!-- 导出标识 -->
+    <rect x="0" y="0" width="24" height="16" rx="3" fill="#8B5CF6"/>
+    <text x="12" y="11" font-family="Arial" font-size="8" font-weight="bold" fill="white" text-anchor="middle">导出</text>
+    
+    <!-- 标题 -->
+    <text x="30" y="11" font-family="Arial" font-size="10" font-weight="bold" fill="#333333">多种导出格式</text>
+  </g>
+  
+  <!-- 副标题 -->
+  <text x="15" y="40" font-family="Arial" font-size="8" fill="#666666">支持多种格式导出，方便分享和备份</text>
+  
+  <!-- 中间区域 - 文档和导出格式图示 -->
+  <g transform="translate(15, 50)">
+    <!-- 简历文档 -->
+    <g transform="translate(20, 20)">
+      <!-- 文档背景 -->
+      <rect x="0" y="0" width="80" height="100" rx="4" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+      
+      <!-- 文档标题 -->
+      <rect x="10" y="10" width="60" height="5" rx="1" fill="#8B5CF6"/>
+      
+      <!-- 文档内容 -->
+      <rect x="10" y="20" width="60" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="25" width="50" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="30" width="55" height="2" rx="1" fill="#D1D5DB"/>
+      
+      <rect x="10" y="40" width="60" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="45" width="40" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="50" width="55" height="2" rx="1" fill="#D1D5DB"/>
+      
+      <rect x="10" y="60" width="60" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="65" width="45" height="2" rx="1" fill="#D1D5DB"/>
+      <rect x="10" y="70" width="50" height="2" rx="1" fill="#D1D5DB"/>
+      
+    </g>
+    
+    <!-- 导出箭头 - 抽物线曲线 -->
+    <g transform="translate(105, 50)">
+      <!-- 抽物线曲线 -->
+      <path d="M0 20 C15 -20, 30 -20, 45 20" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      
+      <!-- 箭头尖端 -->
+      <path d="M38 12 L45 20 L33 18" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      
+      <!-- 装饰小点 -->
+      <circle cx="22.5" cy="0" r="2" fill="#8B5CF6"/>
+    </g>
+    
+    <!-- 导出格式文件组 -->
+    <g transform="translate(150, 30)">
+      <!-- PDF格式 -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="45" height="55" rx="3" fill="#FEF2F2" stroke="#FECACA" stroke-width="1"/>
+        <text x="22.5" y="33" font-family="Arial" font-size="14" font-weight="bold" fill="#EF4444" text-anchor="middle">PDF</text>
+        <path d="M10 10 L35 10 L35 14 L10 14 Z" fill="#FECACA"/>
+      </g>
+      
+      <!-- JSON格式 -->
+      <g transform="translate(55, 0)">
+        <rect x="0" y="0" width="45" height="55" rx="3" fill="#ECFDF5" stroke="#A7F3D0" stroke-width="1"/>
+        <text x="22.5" y="33" font-family="Arial" font-size="12" font-weight="bold" fill="#10B981" text-anchor="middle">JSON</text>
+        <path d="M10 10 L35 10 L35 14 L10 14 Z" fill="#A7F3D0"/>
+      </g>
+    </g>
+  </g>
+  
+</svg>

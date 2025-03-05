@@ -112,7 +112,7 @@ const PdfExport = () => {
       ]);
 
       const response = await fetch(
-        "http://1255612844-0z3iovadu8.ap-chengdu.tencentscf.com/generate-pdf",
+        "https://1255612844-0z3iovadu8.ap-chengdu.tencentscf.com/generate-pdf",
         {
           method: "POST",
           headers: {

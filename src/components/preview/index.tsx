@@ -6,7 +6,7 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import ResumeTemplateComponent from "../templates";
-import { PreviewDock } from "./PreviewDock";
+import PreviewDock from "./PreviewDock";
 
 interface PreviewPanelProps {
   sidePanelCollapsed: boolean;
@@ -33,7 +33,7 @@ const PageBreakLine = React.memo(({ pageNumber }: { pageNumber: number }) => {
       style={{
         top: `${pageHeight * pageNumber}px`,
         breakAfter: "page",
-        breakBefore: "page"
+        breakBefore: "page",
       }}
     >
       <div className="relative w-full">
@@ -52,7 +52,7 @@ const PreviewPanel = ({
   sidePanelCollapsed,
   editPanelCollapsed,
   toggleSidePanel,
-  toggleEditPanel
+  toggleEditPanel,
 }: PreviewPanelProps) => {
   const { activeResume } = useResumeStore();
   const template = useMemo(() => {
@@ -82,7 +82,7 @@ const PreviewPanel = ({
       observer.observe(resumeContentRef.current, {
         childList: true,
         subtree: true,
-        attributes: true
+        attributes: true,
       });
 
       updateContentHeight();
@@ -125,7 +125,7 @@ const PreviewPanel = ({
       ref={previewRef}
       className="relative w-full h-full  bg-gray-100"
       style={{
-        fontFamily: "MiSans VF, sans-serif"
+        fontFamily: "MiSans VF, sans-serif",
       }}
     >
       <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top  md:scale-90  md:origin-top-left">
@@ -142,7 +142,7 @@ const PreviewPanel = ({
             ref={resumeContentRef}
             id="resume-preview"
             style={{
-              padding: `${activeResume.globalSettings?.pagePadding}px`
+              padding: `${activeResume.globalSettings?.pagePadding}px`,
             }}
             className="relative"
           >

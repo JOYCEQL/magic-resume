@@ -467,7 +467,12 @@
       "collapse": "收起编辑面板"
     },
     "github": "GitHub",
-    "backToDashboard": "返回仪表盘"
+    "backToDashboard": "返回仪表盘",
+    "copyResume": {
+      "tooltip": "复制简历",
+      "success": "简历复制成功",
+      "error": "简历复制失败"
+    }
   },
   "aiPolishDialog": {
     "title": "AI 润色",

@@ -201,7 +201,12 @@
       "collapse": "Collapse Edit Panel"
     },
     "github": "GitHub",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "copyResume": {
+      "tooltip": "Copy Resume",
+      "success": "Resume copied successfully",
+      "error": "Failed to copy resume"
+    }
   },
   "workbench": {
     "sidePanel": {

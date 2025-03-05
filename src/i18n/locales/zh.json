@@ -33,18 +33,18 @@
         "title": "智能识别，专业建议",
         "description": "内置智能语法检查，自动识别不恰当的表达，提供专业的修改建议，让您的简历更加出色。",
         "item1": "智能润色",
-        "item1.description": "AI 自动优化文案表达，让简历更专业",
+        "item1_description": "AI 自动优化文案表达，让简历更专业",
         "item2": "语法检查",
-        "item2.description": "自动检测并修正语法和拼写错误"
+        "item2_description": "自动检测并修正语法和拼写错误"
       },
       "storage": {
         "badge": "本地存储",
         "title": "数据安全，隐私优先",
         "description": "所有简历数据完全存储在您的本地设备中，无需担心隐私泄露。支持数据导出备份，确保您的简历数据随时可用。",
         "item1": "本地文件存储",
-        "item1.description": "简历数据安全存储在您的电脑硬盘中",
+        "item1_description": "简历数据安全存储在您的电脑硬盘中",
         "item2": "多种导出格式",
-        "item2.description": "支持PDF和JSON格式导出",
+        "item2_description": "支持PDF和JSON格式导出",
         "item3": "支持数据导出备份"
       },
       "preview": {

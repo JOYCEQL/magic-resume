@@ -31,15 +31,20 @@
       "ai": {
         "badge": "AI Smart Check",
         "title": "Smart Detection, Professional Advice",
-        "item1": "Intelligent enhancement recommendations",
-        "item2": "Automatic error correction and grammar check"
+        "description": "Built-in smart grammar check, automatically identifies inappropriate expressions, provides professional modification suggestions, making your resume more outstanding.",
+        "item1": "Intelligent enhancement",
+        "item1_description": "AI automatically optimizes content expression, making your resume more professional",
+        "item2": "Grammar check",
+        "item2_description": "Automatically detects and corrects grammar and spelling errors"
       },
       "storage": {
         "badge": "Local Storage",
         "title": "Data Security, Privacy First",
         "description": "All resume data is fully stored locally, no need to worry about privacy leaks. Support data export backup, ensure your resume data is always available.",
-        "item1": "No sign-up needed",
-        "item2": "Data fully stored locally",
+        "item1": "Local file storage",
+        "item1_description": "Resume data securely stored on your computer's hard drive",
+        "item2": "Multiple export formats",
+        "item2_description": "Support PDF and JSON format export",
         "item3": "Support data export backup"
       },
       "preview": {

@@ -15,12 +15,12 @@ const features = [
     items: [
       {
         title: "features.ai.item1",
-        description: "features.ai.item1.description",
+        description: "features.ai.item1_description",
         image: "/features/svg/polish.svg",
       },
       {
         title: "features.ai.item2",
-        description: "features.ai.item2.description",
+        description: "features.ai.item2_description",
         image: "/features/svg/grammar.svg",
       },
     ],
@@ -33,12 +33,12 @@ const features = [
     items: [
       {
         title: "features.storage.item1",
-        description: "features.storage.item1.description",
+        description: "features.storage.item1_description",
         image: "/features/svg/local-storage.svg",
       },
       {
         title: "features.storage.item2",
-        description: "features.storage.item2.description",
+        description: "features.storage.item2_description",
         image: "/features/svg/export-formats.svg",
       },
     ],

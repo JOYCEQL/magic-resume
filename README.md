@@ -98,7 +98,7 @@ docker-compose up -d
 [Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
 
 ```bash
-docker pull siyueqingchen/magic-resume
+docker pull siyueqingchen/magic-resume:main
 ```
 
 ## 📝 开源协议

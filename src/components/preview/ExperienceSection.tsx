@@ -37,14 +37,12 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           >
             {experience.company}
           </div>
-          {experience.position && centerSubtitle && (
+          {centerSubtitle && (
             <motion.div className="text-subtitleFont">
               {experience.position}
             </motion.div>
           )}
-          {experience.date && (
-            <div className="text-subtitleFont">{experience.date}</div>
-          )}
+          <div className="text-subtitleFont">{experience.date}</div>
         </motion.div>
         {experience.position && !centerSubtitle && (
           <motion.div className="text-subtitleFont">

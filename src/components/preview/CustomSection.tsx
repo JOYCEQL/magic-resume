@@ -67,17 +67,15 @@ const CustomSection = ({
                 </h4>
               </div>
 
-              {centerSubtitle && item.subtitle && (
+              {centerSubtitle && (
                 <motion.div layout="position" className="text-subtitleFont">
                   {item.subtitle}
                 </motion.div>
               )}
 
-              {
-                <span className="text-subtitleFont shrink-0">
-                  {item.dateRange}
-                </span>
-              }
+              <span className="text-subtitleFont shrink-0">
+                {item.dateRange}
+              </span>
             </motion.div>
 
             {!centerSubtitle && item.subtitle && (

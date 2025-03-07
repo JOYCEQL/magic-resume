@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import LanguageSwitch from "@/components/shared/LanguageSwitch";
@@ -13,9 +13,22 @@ interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   buttonText: string;
+  extraItems?: Array<{
+    icon: React.ReactNode;
+    label: string;
+    component: React.ReactNode;
+  }>;
 }
 
-export default function MobileMenu({ isOpen, onClose, buttonText }: MobileMenuProps) {
+export default function MobileMenu({
+  isOpen,
+  onClose,
+  buttonText,
+  extraItems = [],
+}: MobileMenuProps) {
+  const t = useTranslations("home");
+  const locale = useLocale();
+
   if (!isOpen) return null;
 
   return (
@@ -27,7 +40,6 @@ export default function MobileMenu({ isOpen, onClose, buttonText }: MobileMenuPr
     >
       <div className="bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-b dark:border-gray-800">
         <nav className="mx-auto max-w-[1200px] px-4 py-6 flex flex-col gap-6">
-          {/* Controls */}
           <div className="flex items-center justify-center gap-8">
             <LanguageSwitch />
             <ThemeToggle>
@@ -39,7 +51,24 @@ export default function MobileMenu({ isOpen, onClose, buttonText }: MobileMenuPr
             <GitHubStars />
           </div>
 
-          {/* Action Buttons */}
+          <div className="flex items-center justify-center">
+            <Link
+              href={`/${locale}/changelog`}
+              className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/15 transition-colors"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              {t("changelog")}
+            </Link>
+          </div>
+
+          {extraItems && extraItems.length > 0 && (
+            <div className="flex flex-col items-center justify-center gap-2">
+              {extraItems.map((item, index) => (
+                <div key={index}>{item.component}</div>
+              ))}
+            </div>
+          )}
+
           <div className="flex flex-col gap-3 px-4">
             <Button
               size="default"

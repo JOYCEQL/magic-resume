@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, Moon, Sun, X } from "lucide-react";
+import { FileText, Menu, Moon, Sun, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/shared/Logo";
@@ -16,6 +17,8 @@ import GoDashboard from "./GoDashboard";
 
 export default function LandingHeader() {
   const t = useTranslations("home");
+  const pathname = usePathname();
+  const locale = pathname.split("/")[1]; // 从路径中获取语言代码
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -23,12 +26,14 @@ export default function LandingHeader() {
       <ScrollHeader>
         <div className="mx-auto max-w-[1200px] px-4">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => (window.location.href = `/${locale}/`)}
+            >
               <Logo size={32} />
               <span className="font-bold text-[24px]">{t("header.title")}</span>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-4">
               <LanguageSwitch />
               <ThemeToggle>
@@ -38,6 +43,14 @@ export default function LandingHeader() {
                 </div>
               </ThemeToggle>
               <GitHubStars />
+
+              <Link
+                href={`/${locale}/changelog`}
+                className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/15 transition-colors"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                {t("changelog") || "更新日志"}
+              </Link>
 
               <GoDashboard>
                 <Button
@@ -49,7 +62,6 @@ export default function LandingHeader() {
               </GoDashboard>
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               className="md:hidden p-2 hover:bg-accent rounded-md"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -64,7 +76,6 @@ export default function LandingHeader() {
         </div>
       </ScrollHeader>
 
-      {/* Mobile Navigation */}
       <MobileMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}

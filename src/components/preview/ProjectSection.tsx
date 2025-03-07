@@ -51,14 +51,12 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               </a>
             )}
           </div>
-          {project.role && globalSettings?.centerSubtitle && (
+          {globalSettings?.centerSubtitle && (
             <motion.div layout="position" className=" text-subtitleFont">
               {project.role}
             </motion.div>
           )}
-          {project.date && (
-            <div className="text-subtitleFont">{project.date}</div>
-          )}
+          <div className="text-subtitleFont">{project.date}</div>
         </motion.div>
         {project.role && !centerSubtitle && (
           <motion.div layout="position" className=" text-subtitleFont">

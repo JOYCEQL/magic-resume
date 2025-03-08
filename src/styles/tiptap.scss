@@ -1,19 +1,10 @@
-/* Basic editor styles */
 .tiptap {
   min-height: 300px;
-  border: 1px solid #d1d5db;
-  padding: 2px;
   border-radius: 0 0 4px 4px;
-  :first-child {
-    margin-top: 0;
-  }
-
-  /* List styles */
   ul,
   ol {
     list-style-type: disc;
     padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
 
     li p {
       margin-top: 0.25em;
@@ -22,8 +13,7 @@
   }
   ol {
     list-style-type: decimal;
-    padding: 0 1rem;
-    margin: 1.25rem 1rem 1.25rem 0.4rem;
+    padding: 1rem;
 
     li p {
       margin-top: 0.25em;
@@ -66,7 +56,6 @@
     font-size: 1rem;
   }
 
-  /* Code and preformatted text styles */
   code {
     background-color: rgba(27, 31, 35, 0.05);
     border-radius: 0.4rem;

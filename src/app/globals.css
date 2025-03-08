@@ -248,19 +248,10 @@
 
 .custom-list {
   list-style-type: disc;
-  padding: 0 1rem;
-}
-
-.custom-list li p {
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
+  padding: 0 1.2rem;
 }
 
 .custom-list-ordered {
   list-style-type: decimal;
-  padding: 0 1rem;
-}
-
-.custom-list-ordered li p {
-  margin-top: 0.25em;
+  padding: 0 1.2rem;
 }

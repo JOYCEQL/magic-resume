@@ -5,7 +5,8 @@
     "description": "魔方简历是一款开源的简历编辑器，免费，隐私优先。无需注册登录，数据完全存储在本地，支持数据导出备份，确保您的简历数据随时可用。",
     "dashboard": "仪表盘",
     "edit": "编辑",
-    "delete": "删除"
+    "delete": "删除",
+    "configurePrompt": "请先配置 ApiKey 和 模型Id"
   },
   "home": {
     "header": {
@@ -110,9 +111,15 @@
       "newResume": "新建简历",
       "newResumeDescription": "创建一个新简历以开始。",
       "import": "导入 JSON 配置",
+      "importPdf": "导入 PDF",
       "untitled": "未命名简历",
+      "untitledPdf": "PDF导入简历",
       "importSuccess": "配置导入成功",
       "importError": "配置导入失败，请检查文件格式",
+      "pdfProcessing": "正在处理PDF文件...",
+      "pdfImportSuccess": "PDF导入成功",
+      "pdfImportError": "PDF导入失败，请检查文件格式",
+      "page": "第{{number}}页",
       "notice": {
         "title": "注意",
         "description": "建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失",

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
         response_format: {
-          type: "json_object"
+          type: "json_object",
         },
         messages: [
           {
@@ -41,14 +41,14 @@ export async function POST(req: NextRequest) {
                 ]
               }
 
-              请确保返回的格式可以正常解析`
+              请确保返回的格式可以正常解析`,
           },
           {
             role: "user",
-            content: content
-          }
-        ]
-      })
+            content: content,
+          },
+        ],
+      }),
     });
 
     const data = await response.json();

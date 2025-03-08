@@ -1,8 +1,15 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
+import {
+  Plus,
+  FileText,
+  Settings,
+  AlertCircle,
+  Upload,
+  FileUp,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,15 +18,17 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { initialResumeState } from "@/config/initialResumeData";
-
 import { generateUUID } from "@/utils/uuid";
+import * as pdfjsLib from "pdfjs-dist";
+import { DEFAULT_TEMPLATES } from "@/config";
+import { useAIConfigStore } from "@/store/useAIConfigStore";
 const ResumesList = () => {
   return <ResumeWorkbench />;
 };
@@ -33,7 +42,7 @@ const ResumeWorkbench = () => {
     updateResumeFromFile,
     addResume,
     deleteResume,
-    createResume
+    createResume,
   } = useResumeStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
@@ -110,7 +119,7 @@ const ResumeWorkbench = () => {
           ...config,
           id: generateUUID(),
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
         };
 
         addResume(newResume);
@@ -118,6 +127,128 @@ const ResumeWorkbench = () => {
       } catch (error) {
         console.error("Import error:", error);
         toast.error(t("dashboard.resumes.importError"));
+      }
+    };
+
+    input.click();
+  };
+
+  // 解析PDF文件并提取文本为Markdown格式
+  const parsePdfToMarkdown = async (file: File): Promise<string> => {
+    // 使用本地路径加载PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/build/pdf.worker.mjs",
+      import.meta.url
+    ).toString();
+
+    try {
+      // 读取文件为ArrayBuffer
+      const arrayBuffer = await file.arrayBuffer();
+
+      // 加载PDF文档
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
+
+      let markdownText = "";
+
+      // 遍历所有页面并提取文本
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+
+        // 将文本内容转换为纯文本
+        const pageText = textContent.items
+          .map((item: any) => item.str)
+          .join(" ");
+        markdownText += pageText;
+      }
+
+      return markdownText;
+    } catch (error) {
+      console.error("PDF解析错误:", error);
+      throw new Error("PDF解析失败");
+    }
+  };
+
+  // 导入PDF文件
+  const handleImportPdf = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".pdf";
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        // 显示加载提示
+        toast.loading(
+          t("dashboard.resumes.pdfProcessing") || "正在处理PDF文件..."
+        );
+
+        // 解析PDF为Markdown
+        const markdownContent = await parsePdfToMarkdown(file);
+
+        // 使用AI将PDF内容转换为简历数据
+        const aiConfigStore = useAIConfigStore.getState();
+        const { selectedModel } = aiConfigStore;
+
+        let apiKey = "";
+        let modelId = "";
+
+        if (selectedModel === "doubao") {
+          apiKey = aiConfigStore.doubaoApiKey;
+          modelId = aiConfigStore.doubaoModelId;
+        } else if (selectedModel === "deepseek") {
+          apiKey = aiConfigStore.deepseekApiKey;
+          modelId = aiConfigStore.deepseekModelId;
+        }
+
+        if (!apiKey) {
+          toast.error(t("common.configurePrompt") || "未配置API Key");
+          return;
+        }
+
+        // 调用API将PDF内容转换为简历数据
+        const response = await fetch("/api/pdf-to-resume", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            apiKey,
+            model: modelId,
+            modelType: selectedModel,
+            content: markdownContent,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`转换失败: ${response.statusText}`);
+        }
+
+        const resumeData = await response.json();
+
+        const aiResponse = resumeData.choices[0]?.message?.content;
+        const parsedResumeData = JSON.parse(aiResponse);
+        // 创建新简历
+        const fileName = file.name.replace(".pdf", "");
+        const newId = generateUUID();
+        const newResume = {
+          ...parsedResumeData,
+          id: newId,
+          title:
+            fileName || t("dashboard.resumes.untitledPdf") || "PDF导入简历",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          templateId: DEFAULT_TEMPLATES[0].id,
+        };
+
+        addResume(newResume);
+        toast.success(t("dashboard.resumes.pdfImportSuccess") || "PDF导入成功");
+      } catch (error) {
+        console.error("PDF导入错误:", error);
+        toast.error(t("dashboard.resumes.pdfImportError") || "PDF导入失败");
       }
     };
 
@@ -198,6 +329,7 @@ const ResumeWorkbench = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="flex space-x-2"
           >
             <Button
               onClick={handleImportJson}
@@ -206,6 +338,14 @@ const ResumeWorkbench = () => {
             >
               <Upload className="mr-2 h-4 w-4" />
               {t("dashboard.resumes.import")}
+            </Button>
+            <Button
+              onClick={handleImportPdf}
+              variant="outline"
+              className="hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
+            >
+              <FileUp className="mr-2 h-4 w-4" />
+              {t("dashboard.resumes.importPdf")}
             </Button>
           </motion.div>
           <motion.div
@@ -272,7 +412,7 @@ const ResumeWorkbench = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{
                   duration: 0.3,
-                  delay: index * 0.1
+                  delay: index * 0.1,
                 }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -310,7 +450,7 @@ const ResumeWorkbench = () => {
                         transition={{
                           type: "spring",
                           stiffness: 400,
-                          damping: 17
+                          damping: 17,
                         }}
                       >
                         <Button
@@ -332,7 +472,7 @@ const ResumeWorkbench = () => {
                         transition={{
                           type: "spring",
                           stiffness: 400,
-                          damping: 17
+                          damping: 17,
                         }}
                       >
                         <Button

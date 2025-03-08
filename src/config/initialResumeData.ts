@@ -168,6 +168,114 @@ export const initialResumeState = {
   globalSettings: initialGlobalSettings,
 };
 
+export const initialResumeTemplate = {
+  title: "新建简历",
+  basic: {
+    name: "魔方",
+    title: "高级前端工程师",
+    employementStatus: "离职",
+    email: "zhangsan@example.com",
+    phone: "13800138000",
+    location: "北京市朝阳区",
+    birthDate: "1995-01",
+    fieldOrder: DEFAULT_FIELD_ORDER,
+    icons: {
+      email: "Mail",
+      phone: "Phone",
+      birthDate: "CalendarRange",
+      employementStatus: "Briefcase",
+      location: "MapPin",
+    },
+    photoConfig: DEFAULT_CONFIG,
+    customFields: [
+      {
+        id: "personal",
+        label: "个人网站",
+        value: "https://zhangsan.dev",
+        icon: "Globe",
+      },
+    ],
+    photo: "/avatar.png",
+    githubKey: "",
+    githubUseName: "",
+    githubContributionsVisible: false,
+  },
+  education: [
+    {
+      id: "1",
+      school: "北京大学",
+      major: "计算机科学与技术",
+      degree: "本科",
+      startDate: "2013-09",
+      endDate: "2017-06",
+      visible: true,
+      gpa: "",
+      description: `<ul class="custom-list">
+        <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>
+      </ul>`,
+    },
+  ],
+  skillContent: `<div class="skill-content">
+  <ul class="custom-list">
+    <li>技术管理：具备团队管理经验，主导过多个大型项目的技术选型和架构设计</li>
+  </ul>
+</div>`,
+  experience: [
+    {
+      id: "1",
+      company: "字节跳动",
+      position: "高级前端工程师",
+      date: "2021/7 - 至今",
+      visible: true,
+      details: `<ul class="custom-list">
+      <li>负责抖音创作者平台的开发与维护，主导多个核心功能的技术方案设计</li>
+    </ul>`,
+    },
+  ],
+  draggingProjectId: null,
+  projects: [
+    {
+      id: "p1",
+      name: "抖音创作者中台",
+      role: "前端负责人",
+      date: "2022/6 - 2023/12",
+      description: `<ul class="custom-list">
+        <li>基于 React 开发的创作者数据分析和内容管理平台，服务百万级创作者群体</li>
+      </ul>`,
+      visible: true,
+    },
+  ],
+  menuSections: [
+    { id: "basic", title: "基本信息", icon: "👤", enabled: true, order: 0 },
+    { id: "skills", title: "专业技能", icon: "⚡", enabled: true, order: 1 },
+    {
+      id: "experience",
+      title: "工作经验",
+      icon: "💼",
+      enabled: true,
+      order: 2,
+    },
+
+    {
+      id: "projects",
+      title: "项目经历",
+      icon: "🚀",
+      enabled: true,
+      order: 3,
+    },
+    {
+      id: "education",
+      title: "教育经历",
+      icon: "🎓",
+      enabled: true,
+      order: 4,
+    },
+  ],
+  customData: {},
+  activeSection: "basic",
+  globalSettings: initialGlobalSettings,
+};
+
 export const initialResumeStateEn = {
   title: "New Resume",
   basic: {

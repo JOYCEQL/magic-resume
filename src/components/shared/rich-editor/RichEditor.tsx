@@ -37,6 +37,9 @@ import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+
+import "@/styles/tiptap.scss";
+
 interface RichTextEditorProps {
   content?: string;
   onChange: (content: string) => void;

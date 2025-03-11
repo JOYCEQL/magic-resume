@@ -83,7 +83,7 @@ You can deploy your own instance of Magic Resume with one click:
 2. Run the following command in the project root directory:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will:
@@ -98,22 +98,12 @@ The latest version of Magic Resume is available on Docker Hub:
 [Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
 
 ```bash
-docker pull siyueqingchen/magic-resume
+docker pull siyueqingchen/magic-resume:main
 ```
 
 ## 📝 License
 
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/)
-- [Shadcn/ui](https://ui.shadcn.com/)
-- [Zustand](https://zustand-demo.pmnd.rs/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [TipTap](https://tiptap.dev/)
-- [Lucide Icons](https://lucide.dev/)
 
 ## 🗺️ Roadmap
 
@@ -121,6 +111,8 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - [x] Multi-language support
 - [ ] Support for more resume templates
 - [ ] Support for more export formats
+- [ ] Import PDF, Markdown, etc.
+- [ ] Custom model
 - [ ] Smart single page
 - [ ] Online resume hosting
 

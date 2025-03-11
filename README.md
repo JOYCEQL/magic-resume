@@ -83,7 +83,7 @@ pnpm build
 2. 在项目根目录运行：
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 这将会：
@@ -105,23 +105,15 @@ docker pull siyueqingchen/magic-resume:main
 
 本项目采用 Apache 2.0 协议 - 查看 [LICENSE](LICENSE) 了解详情
 
-## 🙏 鸣谢
-
-- [Next.js](https://nextjs.org/)
-- [Shadcn/ui](https://ui.shadcn.com/)
-- [Zustand](https://zustand-demo.pmnd.rs/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [TipTap](https://tiptap.dev/)
-- [Lucide Icons](https://lucide.dev/)
-
 ## 🗺️ 路线图
 
 - [x] AI 辅助编写
 - [x] 多语言支持
 - [ ] 支持更多简历模板
 - [ ] 更多格式导出
+- [ ] 自定义模型
 - [ ] 智能一页
+- [ ] 导入 PDF, Markdown 等
 - [ ] 在线简历托管
 
 ## 📞 联系方式
@@ -129,7 +121,7 @@ docker pull siyueqingchen/magic-resume:main
 可以通过以下方式关注最新动态:
 
 - 作者：JOYCEQL
-- 推特：@GuangzhouY81070
+- X: @GuangzhouY81070
 - 邮箱：18806723365@163.com
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   BasicInfo,
   getBorderRadiusValue,
-  GlobalSettings
+  GlobalSettings,
 } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -21,7 +21,7 @@ interface BaseInfoProps {
 const BaseInfo = ({
   basic = {} as BasicInfo,
   globalSettings,
-  template
+  template,
 }: BaseInfoProps) => {
   const t = useTranslations("workbench");
   const locale = useLocale();
@@ -49,8 +49,8 @@ const BaseInfo = ({
           icon: basic.icons?.email || "Mail",
           label: "电子邮箱",
           visible: true,
-          custom: false
-        }
+          custom: false,
+        },
       ].filter((item) => Boolean(item.value && item.visible));
     }
 
@@ -70,7 +70,7 @@ const BaseInfo = ({
         icon: basic.icons?.[field.key] || "User",
         label: field.label,
         visible: field.visible,
-        custom: field.custom
+        custom: field.custom,
       }))
       .filter((item) => Boolean(item.value));
   }, [basic]);
@@ -85,8 +85,8 @@ const BaseInfo = ({
         icon: field.icon,
         label: field.label,
         visible: true,
-        custom: true
-      })) || [])
+        custom: true,
+      })) || []),
   ];
 
   const getNameField = () => {
@@ -95,7 +95,7 @@ const BaseInfo = ({
     ) || {
       key: "name",
       label: "姓名",
-      visible: true
+      visible: true,
     };
     return nameField.visible !== false ? nameField : null;
   };
@@ -106,7 +106,7 @@ const BaseInfo = ({
     ) || {
       key: "title",
       label: "职位",
-      visible: true
+      visible: true,
     };
     return titleField.visible !== false ? titleField : null;
   };
@@ -123,10 +123,10 @@ const BaseInfo = ({
           borderRadius: getBorderRadiusValue(
             basic.photoConfig || {
               borderRadius: "none",
-              customBorderRadius: 0
+              customBorderRadius: 0,
             }
           ),
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         <img
@@ -151,7 +151,7 @@ const BaseInfo = ({
     container: "flex items-center justify-between gap-6",
     leftContent: "flex  items-center gap-6 ",
     fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
-    nameTitle: "text-left"
+    nameTitle: "text-left",
   };
 
   // 右对齐布局样式
@@ -159,7 +159,7 @@ const BaseInfo = ({
     container: "flex items-center justify-between gap-6 flex-row-reverse",
     leftContent: "flex justify-end items-center gap-6 ",
     fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start",
-    nameTitle: "text-right"
+    nameTitle: "text-right",
   };
 
   // 居中布局样式
@@ -167,7 +167,7 @@ const BaseInfo = ({
     container: "flex flex-col items-center gap-3",
     leftContent: "flex flex-col items-center gap-4",
     fields: "w-full flex justify-start items-center flex-wrap gap-3",
-    nameTitle: "text-center"
+    nameTitle: "text-center",
   };
 
   // 根据布局选择样式
@@ -196,7 +196,7 @@ const BaseInfo = ({
           layout="position"
           className="font-bold"
           style={{
-            fontSize: `30px`
+            fontSize: `30px`,
           }}
         >
           {basic[nameField.key] as string}
@@ -206,7 +206,7 @@ const BaseInfo = ({
         <motion.h2
           layout="position"
           style={{
-            fontSize: "18px"
+            fontSize: "18px",
           }}
         >
           {basic[titleField.key] as string}
@@ -222,7 +222,7 @@ const BaseInfo = ({
       style={{
         fontSize: `${globalSettings?.baseFontSize || 14}px`,
         color: isModernTemplate ? "#fff" : "rgb(75, 85, 99)",
-        maxWidth: layout === "center" ? "none" : "600px"
+        maxWidth: layout === "center" ? "none" : "600px",
       }}
     >
       {allFields.map((item) => (
@@ -230,13 +230,19 @@ const BaseInfo = ({
           key={item.key}
           className={cn(baseFieldItemClass, isModernTemplate && "text-[#fff]")}
           style={{
-            width: isModernTemplate ? "100%" : ""
+            width: isModernTemplate ? "100%" : "",
           }}
         >
           {useIconMode ? (
             <div className="flex items-center gap-1">
               {getIcon(item.icon)}
-              <span>{item.value}</span>
+              {item.key === "email" ? (
+                <a href={`mailto:${item.value}`} className="underline">
+                  {item.value}
+                </a>
+              ) : (
+                <span>{item.value}</span>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-2 overflow-hidden">

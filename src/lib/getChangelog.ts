@@ -9,6 +9,15 @@ export interface TimelineEntry {
 export function getChangelog(): TimelineEntry[] {
   return [
     {
+      date: "2025-03-15",
+      sections: [
+        {
+          title: "修复",
+          items: ["修复多余分割线引起的导出PDF 400 错误"],
+        },
+      ],
+    },
+    {
       date: "2025-03-07",
       sections: [
         {

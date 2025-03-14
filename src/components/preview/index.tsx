@@ -19,12 +19,14 @@ interface PreviewPanelProps {
 const PageBreakLine = React.memo(({ pageNumber }: { pageNumber: number }) => {
   const { activeResume } = useResumeStore();
   const { globalSettings } = activeResume || {};
-  if (!globalSettings?.pagePadding) return;
+  if (!globalSettings?.pagePadding) return null;
+
   const A4_HEIGHT_MM = 297;
   const MM_TO_PX = 3.78;
 
-  const TOP_MARGIN_MM = globalSettings?.pagePadding / MM_TO_PX;
-  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM + TOP_MARGIN_MM + TOP_MARGIN_MM;
+  const pagePaddingMM = globalSettings.pagePadding / MM_TO_PX;
+
+  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM + pagePaddingMM;
   const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
 
   return (
@@ -63,59 +65,80 @@ const PreviewPanel = ({
   }, [activeResume?.templateId]);
 
   const startRef = useRef<HTMLDivElement>(null);
-  const previewRef = React.useRef<HTMLDivElement>(null);
-  const resumeContentRef = React.useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const resumeContentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
 
   const updateContentHeight = () => {
     if (resumeContentRef.current) {
-      const height = resumeContentRef.current.scrollHeight;
+      const height = resumeContentRef.current.clientHeight;
       if (height > 0) {
-        setContentHeight(height);
+        if (height !== contentHeight) {
+          setContentHeight(height);
+        }
       }
     }
   };
 
   useEffect(() => {
-    const observer = new MutationObserver(updateContentHeight);
+    const debouncedUpdate = throttle(() => {
+      requestAnimationFrame(() => {
+        updateContentHeight();
+      });
+    }, 100);
+
+    const observer = new MutationObserver(debouncedUpdate);
+
     if (resumeContentRef.current) {
       observer.observe(resumeContentRef.current, {
         childList: true,
         subtree: true,
         attributes: true,
+        characterData: true,
       });
 
       updateContentHeight();
     }
 
-    const resizeObserver = new ResizeObserver(
-      throttle(updateContentHeight, 100)
-    );
+    const resizeObserver = new ResizeObserver(debouncedUpdate);
+
     if (resumeContentRef.current) {
       resizeObserver.observe(resumeContentRef.current);
     }
 
-    const timeoutId = setTimeout(updateContentHeight, 100);
-
     return () => {
       observer.disconnect();
       resizeObserver.disconnect();
-      clearTimeout(timeoutId);
     };
+  }, []);
+
+  useEffect(() => {
+    if (activeResume) {
+      const timer = setTimeout(updateContentHeight, 300);
+      return () => clearTimeout(timer);
+    }
   }, [activeResume]);
 
-  const pageBreakCount = useMemo(() => {
-    let TOP_MARGIN_MM;
+  const { pageHeightPx, pageBreakCount } = useMemo(() => {
     const MM_TO_PX = 3.78;
     const A4_HEIGHT_MM = 297;
+
+    let pagePaddingMM = 0;
     if (activeResume?.globalSettings?.pagePadding) {
-      TOP_MARGIN_MM = activeResume.globalSettings.pagePadding / MM_TO_PX;
-    } else {
-      TOP_MARGIN_MM = 0;
+      pagePaddingMM = activeResume.globalSettings.pagePadding / MM_TO_PX;
     }
-    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - TOP_MARGIN_MM - TOP_MARGIN_MM;
+
+    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - pagePaddingMM;
     const pageHeightPx = CONTENT_HEIGHT_MM * MM_TO_PX;
-    return Math.max(0, Math.ceil(contentHeight / pageHeightPx) - 1);
+
+    if (contentHeight <= 0) {
+      return { pageHeightPx, pageBreakCount: 0 };
+    }
+
+    const pageCount = Math.max(1, Math.ceil(contentHeight / pageHeightPx));
+    const pageBreakCount = Math.max(0, pageCount - 1);
+
+    return { pageHeightPx, pageBreakCount };
   }, [contentHeight, activeResume?.globalSettings?.pagePadding]);
 
   if (!activeResume) return null;
@@ -128,7 +151,7 @@ const PreviewPanel = ({
         fontFamily: "MiSans VF, sans-serif",
       }}
     >
-      <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top  md:scale-90  md:origin-top-left">
+      <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top md:scale-90 md:origin-top-left">
         <div
           ref={startRef}
           className={cn(
@@ -186,9 +209,30 @@ const PreviewPanel = ({
               }
             `}</style>
             <ResumeTemplateComponent data={activeResume} template={template} />
-            {Array.from({ length: pageBreakCount }, (_, i) => (
-              <PageBreakLine key={i} pageNumber={i + 1} />
-            ))}
+            {contentHeight > 0 && (
+              <>
+                <div key={`page-breaks-container-${contentHeight}`}>
+                  {Array.from(
+                    { length: Math.min(pageBreakCount, 20) },
+                    (_, i) => {
+                      const pageNumber = i + 1;
+
+                      const pageLinePosition = pageHeightPx * pageNumber;
+
+                      if (pageLinePosition <= contentHeight) {
+                        return (
+                          <PageBreakLine
+                            key={`page-break-${pageNumber}`}
+                            pageNumber={pageNumber}
+                          />
+                        );
+                      }
+                      return null;
+                    }
+                  ).filter(Boolean)}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

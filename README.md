@@ -120,8 +120,10 @@ docker pull siyueqingchen/magic-resume:main
 
 可以通过以下方式关注最新动态:
 
-- 作者：JOYCEQL
+- 作者：SiYue
 - X: @GuangzhouY81070
+- Discord: 欢迎加入群组 https://discord.gg/9mWgZrW3VN
+- 用户群：加微信 qingchensiyue
 - 邮箱：18806723365@163.com
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

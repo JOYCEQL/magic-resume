@@ -120,8 +120,9 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 You can follow the latest updates via:
 
-- Author: JOYCEQL
+- Author: Siyue
 - X: @GuangzhouY81070
+- Discord: Join our community https://discord.gg/9mWgZrW3VN
 - Email: 18806723365@163.com
 - Project Homepage: https://github.com/JOYCEQL/magic-resume
 

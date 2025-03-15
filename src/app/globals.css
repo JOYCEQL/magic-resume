@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 隐藏数字输入框自带的上下箭头 */
+@layer utilities {
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .no-spinner {
+    -moz-appearance: textfield;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

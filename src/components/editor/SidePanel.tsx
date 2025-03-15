@@ -14,6 +14,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -402,10 +403,85 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ pagePadding: value })
                   }
+                  className="flex-1"
                 />
-                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
-                  {globalSettings?.pagePadding}px
-                </span>
+                <div className="flex items-center">
+                  <div className="flex h-8 w-20 overflow-hidden rounded-md border border-input">
+                    <Input
+                      type="number"
+                      min={1}
+                      max={100}
+                      step={1}
+                      value={globalSettings?.pagePadding || 0}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = Number(e.target.value);
+                        if (!isNaN(value) && value >= 0 && value <= 100) {
+                          updateGlobalSettings?.({ pagePadding: value });
+                        }
+                      }}
+                      className="h-full w-12 border-0 text-center focus-visible:ring-0 focus-visible:ring-offset-0 no-spinner"
+                    />
+                    <div className="flex flex-col border-l border-input">
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center border-b border-input bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue = globalSettings?.pagePadding || 0;
+                          if (currentValue < 100) {
+                            updateGlobalSettings?.({
+                              pagePadding: currentValue + 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">增加</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m18 15-6-6-6 6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue = globalSettings?.pagePadding || 0;
+                          if (currentValue > 0) {
+                            updateGlobalSettings?.({
+                              pagePadding: currentValue - 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">减少</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <span className="ml-1 text-sm text-gray-600 dark:text-neutral-300">
+                    px
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -422,10 +498,87 @@ export function SidePanel() {
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ sectionSpacing: value })
                   }
+                  className="flex-1"
                 />
-                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
-                  {globalSettings?.sectionSpacing}px
-                </span>
+                <div className="flex items-center">
+                  <div className="flex h-8 w-20 overflow-hidden rounded-md border border-input">
+                    <Input
+                      type="number"
+                      min={1}
+                      max={100}
+                      step={1}
+                      value={globalSettings?.sectionSpacing || 0}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = Number(e.target.value);
+                        if (!isNaN(value) && value >= 1 && value <= 100) {
+                          updateGlobalSettings?.({ sectionSpacing: value });
+                        }
+                      }}
+                      className="h-full w-12 border-0 text-center focus-visible:ring-0 focus-visible:ring-offset-0 no-spinner"
+                    />
+                    <div className="flex flex-col border-l border-input">
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center border-b border-input bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue =
+                            globalSettings?.sectionSpacing || 0;
+                          if (currentValue < 100) {
+                            updateGlobalSettings?.({
+                              sectionSpacing: currentValue + 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">增加</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m18 15-6-6-6 6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue =
+                            globalSettings?.sectionSpacing || 0;
+                          if (currentValue > 1) {
+                            updateGlobalSettings?.({
+                              sectionSpacing: currentValue - 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">减少</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <span className="ml-1 text-sm text-gray-600 dark:text-neutral-300">
+                    px
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -437,14 +590,92 @@ export function SidePanel() {
                 <Slider
                   value={[globalSettings?.paragraphSpacing || 0]}
                   min={1}
-                  step={0.1}
+                  max={50}
+                  step={1}
                   onValueChange={([value]) =>
                     updateGlobalSettings?.({ paragraphSpacing: value })
                   }
+                  className="flex-1"
                 />
-                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
-                  {globalSettings?.paragraphSpacing}px
-                </span>
+                <div className="flex items-center">
+                  <div className="flex h-8 w-20 overflow-hidden rounded-md border border-input">
+                    <Input
+                      type="number"
+                      min={1}
+                      max={100}
+                      step={1}
+                      value={globalSettings?.paragraphSpacing || 0}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = Number(e.target.value);
+                        if (!isNaN(value) && value >= 1) {
+                          updateGlobalSettings?.({ paragraphSpacing: value });
+                        }
+                      }}
+                      className="h-full w-12 border-0 text-center focus-visible:ring-0 focus-visible:ring-offset-0 no-spinner"
+                    />
+                    <div className="flex flex-col border-l border-input">
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center border-b border-input bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue =
+                            globalSettings?.paragraphSpacing || 0;
+                          if (currentValue < 100) {
+                            updateGlobalSettings?.({
+                              paragraphSpacing: currentValue + 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">增加</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m18 15-6-6-6 6" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="flex h-4 w-8 items-center justify-center bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        onClick={() => {
+                          const currentValue =
+                            globalSettings?.paragraphSpacing || 0;
+                          if (currentValue > 1) {
+                            updateGlobalSettings?.({
+                              paragraphSpacing: currentValue - 1,
+                            });
+                          }
+                        }}
+                      >
+                        <span className="sr-only">减少</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <span className="ml-1 text-sm text-gray-600 dark:text-neutral-300">
+                    px
+                  </span>
+                </div>
               </div>
             </div>
           </div>

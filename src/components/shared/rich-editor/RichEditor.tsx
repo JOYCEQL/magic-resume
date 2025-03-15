@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import { useTranslations } from "next-intl";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
@@ -16,19 +17,15 @@ import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
-  Strikethrough,
   AlignLeft,
   AlignCenter,
   AlignRight,
   AlignJustify,
   List,
   ListOrdered,
-  Quote,
   Undo,
   Redo,
   PaintBucket,
-  Type,
-  ChevronDown,
   Highlighter,
   Wand2,
 } from "lucide-react";
@@ -47,25 +44,30 @@ interface RichTextEditorProps {
   onPolish?: () => void;
 }
 
-const COLORS = [
-  { label: "黑色", value: "#000000" },
-  { label: "深灰", value: "#333333" },
-  { label: "灰色", value: "#666666" },
-  { label: "红色", value: "#FF0000" },
-  { label: "橙色", value: "#FF4D00" },
-  { label: "橙黄", value: "#FF9900" },
-  { label: "黄色", value: "#FFCC00" },
-  { label: "黄绿", value: "#33CC00" },
-  { label: "绿色", value: "#00CC00" },
-  { label: "青色", value: "#00CCCC" },
-  { label: "浅蓝", value: "#0066FF" },
-  { label: "蓝色", value: "#0000FF" },
-  { label: "紫色", value: "#6600FF" },
-  { label: "紫红", value: "#CC00FF" },
-  { label: "粉色", value: "#FF00FF" },
+interface ColorOption {
+  label: string;
+  value: string;
+}
+
+const getColors = (t: any): ColorOption[] => [
+  { label: t("colors.black"), value: "#000000" },
+  { label: t("colors.darkGray"), value: "#333333" },
+  { label: t("colors.gray"), value: "#666666" },
+  { label: t("colors.red"), value: "#FF0000" },
+  { label: t("colors.orange"), value: "#FF4D00" },
+  { label: t("colors.orangeYellow"), value: "#FF9900" },
+  { label: t("colors.yellow"), value: "#FFCC00" },
+  { label: t("colors.yellowGreen"), value: "#33CC00" },
+  { label: t("colors.green"), value: "#00CC00" },
+  { label: t("colors.cyan"), value: "#00CCCC" },
+  { label: t("colors.lightBlue"), value: "#0066FF" },
+  { label: t("colors.blue"), value: "#0000FF" },
+  { label: t("colors.purple"), value: "#6600FF" },
+  { label: t("colors.magenta"), value: "#CC00FF" },
+  { label: t("colors.pink"), value: "#FF00FF" },
 ];
 
-const BG_COLORS = COLORS;
+const getBgColors = getColors;
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -140,6 +142,8 @@ const MenuButton = ({
 
 const TextColorButton = ({ editor }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
+  const t = useTranslations("richEditor");
+  const colors = getColors(t);
 
   React.useEffect(() => {
     const color = editor?.getAttributes("textStyle").color;
@@ -163,14 +167,14 @@ const TextColorButton = ({ editor }) => {
                 : "none",
             }}
           />
-          <span className="sr-only">文字颜色</span>
+          <span className="sr-only">{t("textColor")}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-3 rounded-lg">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <PaintBucket className="h-4 w-4" />
-            <span className="text-sm font-medium">文字颜色</span>
+            <span className="text-sm font-medium">{t("textColor")}</span>
           </div>
           <div className="grid grid-cols-5 gap-1">
             <button
@@ -184,7 +188,7 @@ const TextColorButton = ({ editor }) => {
                 /
               </span>
             </button>
-            {COLORS.map((color) => (
+            {colors.map((color: ColorOption) => (
               <button
                 key={color.value}
                 className={`h-8 w-8 rounded-md border hover:scale-110 transition-transform relative
@@ -214,8 +218,10 @@ const TextColorButton = ({ editor }) => {
 
 const BackgroundColorButton = ({ editor }) => {
   const [activeBgColor, setActiveBgColor] = React.useState<string | null>(null);
+  const t = useTranslations("richEditor");
+  const bgColors = getBgColors(t);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // highlight 属性可能直接返回颜色值
     const highlight =
       editor?.getAttributes("highlight").color ||
@@ -248,14 +254,14 @@ const BackgroundColorButton = ({ editor }) => {
               />
             )}
           </div>
-          <span className="sr-only">背景颜色</span>
+          <span className="sr-only">{t("backgroundColor")}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-3 rounded-lg">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Highlighter className="h-4 w-4" />
-            <span className="text-sm font-medium">背景颜色</span>
+            <span className="text-sm font-medium">{t("backgroundColor")}</span>
           </div>
           <div className="grid grid-cols-5 gap-1">
             <button
@@ -269,7 +275,7 @@ const BackgroundColorButton = ({ editor }) => {
                 /
               </span>
             </button>
-            {BG_COLORS.map((color) => (
+            {bgColors.map((color: ColorOption) => (
               <button
                 key={color.value}
                 className={`h-8 w-8 rounded-md border hover:scale-110 transition-transform relative
@@ -300,81 +306,12 @@ const BackgroundColorButton = ({ editor }) => {
   );
 };
 
-const HeadingSelect = ({ editor }) => {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "h-9 px-2.5 rounded-md flex items-center gap-1.5 min-w-[100px]",
-            "hover:bg-primary/5 dark:hover:bg-neutral-800"
-          )}
-        >
-          <Type className="h-5 w-5" />
-          <span className="text-sm">
-            {editor.isActive("heading", { level: 1 })
-              ? "标题 1"
-              : editor.isActive("heading", { level: 2 })
-              ? "标题 2"
-              : editor.isActive("heading", { level: 3 })
-              ? "标题 3"
-              : "正文"}
-          </span>
-          <ChevronDown className="h-4 w-4 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        className={cn("w-40 p-1 rounded-lg", "bg-white dark:bg-neutral-900")}
-      >
-        <div className="flex flex-col gap-0.5">
-          {[
-            { label: "正文", value: "p" },
-            { label: "标题 1", value: "1" },
-            { label: "标题 2", value: "2" },
-            { label: "标题 3", value: "3" },
-          ].map((item) => (
-            <Button
-              key={item.value}
-              variant="ghost"
-              className={cn(
-                "w-full justify-start px-2 py-1.5 text-sm rounded-md",
-                editor.isActive(
-                  item.value === "p" ? "paragraph" : "heading",
-                  item.value === "p"
-                    ? undefined
-                    : { level: parseInt(item.value) }
-                )
-                  ? "bg-primary/10 text-primary dark:bg-neutral-800 dark:text-neutral-200"
-                  : ""
-              )}
-              onClick={() => {
-                if (item.value === "p") {
-                  editor.chain().focus().setParagraph().run();
-                } else {
-                  editor
-                    .chain()
-                    .focus()
-                    .toggleHeading({ level: parseInt(item.value) })
-                    .run();
-                }
-              }}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
-
 const RichTextEditor = ({
   content = "",
   onChange,
   onPolish,
 }: RichTextEditorProps) => {
+  const t = useTranslations("richEditor");
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -446,42 +383,35 @@ const RichTextEditor = ({
       )}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Toolbar */}
       <div
         className={cn(
           "border-b px-2 py-1.5 flex flex-wrap items-center gap-3",
           "bg-background dark:bg-neutral-900/50 dark:border-neutral-800"
         )}
       >
-        <div className="flex items-center">
-          <HeadingSelect editor={editor} />
-        </div>
-
-        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />
-
         <div className="flex items-center gap-0.5">
           <MenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive("bold")}
-            tooltip="加粗"
+            tooltip={t("bold")}
           >
             <Bold className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive("italic")}
-            tooltip="斜体"
+            tooltip={t("italic")}
           >
             <Italic className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive("underline")}
-            tooltip="下划线"
+            tooltip={t("underline")}
           >
             <UnderlineIcon className="h-5 w-5" />
           </MenuButton>
-          <TextColorButton editor={editor} tooltip="文字颜色" />
+          <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
         </div>
 
@@ -491,28 +421,28 @@ const RichTextEditor = ({
           <MenuButton
             onClick={() => editor.chain().focus().setTextAlign("left").run()}
             isActive={editor.isActive({ textAlign: "left" })}
-            tooltip="左对齐"
+            tooltip={t("alignLeft")}
           >
             <AlignLeft className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().setTextAlign("center").run()}
             isActive={editor.isActive({ textAlign: "center" })}
-            tooltip="居中对齐"
+            tooltip={t("alignCenter")}
           >
             <AlignCenter className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().setTextAlign("right").run()}
             isActive={editor.isActive({ textAlign: "right" })}
-            tooltip="右对齐"
+            tooltip={t("alignRight")}
           >
             <AlignRight className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().setTextAlign("justify").run()}
             isActive={editor.isActive({ textAlign: "justify" })}
-            tooltip="两端对齐"
+            tooltip={t("alignJustify")}
           >
             <AlignJustify className="h-5 w-5" />
           </MenuButton>
@@ -524,14 +454,14 @@ const RichTextEditor = ({
           <MenuButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive("bulletList")}
-            tooltip="无序列表"
+            tooltip={t("bulletList")}
           >
             <List className="h-5 w-5" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive("orderedList")}
-            tooltip="有序列表"
+            tooltip={t("orderedList")}
           >
             <ListOrdered className="h-5 w-5" />
           </MenuButton>
@@ -543,14 +473,14 @@ const RichTextEditor = ({
           <MenuButton
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().undo()}
-            tooltip="撤销"
+            tooltip={t("undo")}
           >
             <Undo className="h-4 w-4" />
           </MenuButton>
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
-            tooltip="重做"
+            tooltip={t("redo")}
           >
             <Redo className="h-4 w-4" />
           </MenuButton>
@@ -562,7 +492,7 @@ const RichTextEditor = ({
               className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-pink-500 hover:to-purple-400 text-white border-none shadow-md transition-all duration-300"
             >
               <Wand2 className="h-4 w-4 mr-2" />
-              AI 润色
+              {t("aiPolish")}
             </Button>
           )}
         </div>

@@ -1,11 +1,9 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { ChevronUpIcon, ChevronDownIcon } from "lucide-react";
-import { format } from "date-fns";
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
@@ -159,7 +157,11 @@ const Field = ({
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {currentDate ? formatDate(currentDate) : <span>选择日期</span>}
+              {currentDate ? (
+                formatDate(currentDate)
+              ) : (
+                <span>{t("field.selectDate")}</span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -167,7 +169,7 @@ const Field = ({
               <div className="relative">
                 <Input
                   type="number"
-                  placeholder="输入年份"
+                  placeholder={t("field.enterYear")}
                   className="w-full pr-8 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   value={yearInput}
                   onChange={handleYearInput}

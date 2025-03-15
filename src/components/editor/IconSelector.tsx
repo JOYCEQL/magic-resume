@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import {
   Popover,
   PopoverContent,
@@ -86,119 +87,366 @@ interface IconSelectorProps {
   onChange: (value: string) => void;
 }
 
-const iconOptions: IconOption[] = [
+const getIconOptions = (t: any): IconOption[] => [
   // 个人信息类
-  { label: "用户", value: "User", icon: User, category: "个人信息" },
-  { label: "邮箱", value: "Mail", icon: Mail, category: "个人信息" },
-  { label: "电话", value: "Phone", icon: Phone, category: "个人信息" },
-  { label: "地址", value: "MapPin", icon: MapPin, category: "个人信息" },
-  { label: "网站", value: "Globe", icon: Globe, category: "个人信息" },
   {
-    label: "手机",
+    label: t("icons.user"),
+    value: "User",
+    icon: User,
+    category: t("categories.personal"),
+  },
+  {
+    label: t("icons.email"),
+    value: "Mail",
+    icon: Mail,
+    category: t("categories.personal"),
+  },
+  {
+    label: t("icons.phone"),
+    value: "Phone",
+    icon: Phone,
+    category: t("categories.personal"),
+  },
+  {
+    label: t("icons.address"),
+    value: "MapPin",
+    icon: MapPin,
+    category: t("categories.personal"),
+  },
+  {
+    label: t("icons.website"),
+    value: "Globe",
+    icon: Globe,
+    category: t("categories.personal"),
+  },
+  {
+    label: t("icons.mobile"),
     value: "Smartphone",
     icon: Smartphone,
-    category: "个人信息",
+    category: t("categories.personal"),
   },
 
   // 教育背景类
   {
-    label: "学历",
+    label: t("icons.education"),
     value: "GraduationCap",
     icon: GraduationCap,
-    category: "教育背景",
+    category: t("categories.education"),
   },
-  { label: "学校", value: "School", icon: School, category: "教育背景" },
-  { label: "专业", value: "Book", icon: Book, category: "教育背景" },
-  { label: "图书馆", value: "Library", icon: Library, category: "教育背景" },
-  { label: "奖学金", value: "Award", icon: Award, category: "教育背景" },
+  {
+    label: t("icons.school"),
+    value: "School",
+    icon: School,
+    category: t("categories.education"),
+  },
+  {
+    label: t("icons.major"),
+    value: "Book",
+    icon: Book,
+    category: t("categories.education"),
+  },
+  {
+    label: t("icons.library"),
+    value: "Library",
+    icon: Library,
+    category: t("categories.education"),
+  },
+  {
+    label: t("icons.scholarship"),
+    value: "Award",
+    icon: Award,
+    category: t("categories.education"),
+  },
 
   // 工作经验类
-  { label: "工作", value: "Briefcase", icon: Briefcase, category: "工作经验" },
-  { label: "公司", value: "Building2", icon: Building2, category: "工作经验" },
-  { label: "办公室", value: "Building", icon: Building, category: "工作经验" },
   {
-    label: "日期范围",
+    label: t("icons.work"),
+    value: "Briefcase",
+    icon: Briefcase,
+    category: t("categories.experience"),
+  },
+  {
+    label: t("icons.company"),
+    value: "Building2",
+    icon: Building2,
+    category: t("categories.experience"),
+  },
+  {
+    label: t("icons.office"),
+    value: "Building",
+    icon: Building,
+    category: t("categories.experience"),
+  },
+  {
+    label: t("icons.dateRange"),
     value: "CalendarRange",
     icon: CalendarRange,
-    category: "工作经验",
+    category: t("categories.experience"),
   },
-  { label: "工作时间", value: "Clock", icon: Clock, category: "工作经验" },
+  {
+    label: t("icons.workTime"),
+    value: "Clock",
+    icon: Clock,
+    category: t("categories.experience"),
+  },
 
   // 技能类
-  { label: "编程", value: "Code", icon: Code, category: "技能" },
-  { label: "系统", value: "Cpu", icon: Cpu, category: "技能" },
-  { label: "数据库", value: "Database", icon: Database, category: "技能" },
-  { label: "终端", value: "Terminal", icon: Terminal, category: "技能" },
-  { label: "技术栈", value: "Layers", icon: Layers, category: "技能" },
-
-  // 语言类
-  { label: "语言", value: "Languages", icon: Languages, category: "语言" },
   {
-    label: "口语",
-    value: "MessageSquare",
-    icon: MessageSquare,
-    category: "语言",
+    label: t("icons.programming"),
+    value: "Code",
+    icon: Code,
+    category: t("categories.skills"),
   },
   {
-    label: "交流",
+    label: t("icons.system"),
+    value: "Cpu",
+    icon: Cpu,
+    category: t("categories.skills"),
+  },
+  {
+    label: t("icons.database"),
+    value: "Database",
+    icon: Database,
+    category: t("categories.skills"),
+  },
+  {
+    label: t("icons.terminal"),
+    value: "Terminal",
+    icon: Terminal,
+    category: t("categories.skills"),
+  },
+  {
+    label: t("icons.techStack"),
+    value: "Layers",
+    icon: Layers,
+    category: t("categories.skills"),
+  },
+
+  // 语言类
+  {
+    label: t("icons.language"),
+    value: "Languages",
+    icon: Languages,
+    category: t("categories.languages"),
+  },
+  {
+    label: t("icons.speaking"),
+    value: "MessageSquare",
+    icon: MessageSquare,
+    category: t("categories.languages"),
+  },
+  {
+    label: t("icons.communication"),
     value: "MessagesSquare",
     icon: MessagesSquare,
-    category: "语言",
+    category: t("categories.languages"),
   },
 
   // 项目经验类
-  { label: "项目", value: "FolderGit2", icon: FolderGit2, category: "项目" },
-  { label: "分支", value: "GitBranch", icon: GitBranch, category: "项目" },
-  { label: "发布", value: "Rocket", icon: Rocket, category: "项目" },
-  { label: "目标", value: "Target", icon: Target, category: "项目" },
+  {
+    label: t("icons.project"),
+    value: "FolderGit2",
+    icon: FolderGit2,
+    category: t("categories.projects"),
+  },
+  {
+    label: t("icons.branch"),
+    value: "GitBranch",
+    icon: GitBranch,
+    category: t("categories.projects"),
+  },
+  {
+    label: t("icons.release"),
+    value: "Rocket",
+    icon: Rocket,
+    category: t("categories.projects"),
+  },
+  {
+    label: t("icons.target"),
+    value: "Target",
+    icon: Target,
+    category: t("categories.projects"),
+  },
 
   // 成就与证书类
-  { label: "奖杯", value: "Trophy", icon: Trophy, category: "成就证书" },
-  { label: "奖牌", value: "Medal", icon: Medal, category: "成就证书" },
-  { label: "星级", value: "Star", icon: Star, category: "成就证书" },
+  {
+    label: t("icons.trophy"),
+    value: "Trophy",
+    icon: Trophy,
+    category: t("categories.achievements"),
+  },
+  {
+    label: t("icons.medal"),
+    value: "Medal",
+    icon: Medal,
+    category: t("categories.achievements"),
+  },
+  {
+    label: t("icons.star"),
+    value: "Star",
+    icon: Star,
+    category: t("categories.achievements"),
+  },
 
   // 兴趣爱好类
-  { label: "兴趣", value: "Heart", icon: Heart, category: "兴趣爱好" },
-  { label: "音乐", value: "Music", icon: Music, category: "兴趣爱好" },
-  { label: "艺术", value: "Palette", icon: Palette, category: "兴趣爱好" },
-  { label: "摄影", value: "Camera", icon: Camera, category: "兴趣爱好" },
+  {
+    label: t("icons.interest"),
+    value: "Heart",
+    icon: Heart,
+    category: t("categories.hobbies"),
+  },
+  {
+    label: t("icons.music"),
+    value: "Music",
+    icon: Music,
+    category: t("categories.hobbies"),
+  },
+  {
+    label: t("icons.art"),
+    value: "Palette",
+    icon: Palette,
+    category: t("categories.hobbies"),
+  },
+  {
+    label: t("icons.photography"),
+    value: "Camera",
+    icon: Camera,
+    category: t("categories.hobbies"),
+  },
 
   // 社交媒体类
-  { label: "Github", value: "Github", icon: Github, category: "社交媒体" },
-  { label: "领英", value: "Linkedin", icon: Linkedin, category: "社交媒体" },
-  { label: "推特", value: "Twitter", icon: Twitter, category: "社交媒体" },
-  { label: "脸书", value: "Facebook", icon: Facebook, category: "社交媒体" },
-  { label: "照片", value: "Instagram", icon: Instagram, category: "社交媒体" },
+  {
+    label: "Github",
+    value: "Github",
+    icon: Github,
+    category: t("categories.social"),
+  },
+  {
+    label: t("icons.linkedin"),
+    value: "Linkedin",
+    icon: Linkedin,
+    category: t("categories.social"),
+  },
+  {
+    label: t("icons.twitter"),
+    value: "Twitter",
+    icon: Twitter,
+    category: t("categories.social"),
+  },
+  {
+    label: t("icons.facebook"),
+    value: "Facebook",
+    icon: Facebook,
+    category: t("categories.social"),
+  },
+  {
+    label: t("icons.instagram"),
+    value: "Instagram",
+    icon: Instagram,
+    category: t("categories.social"),
+  },
 
   // 其他类
-  { label: "简介", value: "FileText", icon: FileText, category: "其他" },
-  { label: "审核", value: "FileCheck", icon: FileCheck, category: "其他" },
-  { label: "筛选", value: "Filter", icon: Filter, category: "其他" },
-  { label: "链接", value: "Link", icon: Link, category: "其他" },
-  { label: "薪资", value: "Wallet", icon: Wallet, category: "其他" },
-  { label: "创意", value: "Lightbulb", icon: Lightbulb, category: "其他" },
-  { label: "发送", value: "Send", icon: Send, category: "其他" },
-  { label: "分享", value: "Share2", icon: Share2, category: "其他" },
-  { label: "设置", value: "Settings", icon: Settings, category: "其他" },
-  { label: "搜索", value: "SearchIcon", icon: SearchIcon, category: "其他" },
-  { label: "标记", value: "Flag", icon: Flag, category: "其他" },
-  { label: "收藏", value: "Bookmark", icon: Bookmark, category: "其他" },
-  { label: "点赞", value: "ThumbsUp", icon: ThumbsUp, category: "其他" },
-  { label: "技能", value: "Zap", icon: Zap, category: "其他" },
+  {
+    label: t("icons.profile"),
+    value: "FileText",
+    icon: FileText,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.review"),
+    value: "FileCheck",
+    icon: FileCheck,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.filter"),
+    value: "Filter",
+    icon: Filter,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.link"),
+    value: "Link",
+    icon: Link,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.salary"),
+    value: "Wallet",
+    icon: Wallet,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.idea"),
+    value: "Lightbulb",
+    icon: Lightbulb,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.send"),
+    value: "Send",
+    icon: Send,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.share"),
+    value: "Share2",
+    icon: Share2,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.settings"),
+    value: "Settings",
+    icon: Settings,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.search"),
+    value: "SearchIcon",
+    icon: SearchIcon,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.flag"),
+    value: "Flag",
+    icon: Flag,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.bookmark"),
+    value: "Bookmark",
+    icon: Bookmark,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.thumbsUp"),
+    value: "ThumbsUp",
+    icon: ThumbsUp,
+    category: t("categories.others"),
+  },
+  {
+    label: t("icons.skill"),
+    value: "Zap",
+    icon: Zap,
+    category: t("categories.others"),
+  },
 ];
 
 const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
+  const t = useTranslations("iconSelector");
+  const iconOptions = React.useMemo(() => getIconOptions(t), [t]);
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isHovered, setIsHovered] = React.useState("");
-  const [selectedCategory, setSelectedCategory] = React.useState("全部");
+  const [selectedCategory, setSelectedCategory] = React.useState(t("all"));
 
   const selectedIcon =
     iconOptions.find((i) => i.value === value) || iconOptions[0];
   const Icon = selectedIcon.icon;
 
   const categories = [
-    "全部",
+    t("all"),
     ...Array.from(new Set(iconOptions.map((icon) => icon.category))),
   ];
 
@@ -207,7 +455,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
       icon.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       icon.value.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === "全部" || icon.category === selectedCategory;
+      selectedCategory === t("all") || icon.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -266,7 +514,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
             />
             <input
               type="text"
-              placeholder="搜索图标..."
+              placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={cn(
@@ -354,9 +602,9 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
               )}
             >
               <SearchIcon className="w-12 h-12 mb-2 opacity-20" />
-              <p>未找到匹配的图标</p>
+              <p>{t("noMatchingIcons")}</p>
               <p className="text-xs opacity-70">
-                {searchTerm ? "请尝试其他搜索关键词" : "请选择其他分类"}
+                {searchTerm ? t("tryOtherKeywords") : t("selectOtherCategory")}
               </p>
             </div>
           )}

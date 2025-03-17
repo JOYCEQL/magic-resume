@@ -5,7 +5,9 @@
     "description": "Magic Resume is an open source resume editor, free, privacy-first. No registration required, all data stored locally, support data backup and export, ensuring your resume data is always available.",
     "dashboard": "Dashboard",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "newResume": "New Resume",
+    "copy": "Copy"
   },
   "home": {
     "header": {
@@ -615,5 +617,13 @@
   },
   "templates": {
     "switchTemplate": "Switch Template"
+  },
+  "themeModal": {
+    "delete": {
+      "title": "Confirm Deletion",
+      "description": "Are you sure you want to delete {title}?",
+      "confirmText": "Delete",
+      "cancelText": "Cancel"
+    }
   }
 }

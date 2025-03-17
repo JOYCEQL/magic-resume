@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +11,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
 interface ThemedAlertDialogProps {
@@ -24,23 +25,24 @@ const ThemeModal = ({
   isOpen,
   onClose,
   onConfirm,
-  title
+  title,
 }: ThemedAlertDialogProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const t = useTranslations("themeModal.delete");
 
   const modalContent = {
     delete: {
-      title: "确定要删除吗",
+      title: t("title"),
       description: (
         <>
           <span>
-            您确定要删除
+            {t.raw("description").split("{title}")[0]}
             <span className="px-2 font-semibold text-primary">{title}</span>
           </span>
-          吗？
+          {t.raw("description").split("{title}")[1]}
         </>
       ),
-      confirmText: "删除",
+      confirmText: t("confirmText"),
       illustration: (
         <svg
           className="h-32 w-32"
@@ -70,8 +72,8 @@ const ThemeModal = ({
             strokeLinecap="round"
           />
         </svg>
-      )
-    }
+      ),
+    },
   };
 
   const content = modalContent["delete"];
@@ -110,7 +112,7 @@ const ThemeModal = ({
 
             <AlertDialogFooter className="mt-8 flex w-full gap-4 sm:flex-row">
               <AlertDialogCancel className="flex-1 rounded-full dark:bg-gray-800 dark:text-neutral-200  text-base font-semibold text-gray-800 ">
-                取消
+                {t("cancelText")}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={onConfirm}

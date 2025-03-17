@@ -5,7 +5,9 @@
     "description": "魔方简历是一款开源的简历编辑器，免费，隐私优先。无需注册登录，数据完全存储在本地，支持数据导出备份，确保您的简历数据随时可用。",
     "dashboard": "仪表盘",
     "edit": "编辑",
-    "delete": "删除"
+    "delete": "删除",
+    "newResume": "新建简历",
+    "copy": "复制"
   },
   "home": {
     "header": {
@@ -617,5 +619,13 @@
   },
   "templates": {
     "switchTemplate": "切换模板"
+  },
+  "themeModal": {
+    "delete": {
+      "title": "确定要删除吗",
+      "description": "您确定要删除{title}吗？",
+      "confirmText": "删除",
+      "cancelText": "取消"
+    }
   }
 }

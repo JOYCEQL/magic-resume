@@ -136,7 +136,10 @@ export const useResumeStore = create(
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           templateId: template?.id,
-          title: `新建简历 ${id.slice(0, 6)}`,
+          title: `${locale === "en" ? "New Resume" : "新建简历"} ${id.slice(
+            0,
+            6
+          )}`,
         };
 
         set((state) => ({
@@ -227,10 +230,22 @@ export const useResumeStore = create(
       duplicateResume: (resumeId) => {
         const newId = generateUUID();
         const originalResume = get().resumes[resumeId];
+
+        // 获取当前语言环境
+        const locale =
+          typeof document !== "undefined"
+            ? document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("NEXT_LOCALE="))
+                ?.split("=")[1] || "zh"
+            : "zh";
+
         const duplicatedResume = {
           ...originalResume,
           id: newId,
-          title: `${originalResume.title} (复制)`,
+          title: `${originalResume.title} (${
+            locale === "en" ? "Copy" : "复制"
+          })`,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

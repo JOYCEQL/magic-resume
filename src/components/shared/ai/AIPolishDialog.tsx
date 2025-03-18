@@ -38,7 +38,10 @@ export default function AIPolishDialog({
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    deepseekModelId
+    deepseekModelId,
+    openaiApiKey,
+    openaiModelId,
+    openaiApiEndpoint,
   } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
@@ -47,11 +50,13 @@ export default function AIPolishDialog({
     try {
       const config = AI_MODEL_CONFIGS[selectedModel];
       const isConfigured =
-        selectedModel === "doubao"
-          ? doubaoApiKey && doubaoModelId
-          : config.requiresModelId
-          ? deepseekApiKey && deepseekModelId
-          : deepseekApiKey;
+          selectedModel === "doubao"
+              ? doubaoApiKey && doubaoModelId
+              : selectedModel === "openai"
+                  ? openaiApiKey && openaiModelId && openaiApiEndpoint
+                  : config.requiresModelId
+                      ? deepseekApiKey && deepseekModelId
+                      : deepseekApiKey;
 
       if (!isConfigured) {
         toast.error(t("error.configRequired"));
@@ -71,13 +76,13 @@ export default function AIPolishDialog({
         },
         body: JSON.stringify({
           content,
-          apiKey: selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey,
+          apiKey: selectedModel === "doubao" ? doubaoApiKey : selectedModel === "openai" ? openaiApiKey : deepseekApiKey,
+          apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
           model:
-            selectedModel === "doubao"
-              ? doubaoModelId
-              : config.requiresModelId
-              ? deepseekModelId
-              : config.defaultModel,
+              selectedModel === "doubao"
+                  ? doubaoModelId
+                  : selectedModel === "openai" ? openaiModelId
+                      : config.requiresModelId ? deepseekModelId : deepseekApiKey,
           modelType: selectedModel
         }),
         signal: abortControllerRef.current.signal

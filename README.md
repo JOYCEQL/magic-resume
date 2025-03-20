@@ -103,7 +103,7 @@ docker pull siyueqingchen/magic-resume:main
 
 ## 📝 开源协议
 
-本项目采用 Apache 2.0 协议 - 查看 [LICENSE](LICENSE) 了解详情
+本项目采用 Apache 2.0 协议，但有一些自定义的部分 - 查看 [LICENSE](LICENSE) 了解详情
 
 ## 🗺️ 路线图
 
@@ -129,4 +129,8 @@ docker pull siyueqingchen/magic-resume:main
 
 ## 🌟 支持项目
 
-如果这个项目对你有帮助，欢迎点个 star ⭐️
+如果您喜欢这个项目，可以考虑小小赞助一下（请备注Github用户名），您的支持将帮助我持续改进项目，并且您的名字将出现在赞助者名单中；当然点亮一颗小星星也是一种支持～
+
+<div >
+  <img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" alt="支持项目" width="300" />
+</div>

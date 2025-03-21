@@ -63,17 +63,22 @@ const PreviewDock = ({
     doubaoModelId,
     deepseekApiKey,
     deepseekModelId,
+    openaiApiKey,
+    openaiModelId,
+    openaiApiEndpoint,
   } = useAIConfigStore();
 
   const handleGrammarCheck = useCallback(async () => {
     if (!resumeContentRef.current) return;
     const config = AI_MODEL_CONFIGS[selectedModel];
     const isConfigured =
-      selectedModel === "doubao"
-        ? doubaoApiKey && doubaoModelId
-        : config.requiresModelId
-        ? deepseekApiKey && deepseekModelId
-        : deepseekApiKey;
+        selectedModel === "doubao"
+            ? doubaoApiKey && doubaoModelId
+            : selectedModel === "openai"
+                ? openaiApiKey && openaiModelId && openaiApiEndpoint
+                : config.requiresModelId
+                    ? deepseekApiKey && deepseekModelId
+                    : deepseekApiKey;
 
     if (!isConfigured) {
       toast.error(

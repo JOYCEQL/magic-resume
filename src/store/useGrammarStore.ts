@@ -46,12 +46,14 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       doubaoModelId,
       deepseekApiKey,
       deepseekModelId,
+      openaiApiKey,
+      openaiModelId
     } = useAIConfigStore.getState();
 
     const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey = selectedModel === "doubao" ? doubaoApiKey : deepseekApiKey;
+    const apiKey = selectedModel === "doubao" ? doubaoApiKey : selectedModel === "openai" ? openaiApiKey : deepseekApiKey;
     const modelId =
-      selectedModel === "doubao" ? doubaoModelId : deepseekModelId;
+      selectedModel === "doubao" ? doubaoModelId : selectedModel === "openai" ? openaiModelId : deepseekModelId;
 
     set({ isChecking: true });
 

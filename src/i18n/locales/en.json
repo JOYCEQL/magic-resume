@@ -150,6 +150,13 @@
           "title": "DeepSeek",
           "description": "Get API key from DeepSeek Platform",
           "apiKey": "DeepSeek API Key"
+        },
+        "openai": {
+          "title": "OpenAI",
+          "description": "Obtain the API key at OpenAI or an open platform compatible with the OpenAI format",
+          "apiKey": "OpenAI API Key",
+          "modelId": "Model ID",
+          "apiEndpoint": "API Endpoint, example: https://openai.example.org/v1"
         }
       }
     },

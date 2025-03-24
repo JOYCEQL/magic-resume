@@ -578,7 +578,7 @@
     "upload": {
       "title": "Online Link",
       "dragHint": "Drag and drop or click to upload image",
-      "sizeLimit": "Image size must not exceed 5MB",
+      "sizeLimit": "Image size must not exceed 2MB",
       "typeLimit": "Please upload an image file",
       "urlPlaceholder": "Enter image link",
       "invalidUrl": "Invalid image URL or inaccessible, please try another image link",

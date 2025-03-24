@@ -534,7 +534,7 @@
     "upload": {
       "title": "在线链接",
       "dragHint": "拖拽或点击上传图片",
-      "sizeLimit": "图片大小不能超过5MB",
+      "sizeLimit": "图片大小不能超过2MB",
       "typeLimit": "请上传图片文件",
       "urlPlaceholder": "输入图片链接",
       "invalidUrl": "图片链接无效或无法访问，请尝试使用其他图片链接",

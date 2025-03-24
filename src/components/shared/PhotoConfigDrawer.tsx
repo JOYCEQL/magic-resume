@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { compressImage, estimateBase64Size } from "@/utils/imageUtils";
 import {
   Drawer,
   DrawerContent,
@@ -88,30 +89,52 @@ const PhotoConfigDrawer: React.FC<Props> = ({
     };
   }, [isOpen, initialConfig, photo]);
 
-  const handleFile = (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      alert(t("upload.sizeLimit"));
-      return;
-    }
 
+
+  const handleFile = async (file: File) => {
     if (!file.type.startsWith("image/")) {
-      alert(t("upload.typeLimit"));
+      toast.error(t("upload.typeLimit"));
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result as string;
-      setPreviewUrl(result);
-      setImageUrl(result);
-      const blob = new Blob([result], { type: "image/png" });
-      const blobUrl = URL.createObjectURL(blob);
-      localStorage.setItem("photo", blobUrl);
+    try {
+      let imageData: string;
+      if (file.size > 2 * 1024 * 1024) {
+        try {
+          imageData = await compressImage(file, 800, 800, 0.7);
+
+          let compressedSize = estimateBase64Size(imageData);
+          if (compressedSize > 2 * 1024 * 1024) {
+            imageData = await compressImage(file, 600, 600, 0.5);
+            compressedSize = estimateBase64Size(imageData);
+
+            if (compressedSize > 2 * 1024 * 1024) {
+              imageData = await compressImage(file, 400, 400, 0.4);
+            }
+          }
+
+          console.log(
+            `原始图片大小: ${(file.size / 1024).toFixed(2)}KB, 压缩后大小: ${(
+              estimateBase64Size(imageData) / 1024
+            ).toFixed(2)}KB`
+          );
+        } catch (error) {
+          toast.error(t("upload.sizeLimit"));
+          return;
+        }
+      } else {
+        // 如果图片小于2MB，但仍然进行轻度压缩以优化性能
+        imageData = await compressImage(file, 1200, 1200, 0.8);
+      }
+
+      setPreviewUrl(imageData);
+      setImageUrl(imageData);
       updateBasicInfo({
-        photo: result,
+        photo: imageData,
       });
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error(t("upload.error"));
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,19 +147,40 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   const handleUrlChange = async (e: string) => {
     const url = e.trim();
     setImageUrl(url);
-
     if (!url) {
       handleRemovePhoto();
       return;
     }
 
     try {
-      const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(
-        url
-      )}`;
+      const proxyUrl = `/api/proxy/image?url=${encodeURIComponent(url)}`;
 
       const img = new Image();
       img.crossOrigin = "anonymous";
+
+      // 检查图片大小
+      const checkImageSize = () => {
+        return new Promise<void>((resolve, reject) => {
+          fetch(proxyUrl, { method: "HEAD" })
+            .then((response) => {
+              const contentLength = response.headers.get("content-length");
+              if (contentLength) {
+                const size = parseInt(contentLength, 10);
+                if (size > 2 * 1024 * 1024) {
+                  reject(new Error(t("upload.sizeLimit")));
+                }
+              }
+              resolve();
+            })
+            .catch(() => {
+              // 如果无法获取大小，则继续尝试加载图片
+              resolve();
+            });
+        });
+      };
+
+      // 先检查图片大小
+      await checkImageSize();
 
       await new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
@@ -156,9 +200,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
 
       setPreviewUrl(proxyUrl);
       updateBasicInfo({
-        photo: proxyUrl,
+        photo: url,
       });
-      onPhotoChange(proxyUrl, config);
+      onPhotoChange(url, config);
     } catch (error) {
       toast.error(
         t("upload.invalidUrl", {

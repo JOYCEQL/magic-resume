@@ -5,14 +5,14 @@ import { AI_MODEL_CONFIGS } from "@/config/ai";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { apiKey, model, content, modelType } = body;
+    const { apiKey, model, content, modelType, apiEndpoint } = body;
 
     const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
     if (!modelConfig) {
       throw new Error("Invalid model type");
     }
 
-    const response = await fetch(modelConfig.url, {
+    const response = await fetch(modelConfig.url(apiEndpoint), {
       method: "POST",
       headers: modelConfig.headers(apiKey),
       body: JSON.stringify({

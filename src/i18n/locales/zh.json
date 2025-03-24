@@ -151,6 +151,13 @@
           "title": "DeepSeek",
           "description": "在 DeepSeek 开放平台获取 API 密钥",
           "apiKey": "API Key"
+        },
+        "openai": {
+          "title": "OpenAI",
+          "description": "在 OpenAI 或兼容 OpenAI 格式的开放平台获取 API 密钥",
+          "apiKey": "API Key",
+          "modelId": "模型 ID",
+          "apiEndpoint": "API 端点，如：https://openai.example.org/v1"
         }
       }
     },

@@ -15,15 +15,22 @@ import {
 } from "@/components/ui/select";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
+import IconOpenAi from "@/components/ai/icon/IconOpenAi";
 
 const AISettingsPage = () => {
   const {
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
+    openAiApiKey,
+    openAiModelId,
+    openAiEndpoint,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
+    setOpenaiApiKey,
+    setOpenaiModelId,
+    setOpenaiApiEndpoint,
     selectedModel,
     setSelectedModel
   } = useAIConfigStore();
@@ -38,23 +45,37 @@ const AISettingsPage = () => {
 
   const handleApiKeyChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek"
+    type: "doubao" | "deepseek" | "openai"
   ) => {
     const newApiKey = e.target.value;
     if (type === "doubao") {
       setDoubaoApiKey(newApiKey);
-    } else {
+    } else if (type === "deepseek") {
       setDeepseekApiKey(newApiKey);
+    } else {
+      setOpenaiApiKey(newApiKey);
     }
   };
 
   const handleModelIdChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek"
+    type: "doubao" | "deepseek" | "openai"
   ) => {
     const newModelId = e.target.value;
     if (type === "doubao") {
       setDoubaoModelId(newModelId);
+    } else if (type === "openai") {
+      setOpenaiModelId(newModelId);
+    }
+  };
+
+  const handleApiEndpointChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "openai"
+  ) => {
+    const newApiEndpoint = e.target.value;
+    if (type === "openai") {
+      setOpenaiApiEndpoint(newApiEndpoint);
     }
   };
 
@@ -78,6 +99,16 @@ const AISettingsPage = () => {
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
       isConfigured: !!(doubaoApiKey && doubaoModelId)
+    },
+    {
+      id: "openai",
+      name: t("dashboard.settings.ai.openai.title"),
+      description: t("dashboard.settings.ai.openai.description"),
+      icon: IconOpenAi,
+      link: "https://platform.openai.com/api-keys",
+      color: "text-blue-500",
+      bgColor: "bg-blue-50 dark:bg-blue-950/50",
+      isConfigured: !!(openAiApiKey && openAiModelId && openAiEndpoint)
     }
   ];
 
@@ -189,12 +220,12 @@ const AISettingsPage = () => {
                       </div>
                       <Input
                         value={
-                          model.id === "doubao" ? doubaoApiKey : deepseekApiKey
+                          model.id === "doubao" ? doubaoApiKey : model.id === "openai" ? openAiApiKey : deepseekApiKey
                         }
                         onChange={(e) =>
                           handleApiKeyChange(
                             e,
-                            model.id as "doubao" | "deepseek"
+                            model.id as "doubao" | "deepseek" | "openai"
                           )
                         }
                         type="password"
@@ -220,6 +251,48 @@ const AISettingsPage = () => {
                           onChange={(e) => handleModelIdChange(e, "doubao")}
                           placeholder={t(
                             "dashboard.settings.ai.doubao.modelId"
+                          )}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {currentModel === "openai" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.openai.modelId")}
+                        </Label>
+                        <Input
+                          value={openAiModelId}
+                          onChange={(e) => handleModelIdChange(e, "openai")}
+                          placeholder={t(
+                            "dashboard.settings.ai.openai.modelId"
+                          )}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {currentModel === "openai" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.openai.apiEndpoint")}
+                        </Label>
+                        <Input
+                          value={openAiEndpoint}
+                          onChange={(e) => handleApiEndpointChange(e, "openai")}
+                          placeholder={t(
+                            "dashboard.settings.ai.openai.apiEndpoint"
                           )}
                           className={cn(
                             "h-11",

@@ -22,9 +22,9 @@ const AISettingsPage = () => {
     doubaoApiKey,
     doubaoModelId,
     deepseekApiKey,
-    openAiApiKey,
-    openAiModelId,
-    openAiEndpoint,
+    openaiApiKey,
+    openaiModelId,
+    openaiApiEndpoint,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
@@ -108,7 +108,7 @@ const AISettingsPage = () => {
       link: "https://platform.openai.com/api-keys",
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
-      isConfigured: !!(openAiApiKey && openAiModelId && openAiEndpoint)
+      isConfigured: !!(openaiApiKey && openaiModelId && openaiApiEndpoint)
     }
   ];
 
@@ -220,7 +220,7 @@ const AISettingsPage = () => {
                       </div>
                       <Input
                         value={
-                          model.id === "doubao" ? doubaoApiKey : model.id === "openai" ? openAiApiKey : deepseekApiKey
+                          model.id === "doubao" ? doubaoApiKey : model.id === "openai" ? openaiApiKey : deepseekApiKey
                         }
                         onChange={(e) =>
                           handleApiKeyChange(
@@ -268,7 +268,7 @@ const AISettingsPage = () => {
                           {t("dashboard.settings.ai.openai.modelId")}
                         </Label>
                         <Input
-                          value={openAiModelId}
+                          value={openaiModelId}
                           onChange={(e) => handleModelIdChange(e, "openai")}
                           placeholder={t(
                             "dashboard.settings.ai.openai.modelId"
@@ -289,7 +289,7 @@ const AISettingsPage = () => {
                           {t("dashboard.settings.ai.openai.apiEndpoint")}
                         </Label>
                         <Input
-                          value={openAiEndpoint}
+                          value={openaiApiEndpoint}
                           onChange={(e) => handleApiEndpointChange(e, "openai")}
                           placeholder={t(
                             "dashboard.settings.ai.openai.apiEndpoint"

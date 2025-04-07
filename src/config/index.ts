@@ -9,12 +9,12 @@ export const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
     key: "employementStatus",
     label: "状态",
     type: "text",
-    visible: true,
+    visible: true
   },
   { id: "4", key: "birthDate", label: "生日", type: "date", visible: true },
   { id: "5", key: "email", label: "邮箱", type: "text", visible: true },
   { id: "6", key: "phone", label: "电话", type: "text", visible: true },
-  { id: "7", key: "location", label: "所在地", type: "text", visible: true },
+  { id: "7", key: "location", label: "所在地", type: "text", visible: true }
 ];
 
 export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
@@ -28,16 +28,16 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       primary: "#000000",
       secondary: "#4b5563",
       background: "#ffffff",
-      text: "#1f2937",
+      text: "#212529"
     },
     spacing: {
       sectionGap: 24,
       itemGap: 16,
-      contentPadding: 32,
+      contentPadding: 32
     },
     basic: {
-      layout: "center",
-    },
+      layout: "center"
+    }
   },
   {
     id: "modern",
@@ -49,16 +49,16 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       primary: "#000000",
       secondary: "#6b7280",
       background: "#ffffff",
-      text: "#111827",
+      text: "#212529"
     },
     spacing: {
       sectionGap: 20,
       itemGap: 20,
-      contentPadding: 1,
+      contentPadding: 1
     },
     basic: {
-      layout: "center",
-    },
+      layout: "center"
+    }
   },
   {
     id: "left-right",
@@ -70,16 +70,16 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       primary: "#000000",
       secondary: "#9ca3af",
       background: "#ffffff",
-      text: "#374151",
+      text: "#212529"
     },
     spacing: {
       sectionGap: 24,
       itemGap: 16,
-      contentPadding: 32,
+      contentPadding: 32
     },
     basic: {
-      layout: "left",
-    },
+      layout: "left"
+    }
   },
   {
     id: "timeline",
@@ -91,17 +91,17 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       primary: "#18181b",
       secondary: "#64748b",
       background: "#ffffff",
-      text: "#1e293b",
+      text: "#212529"
     },
     spacing: {
       sectionGap: 1,
       itemGap: 12,
-      contentPadding: 24,
+      contentPadding: 24
     },
     basic: {
-      layout: "right",
-    },
-  },
+      layout: "right"
+    }
+  }
 ];
 
 export const GITHUB_REPO_URL = "https://github.com/JOYCEQL/magic-resume";

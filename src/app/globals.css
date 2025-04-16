@@ -9,7 +9,7 @@
     -webkit-appearance: none;
     margin: 0;
   }
-  
+
   .no-spinner {
     -moz-appearance: textfield;
   }
@@ -265,6 +265,14 @@
 }
 
 .custom-list-ordered {
+  list-style-position: inside;
   list-style-type: decimal;
-  padding: 0 1.2rem;
+
+  p {
+    display: inline;
+  }
+  /* 次级需要特殊处理 */
+  .custom-list-ordered {
+    padding: 0 1.2rem;
+  }
 }

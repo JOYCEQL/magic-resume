@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
+import GoogleDriveIntegration from "../shared/GoogleDriveIntegration";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
@@ -118,7 +119,8 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
           />
 
           <ThemeToggle></ThemeToggle>
-          <div className="md:flex items-center ">
+          <div className="md:flex items-center space-x-2">
+            <GoogleDriveIntegration />
             <PdfExport />
           </div>
         </div>

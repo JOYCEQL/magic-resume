@@ -11,7 +11,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ const AISettingsPage = () => {
     setOpenaiModelId,
     setOpenaiApiEndpoint,
     selectedModel,
-    setSelectedModel
+    setSelectedModel,
   } = useAIConfigStore();
 
   const [currentModel, setCurrentModel] = useState("");
@@ -88,7 +88,7 @@ const AISettingsPage = () => {
       link: "https://platform.deepseek.com",
       color: "text-purple-500",
       bgColor: "bg-purple-50 dark:bg-purple-950/50",
-      isConfigured: !!deepseekApiKey
+      isConfigured: !!deepseekApiKey,
     },
     {
       id: "doubao",
@@ -98,7 +98,7 @@ const AISettingsPage = () => {
       link: "https://console.volcengine.com/ark",
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
-      isConfigured: !!(doubaoApiKey && doubaoModelId)
+      isConfigured: !!(doubaoApiKey && doubaoModelId),
     },
     {
       id: "openai",
@@ -108,8 +108,8 @@ const AISettingsPage = () => {
       link: "https://platform.openai.com/api-keys",
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
-      isConfigured: !!(openaiApiKey && openaiModelId && openaiApiEndpoint)
-    }
+      isConfigured: !!(openaiApiKey && openaiModelId && openaiApiEndpoint),
+    },
   ];
 
   return (
@@ -220,7 +220,11 @@ const AISettingsPage = () => {
                       </div>
                       <Input
                         value={
-                          model.id === "doubao" ? doubaoApiKey : model.id === "openai" ? openaiApiKey : deepseekApiKey
+                          model.id === "doubao"
+                            ? doubaoApiKey
+                            : model.id === "openai"
+                            ? openaiApiKey
+                            : deepseekApiKey
                         }
                         onChange={(e) =>
                           handleApiKeyChange(
@@ -312,5 +316,6 @@ const AISettingsPage = () => {
     </div>
   );
 };
+export const runtime = "edge";
 
 export default AISettingsPage;

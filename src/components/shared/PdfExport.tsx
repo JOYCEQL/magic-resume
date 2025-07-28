@@ -6,16 +6,17 @@ import {
   Loader2,
   FileJson,
   Printer,
-  ChevronDown,
+  ChevronDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
+import { PDF_EXPORT_CONFIG } from "@/config";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 const getOptimizedStyles = () => {
@@ -108,25 +109,23 @@ const PdfExport = () => {
 
       const [styles] = await Promise.all([
         getOptimizedStyles(),
-        optimizeImages(clonedElement),
+        optimizeImages(clonedElement)
       ]);
 
-      const response = await fetch(
-        "https://1255612844-0z3iovadu8.ap-chengdu.tencentscf.com/generate-pdf",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: clonedElement.outerHTML,
-            styles,
-            margin: globalSettings.pagePadding,
-          }),
-          // 允许跨域请求
-          mode: "cors",
-        }
-      );
+      const response = await fetch(PDF_EXPORT_CONFIG.SERVER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: clonedElement.outerHTML,
+          styles,
+          margin: globalSettings.pagePadding
+        }),
+        // 允许跨域请求
+        mode: "cors",
+        signal: AbortSignal.timeout(PDF_EXPORT_CONFIG.TIMEOUT)
+      });
 
       if (!response.ok) {
         throw new Error(`PDF generation failed: ${response.status}`);
@@ -355,7 +354,7 @@ const PdfExport = () => {
           width: "210mm",
           height: "297mm",
           visibility: "hidden",
-          zIndex: -1,
+          zIndex: -1
         }}
         title="Print Frame"
       />

@@ -601,6 +601,12 @@
       "tooltip": "复制简历",
       "success": "简历复制成功",
       "error": "简历复制失败"
+    },
+    "export": {
+      "tooltip": "导出简历",
+      "pdf": "导出PDF",
+      "json": "导出JSON",
+      "print": "打印"
     }
   },
   "aiPolishDialog": {

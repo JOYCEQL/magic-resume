@@ -222,6 +222,12 @@
       "tooltip": "Copy Resume",
       "success": "Resume copied successfully",
       "error": "Failed to copy resume"
+    },
+    "export": {
+      "tooltip": "Export Resume",
+      "pdf": "Export PDF",
+      "json": "Export JSON",
+      "print": "Print"
     }
   },
   "workbench": {

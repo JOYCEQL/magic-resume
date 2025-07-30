@@ -9,6 +9,11 @@ type Props = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://magicv.art"),
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png"
+  },
   robots: {
     index: true,
     follow: true,
@@ -17,9 +22,9 @@ export const metadata: Metadata = {
       follow: true,
       "max-video-preview": -1,
       "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+      "max-snippet": -1
+    }
+  }
 };
 
 export default function RootLayout({ children }: Props) {

@@ -130,4 +130,4 @@ docker pull siyueqingchen/magic-resume:main
 
 项目接口成本现正在持续上升中，如果对你有所帮助，可以赞赏作者，支持开源～
 
-![支持项目](https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp)
+<img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" width="320"  alt="图片描述">

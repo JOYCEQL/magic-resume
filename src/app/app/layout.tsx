@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-	/* 微应用握手和token、theme消息接收 */
+	/* 微应用双向握手和消息接收 */
 	useEffect(() => {
 		let isReady = false;
 

@@ -38,11 +38,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 					},
 					'*'
 				);
-				console.log('微应用主动发送准备就绪消息');
 			}
 		};
 
-		notifyReady()
+		notifyReady();
 
 		return () => {
 			window.removeEventListener('message', handleMessage);

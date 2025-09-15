@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>magic-resume microapp entry</title>
+		<!-- 避免页面白屏闪烁，以及添加骨架屏效果 -->
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				width: 100%;
+				height: 100%;
+				overflow: hidden; /* 防止滚动条闪烁 */
+				/* 浅色模式下的背景色，与主应用保持一致 */
+				background-color: #ffffff;
+				/* 添加平滑过渡 */
+				transition: background-color 0.2s ease;
+			}
+
+			#loading-skeleton {
+				position: fixed;
+				top: 0;
+				left: 240px;
+				width: 100%;
+				height: 100%;
+				background-color: #ffffff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999;
+				/* 添加淡入淡出动画 */
+				opacity: 1;
+				transition: opacity 0.3s ease;
+			}
+
+			#loading-skeleton.fade-out {
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			/* 加载骨架屏 */
+			.skeleton {
+				background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+				background-size: 200% 100%;
+				animation: loading 5s infinite;
+			}
+
+			.skeleton-header {
+				width: 100%;
+				height: 60px;
+				margin-bottom: 20px;
+			}
+
+			.skeleton-sidebar {
+				width: 240px;
+				height: 100%;
+				margin-right: 20px;
+			}
+
+			.skeleton-content {
+				flex: 1;
+				height: 200px;
+			}
+
+			.skeleton-container {
+				display: flex;
+				width: 100%;
+				height: 100%;
+				padding: 20px;
+				box-sizing: border-box;
+			}
+
+			@keyframes loading {
+				0% {
+					background-position: -200% 0;
+				}
+				100% {
+					background-position: 200% 0;
+				}
+			}
+
+			/* 支持深色模式 */
+			@media (prefers-color-scheme: dark) {
+				html,
+				body {
+					/* 深色模式下的背景色 */
+					background-color: #0a0a0a;
+					color: #ffffff;
+				}
+
+				#loading-skeleton {
+					background-color: #0a0a0a;
+				}
+
+				.skeleton {
+					background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+					background-size: 200% 100%;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 加载骨架屏 -->
+		<div id="loading-skeleton">
+			<div class="skeleton-container">
+				<!-- <div class="skeleton skeleton-sidebar"></div> -->
+				<div style="flex: 1">
+					<div class="skeleton skeleton-header"></div>
+					<div class="skeleton skeleton-content"></div>
+				</div>
+			</div>
+		</div>
+
+		<script src="./qiankun-entry.js" entry></script>
+	</body>
+</html>

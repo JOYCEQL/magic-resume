@@ -42,11 +42,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 			}
 		};
 
-		// 延迟发送，确保组件完全渲染
-		const timer = setTimeout(notifyReady, 100);
+		notifyReady()
 
 		return () => {
-			clearTimeout(timer);
 			window.removeEventListener('message', handleMessage);
 		};
 	}, []);

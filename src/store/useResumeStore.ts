@@ -1,22 +1,21 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import {
-  BasicInfo,
-  Education,
-  Experience,
-  GlobalSettings,
-  Project,
-  CustomItem,
-  ResumeData,
-  MenuSection,
-} from "../types/resume";
 import { DEFAULT_TEMPLATES } from "@/config";
 import {
   initialResumeState,
   initialResumeStateEn,
 } from "@/config/initialResumeData";
+import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { generateUUID } from "@/utils/uuid";
+import { create } from "zustand";
+import {
+  BasicInfo,
+  CustomItem,
+  Education,
+  Experience,
+  GlobalSettings,
+  MenuSection,
+  Project,
+  ResumeData,
+} from "../types/resume";
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
@@ -106,8 +105,8 @@ const syncResumeToFile = async (
   }
 };
 
-export const useResumeStore = create(
-  persist<ResumeStore>(
+export const useResumeStore = create<ResumeStore>(
+  (
     (set, get) => ({
       resumes: {},
       activeResumeId: null,
@@ -615,9 +614,6 @@ export const useResumeStore = create(
         syncResumeToFile(resume);
         return resume.id;
       },
-    }),
-    {
-      name: "resume-storage",
-    }
+    })
   )
 );

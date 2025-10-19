@@ -49,7 +49,6 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             }}
           >
             <span className="text-lg font-semibold">{t("common.title")}</span>
-            <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
           </motion.div>
         </div>
 

@@ -124,7 +124,7 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
   username,
   githubKey,
   className,
-  year = 2024,
+  year = new Date().getFullYear(),
 }) => {
   const [weeks, setWeeks] = useState<ContributionDay[][]>([]);
   const [loading, setLoading] = useState(true);

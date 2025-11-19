@@ -47,7 +47,8 @@ export const useAutoFitOnePage = () => {
   const getCurrentContentHeight = (): number => {
     const resumeContent = document.getElementById("resume-preview");
     if (!resumeContent) return 0;
-    return resumeContent.scrollHeight;
+    const rect = resumeContent.getBoundingClientRect();
+    return Math.max(0, rect.height);
   };
   const calculateCoordinatedFontSizes = useCallback(
     (baseFontSize: number): { headerSize: number; subheaderSize: number } => {

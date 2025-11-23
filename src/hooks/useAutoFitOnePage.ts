@@ -14,12 +14,12 @@ interface OptimizationParams {
 
 const FONT_CONSTRAINTS = {
   minBaseFontSize: 14,
-  minHeaderSize: 16,
-  minSubheaderSize: 16,
+  minHeaderSize: 14,
+  minSubheaderSize: 14,
   headerRatio: 1.25,
   subheaderRatio: 1.0,
   minHeaderDiff: 2,
-  minSubheaderDiff: 2
+  minSubheaderDiff: 2,
 };
 
 interface OptimizationResult {
@@ -50,6 +50,7 @@ export const useAutoFitOnePage = () => {
     const rect = resumeContent.getBoundingClientRect();
     return Math.max(0, rect.height);
   };
+
   const calculateCoordinatedFontSizes = useCallback(
     (baseFontSize: number): { headerSize: number; subheaderSize: number } => {
       let headerSize = Math.round(baseFontSize * FONT_CONSTRAINTS.headerRatio);
@@ -77,29 +78,6 @@ export const useAutoFitOnePage = () => {
     []
   );
 
-  const adjustFontSizesCoordinated = useCallback(
-    (
-      currentParams: OptimizationParams,
-      scaleFactor: number
-    ): OptimizationParams => {
-      const newBaseFontSize = Math.max(
-        FONT_CONSTRAINTS.minBaseFontSize,
-        Math.round(currentParams.baseFontSize * scaleFactor)
-      );
-
-      const { headerSize, subheaderSize } =
-        calculateCoordinatedFontSizes(newBaseFontSize);
-
-      return {
-        ...currentParams,
-        baseFontSize: newBaseFontSize,
-        headerSize,
-        subheaderSize
-      };
-    },
-    [calculateCoordinatedFontSizes]
-  );
-
   const applyOptimizationParams = useCallback(
     (params: OptimizationParams): void => {
       updateGlobalSettings({
@@ -109,7 +87,7 @@ export const useAutoFitOnePage = () => {
         lineHeight: params.lineHeight,
         paragraphSpacing: params.paragraphSpacing,
         sectionSpacing: params.sectionSpacing,
-        pagePadding: params.pagePadding
+        pagePadding: params.pagePadding,
       });
     },
     [updateGlobalSettings]
@@ -118,10 +96,57 @@ export const useAutoFitOnePage = () => {
   const waitForDOMUpdate = (): Promise<void> => {
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
-        setTimeout(resolve, 100);
+        setTimeout(resolve, 50);
       });
     });
   };
+
+  const calculateParamsFromScale = useCallback(
+    (scale: number, initialParams: OptimizationParams): OptimizationParams => {
+      const lerp = (start: number, end: number, t: number) => {
+        return start + (end - start) * t;
+      };
+
+      const minBase = FONT_CONSTRAINTS.minBaseFontSize;
+      const currentBase = initialParams.baseFontSize;
+      const targetBase = Math.max(minBase, currentBase);
+
+      const newBaseFontSize = Math.round(lerp(minBase, targetBase, scale));
+      const { headerSize, subheaderSize } =
+        calculateCoordinatedFontSizes(newBaseFontSize);
+
+      const minLineHeight = 1.2;
+      const newLineHeight = Number(
+        lerp(minLineHeight, initialParams.lineHeight, scale).toFixed(2)
+      );
+
+      const minParaSpacing = 4;
+      const minSectionSpacing = 12;
+
+      const newParaSpacing = Math.round(
+        lerp(minParaSpacing, initialParams.paragraphSpacing, scale)
+      );
+      const newSectionSpacing = Math.round(
+        lerp(minSectionSpacing, initialParams.sectionSpacing, scale)
+      );
+
+      const minPadding = 20;
+      const newPadding = Math.round(
+        lerp(minPadding, initialParams.pagePadding, scale)
+      );
+
+      return {
+        baseFontSize: newBaseFontSize,
+        headerSize,
+        subheaderSize,
+        lineHeight: newLineHeight,
+        paragraphSpacing: newParaSpacing,
+        sectionSpacing: newSectionSpacing,
+        pagePadding: newPadding,
+      };
+    },
+    [calculateCoordinatedFontSizes]
+  );
 
   const autoFitOnePage = useCallback(async (): Promise<OptimizationResult> => {
     if (!activeResume) {
@@ -129,7 +154,6 @@ export const useAutoFitOnePage = () => {
     }
 
     const { globalSettings = {} } = activeResume;
-
     const baseFontSize = globalSettings.baseFontSize || 16;
     const { headerSize, subheaderSize } =
       calculateCoordinatedFontSizes(baseFontSize);
@@ -141,161 +165,96 @@ export const useAutoFitOnePage = () => {
       lineHeight: globalSettings.lineHeight || 1.5,
       paragraphSpacing: globalSettings.paragraphSpacing || 12,
       sectionSpacing: globalSettings.sectionSpacing || 24,
-      pagePadding: globalSettings.pagePadding || 32
+      pagePadding: globalSettings.pagePadding || 32,
     };
 
-    let currentParams = { ...initialParams };
-    let iterations = 0;
-    const maxIterations = 20;
-    const tolerance = 10;
-
-    const targetHeight = calculateTargetHeight(currentParams.pagePadding);
     const initialHeight = getCurrentContentHeight();
+    const initialTargetHeight = calculateTargetHeight(
+      initialParams.pagePadding
+    );
 
-    console.log("开始自动一页纸优化", {
-      targetHeight,
+    console.log("开始自动一页纸优化 (Binary Search)", {
       initialHeight,
-      initialParams,
-      needsReduction: initialHeight > targetHeight
+      targetHeight: initialTargetHeight,
     });
-    if (initialHeight <= targetHeight + tolerance) {
+
+    if (initialHeight <= initialTargetHeight) {
       return {
         success: true,
-        finalParams: currentParams,
+        finalParams: initialParams,
         iterations: 0,
         finalHeight: initialHeight,
-        targetHeight,
+        targetHeight: initialTargetHeight,
         initialHeight,
-        reductionPercentage: 0
+        reductionPercentage: 0,
       };
     }
 
-    while (iterations < maxIterations) {
-      iterations++;
+    let low = 0.0;
+    let high = 1.0;
+    let bestParams = initialParams;
+    let bestHeight = initialHeight;
+    let bestScale = 1.0;
+    let success = false;
 
-      applyOptimizationParams(currentParams);
+    const iterations = 8;
+
+    for (let i = 0; i < iterations; i++) {
+      const mid = (low + high) / 2;
+      const params = calculateParamsFromScale(mid, initialParams);
+
+      applyOptimizationParams(params);
       await waitForDOMUpdate();
+
       const currentHeight = getCurrentContentHeight();
+      const currentTargetHeight = calculateTargetHeight(params.pagePadding);
 
-      console.log(`第${iterations}次迭代`, {
-        currentHeight,
-        targetHeight,
-        difference: currentHeight - targetHeight,
-        params: currentParams
-      });
+      console.log(
+        `Iteration ${i + 1}: scale=${mid.toFixed(
+          3
+        )}, height=${currentHeight}, target=${currentTargetHeight}`
+      );
 
-      if (currentHeight <= targetHeight + tolerance) {
-        const reductionPercentage =
-          ((initialHeight - currentHeight) / initialHeight) * 100;
-        return {
-          success: true,
-          finalParams: currentParams,
-          iterations,
-          finalHeight: currentHeight,
-          targetHeight,
-          initialHeight,
-          reductionPercentage
-        };
-      }
-
-      const heightRatio = targetHeight / currentHeight;
-      const reductionNeeded = (currentHeight - targetHeight) / currentHeight;
-      const isEarlyIteration = iterations <= 5;
-      const isLateIteration = iterations > 15;
-      let fontScaleFactor = 1.0;
-      let spacingScaleFactor = 1.0;
-      let lineHeightScaleFactor = 1.0;
-
-      if (reductionNeeded > 0.4) {
-        fontScaleFactor = 0.85;
-        spacingScaleFactor = 0.7;
-        lineHeightScaleFactor = 0.92;
-      } else if (reductionNeeded > 0.25) {
-        fontScaleFactor = 0.9;
-        spacingScaleFactor = 0.8;
-        lineHeightScaleFactor = 0.95;
-      } else if (reductionNeeded > 0.15) {
-        fontScaleFactor = 0.95;
-        spacingScaleFactor = 0.9;
-        lineHeightScaleFactor = 0.97;
-      } else if (reductionNeeded > 0.05) {
-        fontScaleFactor = 0.98;
-        spacingScaleFactor = 0.95;
-        lineHeightScaleFactor = 0.99;
+      if (currentHeight <= currentTargetHeight) {
+        success = true;
+        bestParams = params;
+        bestHeight = currentHeight;
+        bestScale = mid;
+        low = mid;
       } else {
-        fontScaleFactor = 0.99;
-        spacingScaleFactor = 0.98;
-        lineHeightScaleFactor = 0.995;
-      }
-
-      currentParams = adjustFontSizesCoordinated(
-        currentParams,
-        fontScaleFactor
-      );
-      currentParams.lineHeight = Math.max(
-        1.3,
-        currentParams.lineHeight * lineHeightScaleFactor
-      );
-      currentParams.paragraphSpacing = Math.max(
-        2,
-        Math.round(currentParams.paragraphSpacing * spacingScaleFactor)
-      );
-      currentParams.sectionSpacing = Math.max(
-        6,
-        Math.round(currentParams.sectionSpacing * spacingScaleFactor)
-      );
-
-      if (isLateIteration && currentParams.pagePadding > 20) {
-        currentParams.pagePadding = Math.max(
-          16,
-          currentParams.pagePadding * 0.9
-        );
-      }
-
-      if (
-        currentParams.baseFontSize <= FONT_CONSTRAINTS.minBaseFontSize &&
-        currentParams.pagePadding > 16
-      ) {
-        currentParams.pagePadding = Math.max(
-          16,
-          currentParams.pagePadding * 0.9
-        );
-        const newTargetHeight = calculateTargetHeight(
-          currentParams.pagePadding
-        );
-        if (currentHeight <= newTargetHeight + tolerance) {
-          const reductionPercentage =
-            ((initialHeight - currentHeight) / initialHeight) * 100;
-          return {
-            success: true,
-            finalParams: currentParams,
-            iterations,
-            finalHeight: currentHeight,
-            targetHeight: newTargetHeight,
-            initialHeight,
-            reductionPercentage
-          };
-        }
+        high = mid;
       }
     }
 
-    const finalHeight = getCurrentContentHeight();
+    if (success) {
+      applyOptimizationParams(bestParams);
+      await waitForDOMUpdate();
+    } else {
+      const minParams = calculateParamsFromScale(0, initialParams);
+      applyOptimizationParams(minParams);
+      await waitForDOMUpdate();
+      bestParams = minParams;
+      bestHeight = getCurrentContentHeight();
+    }
+
+    const finalTargetHeight = calculateTargetHeight(bestParams.pagePadding);
     const reductionPercentage =
-      ((initialHeight - finalHeight) / initialHeight) * 100;
+      ((initialHeight - bestHeight) / initialHeight) * 100;
+
     return {
-      success: finalHeight <= targetHeight + tolerance,
-      finalParams: currentParams,
+      success,
+      finalParams: bestParams,
       iterations,
-      finalHeight,
-      targetHeight,
+      finalHeight: bestHeight,
+      targetHeight: finalTargetHeight,
       initialHeight,
-      reductionPercentage
+      reductionPercentage,
     };
   }, [
     activeResume,
-    adjustFontSizesCoordinated,
     applyOptimizationParams,
-    calculateCoordinatedFontSizes
+    calculateCoordinatedFontSizes,
+    calculateParamsFromScale,
   ]);
 
   const resetToDefaults = useCallback(() => {
@@ -312,7 +271,7 @@ export const useAutoFitOnePage = () => {
       lineHeight: 1.5,
       paragraphSpacing: 12,
       sectionSpacing: 24,
-      pagePadding: 32
+      pagePadding: 32,
     };
 
     updateGlobalSettings(defaultParams);
@@ -322,6 +281,6 @@ export const useAutoFitOnePage = () => {
     autoFitOnePage,
     resetToDefaults,
     getCurrentContentHeight,
-    calculateTargetHeight
+    calculateTargetHeight,
   };
 };

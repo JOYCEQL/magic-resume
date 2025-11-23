@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+import { BetterSpace } from "./BetterSpace";
 
 import "@/styles/tiptap.scss";
 
@@ -341,6 +342,7 @@ const RichTextEditor = ({
       Underline,
       Color,
       Highlight.configure({ multicolor: true }),
+      BetterSpace,
     ],
     content,
     onUpdate: ({ editor }) => {

@@ -23,6 +23,7 @@ import {
   AlignJustify,
   List,
   ListOrdered,
+  CornerDownLeft,
   Undo,
   Redo,
   PaintBucket,
@@ -464,6 +465,12 @@ const RichTextEditor = ({
             tooltip={t("orderedList")}
           >
             <ListOrdered className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().setHardBreak().run()}
+            tooltip={t("lineBreak")}
+          >
+            <CornerDownLeft className="h-5 w-5" />
           </MenuButton>
         </div>
 

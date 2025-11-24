@@ -30,6 +30,7 @@
     "@tiptap/extension-bullet-list": "^2.10.2",
     "@tiptap/extension-color": "^2.4.0",
     "@tiptap/extension-highlight": "^2.9.1",
+    "@tiptap/extension-link": "^2.27.1",
     "@tiptap/extension-list-item": "^2.4.0",
     "@tiptap/extension-ordered-list": "^2.10.2",
     "@tiptap/extension-text-align": "^2.4.0",

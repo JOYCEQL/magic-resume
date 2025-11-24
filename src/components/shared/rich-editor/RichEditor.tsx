@@ -7,7 +7,9 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
+import Link from "@tiptap/extension-link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -17,6 +19,7 @@ import {
   Bold,
   Italic,
   Underline as UnderlineIcon,
+  Link2,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -307,6 +310,99 @@ const BackgroundColorButton = ({ editor }) => {
   );
 };
 
+const LinkButton = ({ editor }) => {
+  const [url, setUrl] = React.useState("");
+  const [isOpen, setIsOpen] = React.useState(false);
+  const t = useTranslations("richEditor");
+
+  const currentUrl = editor?.getAttributes("link").href || "";
+  const isActive = editor?.isActive("link");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setUrl(currentUrl);
+    }
+  }, [isOpen, currentUrl]);
+
+  const handleSetLink = () => {
+    if (!url) {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      setIsOpen(false);
+      return;
+    }
+
+    let finalUrl = url.trim();
+    // Add https:// if no protocol is specified
+    if (finalUrl && !finalUrl.match(/^[a-zA-Z]+:\/\//)) {
+      finalUrl = `https://${finalUrl}`;
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: finalUrl })
+      .run();
+    setIsOpen(false);
+  };
+
+  const handleRemoveLink = () => {
+    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    setUrl("");
+    setIsOpen(false);
+  };
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "h-9 w-9 p-0 rounded-md hover:scale-105 transition-all duration-200",
+            isActive
+              ? "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-neutral-800 dark:text-neutral-200"
+              : "hover:bg-primary/5 dark:hover:bg-neutral-800"
+          )}
+        >
+          <Link2 className="h-5 w-5" />
+          <span className="sr-only">{t("link")}</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 p-3 rounded-lg">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <Link2 className="h-4 w-4" />
+            <span className="text-sm font-medium">{t("link")}</span>
+          </div>
+          <Input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSetLink();
+              }
+            }}
+            placeholder={t("urlPlaceholder")}
+            className="w-full"
+          />
+          <div className="flex gap-2">
+            <Button size="sm" onClick={handleSetLink} className="flex-1">
+              {t("applyLink")}
+            </Button>
+            {isActive && (
+              <Button size="sm" variant="outline" onClick={handleRemoveLink}>
+                {t("removeLink")}
+              </Button>
+            )}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const RichTextEditor = ({
   content = "",
   onChange,
@@ -334,6 +430,13 @@ const RichTextEditor = ({
         },
       }),
       ListItem,
+      Link.configure({
+        autolink: true,
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-primary underline cursor-pointer",
+        },
+      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"],
@@ -412,6 +515,7 @@ const RichTextEditor = ({
           >
             <UnderlineIcon className="h-5 w-5" />
           </MenuButton>
+          <LinkButton editor={editor} />
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
         </div>

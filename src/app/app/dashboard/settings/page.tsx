@@ -8,14 +8,14 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import {
   getFileHandle,
   getConfig,
   storeFileHandle,
   storeConfig,
-  verifyPermission
+  verifyPermission,
 } from "@/utils/fileSystem";
 
 const SettingsPage = () => {
@@ -115,5 +115,6 @@ const SettingsPage = () => {
     </div>
   );
 };
+export const runtime = "edge";
 
 export default SettingsPage;

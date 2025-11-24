@@ -107,8 +107,8 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
 export const GITHUB_REPO_URL = "https://github.com/JOYCEQL/magic-resume";
 
 export const PDF_EXPORT_CONFIG = {
-  SERVER_URL:
-    "https://1255612844-0z3iovadu8.ap-chengdu.tencentscf.com/generate-pdf",
-  TIMEOUT: 30000, // 30秒超时
-  MAX_RETRY: 3 // 最大重试次数
+  SERVER_URL: "https://api.magicv.art/generate-pdf",
+  TIMEOUT: 45000,
+  MAX_RETRY: 2,
+  MAX_CONTENT_SIZE: 5 * 1024 * 1024
 } as const;

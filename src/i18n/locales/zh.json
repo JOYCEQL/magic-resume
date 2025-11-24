@@ -187,11 +187,11 @@
   "pdfExport": {
     "button": {
       "export": "导出",
-      "exportPdf": "PDF(服务端)",
+      "exportPdf": "PDF",
       "exportJson": "JSON配置",
       "exporting": "导出中...",
       "exportingJson": "导出中...",
-      "print": "PDF(浏览器打印)"
+      "print": "PDF(备份)"
     },
     "toast": {
       "success": "PDF导出成功",
@@ -606,7 +606,7 @@
       "tooltip": "导出简历",
       "pdf": "导出PDF",
       "json": "导出JSON",
-      "print": "打印"
+      "print": "导出PDF(备份）"
     }
   },
   "aiPolishDialog": {

@@ -8,6 +8,8 @@ import ChangelogTimeline from "@/components/shared/ChangelogTimeline";
 import { getChangelog } from "@/lib/getChangelog";
 import { cn } from "@/lib/utils";
 
+export const runtime = "edge";
+
 export default function ChangelogPage() {
   const t = useTranslations("home");
   const changelogEntries = getChangelog();

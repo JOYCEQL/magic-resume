@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
+import { normalizeRichTextContent } from "@/lib/richText";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -52,7 +53,9 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
         {experience.details && (
           <motion.div
             className="mt-2 text-baseFont"
-            dangerouslySetInnerHTML={{ __html: experience.details }}
+            dangerouslySetInnerHTML={{
+              __html: normalizeRichTextContent(experience.details),
+            }}
             style={{
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
               lineHeight: globalSettings?.lineHeight || 1.6,

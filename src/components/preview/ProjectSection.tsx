@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { Project, GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
+import { normalizeRichTextContent } from "@/lib/richText";
 
 interface ProjectItemProps {
   project: Project;
@@ -99,7 +100,9 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               fontSize: `${globalSettings?.baseFontSize || 14}px`,
               lineHeight: globalSettings?.lineHeight || 1.6,
             }}
-            dangerouslySetInnerHTML={{ __html: project.description }}
+            dangerouslySetInnerHTML={{
+              __html: normalizeRichTextContent(project.description),
+            }}
           ></motion.div>
         ) : (
           <div></div>

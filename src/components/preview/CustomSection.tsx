@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
+import { normalizeRichTextContent } from "@/lib/richText";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -92,7 +93,9 @@ const CustomSection = ({
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   lineHeight: globalSettings?.lineHeight || 1.6,
                 }}
-                dangerouslySetInnerHTML={{ __html: item.description }}
+                dangerouslySetInnerHTML={{
+                  __html: normalizeRichTextContent(item.description),
+                }}
               />
             )}
           </motion.div>

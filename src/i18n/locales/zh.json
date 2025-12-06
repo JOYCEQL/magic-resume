@@ -21,8 +21,8 @@
       "dashboard": "控制台"
     },
     "hero": {
-      "badge": "免费简历创作",
-      "title": "让简历创作变得简单而智能",
+      "badge": "免费简历制作",
+      "title": "让简历制作变得简单而智能",
       "subtitle": "魔方简历利用 AI 技术，帮助您快速创建专业的简历。无需注册，免费使用，数据安全存储。",
       "cta": "立即开始",
       "secondary": "浏览模板"
@@ -187,11 +187,11 @@
   "pdfExport": {
     "button": {
       "export": "导出",
-      "exportPdf": "PDF(服务端)",
+      "exportPdf": "PDF",
       "exportJson": "JSON配置",
       "exporting": "导出中...",
       "exportingJson": "导出中...",
-      "print": "PDF(浏览器打印)"
+      "print": "PDF(备份)"
     },
     "toast": {
       "success": "PDF导出成功",
@@ -601,6 +601,12 @@
       "tooltip": "复制简历",
       "success": "简历复制成功",
       "error": "简历复制失败"
+    },
+    "export": {
+      "tooltip": "导出简历",
+      "pdf": "导出PDF",
+      "json": "导出JSON",
+      "print": "导出PDF(备份）"
     }
   },
   "aiPolishDialog": {

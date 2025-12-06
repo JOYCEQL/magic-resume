@@ -218,4 +218,6 @@ const TemplatesPage = () => {
   );
 };
 
+export const runtime = "edge";
+
 export default TemplatesPage;

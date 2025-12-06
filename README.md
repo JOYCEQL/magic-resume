@@ -13,8 +13,8 @@
 Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 Next.js 和 Motion 构建，支持实时预览和自定义主题。
 
 ## 📸 项目截图
+<img width="1200" height="676" alt="63_1x_shots_so" src="https://github.com/user-attachments/assets/bcde7758-2f1e-44c1-9123-b2673069ed2b" />
 
-![782shots_so](https://github.com/user-attachments/assets/d59f7582-799c-468d-becf-59ee6453acfd)
 
 ## ✨ 特性
 
@@ -110,7 +110,7 @@ docker pull siyueqingchen/magic-resume:main
 - [x] 多语言支持
 - [ ] 支持更多简历模板
 - [ ] 更多格式导出
-- [ ] 自定义模型
+- [x] 自定义模型
 - [ ] 智能一页
 - [ ] 导入 PDF, Markdown 等
 - [ ] 在线简历托管
@@ -128,4 +128,6 @@ docker pull siyueqingchen/magic-resume:main
 
 ## 🌟 支持项目
 
-如果这个项目对你有帮助，欢迎点个 star ⭐️
+项目接口成本现正在持续上升中，如果对你有所帮助，可以赞赏作者，支持开源～
+
+<img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" width="320"  alt="图片描述">

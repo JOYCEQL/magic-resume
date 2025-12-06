@@ -4,6 +4,7 @@ import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useLocale } from "next-intl";
+import { normalizeRichTextContent } from "@/lib/richText";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -97,7 +98,9 @@ const EducationSection = ({
                   fontSize: `${globalSettings?.baseFontSize || 14}px`,
                   lineHeight: globalSettings?.lineHeight || 1.6,
                 }}
-                dangerouslySetInnerHTML={{ __html: edu.description }}
+                dangerouslySetInnerHTML={{
+                  __html: normalizeRichTextContent(edu.description),
+                }}
               />
             )}
           </motion.div>

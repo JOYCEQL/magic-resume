@@ -39,6 +39,3 @@ next-env.d.ts
 .idea
 
 .history
-
-dist
-dist.tar.gz

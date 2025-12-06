@@ -20,6 +20,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# --- 3. 构建 Next.js 应用程序 ---
 echo "Building Next.js Application (Mode: standalone)..."
 pnpm run build
 if [ $? -ne 0 ]; then
@@ -27,6 +28,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# --- 4. 创建最终分发目录 ---
 echo "Creating final distribution directory: $BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 if [ $? -ne 0 ]; then
@@ -34,6 +36,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# --- 5. 复制 Next.js standalone 构建产物 ---
 echo "Copying standalone to distribution directory $BUILD_DIR..."
 cp -r ./.next/standalone/. "$BUILD_DIR"/
 if [ $? -ne 0 ]; then
@@ -41,6 +44,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# --- 6. 复制公共资产 ---
 echo "Copying public assets..."
 cp -r ./public "$BUILD_DIR"/public
 if [ $? -ne 0 ]; then
@@ -48,6 +52,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# --- 7. 复制静态资产 ---
 echo "Copying static assets (.next/static)..."
 mkdir -p "$BUILD_DIR"/.next
 cp -r ./.next/static "$BUILD_DIR"/.next/static

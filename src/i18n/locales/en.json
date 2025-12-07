@@ -465,6 +465,7 @@
     "alignJustify": "Justify",
     "bulletList": "Bullet List",
     "orderedList": "Ordered List",
+    "lineBreak": "Line Break (Shift+Enter)",
     "undo": "Undo",
     "redo": "Redo",
     "aiPolish": "AI Polish",

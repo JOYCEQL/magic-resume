@@ -269,8 +269,8 @@ const PreviewDock = ({
             <title>Print Resume</title>
             <style>
               @font-face {
-                font-family: "MiSans VF";
-                src: url("/fonts/MiSans-VF.ttf") format("woff2");
+                font-family: "Alibaba PuHuiTi";
+                src: url("/fonts/AlibabaPuHuiTi-3-55-Regular.ttf") format("truetype");
                 font-weight: normal;
                 font-style: normal;
                 font-display: swap;
@@ -299,7 +299,7 @@ const PreviewDock = ({
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
-                font-family: "MiSans VF", sans-serif !important;
+                font-family: "Alibaba PuHuiTi", sans-serif !important;
               }
 
               #print-content {

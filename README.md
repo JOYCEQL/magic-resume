@@ -6,6 +6,9 @@
 ![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
+<a href="https://trendshift.io/repositories/13077" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13077" alt="Magic Resume | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+
+
 简体中文 | [English](./README.en-US.md)
 
 </div>

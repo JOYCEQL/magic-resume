@@ -20,31 +20,54 @@ interface ExperienceItemProps {
 const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
   ({ experience, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
-    const gridColumns = centerSubtitle ? 3 : 2;
+    const subtitleGap = globalSettings?.subtitleGap;
+    const useOffsetLayout = centerSubtitle && subtitleGap;
 
     return (
       <motion.div
         style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}
         layout="position"
       >
-        <motion.div
-          className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
-        >
-          <div
-            className="font-bold"
-            style={{
-              fontSize: `${globalSettings?.subheaderSize || 16}px`,
-            }}
+        {useOffsetLayout ? (
+          <motion.div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div
+                className="font-bold"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
+                {experience.company}
+              </div>
+              <motion.div 
+                className="text-subtitleFont"
+                style={{ marginLeft: '16px' }}
+              >
+                {experience.position}
+              </motion.div>
+            </div>
+            <div className="text-subtitleFont">{experience.date}</div>
+          </motion.div>
+        ) : (
+          <motion.div
+            className={`grid grid-cols-${centerSubtitle ? 3 : 2} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
           >
-            {experience.company}
-          </div>
-          {centerSubtitle && (
-            <motion.div className="text-subtitleFont">
-              {experience.position}
-            </motion.div>
-          )}
-          <div className="text-subtitleFont">{experience.date}</div>
-        </motion.div>
+            <div
+              className="font-bold"
+              style={{
+                fontSize: `${globalSettings?.subheaderSize || 16}px`,
+              }}
+            >
+              {experience.company}
+            </div>
+            {centerSubtitle && (
+              <motion.div className="text-subtitleFont">
+                {experience.position}
+              </motion.div>
+            )}
+            <div className="text-subtitleFont">{experience.date}</div>
+          </motion.div>
+        )}
         {experience.position && !centerSubtitle && (
           <motion.div className="text-subtitleFont">
             {experience.position}

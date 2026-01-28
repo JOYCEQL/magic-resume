@@ -15,6 +15,8 @@ interface ProjectItemProps {
 const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
   ({ project, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
+    const subtitleGap = globalSettings?.subtitleGap;
+    const useOffsetLayout = centerSubtitle && subtitleGap;
 
     return (
       <motion.div
@@ -22,56 +24,79 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           marginTop: `${globalSettings?.paragraphSpacing}px`,
         }}
       >
-        <motion.div
-          className={`grid grid-cols-3 gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
-        >
-          <div className="flex items-center gap-2">
-            <h3
-              className="font-bold"
-              style={{
-                fontSize: `${globalSettings?.subheaderSize || 16}px`,
-              }}
-            >
-              {project.name}
-            </h3>
-          </div>
+        {useOffsetLayout ? (
+          <motion.div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <h3
+                className="font-bold"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
+                {project.name}
+              </h3>
+              <motion.div 
+                layout="position" 
+                className="text-subtitleFont"
+                style={{ marginLeft: '16px' }}
+              >
+                {project.role}
+              </motion.div>
+            </div>
+            <div className="text-subtitleFont">{project.date}</div>
+          </motion.div>
+        ) : (
+          <motion.div
+            className={`grid grid-cols-3 gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+          >
+            <div className="flex items-center gap-2">
+              <h3
+                className="font-bold"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
+                {project.name}
+              </h3>
+            </div>
 
-          {project.link && !centerSubtitle && (
-            <a
-              href={
-                project.link.startsWith("http")
-                  ? project.link
-                  : `https://${project.link}`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-              title={project.link}
-            >
-              {(() => {
-                try {
-                  const url = new URL(
-                    project.link.startsWith("http")
-                      ? project.link
-                      : `https://${project.link}`
-                  );
-                  return url.hostname.replace(/^www\./, "");
-                } catch (e) {
-                  return project.link;
+            {project.link && !centerSubtitle && (
+              <a
+                href={
+                  project.link.startsWith("http")
+                    ? project.link
+                    : `https://${project.link}`
                 }
-              })()}
-            </a>
-          )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+                title={project.link}
+              >
+                {(() => {
+                  try {
+                    const url = new URL(
+                      project.link.startsWith("http")
+                        ? project.link
+                        : `https://${project.link}`
+                    );
+                    return url.hostname.replace(/^www\./, "");
+                  } catch (e) {
+                    return project.link;
+                  }
+                })()}
+              </a>
+            )}
 
-          {!project.link && !centerSubtitle && <div></div>}
+            {!project.link && !centerSubtitle && <div></div>}
 
-          {centerSubtitle && (
-            <motion.div layout="position" className=" text-subtitleFont">
-              {project.role}
-            </motion.div>
-          )}
-          <div className="text-subtitleFont">{project.date}</div>
-        </motion.div>
+            {centerSubtitle && (
+              <motion.div layout="position" className=" text-subtitleFont">
+                {project.role}
+              </motion.div>
+            )}
+            <div className="text-subtitleFont">{project.date}</div>
+          </motion.div>
+        )}
         {project.role && !centerSubtitle && (
           <motion.div layout="position" className=" text-subtitleFont">
             {project.role}

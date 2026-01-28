@@ -26,6 +26,8 @@ const CustomSection = ({
   });
 
   const centerSubtitle = globalSettings?.centerSubtitle;
+  const subtitleGap = globalSettings?.subtitleGap;
+  const useOffsetLayout = centerSubtitle && subtitleGap;
   const gridColumns = centerSubtitle ? 3 : 2;
 
   return (
@@ -53,31 +55,60 @@ const CustomSection = ({
               marginTop: `${globalSettings?.paragraphSpacing}px`,
             }}
           >
-            <motion.div
-              layout="position"
-              className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
-            >
-              <div className="flex items-center gap-2">
-                <h4
-                  className="font-bold"
-                  style={{
-                    fontSize: `${globalSettings?.subheaderSize || 16}px`,
-                  }}
-                >
-                  {item.title}
-                </h4>
-              </div>
+            {useOffsetLayout ? (
+              <motion.div
+                layout="position"
+                className={`flex items-center justify-between`}
+              >
+                <div className="flex items-center">
+                  <h4
+                    className="font-bold"
+                    style={{
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                    }}
+                  >
+                    {item.title}
+                  </h4>
+                  <motion.div 
+                    layout="position" 
+                    className="text-subtitleFont"
+                    style={{ marginLeft: '16px' }}
+                  >
+                    {item.subtitle}
+                  </motion.div>
+                </div>
 
-              {centerSubtitle && (
-                <motion.div layout="position" className="text-subtitleFont">
-                  {item.subtitle}
-                </motion.div>
-              )}
+                <span className="text-subtitleFont shrink-0">
+                  {item.dateRange}
+                </span>
+              </motion.div>
+            ) : (
+              <motion.div
+                layout="position"
+                className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+              >
+                <div className="flex items-center gap-2">
+                  <h4
+                    className="font-bold"
+                    style={{
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                    }}
+                  >
+                    {item.title}
+                  </h4>
+                </div>
 
-              <span className="text-subtitleFont shrink-0">
-                {item.dateRange}
-              </span>
-            </motion.div>
+                {centerSubtitle && (
+                  <motion.div layout="position" className="text-subtitleFont">
+                    {item.subtitle}
+                  </motion.div>
+                )}
+
+                <span className="text-subtitleFont shrink-0">
+                  {item.dateRange}
+                </span>
+              </motion.div>
+            )}
 
             {!centerSubtitle && item.subtitle && (
               <motion.div layout="position" className="text-subtitleFont mt-1">

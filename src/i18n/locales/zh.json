@@ -253,6 +253,9 @@
         },
         "centerSubtitle": {
           "title": "副标题居中"
+        },
+        "subtitleGap": {
+          "title": "副标题偏移"
         }
       }
     },

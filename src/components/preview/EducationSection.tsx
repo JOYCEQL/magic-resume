@@ -51,37 +51,72 @@ const EducationSection = ({
               marginTop: `${globalSettings?.paragraphSpacing}px`,
             }}
           >
-            <motion.div
-              layout="position"
-              className={`grid grid-cols-${
-                globalSettings?.centerSubtitle ? "3" : "2"
-              } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
-            >
-              <div
-                className="font-bold"
-                style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
-                }}
+            {globalSettings?.centerSubtitle && globalSettings?.subtitleGap ? (
+              <motion.div
+                layout="position"
+                className={`flex items-center justify-between`}
               >
-                <span>{edu.school}</span>
-              </div>
+                <div className="flex items-center">
+                  <div
+                    className="font-bold"
+                    style={{
+                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                    }}
+                  >
+                    <span>{edu.school}</span>
+                  </div>
+                  <motion.div 
+                    layout="position" 
+                    className="text-subtitleFont"
+                    style={{ marginLeft: '16px' }}
+                  >
+                    {[edu.major, edu.degree].filter(Boolean).join(" · ")}
+                    {edu.gpa && ` · GPA ${edu.gpa}`}
+                  </motion.div>
+                </div>
 
-              {globalSettings?.centerSubtitle && (
-                <motion.div layout="position" className="text-subtitleFont">
-                  {[edu.major, edu.degree].filter(Boolean).join(" · ")}
-                  {edu.gpa && ` · GPA ${edu.gpa}`}
-                </motion.div>
-              )}
-
-              <span
-                className="text-subtitleFont shrink-0"
-                suppressHydrationWarning
+                <span
+                  className="text-subtitleFont shrink-0"
+                  suppressHydrationWarning
+                >
+                  {`${new Date(edu.startDate).toLocaleDateString(
+                    locale
+                  )} - ${new Date(edu.endDate).toLocaleDateString(locale)}`}
+                </span>
+              </motion.div>
+            ) : (
+              <motion.div
+                layout="position"
+                className={`grid grid-cols-${
+                  globalSettings?.centerSubtitle ? "3" : "2"
+                } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
               >
-                {`${new Date(edu.startDate).toLocaleDateString(
-                  locale
-                )} - ${new Date(edu.endDate).toLocaleDateString(locale)}`}
-              </span>
-            </motion.div>
+                <div
+                  className="font-bold"
+                  style={{
+                    fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                  }}
+                >
+                  <span>{edu.school}</span>
+                </div>
+
+                {globalSettings?.centerSubtitle && (
+                  <motion.div layout="position" className="text-subtitleFont">
+                    {[edu.major, edu.degree].filter(Boolean).join(" · ")}
+                    {edu.gpa && ` · GPA ${edu.gpa}`}
+                  </motion.div>
+                )}
+
+                <span
+                  className="text-subtitleFont shrink-0"
+                  suppressHydrationWarning
+                >
+                  {`${new Date(edu.startDate).toLocaleDateString(
+                    locale
+                  )} - ${new Date(edu.endDate).toLocaleDateString(locale)}`}
+                </span>
+              </motion.div>
+            )}
 
             {!globalSettings?.centerSubtitle && (
               <motion.div layout="position" className="text-subtitleFont mt-1">

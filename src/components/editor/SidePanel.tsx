@@ -715,6 +715,24 @@ export function SidePanel() {
                 />
               </div>
             </div>
+
+            {globalSettings.centerSubtitle && (
+              <div className="space-y-2">
+                <Label className="text-gray-600 dark:text-neutral-300">
+                  {t("mode.subtitleGap.title")}
+                </Label>
+                <div className="flex items-center gap-4">
+                  <Switch
+                    checked={globalSettings.subtitleGap}
+                    onCheckedChange={(checked) =>
+                      updateGlobalSettings({
+                        subtitleGap: checked,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </SettingCard>
       </div>

@@ -20,12 +20,8 @@ import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
+import { FONT_OPTIONS, getFontById, DEFAULT_FONT_ID } from "@/config/fonts";
 
-const fontOptions = [
-  { value: "sans", label: "无衬线体" },
-  { value: "serif", label: "衬线体" },
-  { value: "mono", label: "等宽体" },
-];
 
 const lineHeightOptions = [
   { value: "normal", label: "默认" },
@@ -85,11 +81,6 @@ export function SidePanel() {
   const { themeColor = THEME_COLORS[0] } = globalSettings;
   const t = useTranslations("workbench.sidePanel");
 
-  const fontOptions = [
-    { value: "sans", label: t("typography.font.sans") },
-    { value: "serif", label: t("typography.font.serif") },
-    { value: "mono", label: t("typography.font.mono") },
-  ];
 
   const lineHeightOptions = [
     { value: "normal", label: t("typography.lineHeight.normal") },
@@ -216,12 +207,12 @@ export function SidePanel() {
         {/* 排版设置 */}
         <SettingCard icon={Type} title={t("typography.title")}>
           <div className="space-y-6">
-            {/* <div className="space-y-2">
+            <div className="space-y-2">
               <Label className="text-gray-600 dark:text-neutral-300">
                 {t('typography.font.title')}
               </Label>
               <Select
-                value={globalSettings?.fontFamily}
+                value={globalSettings?.fontFamily || DEFAULT_FONT_ID}
                 onValueChange={(value) =>
                   updateGlobalSettings?.({ fontFamily: value })
                 }
@@ -231,7 +222,9 @@ export function SidePanel() {
                   whileTap={{ scale: 0.99 }}
                 >
                   <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue />
+                    <SelectValue>
+                      {getFontById(globalSettings?.fontFamily || DEFAULT_FONT_ID)?.name}
+                    </SelectValue>
                   </SelectTrigger>
                 </motion.div>
                 <SelectContent
@@ -240,18 +233,19 @@ export function SidePanel() {
                     "bg-white border-gray-200"
                   )}
                 >
-                  {fontOptions.map((font) => (
+                  {FONT_OPTIONS.map((font) => (
                     <SelectItem
-                      key={font.value}
-                      value={font.value}
+                      key={font.id}
+                      value={font.id}
                       className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                      style={{ fontFamily: `"${font.family}", sans-serif` }}
                     >
-                      {font.label}
+                      {font.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div> */}
+            </div>
 
             {/* 行高选择 */}
             <div className="space-y-2">

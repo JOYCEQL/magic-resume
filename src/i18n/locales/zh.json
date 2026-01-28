@@ -216,7 +216,10 @@
           "title": "字体",
           "sans": "无衬线体",
           "serif": "衬线体",
-          "mono": "等宽体"
+          "mono": "等宽体",
+          "alibaba": "阿里巴巴普惠体",
+          "misans": "小米MiSans",
+          "noto": "思源黑体"
         },
         "lineHeight": {
           "title": "行高",

@@ -1,6 +1,9 @@
 import { DEFAULT_FIELD_ORDER } from ".";
 import { GlobalSettings, DEFAULT_CONFIG, ResumeData } from "../types/resume";
+import { DEFAULT_FONT_ID } from "./fonts";
+
 const initialGlobalSettings: GlobalSettings = {
+  fontFamily: DEFAULT_FONT_ID,
   baseFontSize: 16,
   pagePadding: 32,
   paragraphSpacing: 12,

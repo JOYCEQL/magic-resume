@@ -36,6 +36,7 @@ import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
+import { generateFontFaces, getFontFamily, DEFAULT_FONT_ID } from "@/config/fonts";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -261,6 +262,8 @@ const PreviewDock = ({
     }
 
     try {
+      const currentFontFamily = getFontFamily(globalSettings?.fontFamily || DEFAULT_FONT_ID);
+      
       iframeWindow.document.open();
       const htmlContent = `
         <!DOCTYPE html>
@@ -268,13 +271,7 @@ const PreviewDock = ({
           <head>
             <title>Print Resume</title>
             <style>
-              @font-face {
-                font-family: "Alibaba PuHuiTi";
-                src: url("/fonts/AlibabaPuHuiTi-3-55-Regular.ttf") format("truetype");
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
+              ${generateFontFaces()}
 
               @page {
                 size: A4;
@@ -291,7 +288,7 @@ const PreviewDock = ({
                 background: white;
               }
               body {
-                font-family: sans-serif;
+                font-family: ${currentFontFamily};
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
               }
@@ -299,7 +296,7 @@ const PreviewDock = ({
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
-                font-family: "Alibaba PuHuiTi", sans-serif !important;
+                font-family: ${currentFontFamily} !important;
               }
 
               #print-content {

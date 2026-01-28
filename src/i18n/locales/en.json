@@ -246,7 +246,10 @@
           "title": "Font",
           "sans": "Sans-serif",
           "serif": "Serif",
-          "mono": "Monospace"
+          "mono": "Monospace",
+          "alibaba": "Alibaba PuHuiTi",
+          "misans": "MiSans",
+          "noto": "Noto Sans SC"
         },
         "lineHeight": {
           "title": "Line Height",

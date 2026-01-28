@@ -5,3 +5,19 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: "MiSans";
+  src: url("/fonts/MiSans-VF.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans SC";
+  src: url("/fonts/NotoSansSC.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

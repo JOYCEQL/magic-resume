@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
 import { PDF_EXPORT_CONFIG } from "@/config";
+import { generateFontFaces, getFontFamily, DEFAULT_FONT_ID } from "@/config/fonts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -202,6 +203,8 @@ const PdfExport = () => {
     }
 
     try {
+      const currentFontFamily = getFontFamily(globalSettings?.fontFamily || DEFAULT_FONT_ID);
+      
       iframeWindow.document.open();
       const htmlContent = `
         <!DOCTYPE html>
@@ -209,13 +212,7 @@ const PdfExport = () => {
           <head>
             <title>Print Resume</title>
             <style>
-              @font-face {
-                font-family: "Alibaba PuHuiTi";
-                src: url("/fonts/AlibabaPuHuiTi-3-55-Regular.ttf") format("truetype");
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-              }
+              ${generateFontFaces()}
 
               @page {
                 size: A4;
@@ -232,7 +229,7 @@ const PdfExport = () => {
                 background: white;
               }
               body {
-                font-family: sans-serif;
+                font-family: ${currentFontFamily};
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
               }
@@ -240,7 +237,7 @@ const PdfExport = () => {
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
-                font-family: "Alibaba PuHuiTi", sans-serif !important;
+                font-family: ${currentFontFamily} !important;
               }
 
               #print-content {

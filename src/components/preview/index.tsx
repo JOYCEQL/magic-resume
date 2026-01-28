@@ -5,6 +5,7 @@ import { throttle } from "lodash";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
+import { getFontFamily, DEFAULT_FONT_ID } from "@/config/fonts";
 import ResumeTemplateComponent from "../templates";
 import PreviewDock from "./PreviewDock";
 
@@ -148,7 +149,7 @@ const PreviewPanel = ({
       ref={previewRef}
       className="relative w-full h-full  bg-gray-100"
       style={{
-        fontFamily: "Alibaba PuHuiTi, sans-serif",
+        fontFamily: getFontFamily(activeResume?.globalSettings?.fontFamily || DEFAULT_FONT_ID),
       }}
     >
       <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top md:scale-90 md:origin-top-left">

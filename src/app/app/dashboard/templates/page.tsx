@@ -63,7 +63,6 @@ const TemplatesPage = () => {
           ...resume.globalSettings,
           themeColor: template.colorScheme.primary,
           sectionSpacing: template.spacing.sectionGap,
-          paragraphSpacing: template.spacing.itemGap,
           pagePadding: template.spacing.contentPadding,
         },
         basic: {

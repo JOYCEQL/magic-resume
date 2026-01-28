@@ -256,18 +256,6 @@
           "normal": "Default",
           "relaxed": "Relaxed",
           "loose": "Loose"
-        },
-        "baseFontSize": {
-          "title": "Base Font Size"
-        },
-        "headerSize": {
-          "title": "Section Header Size"
-        },
-        "subheaderSize": {
-          "title": "Subsection Header Size"
-        },
-        "subtitleFontSize": {
-          "title": "Subtitle Font Size"
         }
       },
       "spacing": {
@@ -277,9 +265,6 @@
         },
         "sectionSpacing": {
           "title": "Section Spacing"
-        },
-        "paragraphSpacing": {
-          "title": "Paragraph Spacing"
         }
       },
       "mode": {
@@ -292,6 +277,37 @@
         },
         "subtitleGap": {
           "title": "Subtitle Offset"
+        }
+      },
+      "styles": {
+        "title": "Style Settings",
+        "editTitle": "Edit: {name}",
+        "regions": {
+          "name": "Name",
+          "basicInfo": "Basic Info",
+          "sectionTitle": "Section Title",
+          "itemTitle": "Item Title",
+          "itemSubtitle": "Item Subtitle",
+          "body": "Body"
+        },
+        "properties": {
+          "fontFamily": "Font",
+          "fontSize": "Font Size",
+          "fontWeight": "Font Weight",
+          "lineHeight": "Line Height",
+          "letterSpacing": "Letter Spacing",
+          "marginTop": "Margin Top",
+          "marginBottom": "Margin Bottom"
+        },
+        "fontWeights": {
+          "normal": "Normal",
+          "medium": "Medium",
+          "semibold": "Semibold",
+          "bold": "Bold"
+        },
+        "actions": {
+          "reset": "Reset",
+          "apply": "Apply"
         }
       }
     },

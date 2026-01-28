@@ -226,18 +226,6 @@
           "normal": "默认",
           "relaxed": "适中",
           "loose": "宽松"
-        },
-        "baseFontSize": {
-          "title": "基础字号"
-        },
-        "headerSize": {
-          "title": "模块标题字号"
-        },
-        "subheaderSize": {
-          "title": "模块项一级标题字号"
-        },
-        "subtitleFontSize": {
-          "title": "模块项二级标题字号"
         }
       },
       "spacing": {
@@ -247,9 +235,6 @@
         },
         "sectionSpacing": {
           "title": "模块间距"
-        },
-        "paragraphSpacing": {
-          "title": "段落间距"
         }
       },
       "mode": {
@@ -262,6 +247,37 @@
         },
         "subtitleGap": {
           "title": "副标题偏移"
+        }
+      },
+      "styles": {
+        "title": "样式设置",
+        "editTitle": "编辑: {name}",
+        "regions": {
+          "name": "姓名",
+          "basicInfo": "基础信息",
+          "sectionTitle": "区块标题",
+          "itemTitle": "区块子标题",
+          "itemSubtitle": "重要信息",
+          "body": "正文"
+        },
+        "properties": {
+          "fontFamily": "字体",
+          "fontSize": "字号",
+          "fontWeight": "字重",
+          "lineHeight": "行高",
+          "letterSpacing": "字间距",
+          "marginTop": "段前间距",
+          "marginBottom": "段后间距"
+        },
+        "fontWeights": {
+          "normal": "常规",
+          "medium": "中等",
+          "semibold": "半粗",
+          "bold": "粗体"
+        },
+        "actions": {
+          "reset": "重置默认",
+          "apply": "应用"
         }
       }
     },

@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
+import { StyleRegionList } from "./styles";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
@@ -204,218 +205,51 @@ export function SidePanel() {
           </div>
         </SettingCard>
 
-        {/* 排版设置 */}
-        <SettingCard icon={Type} title={t("typography.title")}>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t('typography.font.title')}
-              </Label>
-              <Select
-                value={globalSettings?.fontFamily || DEFAULT_FONT_ID}
-                onValueChange={(value) =>
-                  updateGlobalSettings?.({ fontFamily: value })
-                }
+        {/* 样式设置 - 按区域划分 */}
+        <SettingCard icon={Type} title={t("styles.title")}>
+          {/* 全局字体选择 */}
+          <div className="space-y-2 mb-4">
+            <Label className="text-gray-600 dark:text-neutral-300">
+              {t('typography.font.title')}
+            </Label>
+            <Select
+              value={globalSettings?.fontFamily || DEFAULT_FONT_ID}
+              onValueChange={(value) =>
+                updateGlobalSettings?.({ fontFamily: value })
+              }
+            >
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue>
-                      {getFontById(globalSettings?.fontFamily || DEFAULT_FONT_ID)?.name}
-                    </SelectValue>
-                  </SelectTrigger>
-                </motion.div>
-                <SelectContent
-                  className={cn(
-                    "dark:bg-neutral-900 dark:border-neutral-800 text-white",
-                    "bg-white border-gray-200"
-                  )}
-                >
-                  {FONT_OPTIONS.map((font) => (
-                    <SelectItem
-                      key={font.id}
-                      value={font.id}
-                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                      style={{ fontFamily: `"${font.family}", sans-serif` }}
-                    >
-                      {font.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* 行高选择 */}
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("typography.lineHeight.title")}
-              </Label>
-              <div className="flex items-center gap-4">
-                <Slider
-                  value={[globalSettings?.lineHeight || 1.5]}
-                  min={1}
-                  max={2}
-                  step={0.1}
-                  onValueChange={([value]) =>
-                    updateGlobalSettings?.({ lineHeight: value })
-                  }
-                />
-                <span className="min-w-[3ch] text-sm text-gray-600 dark:text-neutral-300">
-                  {globalSettings?.lineHeight}
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("typography.baseFontSize.title")}
-              </Label>
-              <Select
-                value={globalSettings?.baseFontSize?.toString()}
-                onValueChange={(value) =>
-                  updateGlobalSettings?.({ baseFontSize: parseInt(value) })
-                }
+                <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
+                  <SelectValue>
+                    {getFontById(globalSettings?.fontFamily || DEFAULT_FONT_ID)?.name}
+                  </SelectValue>
+                </SelectTrigger>
+              </motion.div>
+              <SelectContent
+                className={cn(
+                  "dark:bg-neutral-900 dark:border-neutral-800 text-white",
+                  "bg-white border-gray-200"
+                )}
               >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                </motion.div>
-                <SelectContent
-                  className={cn(
-                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
-                    "bg-white border-gray-200"
-                  )}
-                >
-                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
-                    <SelectItem
-                      key={size}
-                      value={size.toString()}
-                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                    >
-                      {size}px
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("typography.headerSize.title")}
-              </Label>
-              <Select
-                value={globalSettings?.headerSize?.toString()}
-                onValueChange={(value) =>
-                  updateGlobalSettings?.({ headerSize: parseInt(value) })
-                }
-              >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                </motion.div>
-                <SelectContent
-                  className={cn(
-                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
-                    "bg-white border-gray-200"
-                  )}
-                >
-                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
-                    <SelectItem
-                      key={size}
-                      value={size.toString()}
-                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                    >
-                      {size}px
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("typography.subheaderSize.title")}
-              </Label>
-              <Select
-                value={globalSettings?.subheaderSize?.toString()}
-                onValueChange={(value) =>
-                  updateGlobalSettings?.({ subheaderSize: parseInt(value) })
-                }
-              >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                </motion.div>
-                <SelectContent
-                  className={cn(
-                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
-                    "bg-white border-gray-200"
-                  )}
-                >
-                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
-                    <SelectItem
-                      key={size}
-                      value={size.toString()}
-                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                    >
-                      {size}px
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("typography.subtitleFontSize.title")}
-              </Label>
-              <Select
-                value={globalSettings?.subtitleFontSize?.toString()}
-                onValueChange={(value) =>
-                  updateGlobalSettings?.({ subtitleFontSize: parseInt(value) })
-                }
-              >
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                >
-                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                </motion.div>
-                <SelectContent
-                  className={cn(
-                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
-                    "bg-white border-gray-200"
-                  )}
-                >
-                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
-                    <SelectItem
-                      key={size}
-                      value={size.toString()}
-                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                    >
-                      {size}px
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                {FONT_OPTIONS.map((font) => (
+                  <SelectItem
+                    key={font.id}
+                    value={font.id}
+                    className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                    style={{ fontFamily: `"${font.family}", sans-serif` }}
+                  >
+                    {font.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+          
+          {/* 区域样式列表 */}
+          <StyleRegionList />
         </SettingCard>
 
         {/* 间距设置 */}
@@ -613,102 +447,6 @@ export function SidePanel() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="text-gray-600 dark:text-neutral-300">
-                {t("spacing.paragraphSpacing.title")}
-              </Label>
-              <div className="flex items-center gap-4">
-                <Slider
-                  value={[globalSettings?.paragraphSpacing || 0]}
-                  min={1}
-                  max={50}
-                  step={1}
-                  onValueChange={([value]) =>
-                    updateGlobalSettings?.({ paragraphSpacing: value })
-                  }
-                  className="flex-1"
-                />
-                <div className="flex items-center">
-                  <div className="flex h-8 w-20 overflow-hidden rounded-md border border-input">
-                    <Input
-                      type="number"
-                      min={1}
-                      max={100}
-                      step={1}
-                      value={globalSettings?.paragraphSpacing || 0}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const value = Number(e.target.value);
-                        if (!isNaN(value) && value >= 1) {
-                          updateGlobalSettings?.({ paragraphSpacing: value });
-                        }
-                      }}
-                      className="h-full w-12 border-0 text-center focus-visible:ring-0 focus-visible:ring-offset-0 no-spinner"
-                    />
-                    <div className="flex flex-col border-l border-input">
-                      <button
-                        type="button"
-                        className="flex h-4 w-8 items-center justify-center border-b border-input bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-                        onClick={() => {
-                          const currentValue =
-                            globalSettings?.paragraphSpacing || 0;
-                          if (currentValue < 100) {
-                            updateGlobalSettings?.({
-                              paragraphSpacing: currentValue + 1,
-                            });
-                          }
-                        }}
-                      >
-                        <span className="sr-only">增加</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="m18 15-6-6-6 6" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        className="flex h-4 w-8 items-center justify-center bg-transparent text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-                        onClick={() => {
-                          const currentValue =
-                            globalSettings?.paragraphSpacing || 0;
-                          if (currentValue > 1) {
-                            updateGlobalSettings?.({
-                              paragraphSpacing: currentValue - 1,
-                            });
-                          }
-                        }}
-                      >
-                        <span className="sr-only">减少</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <span className="ml-1 text-sm text-gray-600 dark:text-neutral-300">
-                    px
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </SettingCard>
 

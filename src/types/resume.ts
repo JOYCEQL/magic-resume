@@ -1,3 +1,7 @@
+import { TextStyle, StyleRegion, RegionStyles } from '@/config/textStyles';
+
+export type { TextStyle, StyleRegion, RegionStyles };
+
 export interface PhotoConfig {
   width: number;
   height: number;
@@ -120,17 +124,12 @@ export interface Project {
 export type GlobalSettings = {
   themeColor?: string | undefined;
   fontFamily?: string | undefined;
-  baseFontSize?: number | undefined;
   pagePadding?: number | undefined;
-  paragraphSpacing?: number | undefined;
-  lineHeight?: number | undefined;
   sectionSpacing?: number | undefined;
-  headerSize?: number | undefined;
-  subheaderSize?: number | undefined;
-  subtitleFontSize?: number | undefined;
   useIconMode?: boolean | undefined;
   centerSubtitle?: boolean | undefined;
   subtitleGap?: boolean | undefined;
+  regionStyles?: Partial<RegionStyles>;
 };
 
 export interface ResumeTheme {

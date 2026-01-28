@@ -10,6 +10,7 @@ import {
 } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
 import { useResumeStore } from "@/store/useResumeStore";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface BaseInfoProps {
   basic: BasicInfo | undefined;
@@ -189,14 +190,27 @@ const BaseInfo = ({
   const fieldsContainerClass = cn(baseFieldsClass, layoutStyles.fields);
   const nameTitleClass = cn(baseNameTitleClass, layoutStyles.nameTitle);
 
+  const nameStyle = getRegionStyle('name', globalSettings?.regionStyles);
+  const basicInfoStyle = getRegionStyle('basicInfo', globalSettings?.regionStyles);
+
+  const fontWeightMap: Record<string, number> = {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  };
+
   const NameTitleComponent = (
     <div className={nameTitleClass}>
       {nameField && basic[nameField.key] && (
         <motion.h1
           layout="position"
-          className="font-bold"
           style={{
-            fontSize: `30px`,
+            fontSize: `${nameStyle.fontSize}px`,
+            fontWeight: nameStyle.fontWeight ? fontWeightMap[nameStyle.fontWeight] : 700,
+            lineHeight: nameStyle.lineHeight,
+            marginBottom: nameStyle.marginBottom ? `${nameStyle.marginBottom}px` : undefined,
+            letterSpacing: nameStyle.letterSpacing ? `${nameStyle.letterSpacing}px` : undefined,
           }}
         >
           {basic[nameField.key] as string}
@@ -206,7 +220,10 @@ const BaseInfo = ({
         <motion.h2
           layout="position"
           style={{
-            fontSize: "18px",
+            fontSize: `${basicInfoStyle.fontSize}px`,
+            fontWeight: basicInfoStyle.fontWeight ? fontWeightMap[basicInfoStyle.fontWeight] : 400,
+            lineHeight: basicInfoStyle.lineHeight,
+            marginTop: basicInfoStyle.marginTop ? `${basicInfoStyle.marginTop}px` : undefined,
           }}
         >
           {basic[titleField.key] as string}
@@ -220,7 +237,8 @@ const BaseInfo = ({
       layout="position"
       className={fieldsContainerClass}
       style={{
-        fontSize: `${globalSettings?.baseFontSize || 14}px`,
+        fontSize: `${basicInfoStyle.fontSize}px`,
+        lineHeight: basicInfoStyle.lineHeight,
         color: isModernTemplate ? "#fff" : "rgb(75, 85, 99)",
         maxWidth: layout === "center" ? "none" : "600px",
       }}

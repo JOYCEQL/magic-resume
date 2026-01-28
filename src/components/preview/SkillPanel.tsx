@@ -4,6 +4,7 @@ import SectionTitle from "./SectionTitle";
 import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface SkillSectionProps {
   skill?: string;
@@ -13,6 +14,7 @@ interface SkillSectionProps {
 
 const SkillSection = ({ skill, globalSettings, showTitle = true }: SkillSectionProps) => {
   const { setActiveSection } = useResumeStore();
+  const bodyStyle = getRegionStyle('body', globalSettings?.regionStyles);
 
   return (
     <motion.div
@@ -27,15 +29,15 @@ const SkillSection = ({ skill, globalSettings, showTitle = true }: SkillSectionP
       {showTitle && <SectionTitle type="skills" globalSettings={globalSettings} />}
       <motion.div
         style={{
-          marginTop: `${globalSettings?.paragraphSpacing}px`,
+          marginTop: bodyStyle.marginTop ? `${bodyStyle.marginTop}px` : undefined,
         }}
       >
         <motion.div
           className="text-baseFont"
           layout="position"
           style={{
-            fontSize: `${globalSettings?.baseFontSize || 14}px`,
-            lineHeight: globalSettings?.lineHeight || 1.6,
+            fontSize: `${bodyStyle.fontSize}px`,
+            lineHeight: bodyStyle.lineHeight,
           }}
           dangerouslySetInnerHTML={{
             __html: normalizeRichTextContent(skill),

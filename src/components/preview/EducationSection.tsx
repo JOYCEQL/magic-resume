@@ -5,6 +5,7 @@ import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useLocale } from "next-intl";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -20,6 +21,17 @@ const EducationSection = ({
   const { setActiveSection } = useResumeStore();
   const locale = useLocale();
   const visibleEducation = education?.filter((edu) => edu.visible);
+
+  const itemTitleStyle = getRegionStyle('itemTitle', globalSettings?.regionStyles);
+  const itemSubtitleStyle = getRegionStyle('itemSubtitle', globalSettings?.regionStyles);
+  const bodyStyle = getRegionStyle('body', globalSettings?.regionStyles);
+
+  const fontWeightMap: Record<string, number> = {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  };
   return (
     <motion.div
       className="
@@ -48,7 +60,7 @@ const EducationSection = ({
             layout="position"
             key={edu.id}
             style={{
-              marginTop: `${globalSettings?.paragraphSpacing}px`,
+              marginTop: `${itemTitleStyle.marginTop || 8}px`,
             }}
           >
             {globalSettings?.centerSubtitle && globalSettings?.subtitleGap ? (
@@ -58,9 +70,10 @@ const EducationSection = ({
               >
                 <div className="flex items-center">
                   <div
-                    className="font-bold"
                     style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                      fontSize: `${itemTitleStyle.fontSize}px`,
+                      fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                      lineHeight: itemTitleStyle.lineHeight,
                     }}
                   >
                     <span>{edu.school}</span>
@@ -68,7 +81,7 @@ const EducationSection = ({
                   <motion.div 
                     layout="position" 
                     className="text-subtitleFont"
-                    style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                    style={{ marginLeft: '16px', fontSize: `${itemSubtitleStyle.fontSize}px`, lineHeight: itemSubtitleStyle.lineHeight }}
                   >
                     {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                     {edu.gpa && ` · GPA ${edu.gpa}`}
@@ -77,7 +90,7 @@ const EducationSection = ({
 
                 <span
                   className="text-subtitleFont shrink-0"
-                  style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                  style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}
                   suppressHydrationWarning
                 >
                   {`${new Date(edu.startDate).toLocaleDateString(
@@ -93,16 +106,17 @@ const EducationSection = ({
                 } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
               >
                 <div
-                  className="font-bold"
                   style={{
-                    fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                    fontSize: `${itemTitleStyle.fontSize}px`,
+                    fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                    lineHeight: itemTitleStyle.lineHeight,
                   }}
                 >
                   <span>{edu.school}</span>
                 </div>
 
                 {globalSettings?.centerSubtitle && (
-                  <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+                  <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                     {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                     {edu.gpa && ` · GPA ${edu.gpa}`}
                   </motion.div>
@@ -110,7 +124,7 @@ const EducationSection = ({
 
                 <span
                   className="text-subtitleFont shrink-0"
-                  style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                  style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}
                   suppressHydrationWarning
                 >
                   {`${new Date(edu.startDate).toLocaleDateString(
@@ -121,7 +135,7 @@ const EducationSection = ({
             )}
 
             {!globalSettings?.centerSubtitle && (
-              <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+              <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${itemSubtitleStyle.fontSize}px`, marginTop: itemSubtitleStyle.marginTop ? `${itemSubtitleStyle.marginTop}px` : undefined }}>
                 {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                 {edu.gpa && ` · GPA ${edu.gpa}`}
               </motion.div>
@@ -132,8 +146,9 @@ const EducationSection = ({
                 layout="position"
                 className="mt-2 text-baseFont"
                 style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6,
+                  fontSize: `${bodyStyle.fontSize}px`,
+                  lineHeight: bodyStyle.lineHeight,
+                  marginTop: bodyStyle.marginTop ? `${bodyStyle.marginTop}px` : undefined,
                 }}
                 dangerouslySetInnerHTML={{
                   __html: normalizeRichTextContent(edu.description),

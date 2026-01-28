@@ -5,6 +5,7 @@ import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -23,53 +24,76 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
     const subtitleGap = globalSettings?.subtitleGap;
     const useOffsetLayout = centerSubtitle && subtitleGap;
 
+    const itemTitleStyle = getRegionStyle('itemTitle', globalSettings?.regionStyles);
+    const itemSubtitleStyle = getRegionStyle('itemSubtitle', globalSettings?.regionStyles);
+    const bodyStyle = getRegionStyle('body', globalSettings?.regionStyles);
+
+    const fontWeightMap: Record<string, number> = {
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+    };
+
     return (
       <motion.div
-        style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}
+        style={{ marginTop: `${itemTitleStyle.marginTop || 8}px` }}
         layout="position"
       >
         {useOffsetLayout ? (
           <motion.div className="flex items-center justify-between">
             <div className="flex items-center">
               <div
-                className="font-bold"
                 style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                  fontSize: `${itemTitleStyle.fontSize}px`,
+                  fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                  lineHeight: itemTitleStyle.lineHeight,
                 }}
               >
                 {experience.company}
               </div>
               <motion.div 
                 className="text-subtitleFont"
-                style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                style={{ 
+                  marginLeft: '16px', 
+                  fontSize: `${itemSubtitleStyle.fontSize}px`,
+                  lineHeight: itemSubtitleStyle.lineHeight,
+                }}
               >
                 {experience.position}
               </motion.div>
             </div>
-            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{experience.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>{experience.date}</div>
           </motion.div>
         ) : (
           <motion.div
             className={`grid grid-cols-${centerSubtitle ? 3 : 2} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
           >
             <div
-              className="font-bold"
               style={{
-                fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                fontSize: `${itemTitleStyle.fontSize}px`,
+                fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                lineHeight: itemTitleStyle.lineHeight,
               }}
             >
               {experience.company}
             </div>
             {centerSubtitle && (
-              <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+              <motion.div className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                 {experience.position}
               </motion.div>
             )}
-            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{experience.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>{experience.date}</div>
           </motion.div>
         )}
         {experience.position && !centerSubtitle && (
-          <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+          <motion.div 
+            className="text-subtitleFont" 
+            style={{ 
+              fontSize: `${itemSubtitleStyle.fontSize}px`,
+              marginTop: itemSubtitleStyle.marginTop ? `${itemSubtitleStyle.marginTop}px` : undefined,
+            }}
+          >
             {experience.position}
           </motion.div>
         )}
@@ -80,8 +104,9 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
               __html: normalizeRichTextContent(experience.details),
             }}
             style={{
-              fontSize: `${globalSettings?.baseFontSize || 14}px`,
-              lineHeight: globalSettings?.lineHeight || 1.6,
+              fontSize: `${bodyStyle.fontSize}px`,
+              lineHeight: bodyStyle.lineHeight,
+              marginTop: bodyStyle.marginTop ? `${bodyStyle.marginTop}px` : undefined,
             }}
           ></motion.div>
         )}

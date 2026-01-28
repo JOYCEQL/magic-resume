@@ -4,13 +4,8 @@ import { DEFAULT_FONT_ID } from "./fonts";
 
 const initialGlobalSettings: GlobalSettings = {
   fontFamily: DEFAULT_FONT_ID,
-  baseFontSize: 16,
   pagePadding: 32,
-  paragraphSpacing: 12,
-  lineHeight: 1.5,
   sectionSpacing: 10,
-  headerSize: 18,
-  subheaderSize: 16,
   useIconMode: true,
   themeColor: "#000000",
   centerSubtitle: true,

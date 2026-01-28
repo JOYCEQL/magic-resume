@@ -4,6 +4,7 @@ import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { templateConfigs } from "@/config/templates";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface SectionTitleProps {
   globalSettings?: GlobalSettings;
@@ -30,17 +31,27 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
 
   const themeColor = globalSettings?.themeColor;
 
+  const sectionTitleStyle = getRegionStyle('sectionTitle', globalSettings?.regionStyles);
+  
+  const fontWeightMap: Record<string, number> = {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  };
+
   const baseStyles = useMemo(
     () => ({
-      fontSize: `${globalSettings?.headerSize || styles.fontSize}px`,
-      fontWeight: "bold",
+      fontSize: `${sectionTitleStyle.fontSize}px`,
+      fontWeight: sectionTitleStyle.fontWeight ? fontWeightMap[sectionTitleStyle.fontWeight] : 700,
+      lineHeight: sectionTitleStyle.lineHeight,
       color: themeColor,
-      marginBottom: `${globalSettings?.paragraphSpacing}px`,
+      marginTop: sectionTitleStyle.marginTop ? `${sectionTitleStyle.marginTop}px` : undefined,
+      marginBottom: sectionTitleStyle.marginBottom ? `${sectionTitleStyle.marginBottom}px` : undefined,
+      letterSpacing: sectionTitleStyle.letterSpacing ? `${sectionTitleStyle.letterSpacing}px` : undefined,
     }),
     [
-      globalSettings?.headerSize,
-      globalSettings?.paragraphSpacing,
-      styles.fontSize,
+      sectionTitleStyle,
       themeColor,
     ]
   );

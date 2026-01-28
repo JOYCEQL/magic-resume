@@ -8,6 +8,7 @@ import CustomSection from "../preview/CustomSection";
 import { ResumeData } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
 import ProjectSection from "../preview/ProjectSection";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface TimelineTemplateProps {
   data: ResumeData;
@@ -23,6 +24,7 @@ const TimelineTemplate: React.FC<TimelineTemplateProps> = ({
     (section) => section.enabled
   );
   const sortedSections = [...enabledSections].sort((a, b) => a.order - b.order);
+  const sectionTitleStyle = getRegionStyle('sectionTitle', data.globalSettings?.regionStyles);
 
   const renderTimelineItem = (content: React.ReactNode, title: string) => (
     <div className="relative pl-6">
@@ -38,7 +40,7 @@ const TimelineTemplate: React.FC<TimelineTemplateProps> = ({
         className="text-xl font-bold mb-4"
         style={{
           color: data.globalSettings.themeColor,
-          fontSize: `${data.globalSettings.headerSize || 20}px`,
+          fontSize: `${sectionTitleStyle.fontSize}px`,
         }}
       >
         {title}

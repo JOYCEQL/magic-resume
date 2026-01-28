@@ -10,7 +10,10 @@ import {
   CustomItem,
   ResumeData,
   MenuSection,
+  StyleRegion,
+  TextStyle,
 } from "../types/resume";
+import { DEFAULT_TEXT_STYLES } from "@/config/textStyles";
 import { DEFAULT_TEMPLATES } from "@/config";
 import {
   initialResumeState,
@@ -60,6 +63,11 @@ interface ResumeStore {
   setThemeColor: (color: string) => void;
   setTemplate: (templateId: string) => void;
   addResume: (resume: ResumeData) => string;
+  
+  // 区域样式相关 actions
+  updateRegionStyle: (region: StyleRegion, style: Partial<TextStyle>) => void;
+  resetRegionStyle: (region: StyleRegion) => void;
+  resetAllRegionStyles: () => void;
 }
 
 // 同步简历到文件系统
@@ -586,7 +594,6 @@ export const useResumeStore = create(
             ...resumes[activeResumeId].globalSettings,
             themeColor: template.colorScheme.primary,
             sectionSpacing: template.spacing.sectionGap,
-            paragraphSpacing: template.spacing.itemGap,
             pagePadding: template.spacing.contentPadding,
           },
           basic: {
@@ -614,6 +621,51 @@ export const useResumeStore = create(
 
         syncResumeToFile(resume);
         return resume.id;
+      },
+
+      updateRegionStyle: (region, style) => {
+        const { activeResumeId, updateResume, activeResume } = get();
+        if (activeResumeId) {
+          const currentRegionStyles = activeResume?.globalSettings?.regionStyles || {};
+          updateResume(activeResumeId, {
+            globalSettings: {
+              ...activeResume?.globalSettings,
+              regionStyles: {
+                ...currentRegionStyles,
+                [region]: {
+                  ...currentRegionStyles[region],
+                  ...style,
+                },
+              },
+            },
+          });
+        }
+      },
+
+      resetRegionStyle: (region) => {
+        const { activeResumeId, updateResume, activeResume } = get();
+        if (activeResumeId) {
+          const currentRegionStyles = activeResume?.globalSettings?.regionStyles || {};
+          const { [region]: _, ...rest } = currentRegionStyles;
+          updateResume(activeResumeId, {
+            globalSettings: {
+              ...activeResume?.globalSettings,
+              regionStyles: rest,
+            },
+          });
+        }
+      },
+
+      resetAllRegionStyles: () => {
+        const { activeResumeId, updateResume, activeResume } = get();
+        if (activeResumeId) {
+          updateResume(activeResumeId, {
+            globalSettings: {
+              ...activeResume?.globalSettings,
+              regionStyles: undefined,
+            },
+          });
+        }
       },
     }),
     {

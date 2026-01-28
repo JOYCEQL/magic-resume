@@ -4,6 +4,7 @@ import SectionTitle from "./SectionTitle";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -30,6 +31,17 @@ const CustomSection = ({
   const useOffsetLayout = centerSubtitle && subtitleGap;
   const gridColumns = centerSubtitle ? 3 : 2;
 
+  const itemTitleStyle = getRegionStyle('itemTitle', globalSettings?.regionStyles);
+  const itemSubtitleStyle = getRegionStyle('itemSubtitle', globalSettings?.regionStyles);
+  const bodyStyle = getRegionStyle('body', globalSettings?.regionStyles);
+
+  const fontWeightMap: Record<string, number> = {
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+  };
+
   return (
     <motion.div
       className="hover:cursor-pointer hover:bg-gray-100 rounded-md transition-all duration-300 ease-in-out hover:shadow-md"
@@ -52,7 +64,7 @@ const CustomSection = ({
             key={item.id}
             layout="position"
             style={{
-              marginTop: `${globalSettings?.paragraphSpacing}px`,
+              marginTop: `${itemTitleStyle.marginTop || 8}px`,
             }}
           >
             {useOffsetLayout ? (
@@ -62,9 +74,10 @@ const CustomSection = ({
               >
                 <div className="flex items-center">
                   <h4
-                    className="font-bold"
                     style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                      fontSize: `${itemTitleStyle.fontSize}px`,
+                      fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                      lineHeight: itemTitleStyle.lineHeight,
                     }}
                   >
                     {item.title}
@@ -72,13 +85,13 @@ const CustomSection = ({
                   <motion.div 
                     layout="position" 
                     className="text-subtitleFont"
-                    style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                    style={{ marginLeft: '16px', fontSize: `${itemSubtitleStyle.fontSize}px`, lineHeight: itemSubtitleStyle.lineHeight }}
                   >
                     {item.subtitle}
                   </motion.div>
                 </div>
 
-                <span className="text-subtitleFont shrink-0" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+                <span className="text-subtitleFont shrink-0" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                   {item.dateRange}
                 </span>
               </motion.div>
@@ -89,9 +102,10 @@ const CustomSection = ({
               >
                 <div className="flex items-center gap-2">
                   <h4
-                    className="font-bold"
                     style={{
-                      fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                      fontSize: `${itemTitleStyle.fontSize}px`,
+                      fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                      lineHeight: itemTitleStyle.lineHeight,
                     }}
                   >
                     {item.title}
@@ -99,19 +113,19 @@ const CustomSection = ({
                 </div>
 
                 {centerSubtitle && (
-                  <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+                  <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                     {item.subtitle}
                   </motion.div>
                 )}
 
-                <span className="text-subtitleFont shrink-0" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+                <span className="text-subtitleFont shrink-0" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                   {item.dateRange}
                 </span>
               </motion.div>
             )}
 
             {!centerSubtitle && item.subtitle && (
-              <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+              <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                 {item.subtitle}
               </motion.div>
             )}
@@ -121,8 +135,9 @@ const CustomSection = ({
                 layout="position"
                 className="mt-2 text-baseFont"
                 style={{
-                  fontSize: `${globalSettings?.baseFontSize || 14}px`,
-                  lineHeight: globalSettings?.lineHeight || 1.6,
+                  fontSize: `${bodyStyle.fontSize}px`,
+                  lineHeight: bodyStyle.lineHeight,
+                  marginTop: bodyStyle.marginTop ? `${bodyStyle.marginTop}px` : undefined,
                 }}
                 dangerouslySetInnerHTML={{
                   __html: normalizeRichTextContent(item.description),

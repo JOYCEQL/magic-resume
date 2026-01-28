@@ -6,6 +6,7 @@ import SectionTitle from "./SectionTitle";
 import { Project, GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { getRegionStyle } from "@/config/textStyles";
 
 interface ProjectItemProps {
   project: Project;
@@ -18,19 +19,31 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
     const subtitleGap = globalSettings?.subtitleGap;
     const useOffsetLayout = centerSubtitle && subtitleGap;
 
+    const itemTitleStyle = getRegionStyle('itemTitle', globalSettings?.regionStyles);
+    const itemSubtitleStyle = getRegionStyle('itemSubtitle', globalSettings?.regionStyles);
+    const bodyStyle = getRegionStyle('body', globalSettings?.regionStyles);
+
+    const fontWeightMap: Record<string, number> = {
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+    };
+
     return (
       <motion.div
         style={{
-          marginTop: `${globalSettings?.paragraphSpacing}px`,
+          marginTop: `${itemTitleStyle.marginTop || 8}px`,
         }}
       >
         {useOffsetLayout ? (
           <motion.div className="flex items-center justify-between">
             <div className="flex items-center">
               <h3
-                className="font-bold"
                 style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                  fontSize: `${itemTitleStyle.fontSize}px`,
+                  fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                  lineHeight: itemTitleStyle.lineHeight,
                 }}
               >
                 {project.name}
@@ -38,12 +51,12 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               <motion.div 
                 layout="position" 
                 className="text-subtitleFont"
-                style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
+                style={{ marginLeft: '16px', fontSize: `${itemSubtitleStyle.fontSize}px`, lineHeight: itemSubtitleStyle.lineHeight }}
               >
                 {project.role}
               </motion.div>
             </div>
-            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{project.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>{project.date}</div>
           </motion.div>
         ) : (
           <motion.div
@@ -51,9 +64,10 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           >
             <div className="flex items-center gap-2">
               <h3
-                className="font-bold"
                 style={{
-                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                  fontSize: `${itemTitleStyle.fontSize}px`,
+                  fontWeight: itemTitleStyle.fontWeight ? fontWeightMap[itemTitleStyle.fontWeight] : 600,
+                  lineHeight: itemTitleStyle.lineHeight,
                 }}
               >
                 {project.name}
@@ -90,15 +104,15 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
             {!project.link && !centerSubtitle && <div></div>}
 
             {centerSubtitle && (
-              <motion.div layout="position" className=" text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+              <motion.div layout="position" className=" text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
                 {project.role}
               </motion.div>
             )}
-            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{project.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>{project.date}</div>
           </motion.div>
         )}
         {project.role && !centerSubtitle && (
-          <motion.div layout="position" className=" text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
+          <motion.div layout="position" className=" text-subtitleFont" style={{ fontSize: `${itemSubtitleStyle.fontSize}px` }}>
             {project.role}
           </motion.div>
         )}
@@ -122,8 +136,9 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
             layout="position"
             className="mt-2 text-baseFont"
             style={{
-              fontSize: `${globalSettings?.baseFontSize || 14}px`,
-              lineHeight: globalSettings?.lineHeight || 1.6,
+              fontSize: `${bodyStyle.fontSize}px`,
+              lineHeight: bodyStyle.lineHeight,
+              marginTop: bodyStyle.marginTop ? `${bodyStyle.marginTop}px` : undefined,
             }}
             dangerouslySetInnerHTML={{
               __html: normalizeRichTextContent(project.description),

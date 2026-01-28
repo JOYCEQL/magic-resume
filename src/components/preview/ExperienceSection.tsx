@@ -41,12 +41,12 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
               </div>
               <motion.div 
                 className="text-subtitleFont"
-                style={{ marginLeft: '16px' }}
+                style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
               >
                 {experience.position}
               </motion.div>
             </div>
-            <div className="text-subtitleFont">{experience.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{experience.date}</div>
           </motion.div>
         ) : (
           <motion.div
@@ -61,15 +61,15 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
               {experience.company}
             </div>
             {centerSubtitle && (
-              <motion.div className="text-subtitleFont">
+              <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
                 {experience.position}
               </motion.div>
             )}
-            <div className="text-subtitleFont">{experience.date}</div>
+            <div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>{experience.date}</div>
           </motion.div>
         )}
         {experience.position && !centerSubtitle && (
-          <motion.div className="text-subtitleFont">
+          <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
             {experience.position}
           </motion.div>
         )}

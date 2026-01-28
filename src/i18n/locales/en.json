@@ -262,6 +262,9 @@
         },
         "subheaderSize": {
           "title": "Subsection Header Size"
+        },
+        "subtitleFontSize": {
+          "title": "Subtitle Font Size"
         }
       },
       "spacing": {

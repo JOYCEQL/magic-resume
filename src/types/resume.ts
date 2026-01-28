@@ -127,6 +127,7 @@ export type GlobalSettings = {
   sectionSpacing?: number | undefined;
   headerSize?: number | undefined;
   subheaderSize?: number | undefined;
+  subtitleFontSize?: number | undefined;
   useIconMode?: boolean | undefined;
   centerSubtitle?: boolean | undefined;
   subtitleGap?: boolean | undefined;

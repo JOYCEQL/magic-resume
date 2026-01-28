@@ -384,6 +384,43 @@ export function SidePanel() {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="space-y-2">
+              <Label className="text-gray-600 dark:text-neutral-300">
+                {t("typography.subtitleFontSize.title")}
+              </Label>
+              <Select
+                value={globalSettings?.subtitleFontSize?.toString()}
+                onValueChange={(value) =>
+                  updateGlobalSettings?.({ subtitleFontSize: parseInt(value) })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger className="border border-gray-200 bg-white text-gray-700 transition-colors dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent
+                  className={cn(
+                    "dark:bg-neutral-900 dark:border-neutral-800 dark:text-white",
+                    "bg-white border-gray-200"
+                  )}
+                >
+                  {[12, 13, 14, 15, 16, 18, 20, 24].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={size.toString()}
+                      className="cursor-pointer transition-colors hover:bg-gray-100 focus:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                    >
+                      {size}px
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </SettingCard>
 

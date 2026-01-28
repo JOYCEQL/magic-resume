@@ -68,7 +68,7 @@ const EducationSection = ({
                   <motion.div 
                     layout="position" 
                     className="text-subtitleFont"
-                    style={{ marginLeft: '16px' }}
+                    style={{ marginLeft: '16px', fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
                   >
                     {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                     {edu.gpa && ` · GPA ${edu.gpa}`}
@@ -77,6 +77,7 @@ const EducationSection = ({
 
                 <span
                   className="text-subtitleFont shrink-0"
+                  style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
                   suppressHydrationWarning
                 >
                   {`${new Date(edu.startDate).toLocaleDateString(
@@ -101,7 +102,7 @@ const EducationSection = ({
                 </div>
 
                 {globalSettings?.centerSubtitle && (
-                  <motion.div layout="position" className="text-subtitleFont">
+                  <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
                     {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                     {edu.gpa && ` · GPA ${edu.gpa}`}
                   </motion.div>
@@ -109,6 +110,7 @@ const EducationSection = ({
 
                 <span
                   className="text-subtitleFont shrink-0"
+                  style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}
                   suppressHydrationWarning
                 >
                   {`${new Date(edu.startDate).toLocaleDateString(
@@ -119,7 +121,7 @@ const EducationSection = ({
             )}
 
             {!globalSettings?.centerSubtitle && (
-              <motion.div layout="position" className="text-subtitleFont mt-1">
+              <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subtitleFontSize || 14}px` }}>
                 {[edu.major, edu.degree].filter(Boolean).join(" · ")}
                 {edu.gpa && ` · GPA ${edu.gpa}`}
               </motion.div>

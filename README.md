@@ -70,12 +70,6 @@ pnpm dev
 pnpm build
 ```
 
-## ⚡ Vercel 部署
-
-你可以一键部署自己的 Magic Resume 实例：
-
-[![使用 Vercel 部署](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
-
 ## 🐳 Docker 部署
 
 ### Docker Compose

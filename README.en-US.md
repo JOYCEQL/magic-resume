@@ -68,11 +68,6 @@ pnpm dev
 pnpm build
 ```
 
-## ⚡ Deploy with Vercel
-
-You can deploy your own instance of Magic Resume with one click:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FJOYCEQL%2Fmagic-resume)
 
 ## 🐳 Docker Deployment
 

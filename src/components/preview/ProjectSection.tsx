@@ -66,14 +66,33 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
           {!project.link && !centerSubtitle && <div></div>}
 
           {centerSubtitle && (
-            <motion.div layout="position" className=" text-subtitleFont">
+            <motion.div
+              layout="position"
+              className=" text-subtitleFont"
+              style={{
+                fontSize: `${globalSettings?.subheaderSize || 16}px`,
+              }}
+            >
               {project.role}
             </motion.div>
           )}
-          <div className="text-subtitleFont">{project.date}</div>
+          <div
+            className="text-subtitleFont"
+            style={{
+              fontSize: `${globalSettings?.subheaderSize || 16}px`,
+            }}
+          >
+            {project.date}
+          </div>
         </motion.div>
         {project.role && !centerSubtitle && (
-          <motion.div layout="position" className=" text-subtitleFont">
+          <motion.div
+            layout="position"
+            className=" text-subtitleFont"
+            style={{
+              fontSize: `${globalSettings?.subheaderSize || 16}px`,
+            }}
+          >
             {project.role}
           </motion.div>
         )}

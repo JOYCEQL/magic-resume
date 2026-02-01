@@ -69,18 +69,35 @@ const CustomSection = ({
               </div>
 
               {centerSubtitle && (
-                <motion.div layout="position" className="text-subtitleFont">
+                <motion.div
+                  layout="position"
+                  className="text-subtitleFont"
+                  style={{
+                    fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                  }}
+                >
                   {item.subtitle}
                 </motion.div>
               )}
 
-              <span className="text-subtitleFont shrink-0">
+              <span
+                className="text-subtitleFont shrink-0"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
                 {item.dateRange}
               </span>
             </motion.div>
 
             {!centerSubtitle && item.subtitle && (
-              <motion.div layout="position" className="text-subtitleFont mt-1">
+              <motion.div
+                layout="position"
+                className="text-subtitleFont mt-1"
+                style={{
+                  fontSize: `${globalSettings?.subheaderSize || 16}px`,
+                }}
+              >
                 {item.subtitle}
               </motion.div>
             )}

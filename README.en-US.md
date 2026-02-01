@@ -91,15 +91,6 @@ This will:
 - Automatically build the application image
 - Start the container in the background
 
-### Docker Hub
-
-The latest version of Magic Resume is available on Docker Hub:
-
-[Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
-
-```bash
-docker pull siyueqingchen/magic-resume:main
-```
 
 ## 📝 License
 
@@ -112,7 +103,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - [ ] Support for more resume templates
 - [ ] Support for more export formats
 - [ ] Import PDF, Markdown, etc.
-- [ ] Custom model
+- [x] Custom model
 - [ ] Smart single page
 - [ ] Online resume hosting
 

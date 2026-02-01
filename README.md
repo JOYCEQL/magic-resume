@@ -93,15 +93,7 @@ docker compose up -d
 - 自动构建应用镜像
 - 在后台启动容器
 
-### Docker Hub
 
-最新版本的 Magic Resume 已经发布在 Docker Hub：
-
-[Docker Hub](https://hub.docker.com/r/siyueqingchen/magic-resume/)
-
-```bash
-docker pull siyueqingchen/magic-resume:main
-```
 
 ## 📝 开源协议
 
@@ -125,7 +117,6 @@ docker pull siyueqingchen/magic-resume:main
 - 作者：SiYue
 - X: @GuangzhouY81070
 - Discord: 欢迎加入群组 https://discord.gg/9mWgZrW3VN
-- 用户群：加微信 qingchensiyue
 - 邮箱：18806723365@163.com
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

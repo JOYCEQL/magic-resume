@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export type AIModelType = "doubao" | "deepseek" | "openai";
+import { AI_MODEL_CONFIGS, AIModelType } from "@/config/ai";
 
 interface AIConfigState {
   selectedModel: AIModelType;
@@ -20,11 +19,12 @@ interface AIConfigState {
   setOpenaiApiKey: (apiKey: string) => void;
   setOpenaiModelId: (modelId: string) => void;
   setOpenaiApiEndpoint: (endpoint: string) => void;
+  isConfigured: () => boolean;
 }
 
 export const useAIConfigStore = create<AIConfigState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       selectedModel: "doubao",
       doubaoApiKey: "",
       doubaoModelId: "",
@@ -40,7 +40,12 @@ export const useAIConfigStore = create<AIConfigState>()(
       setDeepseekModelId: (modelId: string) => set({ deepseekModelId: modelId }),
       setOpenaiApiKey: (apiKey: string) => set({ openaiApiKey: apiKey }),
       setOpenaiModelId: (modelId: string) => set({ openaiModelId: modelId }),
-      setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint })
+      setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint }),
+      isConfigured: () => {
+        const state = get();
+        const config = AI_MODEL_CONFIGS[state.selectedModel];
+        return config.validate(state);
+      }
     }),
     {
       name: "ai-config-storage"

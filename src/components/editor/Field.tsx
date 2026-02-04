@@ -2,9 +2,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,8 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import RichTextEditor from "../shared/rich-editor/RichEditor";
 import AIPolishDialog from "../shared/ai/AIPolishDialog";
-import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
+import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 
 interface FieldProps {
   label?: string;
@@ -43,17 +40,7 @@ const Field = ({
   const [displayMonth, setDisplayMonth] = useState<Date>(new Date());
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [showPolishDialog, setShowPolishDialog] = useState(false);
-  const router = useRouter();
-  const {
-    doubaoModelId,
-    doubaoApiKey,
-    selectedModel,
-    deepseekApiKey,
-    deepseekModelId,
-    openaiApiKey,
-    openaiModelId,
-    openaiApiEndpoint
-  } = useAIConfigStore();
+  const { checkConfiguration } = useAIConfiguration();
   const t = useTranslations();
 
   const currentDate = useMemo(
@@ -254,31 +241,9 @@ const Field = ({
             onChange={onChange}
             placeholder={placeholder}
             onPolish={() => {
-              const config = AI_MODEL_CONFIGS[selectedModel];
-              const isConfigured =
-                  selectedModel === "doubao"
-                      ? doubaoApiKey && doubaoModelId
-                      : selectedModel === "openai"
-                          ? openaiApiKey && openaiModelId && openaiApiEndpoint
-                          : config.requiresModelId
-                              ? deepseekApiKey && deepseekModelId
-                              : deepseekApiKey;
-
-              if (!isConfigured) {
-                toast.error(
-                  <>
-                    <span>{t("previewDock.grammarCheck.configurePrompt")}</span>
-                    <Button
-                      className="p-0 h-auto text-white"
-                      onClick={() => router.push("/app/dashboard/ai")}
-                    >
-                      {t("previewDock.grammarCheck.configureButton")}
-                    </Button>
-                  </>
-                );
-                return;
+              if (checkConfiguration()) {
+                setShowPolishDialog(true);
               }
-              setShowPolishDialog(true);
             }}
           />
         </div>

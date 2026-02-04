@@ -36,6 +36,7 @@ import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
+import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -369,30 +370,14 @@ const PreviewDock = ({
     }
   };
 
+  const { checkConfiguration } = useAIConfiguration();
+
+  // ... (keep other hooks)
+
   const handleGrammarCheck = useCallback(async () => {
     if (!resumeContentRef.current) return;
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const isConfigured =
-      selectedModel === "doubao"
-        ? doubaoApiKey && doubaoModelId
-        : selectedModel === "openai"
-        ? openaiApiKey && openaiModelId && openaiApiEndpoint
-        : config.requiresModelId
-        ? deepseekApiKey && deepseekModelId
-        : deepseekApiKey;
-
-    if (!isConfigured) {
-      toast.error(
-        <>
-          <span>{t("grammarCheck.configurePrompt")}</span>
-          <Button
-            className="p-0 h-auto text-white"
-            onClick={() => router.push("/app/dashboard/ai")}
-          >
-            {t("grammarCheck.configureButton")}
-          </Button>
-        </>
-      );
+    
+    if (!checkConfiguration()) {
       return;
     }
 
@@ -402,20 +387,7 @@ const PreviewDock = ({
     } catch (error) {
       toast.error(t("grammarCheck.errorToast"));
     }
-  }, [
-    resumeContentRef,
-    selectedModel,
-    doubaoApiKey,
-    doubaoModelId,
-    deepseekApiKey,
-    deepseekModelId,
-    openaiApiKey,
-    openaiModelId,
-    openaiApiEndpoint,
-    checkGrammar,
-    t,
-    router
-  ]);
+  }, [resumeContentRef, checkConfiguration, checkGrammar, t]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");

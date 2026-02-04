@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AIModelType } from "@/store/useAIConfigStore";
+import { AIModelType } from "@/config/ai";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 
 export async function POST(req: Request) {

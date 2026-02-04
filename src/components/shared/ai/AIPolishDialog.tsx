@@ -42,23 +42,14 @@ export default function AIPolishDialog({
     openaiApiKey,
     openaiModelId,
     openaiApiEndpoint,
+    isConfigured
   } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
 
   const handlePolish = async () => {
     try {
-      const config = AI_MODEL_CONFIGS[selectedModel];
-      const isConfigured =
-          selectedModel === "doubao"
-              ? doubaoApiKey && doubaoModelId
-              : selectedModel === "openai"
-                  ? openaiApiKey && openaiModelId && openaiApiEndpoint
-                  : config.requiresModelId
-                      ? deepseekApiKey && deepseekModelId
-                      : deepseekApiKey;
-
-      if (!isConfigured) {
+      if (!isConfigured()) {
         toast.error(t("error.configRequired"));
         onOpenChange(false);
         return;
@@ -69,6 +60,7 @@ export default function AIPolishDialog({
 
       abortControllerRef.current = new AbortController();
 
+      const config = AI_MODEL_CONFIGS[selectedModel];
       const response = await fetch("/api/polish", {
         method: "POST",
         headers: {

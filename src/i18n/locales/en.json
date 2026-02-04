@@ -97,6 +97,7 @@
   },
   "dashboard": {
     "sidebar": {
+      "appName": "Magic Resume",
       "resumes": "Resumes",
       "settings": "Settings",
       "templates": "Templates",

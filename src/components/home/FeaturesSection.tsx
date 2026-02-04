@@ -3,13 +3,14 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { CircleArrowRight } from "lucide-react";
+import { ChevronRight, Sparkles, Shield, Zap } from "lucide-react";
 import AnimatedFeature from "./client/AnimatedFeature";
 
 const features = [
   {
-    badge: "AI",
-    badgeColor: "bg-blue-500",
+    icon: Sparkles,
+    badge: "features.ai.badge",
+    badgeColor: "bg-primary/10 text-primary",
     title: "features.ai.title",
     description: "features.ai.description",
     items: [
@@ -26,8 +27,9 @@ const features = [
     ],
   },
   {
-    badge: "安全",
-    badgeColor: "bg-green-500",
+    icon: Shield,
+    badge: "features.storage.badge",
+    badgeColor: "bg-emerald-500/10 text-emerald-600",
     title: "features.storage.title",
     description: "features.storage.description",
     items: [
@@ -45,7 +47,7 @@ const features = [
   },
 ] as const;
 
-const SLIDE_DURATION = 5000;
+const SLIDE_DURATION = 6000;
 
 export default function FeaturesSection() {
   const t = useTranslations("home");
@@ -56,28 +58,12 @@ export default function FeaturesSection() {
   const intervalRefs = useRef<(NodeJS.Timeout | null)[]>(
     features.map(() => null)
   );
-  const timeoutRefs = useRef<(NodeJS.Timeout | null)[]>(
-    features.map(() => null)
-  );
-
-  const clearTimers = useCallback((categoryIndex: number) => {
-    if (intervalRefs.current[categoryIndex]) {
-      clearInterval(intervalRefs.current[categoryIndex] as NodeJS.Timeout);
-      intervalRefs.current[categoryIndex] = null;
-    }
-    if (timeoutRefs.current[categoryIndex]) {
-      clearTimeout(timeoutRefs.current[categoryIndex] as NodeJS.Timeout);
-      timeoutRefs.current[categoryIndex] = null;
-    }
-  }, []);
-
-  const clearAllTimers = useCallback(() => {
-    features.forEach((_, index) => clearTimers(index));
-  }, [clearTimers]);
 
   const startProgressTimer = useCallback(
     (categoryIndex: number) => {
-      clearTimers(categoryIndex);
+      if (intervalRefs.current[categoryIndex]) {
+        clearInterval(intervalRefs.current[categoryIndex] as NodeJS.Timeout);
+      }
 
       const updateInterval = 50;
       const progressIncrement = (updateInterval / SLIDE_DURATION) * 100;
@@ -85,356 +71,162 @@ export default function FeaturesSection() {
       intervalRefs.current[categoryIndex] = setInterval(() => {
         setProgresses((prev) => {
           const newProgresses = [...prev];
-          const newProgress = newProgresses[categoryIndex] + progressIncrement;
-
-          if (newProgress >= 100) {
-            clearInterval(
-              intervalRefs.current[categoryIndex] as NodeJS.Timeout
-            );
-            intervalRefs.current[categoryIndex] = null;
-            newProgresses[categoryIndex] = 100;
-
-            timeoutRefs.current[categoryIndex] = setTimeout(() => {
-              setActiveFeatures((prev) => {
-                const newActiveFeatures = [...prev];
-                const currentFeature = newActiveFeatures[categoryIndex];
-                const maxIndex = features[categoryIndex].items.length - 1;
-
-                if (currentFeature < maxIndex) {
-                  newActiveFeatures[categoryIndex] = currentFeature + 1;
-                } else {
-                  newActiveFeatures[categoryIndex] = 0;
-                }
-                return newActiveFeatures;
-              });
-
-              setProgresses((p) => {
-                const np = [...p];
-                np[categoryIndex] = 0;
-                return np;
-              });
-
-              startProgressTimer(categoryIndex);
-            }, 300);
-          } else {
-            newProgresses[categoryIndex] = newProgress;
+          // Allow progress to go slightly over 100, handled by effect
+          if (newProgresses[categoryIndex] < 100) {
+            newProgresses[categoryIndex] += progressIncrement;
           }
-
           return newProgresses;
         });
       }, updateInterval);
     },
-    [clearTimers]
+    []
   );
 
-  const startAutoProgress = useCallback(
-    (categoryIndex: number) => {
-      setProgresses((prev) => {
-        const newProgresses = [...prev];
-        newProgresses[categoryIndex] = 0;
-        return newProgresses;
-      });
-
-      startProgressTimer(categoryIndex);
-    },
-    [startProgressTimer]
-  );
+  // Handle auto-switch when progress reaches 100%
+  useEffect(() => {
+    progresses.forEach((progress, index) => {
+      if (progress >= 100) {
+        // Reset progress immediately to prevent repeated triggers
+        setProgresses((prev) => {
+          const next = [...prev];
+          next[index] = 0;
+          return next;
+        });
+        
+        // Switch to next feature
+        setActiveFeatures((prevActive) => {
+          const next = [...prevActive];
+          const max = features[index].items.length - 1;
+          next[index] = next[index] < max ? next[index] + 1 : 0;
+          return next;
+        });
+      }
+    });
+  }, [progresses]);
 
   useEffect(() => {
-    features.forEach((_, index) => {
-      startAutoProgress(index);
+    features.forEach((_, index) => startProgressTimer(index));
+    return () => {
+      intervalRefs.current.forEach((ref) => {
+        if (ref) clearInterval(ref);
+      });
+    };
+  }, [startProgressTimer]);
+
+  const handleSlideChange = (categoryIndex: number, featureIndex: number) => {
+    setActiveFeatures((prev) => {
+      const next = [...prev];
+      next[categoryIndex] = featureIndex;
+      return next;
     });
-
-    return clearAllTimers;
-  }, [startAutoProgress, clearAllTimers]);
-
-  const handleSlideChange = useCallback(
-    (categoryIndex: number, featureIndex: number) => {
-      setActiveFeatures((prev) => {
-        if (featureIndex === prev[categoryIndex]) return prev;
-
-        const newActiveFeatures = [...prev];
-        newActiveFeatures[categoryIndex] = featureIndex;
-        return newActiveFeatures;
-      });
-
-      clearTimers(categoryIndex);
-
-      setProgresses((prev) => {
-        const newProgresses = [...prev];
-        newProgresses[categoryIndex] = 0;
-        return newProgresses;
-      });
-
-      startProgressTimer(categoryIndex);
-    },
-    [clearTimers, startProgressTimer]
-  );
-
-  const calculateCircleProgress = (percent: number) => {
-    const radius = 10;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percent / 100) * circumference;
-    return { circumference, offset };
+    setProgresses((prev) => {
+      const next = [...prev];
+      next[categoryIndex] = 0;
+      return next;
+    });
+    startProgressTimer(categoryIndex);
   };
 
   return (
-    <section className="py-20 md:py-32 bg-gradient-to-b from-background to-primary/5">
-      <div className="mx-auto max-w-[1200px] px-4">
+    <section className="py-24 md:py-40 bg-background overflow-hidden">
+      <div className="container mx-auto px-6 max-w-6xl">
         <AnimatedFeature>
-          <div className="text-center mb-16 md:mb-24">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">
+          <div className="text-center mb-24 md:mb-32">
+            <h2 className="text-4xl md:text-5xl font-serif font-semibold tracking-tight text-foreground/90 mb-6">
               {t("features.title")}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <div className="w-20 h-1 bg-primary/20 mx-auto rounded-full mb-8" />
+            <p className="text-xl text-muted-foreground/80 max-w-2xl mx-auto font-light leading-relaxed">
               {t("features.subtitle")}
             </p>
           </div>
         </AnimatedFeature>
 
-        <div className="space-y-24 md:space-y-32">
-          <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center">
-            <div className="w-full md:w-[400px] space-y-6 md:mr-16">
-              <div className="flex flex-col items-center md:items-start gap-2">
-                <span className="text-xs font-semibold text-white px-2 py-1 rounded-full bg-blue-500">
-                  {features[0].badge}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-center md:text-left">
-                  {t(features[0].title)}
-                </h3>
-                <p className="text-muted-foreground text-center md:text-left">
-                  {t(features[0].description)}
-                </p>
-              </div>
-              <ul className="space-y-4">
-                {features[0].items.map((item, index) => {
-                  const { circumference, offset } =
-                    activeFeatures[0] === index
-                      ? calculateCircleProgress(progresses[0])
-                      : activeFeatures[0] > index ||
-                        (activeFeatures[0] === 0 &&
-                          index === features[0].items.length - 1)
-                      ? calculateCircleProgress(100)
-                      : calculateCircleProgress(0);
-
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => handleSlideChange(0, index)}
-                      className={`cursor-pointer relative p-2 rounded-lg transition-all`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-6 h-6 flex items-center justify-center">
-                          {activeFeatures[0] === index ? (
-                            <svg width="24" height="24" viewBox="0 0 24 24">
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                fill="none"
-                                stroke="#e2e8f0"
-                                strokeWidth="2.5"
-                                className="dark:stroke-gray-700"
-                              />
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                fill="none"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                className="stroke-gradient-animated transform -rotate-90 origin-center transition-all duration-300 ease-linear"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={offset}
-                              />
-                            </svg>
-                          ) : (
-                            <CircleArrowRight />
-                          )}
-                        </div>
-                        <span
-                          className={`transition-all duration-200 ${
-                            activeFeatures[0] === index
-                              ? "text-blue-600 dark:text-blue-400 font-semibold"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {t(item.title)}
-                        </span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div className="flex-1 w-full md:w-auto relative">
-              <AnimatedFeature key={`feature-${activeFeatures[0]}`}>
-                <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-blue-600/15 z-10"></div>
-
-                  <div
-                    key={activeFeatures[0]}
-                    className="animate-fade-in w-full h-full"
-                  >
-                    <Image
-                      src={features[0].items[activeFeatures[0]].image}
-                      alt={t(features[0].items[activeFeatures[0]].title)}
-                      fill
-                      className="object-contain z-1 transition-transform duration-300 ease-in-out"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
+        <div className="space-y-40">
+          {features.map((category, catIndex) => (
+            <div 
+              key={catIndex} 
+              className={`flex flex-col gap-16 lg:gap-24 items-center ${
+                catIndex % 2 === 1 ? "lg:flex-row-reverse" : "lg:flex-row"
+              }`}
+            >
+              {/* Text Side */}
+              <div className="w-full lg:w-5/12 space-y-10">
+                <AnimatedFeature delay={0.1}>
+                  <div className="space-y-6">
+                    <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium ${category.badgeColor}`}>
+                      <category.icon className="w-4 h-4" />
+                      {t(category.badge)}
+                    </div>
+                    <h3 className="text-3xl md:text-4xl font-serif font-medium tracking-tight text-foreground/90">
+                      {t(category.title)}
+                    </h3>
+                    <p className="text-lg text-muted-foreground/90 leading-relaxed font-light">
+                      {t(category.description)}
+                    </p>
                   </div>
-                </div>
+                </AnimatedFeature>
 
-                <div className="absolute inset-0 -z-10 blur-2xl opacity-70">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 via-transparent to-purple-500/20 rounded-3xl transform scale-95"></div>
-                </div>
-              </AnimatedFeature>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row-reverse gap-8 md:gap-16 items-center">
-            <div className="w-full md:w-[400px] space-y-6">
-              <div className="flex flex-col items-center md:items-start gap-2">
-                <span className="text-xs font-semibold text-white px-2 py-1 rounded-full bg-green-500">
-                  {features[1].badge}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-center md:text-left">
-                  {t(features[1].title)}
-                </h3>
-                <p className="text-muted-foreground text-center md:text-left">
-                  {t(features[1].description)}
-                </p>
-              </div>
-              <ul className="space-y-4">
-                {features[1].items.map((item, index) => {
-                  const { circumference, offset } =
-                    activeFeatures[1] === index
-                      ? calculateCircleProgress(progresses[1])
-                      : activeFeatures[1] > index ||
-                        (activeFeatures[1] === 0 &&
-                          index === features[1].items.length - 1)
-                      ? calculateCircleProgress(100)
-                      : calculateCircleProgress(0);
-
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => handleSlideChange(1, index)}
-                      className={`cursor-pointer relative p-2 rounded-lg transition-all`}
+                <div className="space-y-4">
+                  {category.items.map((item, itemIndex) => (
+                    <button
+                      key={itemIndex}
+                      onClick={() => handleSlideChange(catIndex, itemIndex)}
+                      className={`w-full text-left group p-5 rounded-2xl transition-all relative border overflow-hidden ${
+                        activeFeatures[catIndex] === itemIndex
+                          ? "bg-secondary border-border shadow-sm"
+                          : "bg-transparent border-transparent hover:bg-secondary/40"
+                      }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="relative w-6 h-6 flex items-center justify-center">
-                          {activeFeatures[1] === index ? (
-                            <svg width="24" height="24" viewBox="0 0 24 24">
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                fill="none"
-                                stroke="#e2e8f0"
-                                strokeWidth="2.5"
-                                className="dark:stroke-gray-700"
-                              />
-                              <circle
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                fill="none"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                className="stroke-gradient-green transform -rotate-90 origin-center transition-all duration-300 ease-linear"
-                                strokeDasharray={circumference}
-                                strokeDashoffset={offset}
-                              />
-                            </svg>
-                          ) : (
-                            <CircleArrowRight />
-                          )}
+                      {/* Progress Bar */}
+                      {activeFeatures[catIndex] === itemIndex && (
+                        <div 
+                          className="absolute bottom-0 left-0 h-0.5 bg-primary/30 transition-all duration-75 ease-linear"
+                          style={{ width: `${progresses[catIndex]}%` }}
+                        />
+                      )}
+                      
+                      <div className="flex items-start justify-between">
+                        <div className="space-y-1">
+                          <h4 className={`font-semibold transition-colors ${
+                            activeFeatures[catIndex] === itemIndex ? "text-primary" : "text-foreground/70"
+                          }`}>
+                            {t(item.title)}
+                          </h4>
+                          <p className="text-sm text-muted-foreground line-clamp-1">
+                            {t(item.description)}
+                          </p>
                         </div>
-                        <span
-                          className={`transition-all duration-200 ${
-                            activeFeatures[1] === index
-                              ? "text-green-600 dark:text-green-400 font-semibold"
-                              : "text-muted-foreground"
-                          }`}
-                        >
-                          {t(item.title)}
-                        </span>
+                        <ChevronRight className={`w-5 h-5 transition-all ${
+                          activeFeatures[catIndex] === itemIndex ? "text-primary translate-x-1" : "text-muted-foreground/30"
+                        }`} />
                       </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-            <div className="flex-1 w-full md:w-auto relative">
-              <AnimatedFeature key={`feature-storage-${activeFeatures[1]}`}>
-                <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-green-600/15 z-10"></div>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                  <div
-                    key={activeFeatures[1]}
-                    className="animate-fade-in w-full h-full"
-                  >
-                    <Image
-                      src={features[1].items[activeFeatures[1]].image}
-                      alt={t(features[1].items[activeFeatures[1]].title)}
-                      fill
-                      className="object-contain z-1 transition-transform duration-300 ease-in-out"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
+              {/* Image Side */}
+              <div className="w-full lg:w-7/12">
+                <AnimatedFeature key={`${catIndex}-${activeFeatures[catIndex]}`} delay={0.2}>
+                  <div className="relative aspect-[16/10] bg-secondary/20 rounded-3xl border border-border/50 p-6 sm:p-10 shadow-2xl backdrop-blur-sm group overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
+                    <div className="relative w-full h-full transform group-hover:scale-[1.02] transition-transform duration-700">
+                      <Image
+                        src={category.items[activeFeatures[catIndex]].image}
+                        alt={t(category.items[activeFeatures[catIndex]].title)}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1024px) 100vw, 40vw"
+                      />
+                    </div>
                   </div>
-                </div>
-
-                <div className="absolute inset-0 -z-10 blur-2xl opacity-70">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-green-500/20 via-transparent to-emerald-500/20 rounded-3xl transform scale-95"></div>
-                </div>
-              </AnimatedFeature>
+                </AnimatedFeature>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      <style jsx global>{`
-        .stroke-gradient-animated {
-          stroke: #3b82f6;
-          animation: strokeGradient 5s linear;
-        }
-
-        .stroke-gradient-green {
-          stroke: #10b981;
-          animation: strokeGradientGreen 5s linear;
-        }
-
-        @keyframes strokeGradient {
-          0% {
-            stroke: #3b82f6; /* blue-500 */
-          }
-          50% {
-            stroke: #8b5cf6; /* violet-500 */
-          }
-          100% {
-            stroke: #6366f1; /* indigo-500 */
-          }
-        }
-
-        @keyframes strokeGradientGreen {
-          0% {
-            stroke: #10b981; /* green-500 */
-          }
-          50% {
-            stroke: #059669; /* green-600 */
-          }
-          100% {
-            stroke: #047857; /* green-700 */
-          }
-        }
-
-        .shadow-inner-custom {
-          box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1),
-            inset 0 0 5px rgba(79, 70, 229, 0.2);
-        }
-      `}</style>
     </section>
   );
 }

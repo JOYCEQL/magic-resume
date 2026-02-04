@@ -491,9 +491,9 @@ const RichTextEditor = ({
               size="sm"
               variant="outline"
               onClick={onPolish}
-              className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-pink-500 hover:to-purple-400 text-white border-none shadow-md transition-all duration-300"
+              className="h-8 px-3 text-xs gap-1.5 ml-1 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/5 transition-all duration-300 group"
             >
-              <Wand2 className="h-4 w-4 mr-2" />
+              <Wand2 className="h-3 w-3 group-hover:rotate-12 transition-transform" />
               {t("aiPolish")}
             </Button>
           )}

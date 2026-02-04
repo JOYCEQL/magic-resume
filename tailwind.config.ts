@@ -19,6 +19,10 @@ const config = {
       }
     },
     extend: {
+      fontFamily: {
+        serif: ["Newsreader", "serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
       colors: {
         baseFont: "#212529",
         subtitleFont: "#212529",

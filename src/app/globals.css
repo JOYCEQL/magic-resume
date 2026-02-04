@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap');
+
 /* 隐藏数字输入框自带的上下箭头 */
 @layer utilities {
   .no-spinner::-webkit-inner-spin-button,
@@ -17,41 +19,39 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    /* --primary: 262.1 83.3% 57.8%; */
-    --primary: 140 12% 5%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --background: 48 20% 97%; /* #F9F9F7 */
+    --foreground: 60 5% 10%; /* #1B1B18 */
+    --card: 48 20% 97%;
+    --card-foreground: 60 5% 10%;
+    --popover: 48 20% 97%;
+    --popover-foreground: 60 5% 10%;
+    --primary: 60 5% 10%; /* #1B1B18 - Claude Dark Charcoal */
+    --primary-foreground: 48 20% 97%;
+    --secondary: 48 18% 90%; /* #F2F0E9 */
+    --secondary-foreground: 60 5% 10%;
+    --muted: 60 2% 56%; /* #91918E */
+    --muted-foreground: 60 2% 40%;
+    --accent: 48 10% 92%; /* Neutral/Parchment Accent */
+    --accent-foreground: 60 5% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    /* --ring: 262.1 83.3% 57.8%; */
-    --ring: 140 12% 5%;
+    --border: 48 10% 89%; /* #E6E6E3 */
+    --input: 48 10% 89%;
+    --ring: 60 5% 10%;
     --radius: 0.75rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 140 12% 5%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 140 12% 5%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 48 20% 96%;
+    --sidebar-foreground: 60 5% 25%;
+    --sidebar-primary: 260 45% 52%;
+    --sidebar-primary-foreground: 48 20% 97%;
+    --sidebar-accent: 48 10% 92%;
+    --sidebar-accent-foreground: 260 45% 52%;
+    --sidebar-border: 48 10% 89%;
+    --sidebar-ring: 260 45% 52%;
   }
   /* 通用滚动条样式 */
   ::-webkit-scrollbar {
@@ -90,59 +90,39 @@
   }
 
   .dark {
-    /* & ::-webkit-scrollbar-thumb:vertical {
-      background: transparent;
-    } */
-    /* 
-    & *:hover::-webkit-scrollbar-thumb:vertical {
-      background: rgba(102, 102, 102, 0.5);
-    }
-
-    & ::-webkit-scrollbar-thumb:vertical:hover {
-      background: rgba(102, 102, 102, 0.8);
-    } */
-
-    & ::-webkit-scrollbar-thumb:horizontal {
-      background: rgba(102, 102, 102, 0.5);
-    }
-
-    & ::-webkit-scrollbar-thumb:horizontal:hover {
-      background: rgba(102, 102, 102, 0.8);
-    }
-
-    --background: 140 12% 5%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 154 72% 38%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
+    --background: 60 5% 10%; /* Dark Charcoal */
+    --foreground: 48 20% 97%; /* Off White text */
+    --card: 60 5% 12%;
+    --card-foreground: 48 20% 97%;
+    --popover: 60 5% 12%;
+    --popover-foreground: 48 20% 97%;
+    --primary: 48 20% 97%; /* Off White for primary buttons in dark mode or a light tint */
+    --primary-foreground: 60 5% 10%;
+    --secondary: 60 5% 15%;
+    --secondary-foreground: 48 20% 97%;
+    --muted: 60 2% 40%;
+    --muted-foreground: 60 2% 60%;
+    --accent: 60 5% 15%; /* Dark accent */
+    --accent-foreground: 48 20% 97%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 154 72% 38%;
+    --border: 60 5% 20%;
+    --input: 60 5% 20%;
+    --ring: 48 20% 97%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 140 12% 5%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 60 5% 8%;
+    --sidebar-foreground: 48 20% 90%;
+    --sidebar-primary: 260 60% 70%;
+    --sidebar-primary-foreground: 60 5% 10%;
+    --sidebar-accent: 60 5% 15%;
+    --sidebar-accent-foreground: 60 5% 90%;
+    --sidebar-border: 60 5% 15%;
+    --sidebar-ring: 260 60% 70%;
   }
 }
 
@@ -152,10 +132,23 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  ::selection {
-    @apply text-primary-foreground bg-primary;
+
+  /* Apply serif to all headings globally except in resume preview */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+
+  /* Reset headings in resume preview to inherit or use sans */
+  #resume-preview h1, 
+  #resume-preview h2, 
+  #resume-preview h3, 
+  #resume-preview h4, 
+  #resume-preview h5, 
+  #resume-preview h6 {
+    font-family: inherit;
   }
 
   ::-moz-selection {

@@ -1,76 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="300" height="200" viewBox="0 0 300 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- 背景 -->
-  <rect width="300" height="200" rx="10" fill="#FFFFFF" />
-  
-  <!-- 顶部区域 -->
-  <g transform="translate(15, 15)">
-    <!-- AI标识 -->
-    <rect x="0" y="0" width="24" height="16" rx="3" fill="#EF4444"/>
-    <text x="12" y="11" font-family="Arial" font-size="8" font-weight="bold" fill="white" text-anchor="middle">AI</text>
-    
-    <!-- 标题 -->
-    <text x="30" y="11" font-family="Arial" font-size="10" font-weight="bold" fill="#333333">语法检查</text>
-    
-    <!-- 警告图标和问题数量 -->
-    <g transform="translate(120, 0)">
-      <circle cx="8" cy="8" r="8" fill="#FEF2F2" />
-      <text x="8" y="11" font-family="Arial" font-size="8" font-weight="bold" fill="#EF4444" text-anchor="middle">!</text>
-      <text x="22" y="11" font-family="Arial" font-size="8" font-weight="bold" fill="#EF4444">发现 2 个问题</text>
-    </g>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes underline {
+      0% { stroke-dashoffset: 60; stroke: #EF4444; } /* Red */
+      40% { stroke-dashoffset: 0; stroke: #EF4444; }
+      50% { stroke-dashoffset: 0; stroke: #EF4444; opacity: 1; }
+      55% { opacity: 0; }
+      60% { opacity: 0; stroke: #22C55E; } /* Switch to Green */
+      65% { opacity: 1; stroke-dashoffset: 60; }
+      100% { stroke-dashoffset: 0; stroke: #22C55E; }
+    }
+    @keyframes cursor {
+      0% { transform: translate(110px, 160px); opacity: 0; }
+      20% { opacity: 1; }
+      40% { transform: translate(150px, 160px); }
+      60% { transform: translate(150px, 160px); opacity: 0; }
+      100% { transform: translate(150px, 160px); opacity: 0; }
+    }
+    @keyframes badge {
+      0%, 50% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.1); opacity: 1; }
+      80% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .wiggle-line { animation: underline 4s infinite ease-in-out; stroke-dasharray: 60; }
+    .cursor-move { animation: cursor 4s infinite ease-in-out; }
+    .badge-pop { animation: badge 4s infinite ease-out; transform-origin: 150px 140px; }
+  </style>
+
+  <!-- Background Card -->
+  <rect x="80" y="60" width="240" height="180" rx="8" fill="#F9F9F7" stroke="#E6E6E3" stroke-width="2"/>
+
+  <!-- Text -->
+  <text x="110" y="150" font-family="monospace" font-size="20" fill="#1B1B18" fill-opacity="0.8">Thier</text>
+  <line x1="170" y1="145" x2="280" y2="145" stroke="#1B1B18" stroke-width="2" stroke-opacity="0.1" stroke-linecap="round"/>
+
+  <!-- Animated Wiggle Underline -->
+  <path d="M110 155 Q120 160 130 155 T150 155" stroke-width="2" fill="none" class="wiggle-line" stroke-linecap="round"/>
+
+  <!-- Correction Badge (appears later) -->
+  <g class="badge-pop">
+    <rect x="100" y="115" width="60" height="24" rx="4" fill="#22C55E" fill-opacity="0.1" stroke="#22C55E" stroke-width="1"/>
+    <text x="130" y="131" font-family="sans-serif" font-size="12" font-weight="bold" fill="#15803D" text-anchor="middle">Their</text>
   </g>
-  
-  <!-- 副标题 -->
-  <text x="15" y="40" font-family="Arial" font-size="8" fill="#666666">AI已检测到以下语法和拼写问题</text>
-  
-  <!-- 中间区域 - 语法检查结果 -->
-  <rect x="15" y="45" width="270" height="140" rx="6" fill="white" stroke="#E5E7EB" stroke-width="1" />
-  
-  <!-- 问题1 -->
-  <g transform="translate(25, 60)">
-    <!-- 警告图标 -->
-    <circle cx="6" cy="6" r="6" fill="#FEF2F2" />
-    <text x="6" y="9" font-family="Arial" font-size="7" font-weight="bold" fill="#EF4444" text-anchor="middle">!</text>
-    
-    <!-- 问题描述 -->
-    <text x="18" y="9" font-family="Arial" font-size="8" fill="#111827">应为"前端框架"，用词错误</text>
-    
-    <!-- 定位按钮 -->
-    <rect x="170" y="0" width="20" height="12" rx="2" fill="#F3F4F6" />
-    <text x="180" y="9" font-family="Arial" font-size="7" fill="#374151" text-anchor="middle">定位</text>
-  </g>
-  
-  
-  <!-- 建议修改1 -->
-  <g transform="translate(25, 90)">
-    <text x="18" y="0" font-family="Arial" font-size="7" fill="#6B7280">建议修改：</text>
-    <rect x="18" y="5" width="230" height="14" rx="2" fill="#F0FDF4" opacity="0.5" />
-    <text x="23" y="15" font-family="Arial" font-size="7" fill="#111827"><tspan fill="#16A34A">前端</tspan></text>
-  </g>
-  
-  <!-- 分隔线 -->
-  <line x1="25" y1="120" x2="275" y2="120" stroke="#F3F4F6" stroke-width="1" />
-  
-  <!-- 问题2 -->
-  <g transform="translate(25, 130)">
-    <!-- 警告图标 -->
-    <circle cx="6" cy="6" r="6" fill="#FEF2F2" />
-    <text x="6" y="9" font-family="Arial" font-size="7" font-weight="bold" fill="#EF4444" text-anchor="middle">!</text>
-    
-    <!-- 问题描述 -->
-    <text x="18" y="9" font-family="Arial" font-size="8" fill="#111827">应为"工程化工具"，错别字</text>
-    
-    <!-- 定位按钮 -->
-    <rect x="170" y="0" width="20" height="12" rx="2" fill="#F3F4F6" />
-    <text x="180" y="9" font-family="Arial" font-size="7" fill="#374151" text-anchor="middle">定位</text>
-  </g>
-  
-  
-  <!-- 建议修改2 -->
-  <g transform="translate(25, 160)">
-    <text x="18" y="0" font-family="Arial" font-size="7" fill="#6B7280">建议修改：</text>
-    <rect x="18" y="5" width="230" height="14" rx="2" fill="#F0FDF4" opacity="0.5" />
-    <text x="23" y="15" font-family="Arial" font-size="7" fill="#111827"><tspan fill="#16A34A">工程化</tspan></text>
-  </g>
-  
+
+  <!-- Cursor Hand -->
+  <path d="M0 0L12 4L8 8L14 14L10 18L4 12L0 16V0Z" fill="#1B1B18" stroke="white" stroke-width="1" class="cursor-move"/>
+
 </svg>

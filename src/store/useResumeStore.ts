@@ -1,22 +1,21 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import {
-  BasicInfo,
-  Education,
-  Experience,
-  GlobalSettings,
-  Project,
-  CustomItem,
-  ResumeData,
-  MenuSection,
-} from "../types/resume";
 import { DEFAULT_TEMPLATES } from "@/config";
 import {
   initialResumeState,
   initialResumeStateEn,
 } from "@/config/initialResumeData";
 import { generateUUID } from "@/utils/uuid";
+import { create } from "zustand";
+import {
+  BasicInfo,
+  CustomItem,
+  Education,
+  Experience,
+  GlobalSettings,
+  MenuSection,
+  Project,
+  ResumeData,
+} from "../types/resume";
+import { resumeRepoManager } from "./resumeRepositoryManager";
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
@@ -24,6 +23,7 @@ interface ResumeStore {
 
   createResume: (templateId: string | null) => string;
   deleteResume: (resume: ResumeData) => void;
+  getResumesFromRepository: () => void;
   duplicateResume: (resumeId: string) => string;
   updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
   setActiveResume: (resumeId: string) => void;
@@ -62,52 +62,8 @@ interface ResumeStore {
   addResume: (resume: ResumeData) => string;
 }
 
-// 同步简历到文件系统
-const syncResumeToFile = async (
-  resumeData: ResumeData,
-  prevResume?: ResumeData
-) => {
-  try {
-    const handle = await getFileHandle("syncDirectory");
-    if (!handle) {
-      console.warn("No directory handle found");
-      return;
-    }
-
-    const hasPermission = await verifyPermission(handle);
-    if (!hasPermission) {
-      console.warn("No permission to write to directory");
-      return;
-    }
-
-    const dirHandle = handle as FileSystemDirectoryHandle;
-
-    if (
-      prevResume &&
-      prevResume.id === resumeData.id &&
-      prevResume.title !== resumeData.title
-    ) {
-      try {
-        await dirHandle.removeEntry(`${prevResume.title}.json`);
-      } catch (error) {
-        console.warn("Error deleting old file:", error);
-      }
-    }
-
-    const fileName = `${resumeData.title}.json`;
-    const fileHandle = await dirHandle.getFileHandle(fileName, {
-      create: true,
-    });
-    const writable = await fileHandle.createWritable();
-    await writable.write(JSON.stringify(resumeData, null, 2));
-    await writable.close();
-  } catch (error) {
-    console.error("Error syncing resume to file:", error);
-  }
-};
-
-export const useResumeStore = create(
-  persist<ResumeStore>(
+export const useResumeStore = create<ResumeStore>(
+  (
     (set, get) => ({
       resumes: {},
       activeResumeId: null,
@@ -151,7 +107,7 @@ export const useResumeStore = create(
           activeResume: newResume,
         }));
 
-        syncResumeToFile(newResume);
+        resumeRepoManager.syncResumeToRepository(newResume);
 
         return id;
       },
@@ -166,7 +122,7 @@ export const useResumeStore = create(
             ...data,
           };
 
-          syncResumeToFile(updatedResume, resume);
+          resumeRepoManager.syncResumeToRepository(updatedResume, resume);
 
           return {
             resumes: {
@@ -179,6 +135,10 @@ export const useResumeStore = create(
                 : state.activeResume,
           };
         });
+      },
+
+      getResumesFromRepository: () => {
+        resumeRepoManager.getResumeFromRepository(get().updateResumeFromFile);
       },
 
       // 从文件更新，直接更新resumes
@@ -198,33 +158,18 @@ export const useResumeStore = create(
         }
       },
 
-      deleteResume: (resume) => {
+      deleteResume: resume => {
         const resumeId = resume.id;
-        set((state) => {
+        set(state => {
           const { [resumeId]: _, activeResume, ...rest } = state.resumes;
           return {
             resumes: rest,
             activeResumeId: null,
-            activeResume: null,
+            activeResume: null
           };
         });
-
-        (async () => {
-          try {
-            const handle = await getFileHandle("syncDirectory");
-            if (!handle) return;
-
-            const hasPermission = await verifyPermission(handle);
-            if (!hasPermission) return;
-
-            const dirHandle = handle as FileSystemDirectoryHandle;
-            try {
-              await dirHandle.removeEntry(`${resume.title}.json`);
-            } catch (error) {}
-          } catch (error) {
-            console.error("Error deleting resume file:", error);
-          }
-        })();
+  
+        resumeRepoManager.deleteResumeFromRepository(resume);
       },
 
       duplicateResume: (resumeId) => {
@@ -289,7 +234,7 @@ export const useResumeStore = create(
             activeResume: updatedResume,
           };
 
-          syncResumeToFile(updatedResume, state.activeResume);
+          resumeRepoManager.syncResumeToRepository(updatedResume, state.activeResume);
 
           return newState;
         });
@@ -612,12 +557,9 @@ export const useResumeStore = create(
           activeResumeId: resume.id,
         }));
 
-        syncResumeToFile(resume);
+        resumeRepoManager.syncResumeToRepository(resume);
         return resume.id;
       },
-    }),
-    {
-      name: "resume-storage",
-    }
+    })
   )
 );

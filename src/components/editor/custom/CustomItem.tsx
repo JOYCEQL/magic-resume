@@ -95,10 +95,8 @@ const CustomItem = ({
       dragControls={dragControls}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        "bg-white hover:border-primary",
-        "dark:bg-neutral-900/30",
-        "border-gray-100 dark:border-neutral-800",
-        "dark:hover:border-primary"
+        "bg-card hover:border-primary/50",
+        "border-border"
       )}
     >
       <div
@@ -108,16 +106,16 @@ const CustomItem = ({
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
-          "dark:border-neutral-800 border-gray-100",
+          "border-border",
           expandedId === item.id
             ? "cursor-not-allowed"
-            : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
+            : "cursor-grab hover:bg-muted/50"
         )}
       >
         <GripVertical
           className={cn(
             "w-4 h-4",
-            "dark:text-neutral-400 text-gray-400",
+            "text-muted-foreground",
             expandedId === item.id && "opacity-50"
           )}
         />
@@ -127,15 +125,14 @@ const CustomItem = ({
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between cursor-pointer select-none",
-            expandedId === item.id && "dark:bg-neutral-800/50 bg-gray-50"
+            expandedId === item.id && "bg-muted/30"
           )}
           onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
         >
           <div className="flex-1 min-w-0">
             <h3
               className={cn(
-                "font-medium truncate text-gray-700",
-                "dark:text-neutral-200"
+                 "font-medium truncate text-foreground"
               )}
             >
               {item.title || "未命名模块"}
@@ -197,7 +194,7 @@ const CustomItem = ({
               }}
             >
               <ChevronDown
-                className={cn("w-5 h-5", "dark:text-neutral-400 text-gray-500")}
+                className={cn("w-5 h-5", "text-muted-foreground")}
               />
             </motion.div>
           </div>
@@ -215,13 +212,13 @@ const CustomItem = ({
               <div
                 className={cn(
                   "px-4 pb-4 space-y-4",
-                  "dark:border-neutral-800 border-gray-100"
+                  "border-border"
                 )}
               >
                 <div
                   className={cn(
                     "h-px w-full",
-                    "dark:bg-neutral-800 bg-gray-100"
+                    "bg-border"
                   )}
                 />
                 <CustomItemEditor

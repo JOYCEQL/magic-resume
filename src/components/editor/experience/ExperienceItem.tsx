@@ -103,10 +103,8 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
       dragControls={dragControls}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        "bg-white hover:border-primary",
-        "dark:bg-neutral-900/30",
-        "border-gray-100 dark:border-neutral-800",
-        "dark:hover:border-primary"
+        "bg-card hover:border-primary/20",
+        "border-border"
       )}
     >
       <div
@@ -116,16 +114,16 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
-          "border-gray-100 dark:border-neutral-800",
+          "border-border",
           expandedId === experience.id
             ? "cursor-not-allowed"
-            : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
+            : "cursor-grab hover:bg-muted/50"
         )}
       >
         <GripVertical
           className={cn(
             "w-4 h-4",
-            "text-gray-400 dark:text-neutral-400",
+            "text-muted-foreground",
             expandedId === experience.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
@@ -136,7 +134,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === experience.id && "bg-gray-50 dark:bg-neutral-800/50",
+            expandedId === experience.id && "bg-muted/30",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {
@@ -151,7 +149,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
             <h3
               className={cn(
                 "font-medium truncate",
-                "text-gray-700 dark:text-neutral-200"
+                "text-foreground"
               )}
             >
               {experience.company || "家里蹲公司"}
@@ -209,7 +207,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               }}
             >
               <ChevronDown
-                className={cn("w-5 h-5", "text-gray-500 dark:text-neutral-400")}
+                className={cn("w-5 h-5", "text-muted-foreground")}
               />
             </motion.div>
           </div>
@@ -226,14 +224,14 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
               <div
                 className={cn(
                   "px-4 pb-4 space-y-4",
-                  "border-gray-100 dark:border-neutral-800"
+                  "border-border"
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div
                   className={cn(
                     "h-px w-full",
-                    "bg-gray-100 dark:bg-neutral-800"
+                    "bg-border"
                   )}
                 />
                 <ProjectEditor

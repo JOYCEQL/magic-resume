@@ -47,17 +47,15 @@ export function EditPanel() {
   return (
     <motion.div
       className={cn(
-        "w-full  h-full border-r overflow-y-auto",
-        "dark:bg-neutral-950 dark:border-neutral-800",
-        "bg-gray-50 border-gray-100"
+        "w-full h-full border-r overflow-y-auto",
+        "bg-background border-border"
       )}
     >
       <div className="p-4">
         <motion.div
           className={cn(
             "mb-4 p-4 rounded-lg border",
-            "dark:bg-neutral-900/50 dark:border-neutral-800",
-            "bg-white border-gray-100"
+            "bg-card border-border"
           )}
         >
           <div className="flex items-center gap-2">
@@ -113,8 +111,7 @@ export function EditPanel() {
         <motion.div
           className={cn(
             "rounded-lg",
-            "dark:bg-neutral-900/50 dark:border-neutral-800",
-            "bg-white border-gray-100"
+            "bg-card border-border"
           )}
         >
           {renderFields()}

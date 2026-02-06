@@ -45,10 +45,10 @@ const CustomField: React.FC<CustomFieldProps> = ({
         {...itemAnimations}
         className={cn(
           "grid grid-cols-[auto,auto,1fr,1fr,auto] gap-3 items-center p-3",
-          "bg-white dark:bg-neutral-800 rounded-xl",
-          "border border-neutral-100 dark:border-neutral-700",
+          "bg-card rounded-xl",
+          "border border-border",
           "transition-all duration-200",
-          "hover:border-neutral-200 dark:hover:border-neutral-600",
+          "hover:border-primary/20",
           !field.visible && "!opacity-60"
         )}
       >
@@ -56,9 +56,9 @@ const CustomField: React.FC<CustomFieldProps> = ({
           <GripVertical
             className={cn(
               "w-4 h-4 cursor-grab active:cursor-grabbing",
-              "text-neutral-300 dark:text-neutral-500",
+              "text-muted-foreground",
               "transition-colors duration-200",
-              "group-hover:text-neutral-400 dark:group-hover:text-neutral-400"
+              "group-hover:text-foreground"
             )}
           />
         </div>
@@ -78,10 +78,10 @@ const CustomField: React.FC<CustomFieldProps> = ({
           }
           placeholder={t("customFields.placeholders.label")}
           className={cn(
-            "bg-neutral-50 dark:bg-neutral-900",
-            "border-neutral-200 dark:border-neutral-700",
-            "focus:border-blue-500 dark:focus:border-blue-400",
-            "placeholder-neutral-400 dark:placeholder-neutral-500"
+            "bg-background/50",
+            "border-border",
+            "focus:border-primary",
+            "placeholder-muted-foreground"
           )}
         />
         <Field
@@ -94,10 +94,10 @@ const CustomField: React.FC<CustomFieldProps> = ({
           }
           placeholder={t("customFields.placeholders.value")}
           className={cn(
-            "bg-neutral-50 dark:bg-neutral-900",
-            "border-neutral-200 dark:border-neutral-700",
-            "focus:border-blue-500 dark:focus:border-blue-400",
-            "placeholder-neutral-400 dark:placeholder-neutral-500"
+            "bg-background/50",
+            "border-border",
+            "focus:border-primary",
+            "placeholder-muted-foreground"
           )}
         />
 
@@ -107,8 +107,8 @@ const CustomField: React.FC<CustomFieldProps> = ({
             size="sm"
             className={cn(
               "shrink-0 h-8 px-2",
-              "text-neutral-500 dark:text-neutral-400",
-              "hover:text-neutral-700 dark:hover:text-neutral-200"
+              "text-muted-foreground",
+              "hover:text-foreground"
             )}
             onClick={() => onUpdate({ ...field, visible: !field.visible })}
           >
@@ -252,7 +252,7 @@ const BasicPanel: React.FC = () => {
           {...itemAnimations}
           className={cn(
             "flex items-center gap-4 p-4 pr-3",
-            "bg-white dark:bg-neutral-900",
+            "bg-card",
             "rounded-lg ",
             "transition-all duration-200",
             !field.visible && "opacity-75"
@@ -263,8 +263,8 @@ const BasicPanel: React.FC = () => {
               <GripVertical
                 className={cn(
                   "w-5 h-5 cursor-grab active:cursor-grabbing",
-                  "text-neutral-400 dark:text-neutral-600",
-                  "hover:text-neutral-600 dark:hover:text-neutral-400",
+                  "text-muted-foreground",
+                  "hover:text-foreground",
                   "transition-colors duration-200"
                 )}
               />
@@ -286,7 +286,7 @@ const BasicPanel: React.FC = () => {
                 }}
               />
             )}
-            <div className=" w-[80px] ml-[4px] text-sm font-medium text-neutral-700 dark:text-neutral-200">
+            <div className=" w-[80px] ml-[4px] text-sm font-medium text-foreground">
               {t(`basicFields.${field.key}`)}
             </div>
             <div className="flex-1">
@@ -348,7 +348,7 @@ const BasicPanel: React.FC = () => {
       <div className="space-y-6">
         <div className="space-y-2">
           <h2 className="text-lg font-medium">{t("layout")}</h2>
-          <div className=" bg-white dark:bg-neutral-900 rounded-lg">
+          <div className=" bg-card rounded-lg">
             <AlignSelector
               value={basic?.layout || "left"}
               onChange={(value) =>
@@ -371,7 +371,7 @@ const BasicPanel: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 0 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-neutral-900 rounded-xl p-3 border border-neutral-100 dark:border-neutral-700"
+                className="bg-card rounded-xl p-3 border border-border"
               >
                 <PhotoUpload />
               </motion.div>

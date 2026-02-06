@@ -471,16 +471,15 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
           className={cn(
             "w-8 h-8 p-2 rounded-md relative overflow-hidden",
             "transform-gpu transition-all duration-300 ease-out",
-            "dark:bg-neutral-800 dark:hover:bg-neutral-700/90",
-            "bg-white hover:bg-neutral-50/90 "
+            "hover:bg-muted/50"
           )}
+          variant="ghost"
         >
           <Icon
             className={cn(
               "w-4 h-4 transform-gpu transition-transform duration-300",
               "hover:rotate-[360deg]",
-              "dark:text-neutral-200",
-              "text-neutral-700"
+              "text-foreground"
             )}
           />
         </Button>
@@ -488,8 +487,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
       <PopoverContent
         className={cn(
           "w-[420px] p-4",
-          "dark:bg-neutral-900 dark:border-neutral-800",
-          "bg-white border-neutral-200",
+          "bg-popover border-border",
           "shadow-lg backdrop-blur-sm",
           "animate-in zoom-in-95 duration-200"
         )}
@@ -499,10 +497,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
             className={cn(
               "flex border items-center gap-2 px-3 py-2 rounded-lg",
               "transform-gpu transition-all duration-300",
-              "dark:bg-neutral-800/50  dark:border-neutral-700",
-              "bg-neutral-50 border border-neutral-200",
-              "dark:focus-within:ring-blue-500/30",
-              "focus-within:ring-blue-500/20"
+              "bg-background/50 border border-input",
+              "focus-within:ring-2 focus-within:ring-primary/20"
             )}
           >
             <Search
@@ -539,8 +535,8 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                   "px-2 py-1 text-xs rounded-md",
                   "transition-all duration-200",
                   selectedCategory === category
-                    ? "bg-primary text-white dark:ring-1 dark:ring-blue-500/30  ring-1 ring-blue-500/20"
-                    : "dark:text-white  text-neutral-600 hover:text-neutral-900"
+                    ? "bg-primary text-primary-foreground ring-1 ring-primary/20"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {category}
@@ -558,8 +554,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                 onClick={() => handleSelect(iconValue)}
                 className={cn(
                   "relative p-2 h-10  group",
-                  "dark:hover:bg-neutral-800/70 dark:text-neutral-300 hover:text-neutral-200",
-                  "hover:bg-neutral-100/70 text-neutral-600 hover:text-neutral-900",
+                  "hover:bg-muted text-muted-foreground hover:text-foreground",
                   value === iconValue && "bg-primary text-white  "
                 )}
               >
@@ -571,8 +566,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                     "opacity-0 translate-y-1",
                     "group-hover:opacity-100 group-hover:translate-y-0",
                     "pointer-events-none",
-                    "dark:bg-neutral-800 dark:text-neutral-200 border dark:border-neutral-700",
-                    "bg-white text-neutral-700 border dark:border-neutral-200",
+                    "bg-popover text-popover-foreground border border-border",
                     "shadow-sm whitespace-nowrap z-10"
                   )}
                 >
@@ -581,9 +575,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                 {isHovered === iconValue && (
                   <span
                     className={cn(
-                      "absolute inset-0 bg-gradient-to-r",
-                      "dark:from-blue-500/10 dark:to-purple-500/10",
-                      "from-blue-500/5 to-purple-500/5",
+                      "absolute inset-0 bg-primary/5",
                       "animate-in fade-in duration-300"
                     )}
                   />

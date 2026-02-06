@@ -14,9 +14,8 @@ const SkillPanel = () => {
     <div
       className={cn(
         "rounded-lg border p-4",
-        "bg-white",
-        "dark:bg-neutral-900/30",
-        "border-gray-100 dark:border-neutral-800"
+        "bg-card",
+        "border-border"
       )}
     >
       <Field

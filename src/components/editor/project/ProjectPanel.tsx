@@ -29,7 +29,7 @@ const ProjectPanel = () => {
     <div
       className={cn(
         "space-y-4 px-4 py-4 rounded-lg",
-        "bg-white dark:bg-neutral-900/30"
+        "bg-card border-border",
       )}
     >
       <Reorder.Group

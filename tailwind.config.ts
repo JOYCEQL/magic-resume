@@ -128,9 +128,6 @@ const config = {
       }
     }
   },
-  colors: {
-    primary: "262.1 83.3% 57.8%"
-  },
   plugins: [require("tailwindcss-animate")]
 } satisfies Config;
 

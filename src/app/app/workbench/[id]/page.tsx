@@ -37,7 +37,7 @@ const DragHandle = ({ show = true }) => {
         className={cn(
           "absolute inset-y-0 left-1/2 w-1 -translate-x-1/2",
           "group-hover:bg-primary/20 group-data-[dragging=true]:bg-primary",
-          "dark:bg-neutral-700/50 bg-gray-200"
+          "bg-border"
         )}
       />
       <div
@@ -45,10 +45,10 @@ const DragHandle = ({ show = true }) => {
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           "w-4 h-8 rounded-full opacity-0 group-hover:opacity-100",
           "flex items-center justify-center",
-          "dark:bg-neutral-800 bg-gray-200"
+          "bg-background border border-border"
         )}
       >
-        <div className="w-0.5 h-4 bg-gray-400 rounded-full" />
+        <div className="w-0.5 h-4 bg-muted-foreground/50 rounded-full" />
       </div>
     </ResizableHandle>
   );
@@ -74,7 +74,8 @@ const LayoutControls = memo(
       className={cn(
         "absolute bottom-6 left-1/2 -translate-x-1/2",
         "flex items-center gap-2 z-10 p-2 rounded-full",
-        "dark:bg-neutral-900/80 dark:border dark:border-neutral-800 bg-white/80 border border-gray-200",
+        "flex items-center gap-2 z-10 p-2 rounded-full",
+        "bg-background/80 border border-border",
         "backdrop-blur-sm shadow-lg"
       )}
     >
@@ -98,7 +99,7 @@ const LayoutControls = memo(
         </Tooltip>
       </TooltipProvider>
 
-      <div className={cn("h-5 w-px mx-1", "dark:bg-neutral-800 bg-gray-200")} />
+      <div className={cn("h-5 w-px mx-1", "bg-border")} />
 
       <TooltipProvider>
         <Tooltip>
@@ -232,8 +233,8 @@ export default function Home() {
     <main
       className={cn(
         "w-full min-h-screen  overflow-hidden",
-        "bg-white text-gray-900",
-        "dark:bg-neutral-900 dark:text-neutral-200"
+        "w-full min-h-screen overflow-hidden",
+        "bg-background text-foreground"
       )}
     >
       <EditorHeader />
@@ -244,8 +245,8 @@ export default function Home() {
           direction="horizontal"
           className={cn(
             "h-full",
-            "border border-gray-200 bg-white",
-            "dark:border-neutral-800 dark:bg-neutral-900/50"
+            "h-full",
+            "border border-border bg-background"
           )}
         >
           {/* 侧边栏面板 */}
@@ -257,7 +258,7 @@ export default function Home() {
                 defaultSize={panelSizes?.[0]}
                 minSize={20}
                 className={cn(
-                  "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
+                  "bg-background border-r border-border"
                 )}
               >
                 <div className="h-full overflow-y-auto">
@@ -277,7 +278,7 @@ export default function Home() {
                 minSize={32}
                 defaultSize={panelSizes?.[1]}
                 className={cn(
-                  "dark:bg-neutral-900 dark:border-r dark:border-neutral-800"
+                  "bg-background border-r border-border"
                 )}
               >
                 <div className="h-full">

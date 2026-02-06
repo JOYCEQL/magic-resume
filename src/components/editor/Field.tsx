@@ -76,7 +76,7 @@ const Field = ({
         <span
           className={cn(
             "block text-sm font-medium",
-            "text-gray-700 dark:text-neutral-300"
+            "text-foreground"
           )}
         >
           {label}
@@ -88,11 +88,10 @@ const Field = ({
 
   const inputStyles = cn(
     "block w-full rounded-md border-0 py-1.5 px-3",
-    "text-gray-900 dark:text-neutral-300",
-    "shadow-sm ring-1 ring-inset ring-gray-300",
-    "placeholder:text-gray-400",
-    "focus:ring-2 focus:ring-inset focus:ring-primary",
-    "dark:bg-neutral-900/30 dark:ring-neutral-700 dark:focus:ring-primary",
+    "text-foreground bg-background",
+    "shadow-sm ring-1 ring-inset ring-input",
+    "placeholder:text-muted-foreground",
+    "focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary",
     "sm:text-sm sm:leading-6",
     className
   );

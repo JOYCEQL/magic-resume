@@ -71,22 +71,35 @@ const AlignSelector: React.FC<AlignSelectorProps> = ({ value, onChange }) => {
   ];
 
   return (
-    <div className="inline-flex p-1 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
+    <div className="grid grid-cols-3 gap-3">
       {layouts.map((layout) => (
         <button
           key={layout.value}
           onClick={() => onChange(layout.value as "left" | "center" | "right")}
           title={layout.tooltip}
           className={cn(
-            "p-2 rounded-lg transition-all duration-200",
-            "hover:bg-white dark:hover:bg-neutral-700",
-            "focus:outline-none focus:ring-2 focus:ring-primary/20",
+            "group relative flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200",
+            "hover:scale-[1.02] active:scale-[0.98]",
             value === layout.value
-              ? "bg-white dark:bg-neutral-700 shadow-sm"
-              : "text-neutral-600 dark:text-neutral-400"
+              ? "border-primary bg-primary/5 text-primary shadow-sm"
+              : "border-transparent bg-secondary/40 text-muted-foreground hover:bg-secondary hover:text-foreground"
           )}
         >
-          {layout.icon}
+          {/* Icon wrapper to control size */}
+          <div className="w-10 h-10 flex items-center justify-center">
+             {React.cloneElement(layout.icon as React.ReactElement, {
+                width: "100%",
+                height: "100%",
+                className: "fill-current"
+             })}
+          </div>
+          {/* <span className="text-[10px] mt-2 font-medium opacity-80">
+            {layout.tooltip}
+          </span> */}
+          
+           {value === layout.value && (
+            <div className="absolute inset-0 rounded-xl ring-2 ring-primary ring-offset-2 ring-offset-background opacity-0 animate-in fade-in zoom-in-95 duration-200 fill-mode-forwards" />
+          )}
         </button>
       ))}
     </div>

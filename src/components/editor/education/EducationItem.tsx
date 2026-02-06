@@ -135,10 +135,8 @@ const EducationItem = ({ education }: { education: Education }) => {
       dragControls={dragControls}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        "bg-white hover:border-primary",
-        "dark:bg-neutral-900/30",
-        "border-gray-100 dark:border-neutral-800",
-        "dark:hover:border-primary"
+        "bg-card hover:border-primary/50",
+        "border-border"
       )}
     >
       <div
@@ -149,17 +147,16 @@ const EducationItem = ({ education }: { education: Education }) => {
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
           "dark:border-neutral-800",
-          "border-gray-100",
+          "border-border",
           expandedId === education.id
             ? "cursor-not-allowed"
-            : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
+            : "cursor-grab hover:bg-muted/50"
         )}
       >
         <GripVertical
           className={cn(
             "w-4 h-4",
-            "dark:text-neutral-400",
-            "text-gray-400",
+            "text-muted-foreground",
             expandedId === education.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
@@ -170,7 +167,7 @@ const EducationItem = ({ education }: { education: Education }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === education.id && "dark:bg-neutral-800/50 ",
+            expandedId === education.id && "bg-muted/30",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {
@@ -187,8 +184,7 @@ const EducationItem = ({ education }: { education: Education }) => {
                 <h3
                   className={cn(
                     "font-medium truncate",
-                    "dark:text-neutral-200",
-                    "text-gray-700"
+                    "text-foreground"
                   )}
                 >
                   {education.school || "未填写学校"}
@@ -255,7 +251,7 @@ const EducationItem = ({ education }: { education: Education }) => {
               }}
             >
               <ChevronDown
-                className={cn("w-5 h-5", "text-gray-500 dark:text-neutral-400")}
+                className={cn("w-5 h-5", "text-muted-foreground")}
               />
             </motion.div>
           </div>
@@ -272,14 +268,14 @@ const EducationItem = ({ education }: { education: Education }) => {
               <div
                 className={cn(
                   "px-4 pb-4 space-y-4",
-                  "border-gray-100 dark:border-neutral-800"
+                  "border-border"
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div
                   className={cn(
                     "h-px w-full",
-                    "bg-gray-100 dark:bg-neutral-800"
+                    "bg-border"
                   )}
                 />
                 <EducationEditor

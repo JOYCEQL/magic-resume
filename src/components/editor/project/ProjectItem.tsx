@@ -120,10 +120,8 @@ const ProjectItem = ({ project }: { project: Project }) => {
       }}
       className={cn(
         "rounded-lg border overflow-hidden flex group",
-        "bg-white hover:border-primary",
-        "dark:bg-neutral-900/30",
-        "border-gray-100 dark:border-neutral-800",
-        "dark:hover:border-primary"
+        "bg-card hover:border-primary/50",
+        "border-border"
       )}
     >
       <div
@@ -140,16 +138,16 @@ const ProjectItem = ({ project }: { project: Project }) => {
         }}
         className={cn(
           "w-12 flex items-center justify-center border-r shrink-0 touch-none",
-          "border-gray-100 dark:border-neutral-800",
+          "border-border",
           expandedId === project.id
             ? "cursor-not-allowed"
-            : "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
+            : "cursor-grab hover:bg-muted/50"
         )}
       >
         <GripVertical
           className={cn(
             "w-4 h-4",
-            "text-gray-400 dark:text-neutral-400",
+            "text-muted-foreground",
             expandedId === project.id && "opacity-50",
             "transform transition-transform group-hover:scale-110"
           )}
@@ -160,7 +158,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === project.id && "bg-gray-50 dark:bg-neutral-800/50",
+            expandedId === project.id && "bg-muted/30",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {

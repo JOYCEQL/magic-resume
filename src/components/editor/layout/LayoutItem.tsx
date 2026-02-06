@@ -30,11 +30,11 @@ const LayoutItem = ({
     return (
       <div
         className={cn(
-          "rounded-lg group border mb-2  hover:border-primary",
-          "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800",
-          "hover:bg-gray-50 bg-white border-gray-100",
+          "rounded-lg group border mb-2",
+          "bg-card border-border",
+          "hover:border-primary/50 transition-colors",
           activeSection === item.id &&
-            "border-primary dark:border-primary text-primary"
+            "border-primary text-primary ring-1 ring-primary"
         )}
         onClick={() => setActiveSection(item.id)}
       >
@@ -42,8 +42,7 @@ const LayoutItem = ({
           <span
             className={cn(
               "text-lg  ml-[12px]",
-              "dark:text-neutral-300",
-              "text-gray-600"
+              "text-muted-foreground group-hover:text-foreground transition-colors"
             )}
           >
             {item.icon}
@@ -63,11 +62,11 @@ const LayoutItem = ({
       dragListener={false}
       dragControls={dragControls}
       className={cn(
-        "rounded-lg group border hover:border-primary flex overflow-hidden ",
-        "dark:hover:bg-neutral-800 dark:bg-neutral-900/50 dark:border-neutral-800 dark:hover:border-primary",
-        "hover:bg-gray-50 bg-white border-gray-100",
+        "rounded-lg group border flex overflow-hidden ",
+        "bg-card border-border",
+        "hover:border-primary/50 transition-colors",
         activeSection === item.id &&
-          "border-primary dark:border-primary text-primary"
+          "border-primary text-primary ring-1 ring-primary"
       )}
       whileHover={{ scale: 1.01 }}
       whileDrag={{ scale: 1.02 }}
@@ -78,14 +77,14 @@ const LayoutItem = ({
         }}
         className={cn(
           "w-8 flex items-center justify-center  touch-none shrink-0",
-          "border-gray-100 dark:border-neutral-800",
-          "cursor-grab hover:bg-gray-50 dark:hover:bg-neutral-800/50"
+          "border-border",
+          "cursor-grab hover:bg-muted/50"
         )}
       >
         <GripVertical
           className={cn(
             "w-4 h-4",
-            "text-gray-400 dark:text-neutral-400",
+            "text-muted-foreground",
             "transform transition-transform group-hover:scale-110"
           )}
         />
@@ -99,8 +98,7 @@ const LayoutItem = ({
           <span
             className={cn(
               "text-lg mr-2",
-              "dark:text-neutral-300",
-              "text-gray-600"
+              "text-muted-foreground group-hover:text-foreground transition-colors"
             )}
           >
             {item.icon}
@@ -115,8 +113,7 @@ const LayoutItem = ({
             }}
             className={cn(
               "p-1.5 rounded-md mr-2",
-              "dark:hover:bg-neutral-700 dark:text-neutral-300",
-              "hover:bg-gray-100 text-gray-600"
+              "hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
             )}
           >
             {item.enabled ? (
@@ -142,8 +139,7 @@ const LayoutItem = ({
             }}
             className={cn(
               "p-1.5 rounded-md text-primary",
-              "dark:hover:bg-neutral-700 dark:text-neutral-300",
-              "hover:bg-gray-100 text-gray-600"
+              "hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
             )}
           >
             <Trash2 className="w-4 h-4 text-red-400" />

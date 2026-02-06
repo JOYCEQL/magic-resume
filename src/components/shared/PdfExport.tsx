@@ -107,10 +107,16 @@ const PdfExport = () => {
         line.style.display = "none";
       });
 
-      const [styles] = await Promise.all([
+      const [capturedStyles] = await Promise.all([
         getOptimizedStyles(),
         optimizeImages(clonedElement)
       ]);
+
+      const styles = `
+        ${capturedStyles}
+        html, body { background: white !important; background-color: white !important; }
+        #resume-preview { background: white !important; background-color: white !important; }
+      `;
 
       const response = await fetch(PDF_EXPORT_CONFIG.SERVER_URL, {
         method: "POST",

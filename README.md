@@ -104,6 +104,16 @@ docker compose up -d
 - [ ] 导入 PDF, Markdown 等
 - [ ] 在线简历托管
 
+## 📈 Star History
+
+<a href="https://star-history.com/#JOYCEQL/magic-resume&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date" />
+ </picture>
+</a>
+
 ## 📞 联系方式
 
 可以通过以下方式关注最新动态:

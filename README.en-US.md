@@ -102,6 +102,16 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - [ ] Smart single page
 - [ ] Online resume hosting
 
+## 📈 Star History
+
+<a href="https://star-history.com/#JOYCEQL/magic-resume&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JOYCEQL/magic-resume&type=Date" />
+ </picture>
+</a>
+
 ## 📞 Contact
 
 You can follow the latest updates via:

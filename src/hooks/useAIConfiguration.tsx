@@ -16,7 +16,7 @@ export const useAIConfiguration = () => {
           <span>{t("configurePrompt")}</span>
           <Button
             variant="link"
-            className="p-0 h-auto ml-1 font-normal"
+            className="p-0 h-auto ml-1 font-bold underline decoration-[#D97757]/30 underline-offset-4 text-[#D97757]"
             onClick={() => router.push("/app/dashboard/ai")}
           >
             {t("configureButton")}

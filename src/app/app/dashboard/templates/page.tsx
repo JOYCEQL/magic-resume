@@ -77,7 +77,7 @@ const TemplatesPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="w-full max-w-[1600px] mx-auto py-8 px-6 lg:px-8">
       <div className="flex flex-col space-y-8">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
@@ -87,7 +87,7 @@ const TemplatesPage = () => {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
         >
           {DEFAULT_TEMPLATES.map((template) => {
             const templateKey =
@@ -96,7 +96,7 @@ const TemplatesPage = () => {
               <motion.div key={template.id} variants={item}>
                 <Card
                   className={cn(
-                    "group cursor-pointer overflow-hidden transition-all hover:shadow-md max-w-[300px] mx-auto",
+                    "group cursor-pointer overflow-hidden transition-all hover:shadow-lg",
                     "border border-gray-200 hover:border-primary/40 dark:border-gray-800 rounded-xl"
                   )}
                 >

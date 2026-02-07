@@ -46,15 +46,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       icon: IconTemplates,
     },
     {
+      title: t("sidebar.ai"),
+      url: "/app/dashboard/ai",
+      icon: IconAI,
+    },
+    {
       title: t("sidebar.settings"),
       url: "/app/dashboard/settings",
       icon: IconSettings,
     },
-    {
-      title: t("sidebar.ai"),
-      url: "/app/dashboard/ai",
-      icon: IconAI,
-    }
+
   ];
 
   const router = useRouter();
@@ -72,10 +73,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   const handleItemClick = (item: MenuItem) => {
     if (item.items) {
-      // If there are submenus, expand/collapse submenu
-      // Logic for expanding/collapsing submenus can be added here
+
     } else {
-      // If no submenu, navigate directly
       router.push(item.url || item.href || "/");
     }
   };

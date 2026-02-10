@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
-            <Logo size={24} />
+            <Logo size={32} />
             <span className="font-serif font-semibold text-lg text-foreground/80">Magic Resume</span>
           </div>
           

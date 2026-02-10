@@ -94,10 +94,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           className="border-r border-border/40 bg-card/50 backdrop-blur-xl"
         >
           <SidebarHeader className="h-16 flex items-center justify-center border-b border-border/40">
-            <div className="w-full justify-center flex items-center gap-2">
+            <div className="w-full justify-center flex items-center">
               <Logo
                 className="cursor-pointer hover:opacity-80 transition-opacity"
-                size={32}
+                size={48}
                 onClick={() => router.push("/")}
               />
               {open && (

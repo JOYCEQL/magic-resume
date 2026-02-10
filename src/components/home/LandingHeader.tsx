@@ -26,10 +26,10 @@ export default function LandingHeader() {
         <div className="mx-auto max-w-[1200px] px-4">
           <div className="flex items-center justify-between h-20">
             <div
-              className="flex items-center gap-3 cursor-pointer group"
+              className="flex items-center  cursor-pointer group"
               onClick={() => (window.location.href = `/${locale}/`)}
             >
-              <Logo size={32} />
+              <Logo size={60} />
               <span className="font-serif text-[24px] tracking-tight font-semibold text-foreground/90">
                 {t("header.title")}
               </span>

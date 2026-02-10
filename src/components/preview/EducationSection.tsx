@@ -53,12 +53,10 @@ const EducationSection = ({
           >
             <motion.div
               layout="position"
-              className={`grid grid-cols-${
-                globalSettings?.centerSubtitle ? "3" : "2"
-              } gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+              className="flex items-center gap-2"
             >
               <div
-                className="font-bold"
+                className={`font-bold ${globalSettings?.flexibleHeaderLayout ? '' : 'flex-1'}`}
                 style={{
                   fontSize: `${globalSettings?.subheaderSize || 16}px`,
                 }}
@@ -69,7 +67,7 @@ const EducationSection = ({
               {globalSettings?.centerSubtitle && (
                 <motion.div
                   layout="position"
-                  className="text-subtitleFont"
+                  className={`text-subtitleFont ${globalSettings?.flexibleHeaderLayout ? 'ml-[16px]' : 'flex-1'}`}
                   style={{
                     fontSize: `${globalSettings?.subheaderSize || 16}px`,
                   }}
@@ -80,7 +78,7 @@ const EducationSection = ({
               )}
 
               <span
-                className="text-subtitleFont shrink-0"
+                className={`text-subtitleFont shrink-0 ${globalSettings?.flexibleHeaderLayout ? 'ml-auto' : 'flex-1 text-right'}`}
                 suppressHydrationWarning
                 style={{
                   fontSize: `${globalSettings?.subheaderSize || 16}px`,

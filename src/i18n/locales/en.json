@@ -284,6 +284,9 @@
         },
         "centerSubtitle": {
           "title": "Center Subtitle"
+        },
+        "flexibleHeaderLayout": {
+          "title": "Long Title"
         }
       }
     },

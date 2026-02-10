@@ -20,6 +20,7 @@ interface ExperienceItemProps {
 const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
   ({ experience, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
+    const flexLayout = globalSettings?.flexibleHeaderLayout;
     const gridColumns = centerSubtitle ? 3 : 2;
 
     return (
@@ -28,10 +29,10 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
         layout="position"
       >
         <motion.div
-          className={`grid grid-cols-${gridColumns} gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+          className="flex items-center gap-2"
         >
           <div
-            className="font-bold"
+            className={`font-bold ${flexLayout ? '' : 'flex-[1.5]'}`}
             style={{
               fontSize: `${globalSettings?.subheaderSize || 16}px`,
             }}
@@ -40,7 +41,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
           </div>
           {centerSubtitle && (
             <motion.div
-              className="text-subtitleFont"
+              className={`text-subtitleFont ${flexLayout ? 'ml-[16px]' : 'flex-1'}`}
               style={{
                 fontSize: `${globalSettings?.subheaderSize || 16}px`,
               }}
@@ -49,7 +50,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
             </motion.div>
           )}
           <div
-            className="text-subtitleFont"
+            className={`text-subtitleFont shrink-0 ${flexLayout ? 'ml-auto' : 'flex-1 text-right'}`}
             style={{
               fontSize: `${globalSettings?.subheaderSize || 16}px`,
             }}

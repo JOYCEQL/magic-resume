@@ -16,6 +16,8 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
   ({ project, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
 
+    const flexLayout = globalSettings?.flexibleHeaderLayout;
+
     return (
       <motion.div
         style={{
@@ -23,9 +25,9 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
         }}
       >
         <motion.div
-          className={`grid grid-cols-3 gap-2 items-center justify-items-start [&>*:last-child]:justify-self-end`}
+          className="flex items-center gap-2"
         >
-          <div className="flex items-center gap-2">
+          <div className={`flex items-center gap-2 ${flexLayout ? '' : 'flex-[1.5]'}`}>
             <h3
               className="font-bold"
               style={{
@@ -45,7 +47,7 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="underline"
+              className={`underline ${flexLayout ? '' : 'flex-1'}`}
               title={project.link}
             >
               {(() => {
@@ -63,12 +65,12 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
             </a>
           )}
 
-          {!project.link && !centerSubtitle && <div></div>}
+          {!project.link && !centerSubtitle && !flexLayout && <div className="flex-1"></div>}
 
           {centerSubtitle && (
             <motion.div
               layout="position"
-              className=" text-subtitleFont"
+              className={` text-subtitleFont ${flexLayout ? 'ml-[16px]' : 'flex-1'}`}
               style={{
                 fontSize: `${globalSettings?.subheaderSize || 16}px`,
               }}
@@ -77,7 +79,7 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
             </motion.div>
           )}
           <div
-            className="text-subtitleFont"
+            className={`text-subtitleFont shrink-0 ${flexLayout ? 'ml-auto' : 'flex-1 text-right'}`}
             style={{
               fontSize: `${globalSettings?.subheaderSize || 16}px`,
             }}

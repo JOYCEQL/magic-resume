@@ -254,6 +254,9 @@
         },
         "centerSubtitle": {
           "title": "副标题居中"
+        },
+        "flexibleHeaderLayout": {
+          "title": "长标题模式"
         }
       }
     },

@@ -709,6 +709,22 @@ export function SidePanel() {
                 />
               </div>
             </div>
+
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">
+                {t("mode.flexibleHeaderLayout.title")}
+              </Label>
+              <div className="flex items-center gap-4">
+                <Switch
+                  checked={globalSettings.flexibleHeaderLayout}
+                  onCheckedChange={(checked) =>
+                    updateGlobalSettings({
+                      flexibleHeaderLayout: checked,
+                    })
+                  }
+                />
+              </div>
+            </div>
           </div>
         </SettingCard>
       </div>

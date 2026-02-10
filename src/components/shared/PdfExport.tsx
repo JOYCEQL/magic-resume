@@ -252,6 +252,7 @@ const PdfExport = () => {
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
+                width: calc(210mm - ${2 * (pagePadding || 0)}px);
                 font-family: "Alibaba PuHuiTi", sans-serif !important;
               }
 

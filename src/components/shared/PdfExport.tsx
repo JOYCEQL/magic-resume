@@ -101,6 +101,12 @@ const PdfExport = () => {
 
       const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
 
+      // 服务端会强制 #resume-preview { width: 210mm; padding: 0 !important }
+      // 预览中内容宽度 = 210mm（父容器）- 2*pagePadding（padding）
+      // 通过 inline style 覆盖服务端的 width: 210mm，使内容宽度与预览一致
+      const pagePadding = globalSettings?.pagePadding || 0;
+      clonedElement.style.width = `calc(210mm - ${2 * pagePadding}px)`;
+
       const pageBreakLines =
         clonedElement.querySelectorAll<HTMLElement>(".page-break-line");
       pageBreakLines.forEach((line) => {

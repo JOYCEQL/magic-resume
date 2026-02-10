@@ -16,37 +16,36 @@ interface PreviewPanelProps {
   toggleEditPanel: () => void;
 }
 
-const PageBreakLine = React.memo(({ pageNumber }: { pageNumber: number }) => {
-  const { activeResume } = useResumeStore();
-  const { globalSettings } = activeResume || {};
-  if (!globalSettings?.pagePadding) return null;
+const PageBreakLine = React.memo(
+  ({
+    pageNumber,
+    contentPerPagePx,
+    pagePadding,
+  }: {
+    pageNumber: number;
+    contentPerPagePx: number;
+    pagePadding: number;
+  }) => {
+    // 预览中 #resume-preview 有 padding-top，内容从 pagePadding 位置开始
+    // 每页能容纳 contentPerPagePx 高度的内容（与 Puppeteer PDF margin 一致）
+    // 第 N 页结束位置 = pagePadding + N * contentPerPagePx
+    const top = pagePadding + pageNumber * contentPerPagePx;
 
-  const A4_HEIGHT_MM = 297;
-  const MM_TO_PX = 3.78;
-
-  const pagePaddingMM = globalSettings.pagePadding / MM_TO_PX;
-
-  const CONTENT_HEIGHT_MM = A4_HEIGHT_MM + pagePaddingMM;
-  const pageHeight = CONTENT_HEIGHT_MM * MM_TO_PX;
-
-  return (
-    <div
-      className="absolute left-0 right-0 pointer-events-none page-break-line"
-      style={{
-        top: `${pageHeight * pageNumber}px`,
-        breakAfter: "page",
-        breakBefore: "page",
-      }}
-    >
-      <div className="relative w-full">
-        <div className="absolute w-full border-t-2 border-dashed border-red-400" />
-        <div className="absolute right-0 -top-6 text-xs text-red-500">
-          第{pageNumber}页结束
+    return (
+      <div
+        className="absolute left-0 right-0 pointer-events-none page-break-line"
+        style={{ top: `${top}px` }}
+      >
+        <div className="relative w-full">
+          <div className="absolute w-full border-t-2 border-dashed border-red-400" />
+          <div className="absolute right-0 -top-6 text-xs text-red-500">
+            第{pageNumber}页结束
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 PageBreakLine.displayName = "PageBreakLine";
 
@@ -119,27 +118,28 @@ const PreviewPanel = ({
     }
   }, [activeResume]);
 
-  const { pageHeightPx, pageBreakCount } = useMemo(() => {
+  const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
+
+  const { contentPerPagePx, pageBreakCount } = useMemo(() => {
     const MM_TO_PX = 3.78;
-    const A4_HEIGHT_MM = 297;
+    const A4_HEIGHT_PX = 297 * MM_TO_PX;
 
-    let pagePaddingMM = 0;
-    if (activeResume?.globalSettings?.pagePadding) {
-      pagePaddingMM = activeResume.globalSettings.pagePadding / MM_TO_PX;
-    }
-
-    const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - pagePaddingMM;
-    const pageHeightPx = CONTENT_HEIGHT_MM * MM_TO_PX;
+    // 与 Puppeteer PDF 导出一致：margin: pagePadding px（上下各一份）
+    // 每页可用内容高度 = A4 总高度 - 上 margin - 下 margin
+    const contentPerPagePx = A4_HEIGHT_PX - 2 * pagePadding;
 
     if (contentHeight <= 0) {
-      return { pageHeightPx, pageBreakCount: 0 };
+      return { contentPerPagePx, pageBreakCount: 0 };
     }
 
-    const pageCount = Math.max(1, Math.ceil(contentHeight / pageHeightPx));
+    // contentHeight 包含 #resume-preview 的 padding（上+下）
+    // 实际内容高度 = contentHeight - 2 * pagePadding
+    const actualContentHeight = contentHeight - 2 * pagePadding;
+    const pageCount = Math.max(1, Math.ceil(actualContentHeight / contentPerPagePx));
     const pageBreakCount = Math.max(0, pageCount - 1);
 
-    return { pageHeightPx, pageBreakCount };
-  }, [contentHeight, activeResume?.globalSettings?.pagePadding]);
+    return { contentPerPagePx, pageBreakCount };
+  }, [contentHeight, pagePadding]);
 
   if (!activeResume) return null;
 
@@ -217,13 +217,16 @@ const PreviewPanel = ({
                     (_, i) => {
                       const pageNumber = i + 1;
 
-                      const pageLinePosition = pageHeightPx * pageNumber;
+                      const pageLinePosition =
+                        pagePadding + pageNumber * contentPerPagePx;
 
                       if (pageLinePosition <= contentHeight) {
                         return (
                           <PageBreakLine
                             key={`page-break-${pageNumber}`}
                             pageNumber={pageNumber}
+                            contentPerPagePx={contentPerPagePx}
+                            pagePadding={pagePadding}
                           />
                         );
                       }

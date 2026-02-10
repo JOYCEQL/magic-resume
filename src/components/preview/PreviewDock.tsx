@@ -159,6 +159,14 @@ const PreviewDock = ({
       }
 
       const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
+      const pagePadding = globalSettings?.pagePadding || 0;
+      clonedElement.style.setProperty(
+        "width",
+        `calc(210mm - ${2 * pagePadding}px)`,
+        "important"
+      );
+      clonedElement.style.setProperty("padding", "0", "important");
+      clonedElement.style.setProperty("box-sizing", "border-box");
 
       const pageBreakLines =
         clonedElement.querySelectorAll<HTMLElement>(".page-break-line");

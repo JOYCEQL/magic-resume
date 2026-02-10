@@ -103,9 +103,15 @@ const PdfExport = () => {
 
       // 服务端会强制 #resume-preview { width: 210mm; padding: 0 !important }
       // 预览中内容宽度 = 210mm（父容器）- 2*pagePadding（padding）
-      // 通过 inline style 覆盖服务端的 width: 210mm，使内容宽度与预览一致
+      // 通过 inline style 覆盖服务端样式，使内容宽度与预览一致
       const pagePadding = globalSettings?.pagePadding || 0;
-      clonedElement.style.width = `calc(210mm - ${2 * pagePadding}px)`;
+      clonedElement.style.setProperty(
+        "width",
+        `calc(210mm - ${2 * pagePadding}px)`,
+        "important"
+      );
+      clonedElement.style.setProperty("padding", "0", "important");
+      clonedElement.style.setProperty("box-sizing", "border-box");
 
       const pageBreakLines =
         clonedElement.querySelectorAll<HTMLElement>(".page-break-line");
@@ -252,14 +258,14 @@ const PdfExport = () => {
               #resume-preview {
                 padding: 0 !important;
                 margin: 0 !important;
-                width: calc(210mm - ${2 * (pagePadding || 0)}px);
+                width: 100%;
                 font-family: "Alibaba PuHuiTi", sans-serif !important;
               }
 
               #print-content {
-                width: 210mm;
+                width: 100%;
                 min-height: 297mm;
-                margin: 0 auto;
+                margin: 0;
                 padding: 0;
                 background: white;
                 box-shadow: none;

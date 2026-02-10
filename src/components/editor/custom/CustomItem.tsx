@@ -125,7 +125,7 @@ const CustomItem = ({
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between cursor-pointer select-none",
-            expandedId === item.id && "bg-muted/30"
+            expandedId === item.id && "bg-muted/10"
           )}
           onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
         >

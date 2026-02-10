@@ -167,7 +167,7 @@ const EducationItem = ({ education }: { education: Education }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === education.id && "bg-muted/30",
+            expandedId === education.id && "bg-muted/10",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {

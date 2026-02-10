@@ -134,7 +134,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === experience.id && "bg-muted/30",
+            expandedId === experience.id && "bg-muted/10",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {

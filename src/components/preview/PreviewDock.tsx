@@ -418,7 +418,7 @@ const PreviewDock = ({
     <>
       <div className="hidden md:block fixed top-1/2 right-3 transform -translate-y-1/2">
         <TooltipProvider delayDuration={0}>
-          <Dock>
+          <Dock className="bg-background/80 border border-border/40 shadow-xl">
             <div className="flex flex-col gap-2">
               <DockIcon>
                 <Tooltip>

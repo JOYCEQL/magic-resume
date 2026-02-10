@@ -158,7 +158,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
         <div
           className={cn(
             "px-4 py-4 flex items-center justify-between",
-            expandedId === project.id && "bg-muted/30",
+            expandedId === project.id && "bg-muted/10",
             "cursor-pointer select-none"
           )}
           onClick={(e) => {

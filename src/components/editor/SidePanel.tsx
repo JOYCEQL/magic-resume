@@ -20,6 +20,7 @@ import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { THEME_COLORS } from "@/types/resume";
+import { ColorPicker } from "@/components/ui/color-picker";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
@@ -98,7 +99,7 @@ export function SidePanel() {
 
   const debouncedSetColor = useMemo(
     () =>
-      debounce((value) => {
+      debounce((value: string) => {
         setThemeColor(value);
       }, 100),
     []
@@ -201,11 +202,9 @@ export function SidePanel() {
               <div className="text-sm text-muted-foreground">
                 {t("theme.custom")}
               </div>
-              <motion.input
-                type="color"
+              <ColorPicker
                 value={themeColor}
-                onChange={(e) => debouncedSetColor(e.target.value)}
-                className="w-[40px] h-[40px] rounded-lg cursor-pointer overflow-hidden hover:scale-105 transition-transform"
+                onChange={(value) => debouncedSetColor(value)}
               />
             </div>
           </div>

@@ -13,7 +13,7 @@ const config = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // output: "export",
+  ...(process.env.NEXT_STANDALONE === "1" && { output: "standalone" }),
 };
 
 export default withNextIntl(config);

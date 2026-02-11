@@ -5,6 +5,7 @@ import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useLocale } from "next-intl";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { formatDateString } from "@/lib/utils";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -84,9 +85,9 @@ const EducationSection = ({
                   fontSize: `${globalSettings?.subheaderSize || 16}px`,
                 }}
               >
-                {`${new Date(edu.startDate).toLocaleDateString(
-                  locale
-                )} - ${new Date(edu.endDate).toLocaleDateString(locale)}`}
+                {`${formatDateString(edu.startDate)} - ${formatDateString(
+                  edu.endDate
+                )}`}
               </span>
             </motion.div>
 

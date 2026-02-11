@@ -46,6 +46,7 @@ const CustomItemEditor = ({
           label="时间范围"
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}
+          type="date-range"
           placeholder="例如: 2023.01 - 2024.01"
         />
 

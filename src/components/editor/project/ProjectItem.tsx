@@ -68,6 +68,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
             label={t("labels.date")}
             value={project.date}
             onChange={(value) => handleChange("date", value)}
+            type="date-range"
             placeholder={t("placeholders.date")}
           />
         </div>

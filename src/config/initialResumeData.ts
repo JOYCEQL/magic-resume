@@ -22,7 +22,7 @@ export const initialResumeState = {
     email: "zhangsan@example.com",
     phone: "13800138000",
     location: "北京市朝阳区",
-    birthDate: "1995-01",
+    birthDate: "2025-01",
     fieldOrder: DEFAULT_FIELD_ORDER,
     icons: {
       email: "Mail",
@@ -81,7 +81,7 @@ export const initialResumeState = {
       id: "1",
       company: "字节跳动",
       position: "高级前端工程师",
-      date: "2021/7 - 至今",
+      date: "2021.07 - 2024.12",
       visible: true,
       details: `<ul class="custom-list">
       <li>负责抖音创作者平台的开发与维护，主导多个核心功能的技术方案设计</li>
@@ -98,7 +98,7 @@ export const initialResumeState = {
       id: "p1",
       name: "抖音创作者中台",
       role: "前端负责人",
-      date: "2022/6 - 2023/12",
+      date: "2022.06 - 2023.12",
       description: `<ul class="custom-list">
         <li>基于 React 开发的创作者数据分析和内容管理平台，服务百万级创作者群体</li>
         <li>包含数据分析、内容管理、收益管理等多个子系统</li>
@@ -112,7 +112,7 @@ export const initialResumeState = {
       id: "p2",
       name: "微信小程序开发者工具",
       role: "核心开发者",
-      date: "2020/3 - 2021/6",
+      date: "2020.03 - 2021.06",
       description: `<ul class="custom-list">
         <li>为开发者提供小程序开发、调试和发布的一站式解决方案</li>
         <li>基于 Electron 构建的跨平台桌面应用</li>
@@ -126,7 +126,7 @@ export const initialResumeState = {
       id: "p3",
       name: "前端监控平台",
       role: "技术负责人",
-      date: "2021/9 - 2022/3",
+      date: "2021.09 - 2022.03",
       description: `<ul class="custom-list">
         <li>一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能。</li>
         <li>基于 Vue 和 Element UI 构建，提供实时的监控数据和可视化分析工具。</li>
@@ -229,7 +229,7 @@ export const initialResumeStateEn = {
       id: "1",
       company: "ByteDance",
       position: "Senior Frontend Engineer",
-      date: "2021/7 - Present",
+      date: "2021.07 - 2024.12",
       visible: true,
       details: `<ul class="custom-list">
       <li>Responsible for development and maintenance of TikTok Creator Platform, leading technical solution design for core features</li>
@@ -246,7 +246,7 @@ export const initialResumeStateEn = {
       id: "p1",
       name: "TikTok Creator Platform",
       role: "Frontend Lead",
-      date: "2022/6 - 2023/12",
+      date: "2022.06 - 2023.12",
       description: `<ul class="custom-list">
         <li>React-based analytics and content management platform serving millions of creators</li>
         <li>Includes data analytics, content management, and revenue management subsystems</li>
@@ -260,7 +260,7 @@ export const initialResumeStateEn = {
       id: "p2",
       name: "WeChat Mini Program Developer Tools",
       role: "Core Developer",
-      date: "2020/3 - 2021/6",
+      date: "2020.03 - 2021.06",
       description: `<ul class="custom-list">
         <li>All-in-one solution for mini program development, debugging, and publishing</li>
         <li>Cross-platform desktop application built with Electron</li>
@@ -274,7 +274,7 @@ export const initialResumeStateEn = {
       id: "p3",
       name: "Frontend Monitoring Platform",
       role: "Technical Lead",
-      date: "9/2021 - 5/2022",
+      date: "2021.09 - 2022.05",
       description: `<ul class="custom-list">
         <li>Complete frontend monitoring solution including error tracking, performance monitoring, and user behavior analysis</li>
         <li>Built with Vue and Element UI, providing real-time monitoring data and visualization tools</li>

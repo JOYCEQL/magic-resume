@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDateString } from "@/lib/utils";
 import {
   BasicInfo,
   getBorderRadiusValue,
@@ -65,7 +65,7 @@ const BaseInfo = ({
         key: field.key,
         value:
           field.key === "birthDate" && basic[field.key]
-            ? new Date(basic[field.key] as string).toLocaleDateString(locale)
+            ? formatDateString(basic[field.key] as string)
             : (basic[field.key] as string),
         icon: basic.icons?.[field.key] || "User",
         label: field.label,

@@ -56,6 +56,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
           label={t("labels.date")}
           value={experience.date}
           onChange={(value) => handleChange("date", value)}
+          type="date-range"
           placeholder={t("placeholders.date")}
         />
         <Field

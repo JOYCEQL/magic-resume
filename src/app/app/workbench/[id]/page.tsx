@@ -7,6 +7,7 @@ import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
 import PreviewPanel from "@/components/preview";
+import { MobileWorkbench } from "@/components/mobile/MobileWorkbench";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -179,6 +180,25 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // 初始化检查屏幕宽度
+    if (window.innerWidth < 1920) {
+      setSidePanelCollapsed(true);
+    }
+    
+    // 监听 resize
+    const handleResize = () => {
+      if (window.innerWidth < 1920) {
+        setSidePanelCollapsed(true);
+      } else {
+        setSidePanelCollapsed(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
     let newSizes = [];
 
     // 侧边栏尺寸
@@ -189,7 +209,7 @@ export default function Home() {
       newSizes.push(0);
     } else {
       if (sidePanelCollapsed) {
-        newSizes.push(50);
+        newSizes.push(36);
       } else {
         if (previewPanelCollapsed) {
           newSizes.push(80);
@@ -209,7 +229,12 @@ export default function Home() {
         if (editPanelCollapsed) {
           newSizes.push(80);
         } else {
-          newSizes.push(48);
+          // 如果侧边栏收起且编辑区展开，预览区占64，编辑区占36
+          if (sidePanelCollapsed) {
+             newSizes.push(64);
+          } else {
+             newSizes.push(48);
+          }
         }
       }
     }
@@ -256,7 +281,6 @@ export default function Home() {
                 id="side-panel"
                 order={1}
                 defaultSize={panelSizes?.[0]}
-                minSize={20}
                 className={cn(
                   "bg-background border-r border-border"
                 )}
@@ -275,7 +299,6 @@ export default function Home() {
               <ResizablePanel
                 id="edit-panel"
                 order={2}
-                minSize={32}
                 defaultSize={panelSizes?.[1]}
                 className={cn(
                   "bg-background border-r border-border"
@@ -295,7 +318,6 @@ export default function Home() {
               order={3}
               collapsible={false}
               defaultSize={panelSizes?.[2]}
-              minSize={48}
               className="bg-gray-100"
             >
               <div className="h-full overflow-y-auto">
@@ -314,15 +336,7 @@ export default function Home() {
 
       {/* 移动端布局 */}
       <div className="md:hidden h-[calc(100vh-64px)]">
-        <div className="h-full overflow-y-auto">
-          <PreviewPanel
-            sidePanelCollapsed={true}
-            editPanelCollapsed={true}
-            previewPanelCollapsed={false}
-            toggleSidePanel={toggleSidePanel}
-            toggleEditPanel={toggleEditPanel}
-          />
-        </div>
+        <MobileWorkbench />
       </div>
     </main>
   );

@@ -30,7 +30,7 @@ export default async function LocaleLayout({ children }: Props) {
   return (
     <Document
       locale={locale}
-      bodyClassName="overflow-y-hidden w-full md:min-w-[1600px]"
+      bodyClassName="overflow-y-hidden w-full"
     >
       <NextIntlClientProvider messages={messages}>
         <Providers>{children}</Providers>

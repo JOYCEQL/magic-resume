@@ -6,11 +6,11 @@ import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
 
 export interface GrammarError {
-  error: string;
-  suggestion: string;
   context: string;
-  type?: string;
-  text?: string;
+  text: string;
+  suggestion: string;
+  reason: string;
+  type: "spelling" | "grammar";
 }
 
 interface GrammarStore {
@@ -25,6 +25,7 @@ interface GrammarStore {
   checkGrammar: (text: string) => Promise<void>;
   clearErrors: () => void;
   selectError: (index: number) => void;
+  dismissError: (index: number) => void;
 }
 
 export const useGrammarStore = create<GrammarStore>((set, get) => ({
@@ -158,5 +159,30 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         block: "center",
       });
     }
+  },
+  dismissError: (index: number) => {
+    set((state) => {
+      const newErrors = [...state.errors];
+      newErrors.splice(index, 1);
+      
+      const preview = document.getElementById("resume-preview");
+      if (preview) {
+        // 重新标记剩余错误
+        const marker = new Mark(preview);
+        marker.unmark();
+        newErrors.forEach((error, i) => {
+             marker.mark(error.context || error.text || "", {
+              className: cn(
+                  "bg-yellow-200 dark:bg-yellow-900",
+                  state.selectedErrorIndex === i && "bg-green-200 dark:bg-green-900" 
+                  // 注意：selectedErrorIndex 可能因为删除而需要调整，这里简化处理，稍后在选中逻辑中可能需要优化
+                  // 为了保持一致性，最好是重新选中当前索引或重置选中
+              )
+             });
+        });
+      }
+
+      return { errors: newErrors, selectedErrorIndex: null };
+    });
   },
 }));

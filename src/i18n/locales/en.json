@@ -642,5 +642,23 @@
       "confirmText": "Delete",
       "cancelText": "Cancel"
     }
+  },
+  "grammarCheck": {
+    "title": "AI Grammar Check",
+    "description": "Found {count} suggestions",
+    "exit": "Exit",
+    "spelling": "Spelling",
+    "punctuation": "Punctuation",
+    "original": "Original",
+    "error_point": "Error",
+    "suggestion": "Suggestion",
+    "reason": "Reason",
+    "accept": "Apply",
+    "ignore": "Ignore",
+    "found_issues": "Found {count} issues",
+    "applied_success": "Changes applied",
+    "apply_error": "Text not found, cannot apply automatically",
+    "no_errors_title": "Perfect!",
+    "no_errors_desc": "No grammar or punctuation errors found."
   }
 }

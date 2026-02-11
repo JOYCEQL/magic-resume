@@ -644,5 +644,23 @@
       "confirmText": "删除",
       "cancelText": "取消"
     }
+  },
+  "grammarCheck": {
+    "title": "AI 语法检查",
+    "description": "发现 {count} 个建议优化项",
+    "exit": "退出检查",
+    "spelling": "错别字",
+    "punctuation": "标点符号",
+    "original": "原文",
+    "error_point": "错误点",
+    "suggestion": "建议修改",
+    "reason": "原因",
+    "accept": "应用",
+    "ignore": "忽略",
+    "found_issues": "发现 {count} 个问题",
+    "applied_success": "已应用修改",
+    "apply_error": "未找到对应文本，无法自动修改",
+    "no_errors_title": "太棒了！",
+    "no_errors_desc": "文档非常完美，没有发现任何错别字或标点错误。"
   }
 }

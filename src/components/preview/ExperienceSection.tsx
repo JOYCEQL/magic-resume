@@ -5,6 +5,8 @@ import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { formatDateString } from "@/lib/utils";
+import { useLocale } from "next-intl";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -22,6 +24,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
     const centerSubtitle = globalSettings?.centerSubtitle;
     const flexLayout = globalSettings?.flexibleHeaderLayout;
     const gridColumns = centerSubtitle ? 3 : 2;
+    const locale = useLocale();
 
     return (
       <motion.div
@@ -55,7 +58,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
               fontSize: `${globalSettings?.subheaderSize || 16}px`,
             }}
           >
-            {experience.date}
+            {formatDateString(experience.date, locale)}
           </div>
         </motion.div>
         {experience.position && !centerSubtitle && (

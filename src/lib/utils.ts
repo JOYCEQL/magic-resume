@@ -5,19 +5,56 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDateString(dateStr: string | undefined): string {
-  if (!dateStr) return "";
-  // Check if it matches YYYY-MM
-  // If so, replace - with .
-  
+function parseToDate(dateStr: string): Date | null {
+  let year: number | null = null;
+  let month: number | null = null;
+
   if (dateStr.match(/^\d{4}-\d{2}$/)) {
-      return dateStr.replace("-", ".");
+    const parts = dateStr.split("-");
+    year = parseInt(parts[0], 10);
+    month = parseInt(parts[1], 10);
+  } else if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    const parts = dateStr.split("-");
+    year = parseInt(parts[0], 10);
+    month = parseInt(parts[1], 10);
+  } else if (dateStr.match(/^\d{4}\.\d{2}$/)) {
+    const parts = dateStr.split(".");
+    year = parseInt(parts[0], 10);
+    month = parseInt(parts[1], 10);
+  } else if (dateStr.match(/^\d{4}\/\d{2}$/)) {
+    const parts = dateStr.split("/");
+    year = parseInt(parts[0], 10);
+    month = parseInt(parts[1], 10);
   }
-  
-  if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
-       // Cut off day if present? User wants "month" precision.
-       return dateStr.substring(0, 7).replace("-", ".");
+
+  if (year !== null && month !== null) {
+      return new Date(Date.UTC(year, month - 1, 1));
   }
-  
-  return dateStr;
+  return null;
+}
+
+export function formatDateString(dateStr: string | undefined, locale: string = "zh"): string {
+  if (!dateStr) return "";
+
+  if (dateStr.includes(" - ")) {
+    const [start, end] = dateStr.split(" - ");
+    return `${formatDateString(start, locale)} - ${formatDateString(end, locale)}`;
+  }
+
+  const date = parseToDate(dateStr);
+  if (!date) return dateStr;
+
+  try {
+      if (locale === "zh" || locale === "zh-CN") {
+          return `${date.getUTCFullYear()}.${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+      }
+      const formatter = new Intl.DateTimeFormat(locale, { 
+          year: 'numeric', 
+          month: '2-digit',
+          timeZone: 'UTC' 
+      });
+      return formatter.format(date);
+  } catch (e) {
+      return dateStr;
+  }
 }

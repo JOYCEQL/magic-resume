@@ -65,7 +65,7 @@ const BaseInfo = ({
         key: field.key,
         value:
           field.key === "birthDate" && basic[field.key]
-            ? formatDateString(basic[field.key] as string)
+            ? formatDateString(basic[field.key] as string, locale)
             : (basic[field.key] as string),
         icon: basic.icons?.[field.key] || "User",
         label: field.label,

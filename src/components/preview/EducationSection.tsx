@@ -85,8 +85,9 @@ const EducationSection = ({
                   fontSize: `${globalSettings?.subheaderSize || 16}px`,
                 }}
               >
-                {`${formatDateString(edu.startDate)} - ${formatDateString(
-                  edu.endDate
+                {`${formatDateString(edu.startDate, locale)} - ${formatDateString(
+                  edu.endDate,
+                  locale
                 )}`}
               </span>
             </motion.div>

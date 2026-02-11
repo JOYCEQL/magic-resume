@@ -4,6 +4,8 @@ import SectionTitle from "./SectionTitle";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { formatDateString } from "@/lib/utils";
+import { useLocale } from "next-intl";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -21,6 +23,7 @@ const CustomSection = ({
   showTitle = true,
 }: CustomSectionProps) => {
   const { setActiveSection } = useResumeStore();
+  const locale = useLocale();
   const visibleItems = items?.filter((item) => {
     return item.visible && (item.title || item.description);
   });
@@ -86,7 +89,7 @@ const CustomSection = ({
                   fontSize: `${globalSettings?.subheaderSize || 16}px`,
                 }}
               >
-                {item.dateRange}
+                {formatDateString(item.dateRange, locale)}
               </span>
             </motion.div>
 

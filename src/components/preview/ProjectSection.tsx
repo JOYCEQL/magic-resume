@@ -6,6 +6,8 @@ import SectionTitle from "./SectionTitle";
 import { Project, GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
+import { formatDateString } from "@/lib/utils";
+import { useLocale } from "next-intl";
 
 interface ProjectItemProps {
   project: Project;
@@ -15,6 +17,7 @@ interface ProjectItemProps {
 const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
   ({ project, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
+    const locale = useLocale();
 
     const flexLayout = globalSettings?.flexibleHeaderLayout;
 
@@ -84,7 +87,7 @@ const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
               fontSize: `${globalSettings?.subheaderSize || 16}px`,
             }}
           >
-            {project.date}
+            {formatDateString(project.date, locale)}
           </div>
         </motion.div>
         {project.role && !centerSubtitle && (

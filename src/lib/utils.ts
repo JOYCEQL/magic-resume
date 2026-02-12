@@ -46,7 +46,7 @@ export function formatDateString(dateStr: string | undefined, locale: string = "
 
   try {
       if (locale === "zh" || locale === "zh-CN") {
-          return `${date.getUTCFullYear()}.${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
+          return `${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
       }
       const formatter = new Intl.DateTimeFormat(locale, { 
           year: 'numeric', 

@@ -1,8 +1,7 @@
-"use client";
 import React, { useState } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -33,7 +32,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
   onUpdate,
   onDelete,
 }) => {
-  const t = useTranslations("workbench.basicPanel");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.basicPanel" });
 
   return (
     <Reorder.Item
@@ -155,7 +154,7 @@ const BasicPanel: React.FC = () => {
       visible: field.visible ?? true,
     }));
   });
-  const t = useTranslations("workbench.basicPanel");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.basicPanel" });
 
   const handleBasicReorder = (newOrder: BasicFieldType[]) => {
     setBasicFields(newOrder);

@@ -1,13 +1,6 @@
-"use server";
+// Navigation actions - replaced Next.js server actions with client-side navigation helpers
+// These are now simple constants since TanStack Router uses client-side navigation
 
-import { redirect } from "next/navigation";
-
-export async function GoDashboardAction() {
-  redirect("/app/dashboard");
-}
-export async function GoResumesAction() {
-  redirect("/app/dashboard/resumes");
-}
-export async function GoTemplatesAction() {
-  redirect("/app/dashboard/templates");
-}
+export const DASHBOARD_PATH = "/app/dashboard";
+export const RESUMES_PATH = "/app/dashboard/resumes";
+export const TEMPLATES_PATH = "/app/dashboard/templates";

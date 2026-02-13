@@ -1,4 +1,3 @@
-"use client";
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,7 +6,7 @@ import { Project, GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface ProjectItemProps {
   project: Project;
@@ -17,7 +16,7 @@ interface ProjectItemProps {
 const ProjectItem = React.forwardRef<HTMLDivElement, ProjectItemProps>(
   ({ project, globalSettings }, ref) => {
     const centerSubtitle = globalSettings?.centerSubtitle;
-    const locale = useLocale();
+    const { i18n } = useTranslation(); const locale = i18n.language;
 
     const flexLayout = globalSettings?.flexibleHeaderLayout;
 

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
@@ -6,7 +5,7 @@ import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -24,7 +23,7 @@ const ExperienceItem = React.forwardRef<HTMLDivElement, ExperienceItemProps>(
     const centerSubtitle = globalSettings?.centerSubtitle;
     const flexLayout = globalSettings?.flexibleHeaderLayout;
     const gridColumns = centerSubtitle ? 3 : 2;
-    const locale = useLocale();
+    const { i18n } = useTranslation(); const locale = i18n.language;
 
     return (
       <motion.div

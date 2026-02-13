@@ -1,8 +1,7 @@
-"use client";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -43,7 +42,7 @@ const Field = ({
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [showPolishDialog, setShowPolishDialog] = useState(false);
   const { checkConfiguration } = useAIConfiguration();
-  const t = useTranslations();
+  const { t } = useTranslation();
 
   const currentDate = useMemo(
     () => (value ? new Date(value) : undefined),

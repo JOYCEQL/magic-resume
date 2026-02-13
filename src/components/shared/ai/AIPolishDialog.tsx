@@ -1,8 +1,7 @@
-"use client";
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 import {
   Dialog,
@@ -30,7 +29,7 @@ export default function AIPolishDialog({
   content,
   onApply
 }: AIPolishDialogProps) {
-  const t = useTranslations("aiPolishDialog");
+  const { t } = useTranslation("translation", { keyPrefix: "aiPolishDialog" });
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
   const {

@@ -1,4 +1,3 @@
-"use client";
 
 import { DateInput } from "@heroui/date-input";
 import { HeroUIProvider } from "@heroui/react";
@@ -54,7 +53,7 @@ export function UnifiedDateInput({
           value={selectedDate}
           onChange={handleDateChange}
           isRequired={isRequired}
-          granularity="month"
+          granularity={"month" as any}
           variant="bordered"
           labelPlacement="outside"
           shouldForceLeadingZeros

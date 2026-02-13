@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import ProjectItem from "./ProjectItem";
 import { Project } from "@/types/resume";
 import { generateUUID } from "@/utils/uuid";
 
 const ProjectPanel = () => {
-  const t = useTranslations("workbench.projectPanel");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.projectPanel" });
   const { activeResume, updateProjects, updateProjectsBatch } =
     useResumeStore();
   const { projects = [] } = activeResume || {};

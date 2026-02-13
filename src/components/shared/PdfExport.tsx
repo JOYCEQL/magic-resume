@@ -1,6 +1,5 @@
-"use client";
 import React, { useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   Download,
   Loader2,
@@ -86,7 +85,7 @@ const PdfExport = () => {
   const [isExportingJson, setIsExportingJson] = useState(false);
   const { activeResume } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
-  const t = useTranslations("pdfExport");
+  const { t } = useTranslation("translation", { keyPrefix: "pdfExport" });
   const printFrameRef = useRef<HTMLIFrameElement>(null);
 
   const handleExport = async () => {

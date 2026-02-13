@@ -40,3 +40,5 @@ next-env.d.ts
 
 .history
 .agent
+dist
+.wrangler

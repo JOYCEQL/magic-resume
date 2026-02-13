@@ -1,8 +1,6 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl";
-import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { Link } from "@tanstack/react-router";
 import { Sun, Moon, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/shared/ThemeToggle";
@@ -26,8 +24,7 @@ export default function MobileMenu({
   buttonText,
   extraItems = [],
 }: MobileMenuProps) {
-  const t = useTranslations("home");
-  const locale = useLocale();
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
 
   if (!isOpen) return null;
 
@@ -51,7 +48,6 @@ export default function MobileMenu({
             <GitHubStars />
           </div>
 
-
           {extraItems && extraItems.length > 0 && (
             <div className="flex flex-col items-center justify-center gap-2">
               {extraItems.map((item, index) => (
@@ -66,7 +62,7 @@ export default function MobileMenu({
               className="bg-primary hover:opacity-90 text-white w-full py-6"
               asChild
             >
-              <Link href="/app/dashboard" onClick={onClose}>
+              <Link to="/app/dashboard" onClick={onClose}>
                 {buttonText}
               </Link>
             </Button>

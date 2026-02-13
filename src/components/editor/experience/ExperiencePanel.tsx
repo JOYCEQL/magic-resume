@@ -1,16 +1,15 @@
-"use client";
 import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { generateUUID } from "@/utils/uuid";
 
 const ExperiencePanel = () => {
-  const t = useTranslations("workbench.experiencePanel");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.experiencePanel" });
   const { activeResume, updateExperience, updateExperienceBatch } =
     useResumeStore();
   const { experience = [] } = activeResume || {};

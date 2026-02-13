@@ -1,4 +1,3 @@
-"use client";
 
 import { DateInput } from "@heroui/date-input";
 import { HeroUIProvider } from "@heroui/react";
@@ -107,7 +106,7 @@ export function UnifiedDateRangeInput({
               value={range.start}
               onChange={handleStartChange}
               variant="bordered"
-              granularity="month"
+              granularity={"month" as any}
               shouldForceLeadingZeros
               aria-label="Start Date"
               classNames={{
@@ -123,7 +122,7 @@ export function UnifiedDateRangeInput({
               value={range.end}
               onChange={handleEndChange}
               variant="bordered"
-              granularity="month"
+              granularity={"month" as any}
               shouldForceLeadingZeros
               aria-label="End Date"
               classNames={{

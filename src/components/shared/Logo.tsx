@@ -1,6 +1,4 @@
-"use client";
 import React from "react";
-import Image from "next/image";
 
 interface LogoProps {
   size?: number;
@@ -14,14 +12,13 @@ const Logo: React.FC<LogoProps> = ({
   onClick,
 }) => {
   return (
-    <Image
+    <img
       src="/logo.svg"
       alt="Magic Resume Logo"
       width={size}
       height={size}
       className={className}
       onClick={onClick}
-      priority={size >= 64}
     />
   );
 };

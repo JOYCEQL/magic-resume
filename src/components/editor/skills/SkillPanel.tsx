@@ -1,4 +1,3 @@
-"use client";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import Field from "../Field";
@@ -19,7 +18,7 @@ const SkillPanel = () => {
       )}
     >
       <Field
-        value={skillContent}
+        value={skillContent || ""}
         onChange={handleChange}
         type="editor"
         placeholder="描述你的技能、专长等..."

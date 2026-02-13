@@ -1,9 +1,8 @@
-"use client";
-
+import { Link } from "@tanstack/react-router";
 import {
-  GoDashboardAction,
-  GoTemplatesAction,
-  GoResumesAction,
+  DASHBOARD_PATH,
+  RESUMES_PATH,
+  TEMPLATES_PATH,
 } from "@/actions/navigation";
 
 export default function GoDashboard({
@@ -13,11 +12,11 @@ export default function GoDashboard({
   children: React.ReactNode;
   type?: "dashboard" | "templates" | "resumes";
 }) {
-  const actionMap = {
-    dashboard: GoDashboardAction,
-    resumes: GoResumesAction,
-    templates: GoTemplatesAction,
+  const pathMap = {
+    dashboard: DASHBOARD_PATH,
+    resumes: RESUMES_PATH,
+    templates: TEMPLATES_PATH,
   };
 
-  return <form action={actionMap[type]}>{children}</form>;
+  return <Link to={pathMap[type]}>{children}</Link>;
 }

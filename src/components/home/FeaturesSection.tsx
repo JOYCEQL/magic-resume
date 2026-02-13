@@ -1,7 +1,6 @@
-"use client";
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useTranslation } from "react-i18next";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronRight, Sparkles, Shield, Zap } from "lucide-react";
 import AnimatedFeature from "./client/AnimatedFeature";
@@ -50,7 +49,7 @@ const features = [
 const SLIDE_DURATION = 6000;
 
 export default function FeaturesSection() {
-  const t = useTranslations("home");
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
   const [activeFeatures, setActiveFeatures] = useState<number[]>(
     features.map(() => 0)
   );
@@ -212,12 +211,10 @@ export default function FeaturesSection() {
                   <div className="relative aspect-[16/10] bg-secondary/20 rounded-3xl border border-border/50 p-6 sm:p-10 shadow-2xl backdrop-blur-sm group overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
                     <div className="relative w-full h-full transform group-hover:scale-[1.02] transition-transform duration-700">
-                      <Image
+                      <img
                         src={category.items[activeFeatures[catIndex]].image}
                         alt={t(category.items[activeFeatures[catIndex]].title)}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 1024px) 100vw, 40vw"
+                        className="absolute inset-0 w-full h-full object-contain"
                       />
                     </div>
                   </div>

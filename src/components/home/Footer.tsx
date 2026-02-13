@@ -1,8 +1,8 @@
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import Logo from "@/components/shared/Logo";
 
 export default function Footer() {
-  const t = useTranslations("home");
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
 
   return (
     <footer className="py-16 md:py-24 border-t border-border/50 bg-secondary/10">

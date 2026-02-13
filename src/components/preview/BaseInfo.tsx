@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
 import { cn, formatDateString } from "@/lib/utils";
@@ -23,8 +23,8 @@ const BaseInfo = ({
   globalSettings,
   template,
 }: BaseInfoProps) => {
-  const t = useTranslations("workbench");
-  const locale = useLocale();
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "workbench" });
+  const locale = i18n.language;
   const { setActiveSection } = useResumeStore();
   const useIconMode = globalSettings?.useIconMode ?? false;
   const layout = basic?.layout || "left";

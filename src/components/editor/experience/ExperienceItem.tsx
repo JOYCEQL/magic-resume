@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -13,7 +12,7 @@ import Field from "../Field";
 import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useResumeStore } from "@/store/useResumeStore";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface ProjectEditorProps {
   experience: Experience;
@@ -26,7 +25,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   experience,
   onSave,
 }) => {
-  const t = useTranslations("workbench.experienceItem");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.experienceItem" });
 
   const handleChange = (field: keyof Experience, value: string) => {
     onSave({

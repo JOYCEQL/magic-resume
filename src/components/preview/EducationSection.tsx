@@ -1,9 +1,8 @@
-"use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
-import { useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 
@@ -19,7 +18,7 @@ const EducationSection = ({
   showTitle = true,
 }: EducationSectionProps) => {
   const { setActiveSection } = useResumeStore();
-  const locale = useLocale();
+  const { i18n } = useTranslation(); const locale = i18n.language;
   const visibleEducation = education?.filter((edu) => edu.visible);
   return (
     <motion.div

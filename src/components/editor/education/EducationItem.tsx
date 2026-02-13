@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -13,7 +12,7 @@ import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import { useState, useCallback } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface EducationEditorProps {
   education: Education;
@@ -26,7 +25,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
   education,
   onSave,
 }) => {
-  const t = useTranslations("workbench.educationItem");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.educationItem" });
   const handleChange = (field: keyof Education, value: string) => {
     onSave({
       ...education,
@@ -92,7 +91,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
         <Field
           label={t("labels.description")}
-          value={education.description}
+          value={education.description || ""}
           onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder={t("placeholders.description")}

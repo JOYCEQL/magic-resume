@@ -1,13 +1,13 @@
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, Play } from "lucide-react";
 import ScrollBackground from "./client/ScrollBackground";
 import AnimatedFeature from "./client/AnimatedFeature";
 import GoDashboard from "./GoDashboard";
-import Image from "next/image";
+
 
 export default function HeroSection() {
-  const t = useTranslations("home");
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
 
   return (
     <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden bg-background">
@@ -62,13 +62,13 @@ export default function HeroSection() {
           <div className="mt-20 relative px-4 sm:px-0">
              <div className="absolute -inset-4 bg-gradient-to-b from-primary/5 to-transparent rounded-[3rem] blur-2xl -z-10" />
              <div className="relative rounded-3xl border border-border/50 bg-secondary/30 p-2 sm:p-4 backdrop-blur-sm shadow-2xl overflow-hidden group">
-                <Image
+                <img
                   src="/web-shot.png"
                   alt="Resume Editor Preview"
                   width={1200}
                   height={800}
                   className="rounded-2xl shadow-sm group-hover:scale-[1.01] transition-transform duration-700"
-                  priority
+                  loading="eager"
                 />
              </div>
           </div>

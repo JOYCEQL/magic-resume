@@ -1,9 +1,8 @@
-"use client";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";
 import debounce from "lodash/debounce";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -83,7 +82,7 @@ export function SidePanel() {
   } = activeResume || {};
 
   const { themeColor = THEME_COLORS[0] } = globalSettings;
-  const t = useTranslations("workbench.sidePanel");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.sidePanel" });
 
   const fontOptions = [
     { value: "sans", label: t("typography.font.sans") },

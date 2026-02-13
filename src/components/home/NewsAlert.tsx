@@ -1,5 +1,5 @@
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 interface NewsAlertProps {
@@ -7,7 +7,7 @@ interface NewsAlertProps {
 }
 
 export default function NewsAlert({ className }: NewsAlertProps) {
-  const t = useTranslations("home");
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
 
   return (
     <div

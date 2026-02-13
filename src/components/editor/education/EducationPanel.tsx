@@ -1,16 +1,15 @@
-"use client";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import EducationItem from "./EducationItem";
 import { Education } from "@/types/resume";
 import { generateUUID } from "@/utils/uuid";
 
 const EducationPanel = () => {
-  const t = useTranslations('workbench.educationPanel');
+  const { t } = useTranslation('translation', { keyPrefix: 'workbench.educationPanel' });
   const { activeResume, updateEducation, updateEducationBatch } =
     useResumeStore();
   const { education = [] } = activeResume || {};

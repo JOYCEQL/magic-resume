@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { Settings2, Image, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,14 +5,14 @@ import { cn } from "@/lib/utils";
 import PhotoConfigDrawer from "./PhotoConfigDrawer";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicInfo, PhotoConfig } from "@/types/resume";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   className?: string;
 }
 
 const PhotoSelector: React.FC<Props> = ({ className }) => {
-  const t = useTranslations("workbench");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench" });
   const [showConfig, setShowConfig] = useState(false);
   const { updateBasicInfo, activeResume } = useResumeStore();
   const { basic = {} as BasicInfo } = activeResume || {};

@@ -1,8 +1,7 @@
-"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,7 +27,7 @@ const ThemeModal = ({
   title,
 }: ThemedAlertDialogProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const t = useTranslations("themeModal.delete");
+  const { t } = useTranslation("translation", { keyPrefix: "themeModal.delete" });
 
   const modalContent = {
     delete: {
@@ -36,10 +35,10 @@ const ThemeModal = ({
       description: (
         <>
           <span>
-            {t.raw("description").split("{title}")[0]}
+            {String(t("description")).split("{title}")[0]}
             <span className="px-2 font-semibold text-primary">{title}</span>
           </span>
-          {t.raw("description").split("{title}")[1]}
+          {String(t("description")).split("{title}")[1]}
         </>
       ),
       confirmText: t("confirmText"),

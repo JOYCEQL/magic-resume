@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   Popover,
   PopoverContent,
@@ -434,7 +434,7 @@ const getIconOptions = (t: any): IconOption[] => [
 ];
 
 const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
-  const t = useTranslations("iconSelector");
+  const { t } = useTranslation("translation", { keyPrefix: "iconSelector" });
   const iconOptions = React.useMemo(() => getIconOptions(t), [t]);
   const [open, setOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");

@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { throttle } from "lodash";
@@ -169,7 +168,7 @@ const PreviewPanel = ({
             }}
             className="relative"
           >
-            <style jsx global>{`
+            <style dangerouslySetInnerHTML={{ __html: `
               .grammar-error {
                 cursor: help;
                 border-bottom: 2px dashed;
@@ -207,7 +206,7 @@ const PreviewPanel = ({
                   background-color: transparent;
                 }
               }
-            `}</style>
+            ` }} />
             <ResumeTemplateComponent data={activeResume} template={template} />
             {contentHeight > 0 && (
               <>

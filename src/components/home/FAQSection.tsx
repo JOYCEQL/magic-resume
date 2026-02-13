@@ -1,7 +1,6 @@
-"use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   Accordion,
   AccordionContent,
@@ -11,8 +10,8 @@ import {
 import AnimatedFeature from "./client/AnimatedFeature";
 
 export default function FAQSection() {
-  const t = useTranslations("home.faq");
-  const faqItems = t.raw("items");
+  const { t } = useTranslation("translation", { keyPrefix: "home.faq" });
+  const faqItems = t("items", { returnObjects: true }) as Array<{ question: string; answer: string }>;
 
   return (
     <section className="py-24 md:py-40 bg-background relative overflow-hidden">

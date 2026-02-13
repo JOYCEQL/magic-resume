@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import AnimatedFeature from "./client/AnimatedFeature";
 import GoDashboard from "./GoDashboard";
 
 export default function CTASection() {
-  const t = useTranslations("home");
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
 
   return (
     <section className="py-24 md:py-44 bg-secondary/30 relative overflow-hidden">

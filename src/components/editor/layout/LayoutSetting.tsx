@@ -1,4 +1,3 @@
-"use client";
 import { Reorder } from "framer-motion";
 import { MenuSection } from "@/types/resume";
 import LayoutItem from "./LayoutItem";

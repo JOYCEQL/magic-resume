@@ -1,8 +1,7 @@
-"use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocation } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { Menu, Moon, Sun, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +14,9 @@ import MobileMenu from "./client/MobileMenu";
 import GoDashboard from "./GoDashboard";
 
 export default function LandingHeader() {
-  const t = useTranslations("home");
-  const pathname = usePathname();
+  const { t } = useTranslation("translation", { keyPrefix: "home" });
+  const location = useLocation();
+  const pathname = location.pathname;
   const locale = pathname.split("/")[1];
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

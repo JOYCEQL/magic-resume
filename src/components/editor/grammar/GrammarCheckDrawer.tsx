@@ -1,4 +1,3 @@
-"use client";
 
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -21,10 +20,10 @@ import { ResumeData } from "@/types/resume";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 export function GrammarCheckDrawer() {
-  const t = useTranslations("grammarCheck");
+  const { t } = useTranslation("translation", { keyPrefix: "grammarCheck" });
   const {
     errors,
     clearErrors,

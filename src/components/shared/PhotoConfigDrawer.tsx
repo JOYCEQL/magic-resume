@@ -1,8 +1,7 @@
-"use client";
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { compressImage, estimateBase64Size } from "@/utils/imageUtils";
 import {
@@ -46,7 +45,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   onConfigChange,
   ...props
 }) => {
-  const t = useTranslations("photoConfig");
+  const { t } = useTranslation("translation", { keyPrefix: "photoConfig" });
   const { updateBasicInfo } = useResumeStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);

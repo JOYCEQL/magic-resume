@@ -1,8 +1,7 @@
-"use client";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import { AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
@@ -27,8 +26,8 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
   const { menuSections = [], activeSection } = activeResume || {};
   const themeConfig = getThemeConfig();
   const { errors, selectError } = useGrammarCheck();
-  const router = useRouter();
-  const t = useTranslations();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const visibleSections = menuSections
     ?.filter((section) => section.enabled)
     .sort((a, b) => a.order - b.order);
@@ -46,7 +45,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              router.push("/app/dashboard");
+              navigate({ to: "/app/dashboard" });
             }}
           >
             <span className="text-lg font-semibold">{t("common.title")}</span>

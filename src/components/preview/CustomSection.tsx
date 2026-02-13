@@ -1,11 +1,10 @@
-"use client";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface CustomSectionProps {
   sectionId: string;
@@ -23,7 +22,7 @@ const CustomSection = ({
   showTitle = true,
 }: CustomSectionProps) => {
   const { setActiveSection } = useResumeStore();
-  const locale = useLocale();
+  const { i18n } = useTranslation(); const locale = i18n.language;
   const visibleItems = items?.filter((item) => {
     return item.visible && (item.title || item.description);
   });

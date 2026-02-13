@@ -1,7 +1,6 @@
-"use client";
 import React, { useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { useTranslations } from "next-intl";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import { useTranslation } from "react-i18next";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
@@ -141,9 +140,9 @@ const MenuButton = ({
   );
 };
 
-const TextColorButton = ({ editor }) => {
+const TextColorButton = ({ editor }: { editor: Editor | null }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
-  const t = useTranslations("richEditor");
+  const { t } = useTranslation("translation", { keyPrefix: "richEditor" });
   const colors = getColors(t);
 
   React.useEffect(() => {
@@ -181,7 +180,7 @@ const TextColorButton = ({ editor }) => {
             <button
               className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted"
               onClick={() => {
-                editor.chain().focus().unsetColor().run();
+                editor?.chain().focus().unsetColor().run();
                 setActiveColor(null);
               }}
             >
@@ -204,7 +203,7 @@ const TextColorButton = ({ editor }) => {
                     color.value === "#FFFFFF" ? "#E2E8F0" : color.value,
                 }}
                 onClick={() => {
-                  editor.chain().focus().setColor(color.value).run();
+                  editor?.chain().focus().setColor(color.value).run();
                   setActiveColor(color.value);
                 }}
                 title={color.label}
@@ -217,9 +216,9 @@ const TextColorButton = ({ editor }) => {
   );
 };
 
-const BackgroundColorButton = ({ editor }) => {
+const BackgroundColorButton = ({ editor }: { editor: Editor | null }) => {
   const [activeBgColor, setActiveBgColor] = React.useState<string | null>(null);
-  const t = useTranslations("richEditor");
+  const { t } = useTranslation("translation", { keyPrefix: "richEditor" });
   const bgColors = getBgColors(t);
 
   useEffect(() => {
@@ -268,7 +267,7 @@ const BackgroundColorButton = ({ editor }) => {
             <button
               className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted"
               onClick={() => {
-                editor.chain().focus().unsetHighlight().run();
+                editor?.chain().focus().unsetHighlight().run();
                 setActiveBgColor(null);
               }}
             >
@@ -291,7 +290,7 @@ const BackgroundColorButton = ({ editor }) => {
                 }}
                 onClick={() => {
                   editor
-                    .chain()
+                    ?.chain()
                     .focus()
                     .setHighlight({ color: color.value })
                     .run();
@@ -312,7 +311,7 @@ const RichTextEditor = ({
   onChange,
   onPolish,
 }: RichTextEditorProps) => {
-  const t = useTranslations("richEditor");
+  const { t } = useTranslation("translation", { keyPrefix: "richEditor" });
   const editor = useEditor({
     extensions: [
       StarterKit.configure({

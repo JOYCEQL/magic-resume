@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -12,7 +11,7 @@ import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 
 interface Project {
   id: string;
@@ -32,7 +31,7 @@ interface ProjectEditorProps {
 }
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
-  const t = useTranslations("workbench.projectItem");
+  const { t } = useTranslation("translation", { keyPrefix: "workbench.projectItem" });
   const handleChange = (field: keyof Project, value: string) => {
     onSave({
       ...project,

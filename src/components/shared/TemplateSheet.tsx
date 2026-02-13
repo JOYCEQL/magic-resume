@@ -1,7 +1,6 @@
-"use client";
 import { Layout, PanelsLeftBottom } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslation } from "react-i18next";
 import {
   Sheet,
   SheetContent,
@@ -26,7 +25,7 @@ const templateImages: { [key: string]: any } = {
 };
 
 const TemplateSheet = () => {
-  const t = useTranslations("templates");
+  const { t } = useTranslation("translation", { keyPrefix: "templates" });
   const { activeResume, setTemplate } = useResumeStore();
   const currentTemplate =
     DEFAULT_TEMPLATES.find((t) => t.id === activeResume?.templateId) ||

@@ -1,4 +1,3 @@
-"use client";
 import React, { useCallback, useState } from "react";
 import {
   Edit2,
@@ -13,8 +12,8 @@ import {
   Loader2
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,9 +64,9 @@ const PreviewDock = ({
   toggleEditPanel,
   resumeContentRef
 }: PreviewDockProps) => {
-  const router = useRouter();
-  const t = useTranslations("previewDock");
-  const tPdf = useTranslations("pdfExport");
+  const navigate = useNavigate();
+  const { t } = useTranslation("translation", { keyPrefix: "previewDock" });
+  const { t: tPdf } = useTranslation("translation", { keyPrefix: "pdfExport" });
   const { checkGrammar, isChecking } = useGrammarCheck();
   const [isExporting, setIsExporting] = useState(false);
   const [isExportingJson, setIsExportingJson] = useState(false);
@@ -406,11 +405,11 @@ const PreviewDock = ({
     try {
       const newId = duplicateResume(activeResumeId);
       toast.success(t("copyResume.success"));
-      router.push(`/app/workbench/${newId}`);
+      navigate({ to: `/app/workbench/${newId}` });
     } catch (error) {
       toast.error(t("copyResume.error"));
     }
-  }, [activeResumeId, duplicateResume, router, t]);
+  }, [activeResumeId, duplicateResume, navigate, t]);
 
   const isLoading = isExporting || isExportingJson;
 
@@ -597,7 +596,7 @@ const PreviewDock = ({
                         "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
                         "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50"
                       )}
-                      onClick={() => router.push("/app/dashboard")}
+                      onClick={() => navigate({ to: "/app/dashboard" })}
                     >
                       <Home className="h-4 w-4" />
                     </div>

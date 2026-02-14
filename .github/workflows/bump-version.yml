@@ -33,11 +33,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump version
-        run: npx bumpp patch --no-progress --commit "chore(release): v%s [skip ci]" --tag --push --yes
+        run: 'npx bumpp patch --no-progress --commit "chore(release): v%s [skip ci]" --tag --push --yes'
 
       - name: Get new version
         id: version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p 'require("./package.json").version')" >> $GITHUB_OUTPUT
 
       - name: Create Release
         uses: softprops/action-gh-release@v1

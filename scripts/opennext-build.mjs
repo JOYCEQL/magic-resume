@@ -11,7 +11,7 @@ const middlewareContent = [
   'import handler from "./intl-proxy";',
   "",
   "export default handler;",
-  'export const runtime = "experimental-edge";',
+  // 'export const runtime = "experimental-edge";',
   "export const config = {",
   '  matcher: ["/", "/(zh|en)/:path*"],',
   "};",

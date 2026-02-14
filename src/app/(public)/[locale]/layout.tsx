@@ -11,7 +11,7 @@ import Document from "@/components/Document";
 import { locales } from "@/i18n/config";
 import { Providers } from "@/app/providers";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 type Props = {
   children: ReactNode;

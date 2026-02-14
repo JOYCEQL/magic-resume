@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 
-export const runtime = "edge";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {

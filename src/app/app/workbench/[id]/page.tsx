@@ -155,7 +155,6 @@ const LayoutControls = memo(
 
 LayoutControls.displayName = "LayoutControls";
 
-export const runtime = "edge";
 
 export default function Home() {
   const [sidePanelCollapsed, setSidePanelCollapsed] = useState(false);

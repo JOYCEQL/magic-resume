@@ -150,6 +150,5 @@ const SettingsPage = () => {
     </div>
   );
 };
-export const runtime = "edge";
 
 export default SettingsPage;

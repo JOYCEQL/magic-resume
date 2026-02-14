@@ -28,4 +28,3 @@ export default async function LocaleLayout({ children }: Props) {
   );
 }
 
-export const runtime = "edge";

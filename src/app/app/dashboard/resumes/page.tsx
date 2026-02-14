@@ -358,6 +358,5 @@ const ResumeWorkbench = () => {
     </motion.div>
   );
 };
-export const runtime = "edge";
 
 export default ResumesList;

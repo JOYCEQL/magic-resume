@@ -316,6 +316,5 @@ const AISettingsPage = () => {
     </div>
   );
 };
-export const runtime = "edge";
 
 export default AISettingsPage;

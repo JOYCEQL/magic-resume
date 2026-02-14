@@ -21,13 +21,27 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Git Configuration
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Bump version
-        run: 'npm version patch -m "chore(release): %s [skip ci]"'
+        run: npx bumpp patch --no-progress --commit "chore(release): v%s [skip ci]" --tag --push --yes
 
-      - name: Push changes
-        run: git push --follow-tags
+      - name: Get new version
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          generate_release_notes: true

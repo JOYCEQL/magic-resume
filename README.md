@@ -3,7 +3,7 @@
 # ✨ Magic Resume ✨
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
 <a href="https://trendshift.io/repositories/13077" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13077" alt="Magic Resume | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
@@ -21,7 +21,7 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ## ✨ 特性
 
-- 🚀 基于 Next.js 14+ 构建
+- 🚀 基于 Next.js 16+ 构建
 - 💫 流畅的动画效果 (Motion)
 - 🎨 自定义主题支持
 - 🌙 深色模式
@@ -32,7 +32,7 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ## 🛠️ 技术栈
 
-- Next.js 14+
+- Next.js 16+
 - TypeScript
 - Motion
 - Tiptap

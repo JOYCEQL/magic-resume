@@ -7,14 +7,9 @@ import { Providers } from "@/app/providers";
 import Client from "./client";
 type Props = {
   children: ReactNode;
-  params: {
-    locale: string;
-  };
 };
-export async function generateMetadata({
-  params: { locale },
-}: Props): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "common" });
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations({ namespace: "common" });
   return {
     title: t("title") + " - " + t("dashboard"),
   };

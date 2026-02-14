@@ -3,7 +3,7 @@
 # ✨ Magic Resume ✨
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![Next.js](https://img.shields.io/badge/Next.js-14.0-black)
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
 [简体中文](./README.md) | English
@@ -18,7 +18,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## ✨ Features
 
-- 🚀 Built with Next.js 14+
+- 🚀 Built with Next.js 16+
 - 💫 Smooth animations (Framer Motion)
 - 🎨 Custom theme support
 - 📱 Responsive design
@@ -30,7 +30,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## 🛠️ Tech Stack
 
-- Next.js 14+
+- Next.js 16+
 - TypeScript
 - Motion
 - Tiptap

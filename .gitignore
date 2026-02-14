@@ -12,6 +12,8 @@
 # next.js
 /.next/
 /out/
+/.open-next/
+/.wrangler/
 
 # production
 /build
@@ -40,3 +42,4 @@ next-env.d.ts
 
 .history
 .agent
+dist

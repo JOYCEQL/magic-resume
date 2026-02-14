@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /app/workbench
+Disallow: /api
 
 # Sitemap
 Sitemap: https://magicv.art/sitemap.xml

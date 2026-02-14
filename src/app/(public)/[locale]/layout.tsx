@@ -13,7 +13,7 @@ import { Providers } from "@/app/providers";
 
 type Props = {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
@@ -21,14 +21,26 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({
-  params: { locale }
+  params
 }: Props): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "common" });
   const baseUrl = "https://magicv.art";
 
   return {
     title: t("title") + " - " + t("subtitle"),
     description: t("description"),
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1
+      }
+    },
     alternates: {
       canonical: `${baseUrl}/${locale}`
     },
@@ -43,8 +55,9 @@ export async function generateMetadata({
 
 export default async function LocaleLayout({
   children,
-  params: { locale }
+  params
 }: Props) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   if (!locales.includes(locale as any)) {

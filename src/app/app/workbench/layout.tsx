@@ -8,17 +8,23 @@ import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
   children: ReactNode;
-  params: {
-    locale: string;
-  };
 };
 
-export async function generateMetadata({
-  params: { locale }
-}: Props): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: "common" });
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations({ namespace: "common" });
   return {
-    title: t("title") + " - " + t("dashboard")
+    title: t("title") + " - " + t("dashboard"),
+    robots: {
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1
+      }
+    }
   };
 }
 

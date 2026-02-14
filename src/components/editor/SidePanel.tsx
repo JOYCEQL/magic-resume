@@ -129,7 +129,7 @@ export function SidePanel() {
   return (
     <motion.div
       className={cn(
-        "w-[80] border-r overflow-y-auto",
+        "w-full h-full border-r overflow-y-auto",
         "bg-background border-border"
       )}
       initial={{ x: -100, opacity: 0 }}

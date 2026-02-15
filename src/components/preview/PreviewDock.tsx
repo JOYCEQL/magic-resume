@@ -99,7 +99,10 @@ const PreviewDock = ({
               if (styleCache.has(ruleText)) return false;
               styleCache.set(ruleText, true);
 
+              if (rule instanceof CSSImportRule) return false;
               if (rule instanceof CSSFontFaceRule) return false;
+              if (ruleText.includes("@import")) return false;
+              if (ruleText.includes("url(")) return false;
               if (ruleText.includes("font-family")) return false;
               if (ruleText.includes("@keyframes")) return false;
               if (ruleText.includes("animation")) return false;
@@ -178,7 +181,6 @@ const PreviewDock = ({
         getOptimizedStyles(),
         optimizeImages(clonedElement)
       ]);
-
       const response = await fetch(PDF_EXPORT_CONFIG.SERVER_URL, {
         method: "POST",
         headers: {
@@ -187,7 +189,7 @@ const PreviewDock = ({
         body: JSON.stringify({
           content: clonedElement.outerHTML,
           styles,
-          margin: globalSettings.pagePadding
+          margin: pagePadding
         }),
         mode: "cors",
         signal: AbortSignal.timeout(PDF_EXPORT_CONFIG.TIMEOUT)

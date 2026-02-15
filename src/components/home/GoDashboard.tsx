@@ -1,23 +1,30 @@
 "use client";
 
-import {
-  GoDashboardAction,
-  GoTemplatesAction,
-  GoResumesAction,
-} from "@/actions/navigation";
+import { useRouter } from "next/navigation";
 
 export default function GoDashboard({
   children,
-  type = "dashboard",
+  type = "dashboard"
 }: {
   children: React.ReactNode;
   type?: "dashboard" | "templates" | "resumes";
 }) {
-  const actionMap = {
-    dashboard: GoDashboardAction,
-    resumes: GoResumesAction,
-    templates: GoTemplatesAction,
+  const router = useRouter();
+
+  const pathMap: Record<typeof type, string> = {
+    dashboard: "/app/dashboard",
+    resumes: "/app/dashboard/resumes",
+    templates: "/app/dashboard/templates"
   };
 
-  return <form action={actionMap[type]}>{children}</form>;
+  return (
+    <div
+      className="contents cursor-pointer"
+      onClick={() => {
+        router.push(pathMap[type]);
+      }}
+    >
+      {children}
+    </div>
+  );
 }

@@ -3,14 +3,14 @@
 # ✨ Magic Resume ✨
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![Next.js](https://img.shields.io/badge/Next.js-16.0-black)
+![TanStack Start](https://img.shields.io/badge/TanStack_Start-1.x-black)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
 [简体中文](./README.md) | English
 
 </div>
 
-Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with Next.js and Framer Motion, it supports real-time preview and custom themes.
+Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview and custom themes.
 
 ## 📸 Screenshots
 
@@ -18,7 +18,7 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## ✨ Features
 
-- 🚀 Built with Next.js 16+
+- 🚀 Built with TanStack Start
 - 💫 Smooth animations (Framer Motion)
 - 🎨 Custom theme support
 - 📱 Responsive design
@@ -30,7 +30,9 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## 🛠️ Tech Stack
 
-- Next.js 16+
+- TanStack Start
+- TanStack Router
+- Vite
 - TypeScript
 - Motion
 - Tiptap
@@ -66,6 +68,12 @@ pnpm dev
 
 ```bash
 pnpm build
+```
+
+## ☁️ Cloudflare Deploy
+
+```bash
+pnpm run cf:deploy
 ```
 
 

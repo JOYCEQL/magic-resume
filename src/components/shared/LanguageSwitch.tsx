@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Languages } from "lucide-react";
@@ -10,14 +11,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { locales, localeNames } from "@/i18n/config";
-import { Link, usePathname } from "@/i18n/routing.public";
+import { usePathname } from "@/i18n/routing.public";
+import { persistLocale, withLocale } from "@/i18n/runtime";
 
 export default function LanguageSwitch() {
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const handleSelectLocale = (nextLocale: string) => {
+    if (nextLocale === locale) {
+      setOpen(false);
+      return;
+    }
+
+    persistLocale(nextLocale);
+    setOpen(false);
+
+    const nextPath = withLocale(pathname, nextLocale);
+
+    window.setTimeout(() => {
+      router.push(nextPath);
+    }, 0);
+  };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -33,15 +53,17 @@ export default function LanguageSwitch() {
             <DropdownMenuItem
               key={loc}
               className={locale === loc ? "bg-accent" : ""}
+              onSelect={(event) => {
+                event.preventDefault();
+                handleSelectLocale(loc);
+              }}
             >
-              <Link className="w-full" href={pathname} locale={loc}>
-                <span className="flex items-center gap-2">
-                  {localeNames[loc]}
-                  {locale === loc && (
-                    <span className="text-xs text-muted-foreground">✓</span>
-                  )}
-                </span>
-              </Link>
+              <span className="flex w-full items-center gap-2">
+                {localeNames[loc]}
+                {locale === loc && (
+                  <span className="text-xs text-muted-foreground">✓</span>
+                )}
+              </span>
             </DropdownMenuItem>
           );
         })}

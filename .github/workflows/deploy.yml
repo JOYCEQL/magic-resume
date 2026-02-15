@@ -1,9 +1,10 @@
-name: Deploy to Cloudflare Worker
+name: Deploy to Cloudflare
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -24,9 +25,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm pages:build
+        run: pnpm run build
 
-      - name: Deploy to Cloudflare Worker
+      - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

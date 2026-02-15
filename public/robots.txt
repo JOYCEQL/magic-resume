@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /app/workbench
+Disallow: /app
 Disallow: /api
 
 # Sitemap

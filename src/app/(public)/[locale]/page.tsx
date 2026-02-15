@@ -8,7 +8,7 @@ import FAQSection from "@/components/home/FAQSection";
 
 export default function LandingPage() {
   return (
-    <div className="relative bg-gradient-to-b from-[#f8f9fb] to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="relative bg-gradient-to-b from-[#f8f9fb] to-white dark:from-gray-900 ">
       <LandingHeader />
       <HeroSection />
       <FeaturesSection />

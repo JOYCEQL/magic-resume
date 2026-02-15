@@ -8,7 +8,7 @@ export default function CTASection() {
   const t = useTranslations("home");
 
   return (
-    <section className="py-24 md:py-44 bg-secondary/30 relative overflow-hidden">
+    <section className="py-24 md:py-44 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[120px] -z-10 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-1/3 h-full bg-primary/5 blur-[120px] -z-10 -translate-x-1/2" />

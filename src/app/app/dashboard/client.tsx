@@ -22,7 +22,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip";
 import Logo from "@/components/shared/Logo";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface MenuItem {
   title: string;
@@ -34,6 +34,7 @@ interface MenuItem {
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations("dashboard");
+  const locale = useLocale();
   const sidebarItems: MenuItem[] = [
     {
       title: t("sidebar.resumes"),
@@ -98,7 +99,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
               <Logo
                 className="cursor-pointer hover:opacity-80 transition-opacity"
                 size={48}
-                onClick={() => router.push("/")}
+                onClick={() => router.push(`/${locale}`)}
               />
               {open && (
                 <span className="font-bold text-lg tracking-tight">

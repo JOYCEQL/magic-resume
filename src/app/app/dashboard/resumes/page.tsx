@@ -1,10 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,11 +8,16 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
-import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
-import { useResumeStore } from "@/store/useResumeStore";
 import { initialResumeState } from "@/config/initialResumeData";
+import { cn } from "@/lib/utils";
+import { useResumeStore } from "@/store/useResumeStore";
+import { getConfig, getFileHandle } from "@/utils/fileSystem";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertCircle, FileText, Plus, Settings, Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 import { generateUUID } from "@/utils/uuid";
 const ResumesList = () => {
@@ -30,7 +30,7 @@ const ResumeWorkbench = () => {
     resumes,
     setActiveResume,
     updateResume,
-    updateResumeFromFile,
+    getResumesFromRepository,
     addResume,
     deleteResume,
     createResume,
@@ -38,38 +38,12 @@ const ResumeWorkbench = () => {
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
 
-  useEffect(() => {
-    const syncResumesFromFiles = async () => {
-      try {
-        const handle = await getFileHandle("syncDirectory");
-        if (!handle) return;
-
-        const hasPermission = await verifyPermission(handle);
-        if (!hasPermission) return;
-
-        const dirHandle = handle as FileSystemDirectoryHandle;
-
-        for await (const entry of dirHandle.values()) {
-          if (entry.kind === "file" && entry.name.endsWith(".json")) {
-            try {
-              const file = await entry.getFile();
-              const content = await file.text();
-              const resumeData = JSON.parse(content);
-              updateResumeFromFile(resumeData);
-            } catch (error) {
-              console.error("Error reading resume file:", error);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error syncing resumes from files:", error);
-      }
-    };
-
-    if (Object.keys(resumes).length === 0) {
-      syncResumesFromFiles();
-    }
-  }, [resumes, updateResume]);
+	// 将数据仓库中的简历数据同步到store
+	useEffect(() => {
+		if (Object.keys(resumes).length === 0) {
+			getResumesFromRepository();
+		}
+	}, [resumes, updateResume, getResumesFromRepository]);
 
   useEffect(() => {
     const loadSavedConfig = async () => {

@@ -440,6 +440,7 @@
     "alignJustify": "两端对齐",
     "bulletList": "无序列表",
     "orderedList": "有序列表",
+    "lineBreak": "换行 (Shift+Enter)",
     "undo": "撤销",
     "redo": "重做",
     "aiPolish": "AI 润色",

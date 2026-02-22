@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "@/i18n/compat/client";
+import { useRouter } from "@/lib/navigation";
 import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";

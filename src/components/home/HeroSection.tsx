@@ -1,10 +1,10 @@
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight, Play } from "lucide-react";
 import ScrollBackground from "./client/ScrollBackground";
 import AnimatedFeature from "./client/AnimatedFeature";
 import GoDashboard from "./GoDashboard";
-import Image from "next/image";
+import Image from "@/lib/image";
 
 export default function HeroSection() {
   const t = useTranslations("home");

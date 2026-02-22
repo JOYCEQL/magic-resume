@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import Logo from "@/components/shared/Logo";
 
 export default function Footer() {

@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import Image, { StaticImageData } from "next/image";
+import { useRouter } from "@/lib/navigation";
+import Image from "@/lib/image";
 
 import { useResumeStore } from "@/store/useResumeStore";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,7 +18,7 @@ import timeline from "@/assets/images/template-cover/timeline.png";
 import { cn } from "@/lib/utils";
 import { DEFAULT_TEMPLATES } from "@/config";
 
-const templateImages: Record<string, StaticImageData> = {
+const templateImages: Record<string, string> = {
   classic,
   modern,
   "left-right": leftRight,

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import ExperienceItem from "./ExperienceItem";
 import { Experience } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";

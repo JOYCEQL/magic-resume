@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import Image from "next/image";
+import { useTranslations } from "@/i18n/compat/client";
+import Image from "@/lib/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronRight, Sparkles, Shield, Zap } from "lucide-react";
 import AnimatedFeature from "./client/AnimatedFeature";

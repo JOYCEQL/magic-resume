@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from "@/components/ui/button";
-import Link from "next/link";
+import Link from "@/lib/link";
 import { JSX, RefAttributes } from "react";
 
 const EditButton = (
@@ -8,7 +8,7 @@ const EditButton = (
     RefAttributes<HTMLButtonElement>
 ) => {
   return (
-    <Link href={"/dashboard"}>
+    <Link href={"/app/dashboard"}>
       <Button {...props}>{props.children}</Button>
     </Link>
   );

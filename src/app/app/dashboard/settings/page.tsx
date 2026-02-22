@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Folder, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,

@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
 import { cn, formatDateString } from "@/lib/utils";

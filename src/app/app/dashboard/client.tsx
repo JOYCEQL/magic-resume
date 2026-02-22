@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { IconResumes, IconTemplates, IconSettings, IconAI } from "@/components/shared/icons/SidebarIcons";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/lib/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -22,7 +22,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip";
 import Logo from "@/components/shared/Logo";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 interface MenuItem {
   title: string;

@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";
 import debounce from "lodash/debounce";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import {
   Select,
   SelectContent,

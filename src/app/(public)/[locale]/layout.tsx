@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "@/lib/navigation";
+import { NextIntlClientProvider } from "@/i18n/compat/client";
 import {
   getMessages,
   getTranslations,
   setRequestLocale
-} from "next-intl/server";
+} from "@/i18n/compat/server";
 import Document from "@/components/Document";
 import { locales } from "@/i18n/config";
 import { Providers } from "@/app/providers";

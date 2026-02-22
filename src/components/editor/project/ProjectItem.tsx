@@ -12,7 +12,7 @@ import { ChevronDown, Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 interface Project {
   id: string;

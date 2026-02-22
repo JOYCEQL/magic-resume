@@ -13,8 +13,8 @@ import {
   Loader2
 } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "@/i18n/compat/client";
+import { useRouter } from "@/lib/navigation";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
 import {
@@ -96,10 +96,14 @@ const PreviewDock = ({
           return Array.from(sheet.cssRules)
             .filter((rule) => {
               const ruleText = rule.cssText;
+              const normalizedRuleText = ruleText.toLowerCase();
               if (styleCache.has(ruleText)) return false;
               styleCache.set(ruleText, true);
 
               if (rule instanceof CSSFontFaceRule) return false;
+              if (rule instanceof CSSImportRule) return false;
+              if (normalizedRuleText.includes("fonts.googleapis.com")) return false;
+              if (normalizedRuleText.includes("fonts.gstatic.com")) return false;
               if (ruleText.includes("font-family")) return false;
               if (ruleText.includes("@keyframes")) return false;
               if (ruleText.includes("animation")) return false;

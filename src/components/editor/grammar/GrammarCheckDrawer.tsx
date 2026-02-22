@@ -21,7 +21,7 @@ import { ResumeData } from "@/types/resume";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 export function GrammarCheckDrawer() {
   const t = useTranslations("grammarCheck");

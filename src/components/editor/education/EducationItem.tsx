@@ -13,7 +13,7 @@ import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
 import { useState, useCallback } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 interface EducationEditorProps {
   education: Education;

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { ReactNode } from "react";
-import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "@/i18n/compat/server";
 import Document from "@/components/Document";
 
 type Props = {

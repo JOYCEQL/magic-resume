@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import { toast } from "sonner";
 import { compressImage, estimateBase64Size } from "@/utils/imageUtils";
 import {

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import PhotoConfigDrawer from "./PhotoConfigDrawer";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicInfo, PhotoConfig } from "@/types/resume";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 interface Props {
   className?: string;

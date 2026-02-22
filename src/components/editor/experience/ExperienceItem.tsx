@@ -13,7 +13,7 @@ import Field from "../Field";
 import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useResumeStore } from "@/store/useResumeStore";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 
 interface ProjectEditorProps {
   experience: Experience;

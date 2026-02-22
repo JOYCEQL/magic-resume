@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useRouter } from "@/lib/navigation";
+import { useTranslations } from "@/i18n/compat/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAIConfigStore } from "@/store/useAIConfigStore";

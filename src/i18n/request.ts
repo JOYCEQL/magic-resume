@@ -1,4 +1,4 @@
-import { getRequestConfig } from "next-intl/server";
+import { getRequestConfig } from "@/i18n/compat/server";
 import { defaultLocale, locales } from "./config";
 import { getUserLocale } from "./db";
 

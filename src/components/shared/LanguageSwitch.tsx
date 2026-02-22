@@ -1,6 +1,6 @@
 "use client";
-import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useLocale } from "@/i18n/compat/client";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Languages } from "lucide-react";
 import {
   DropdownMenu,
@@ -10,11 +10,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { locales, localeNames } from "@/i18n/config";
-import { Link, usePathname } from "@/i18n/routing.public";
+import { getLocaleFromPathname, replacePathLocale } from "@/i18n/runtime";
 
 export default function LanguageSwitch() {
   const locale = useLocale();
-  const pathname = usePathname();
+  const navigate = useNavigate();
+  const pathname = useLocation({
+    select: (location) => location.pathname
+  });
+
+  const handleSwitchLocale = (nextLocale: (typeof locales)[number]) => {
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000`;
+
+    const currentPathLocale = getLocaleFromPathname(pathname);
+    if (currentPathLocale) {
+      navigate({ to: replacePathLocale(pathname, nextLocale) });
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -33,15 +45,14 @@ export default function LanguageSwitch() {
             <DropdownMenuItem
               key={loc}
               className={locale === loc ? "bg-accent" : ""}
+              onClick={() => handleSwitchLocale(loc)}
             >
-              <Link className="w-full" href={pathname} locale={loc}>
-                <span className="flex items-center gap-2">
-                  {localeNames[loc]}
-                  {locale === loc && (
-                    <span className="text-xs text-muted-foreground">✓</span>
-                  )}
-                </span>
-              </Link>
+              <span className="flex items-center gap-2">
+                {localeNames[loc]}
+                {locale === loc && (
+                  <span className="text-xs text-muted-foreground">✓</span>
+                )}
+              </span>
             </DropdownMenuItem>
           );
         })}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useTranslations } from "next-intl";
+import { useTranslations } from "@/i18n/compat/client";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";

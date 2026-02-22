@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import { useResumeStore } from "@/store/useResumeStore";
-import { useLocale } from "next-intl";
+import { useLocale } from "@/i18n/compat/client";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 

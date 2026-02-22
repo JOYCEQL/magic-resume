@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  GoDashboardAction,
-  GoTemplatesAction,
-  GoResumesAction,
-} from "@/actions/navigation";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function GoDashboard({
   children,
@@ -13,11 +9,22 @@ export default function GoDashboard({
   children: React.ReactNode;
   type?: "dashboard" | "templates" | "resumes";
 }) {
-  const actionMap = {
-    dashboard: GoDashboardAction,
-    resumes: GoResumesAction,
-    templates: GoTemplatesAction,
+  const navigate = useNavigate();
+
+  const routeMap = {
+    dashboard: "/app/dashboard",
+    resumes: "/app/dashboard/resumes",
+    templates: "/app/dashboard/templates"
   };
 
-  return <form action={actionMap[type]}>{children}</form>;
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        navigate({ to: routeMap[type] });
+      }}
+    >
+      {children}
+    </form>
+  );
 }

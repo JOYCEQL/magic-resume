@@ -1,5 +1,5 @@
-import { createNavigation } from "next-intl/navigation";
-import { defineRouting } from "next-intl/routing";
+import { createNavigation } from "@/i18n/compat/navigation";
+import { defineRouting } from "@/i18n/compat/navigation";
 import { defaultLocale, locales } from "./config";
 
 export const routing = defineRouting({

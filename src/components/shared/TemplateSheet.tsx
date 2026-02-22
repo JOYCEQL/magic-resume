@@ -18,7 +18,7 @@ import modern from "@/assets/images/template-cover/modern.png";
 import leftRight from "@/assets/images/template-cover/left-right.png";
 import timeline from "@/assets/images/template-cover/timeline.png";
 
-const templateImages: { [key: string]: any } = {
+const templateImages: Record<string, string> = {
   classic,
   modern,
   "left-right": leftRight,
@@ -46,23 +46,23 @@ const TemplateSheet = () => {
         <SheetDescription></SheetDescription>
 
         <div className="grid grid-cols-3 gap-4 mt-4">
-          {DEFAULT_TEMPLATES.map((t) => (
+          {DEFAULT_TEMPLATES.map((template) => (
             <button
-              key={t.id}
-              onClick={() => setTemplate(t.id)}
+              key={template.id}
+              onClick={() => setTemplate(template.id)}
               className={cn(
                 "relative group rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02]",
-                t.id === currentTemplate.id
+                template.id === currentTemplate.id
                   ? "border-primary dark:border-primary shadow-lg dark:shadow-primary/30"
                   : "dark:border-neutral-800 dark:hover:border-neutral-700 border-gray-100 hover:border-gray-200"
               )}
             >
               <img
-                src={templateImages[t.id].src}
-                alt={t.name}
+                src={templateImages[template.id]}
+                alt={template.name}
                 className="w-full h-auto"
               />
-              {t.id === currentTemplate.id && (
+              {template.id === currentTemplate.id && (
                 <motion.div
                   layoutId="template-selected"
                   className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-white/30"

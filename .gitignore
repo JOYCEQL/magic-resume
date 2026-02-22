@@ -42,3 +42,4 @@ src/routeTree.gen.ts
 
 .history
 .agent
+.tanstack

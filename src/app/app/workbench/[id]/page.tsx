@@ -199,6 +199,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    document.body.classList.add("workbench-body-lock");
+    return () => {
+      document.body.classList.remove("workbench-body-lock");
+    };
+  }, []);
+
+  useEffect(() => {
     let newSizes = [];
 
     // 侧边栏尺寸

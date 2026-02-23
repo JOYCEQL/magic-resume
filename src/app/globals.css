@@ -135,6 +135,10 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  body.workbench-body-lock {
+    overflow-y: hidden;
+  }
+
 
   /* Apply serif to all headings globally except in resume preview */
   h1, h2, h3, h4, h5, h6 {

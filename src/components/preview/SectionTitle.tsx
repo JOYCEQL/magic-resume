@@ -4,6 +4,7 @@ import { GlobalSettings } from "@/types/resume";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import { templateConfigs } from "@/config/templates";
+import { useTemplateContext } from "../templates/TemplateContext";
 
 interface SectionTitleProps {
   globalSettings?: GlobalSettings;
@@ -14,7 +15,10 @@ interface SectionTitleProps {
 
 const SectionTitle = ({ type, title, globalSettings, showTitle = true }: SectionTitleProps) => {
   const { activeResume } = useResumeStore();
-  const { menuSections = [], templateId = "default" } = activeResume || {};
+  const templateContext = useTemplateContext();
+  
+  const menuSections = templateContext?.menuSections ?? activeResume?.menuSections ?? [];
+  const templateId = templateContext?.templateId ?? activeResume?.templateId ?? "default";
 
   const renderTitle = useMemo(() => {
     if (type === "custom") {
@@ -88,6 +92,86 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
         return (
           <h3
             className={cn("pb-2 border-b")}
+            style={{
+              ...baseStyles,
+              color: themeColor,
+              borderColor: themeColor,
+            }}
+          >
+            {renderTitle}
+          </h3>
+        );
+
+      case "minimalist":
+        return (
+          <h3
+            className={cn("pb-1 mb-2 tracking-widest uppercase")}
+            style={{
+              ...baseStyles,
+              color: themeColor,
+            }}
+          >
+            {renderTitle}
+          </h3>
+        );
+
+      case "professional":
+        return (
+          <h3
+            className={cn("pb-1 border-b-2 uppercase tracking-wide")}
+            style={{
+              ...baseStyles,
+              color: themeColor,
+              borderColor: themeColor,
+            }}
+          >
+            {renderTitle}
+          </h3>
+        );
+
+      case "elegant":
+        return (
+          <div className="flex items-center justify-center w-full mb-4 relative">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div
+                className="w-full border-t"
+                style={{ borderColor: themeColor, opacity: 0.3 }}
+              ></div>
+            </div>
+            <h3
+              className={cn("relative bg-white px-4 text-center")}
+              style={{
+                ...baseStyles,
+                color: themeColor,
+                marginBottom: 0,
+              }}
+            >
+              {renderTitle}
+            </h3>
+          </div>
+        );
+
+      case "creative":
+        return (
+          <h3
+            className={cn("inline-block px-3 py-1 rounded text-white shadow-sm mb-3")}
+            style={{
+              ...baseStyles,
+              backgroundColor: themeColor,
+              color: "#ffffff",
+            }}
+          >
+            {renderTitle}
+          </h3>
+        );
+
+      case "compact":
+        return (
+          <h3
+            className={cn("pb-1 border-b border-dashed mb-2")}
             style={{
               ...baseStyles,
               color: themeColor,

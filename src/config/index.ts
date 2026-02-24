@@ -101,6 +101,111 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     basic: {
       layout: "right"
     }
+  },
+  {
+    id: "minimalist",
+    name: "极简模板",
+    description: "大面积留白，干净纯粹的排版风格",
+    thumbnail: "minimalist",
+    layout: "minimalist",
+    colorScheme: {
+      primary: "#171717",
+      secondary: "#737373",
+      background: "#ffffff",
+      text: "#171717"
+    },
+    spacing: {
+      sectionGap: 32,
+      itemGap: 24,
+      contentPadding: 40
+    },
+    basic: {
+      layout: "center"
+    }
+  },
+  {
+    id: "professional",
+    name: "商务模板",
+    description: "经典双列布局，适合资深职场人士",
+    thumbnail: "professional",
+    layout: "professional",
+    colorScheme: {
+      primary: "#0f172a",
+      secondary: "#475569",
+      background: "#ffffff",
+      text: "#1e293b"
+    },
+    spacing: {
+      sectionGap: 20,
+      itemGap: 16,
+      contentPadding: 24
+    },
+    basic: {
+      layout: "left"
+    }
+  },
+  {
+    id: "elegant",
+    name: "优雅模板",
+    description: "居中标题单列设计，具有高级感的分隔线",
+    thumbnail: "elegant",
+    layout: "elegant",
+    colorScheme: {
+      primary: "#18181b",
+      secondary: "#71717a",
+      background: "#ffffff",
+      text: "#27272a"
+    },
+    spacing: {
+      sectionGap: 28,
+      itemGap: 18,
+      contentPadding: 32
+    },
+    basic: {
+      layout: "center"
+    }
+  },
+  {
+    id: "creative",
+    name: "创意模板",
+    description: "视觉错落设计，灵动活泼展现个性",
+    thumbnail: "creative",
+    layout: "creative",
+    colorScheme: {
+      primary: "#3b82f6",
+      secondary: "#64748b",
+      background: "#ffffff",
+      text: "#1e293b"
+    },
+    spacing: {
+      sectionGap: 24,
+      itemGap: 16,
+      contentPadding: 28
+    },
+    basic: {
+      layout: "left"
+    }
+  },
+  {
+    id: "compact",
+    name: "紧凑模板",
+    description: "高效的页面利用率，适合经验丰富的信息传达",
+    thumbnail: "compact",
+    layout: "compact",
+    colorScheme: {
+      primary: "#000000",
+      secondary: "#6b7280",
+      background: "#ffffff",
+      text: "#111827"
+    },
+    spacing: {
+      sectionGap: 12,
+      itemGap: 8,
+      contentPadding: 16
+    },
+    basic: {
+      layout: "left"
+    }
   }
 ];
 

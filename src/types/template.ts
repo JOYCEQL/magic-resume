@@ -5,7 +5,7 @@ export interface ResumeTemplate {
   name: string;
   description: string;
   thumbnail: string;
-  layout: "classic" | "modern" | "left-right" | "professional" | "timeline";
+  layout: "classic" | "modern" | "left-right" | "professional" | "timeline" | "minimalist" | "elegant" | "creative" | "compact";
   colorScheme: {
     primary: string;
     secondary: string;

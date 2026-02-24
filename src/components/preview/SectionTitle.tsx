@@ -115,19 +115,7 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
           </h3>
         );
 
-      case "professional":
-        return (
-          <h3
-            className={cn("pb-1 border-b-2 uppercase tracking-wide")}
-            style={{
-              ...baseStyles,
-              color: themeColor,
-              borderColor: themeColor,
-            }}
-          >
-            {renderTitle}
-          </h3>
-        );
+
 
       case "elegant":
         return (
@@ -168,19 +156,7 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
           </h3>
         );
 
-      case "compact":
-        return (
-          <h3
-            className={cn("pb-1 border-b border-dashed mb-2")}
-            style={{
-              ...baseStyles,
-              color: themeColor,
-              borderColor: themeColor,
-            }}
-          >
-            {renderTitle}
-          </h3>
-        );
+
 
       default:
         return (

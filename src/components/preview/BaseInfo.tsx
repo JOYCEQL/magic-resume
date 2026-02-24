@@ -40,6 +40,10 @@ const BaseInfo = ({
     return template?.layout === "modern";
   }, [template]);
 
+  const isWhiteTextTemplate = React.useMemo(() => {
+    return template?.layout === "modern" || template?.layout === "creative";
+  }, [template]);
+
   const getOrderedFields = React.useMemo(() => {
     if (!basic.fieldOrder) {
       return [
@@ -221,14 +225,14 @@ const BaseInfo = ({
       className={fieldsContainerClass}
       style={{
         fontSize: `${globalSettings?.baseFontSize || 14}px`,
-        color: isModernTemplate ? "#fff" : "rgb(75, 85, 99)",
+        color: isWhiteTextTemplate ? "#fff" : "rgb(75, 85, 99)",
         maxWidth: layout === "center" ? "none" : "600px",
       }}
     >
       {allFields.map((item) => (
         <motion.div
           key={item.key}
-          className={cn(baseFieldItemClass, isModernTemplate && "text-[#fff]")}
+          className={cn(baseFieldItemClass, isWhiteTextTemplate && "text-[#fff]")}
           style={{
             width: isModernTemplate ? "100%" : "",
           }}

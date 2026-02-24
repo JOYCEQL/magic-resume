@@ -47,15 +47,7 @@ export const templateConfigs: Record<string, TemplateConfig> = {
       },
     },
   },
-  professional: {
-    sectionTitle: {
-      className: "border-b-2 mb-3 pb-1 uppercase tracking-wider",
-      styles: {
-        fontSize: 18,
-        borderColor: "var(--theme-color)",
-      },
-    },
-  },
+
   elegant: {
     sectionTitle: {
       className: "flex items-center justify-center w-full mb-4 relative",
@@ -73,14 +65,6 @@ export const templateConfigs: Record<string, TemplateConfig> = {
       },
     },
   },
-  compact: {
-    sectionTitle: {
-      className: "border-b border-dashed mb-2 pb-1",
-      styles: {
-        fontSize: 15,
-        borderColor: "var(--theme-color)",
-      },
-    },
-  },
+
 };
 

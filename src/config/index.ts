@@ -123,27 +123,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       layout: "center"
     }
   },
-  {
-    id: "professional",
-    name: "商务模板",
-    description: "经典双列布局，适合资深职场人士",
-    thumbnail: "professional",
-    layout: "professional",
-    colorScheme: {
-      primary: "#0f172a",
-      secondary: "#475569",
-      background: "#ffffff",
-      text: "#1e293b"
-    },
-    spacing: {
-      sectionGap: 20,
-      itemGap: 16,
-      contentPadding: 24
-    },
-    basic: {
-      layout: "left"
-    }
-  },
+
   {
     id: "elegant",
     name: "优雅模板",
@@ -181,27 +161,6 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
       sectionGap: 24,
       itemGap: 16,
       contentPadding: 28
-    },
-    basic: {
-      layout: "left"
-    }
-  },
-  {
-    id: "compact",
-    name: "紧凑模板",
-    description: "高效的页面利用率，适合经验丰富的信息传达",
-    thumbnail: "compact",
-    layout: "compact",
-    colorScheme: {
-      primary: "#000000",
-      secondary: "#6b7280",
-      background: "#ffffff",
-      text: "#111827"
-    },
-    spacing: {
-      sectionGap: 12,
-      itemGap: 8,
-      contentPadding: 16
     },
     basic: {
       layout: "left"

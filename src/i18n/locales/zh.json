@@ -182,6 +182,26 @@
       "timeline": {
         "name": "时间轴布局",
         "description": "时间轴风格，突出经历的时间顺序"
+      },
+      "minimalist": {
+        "name": "极简模板",
+        "description": "大面积留白，干净纯粹的排版风格"
+      },
+      "professional": {
+        "name": "商务模板",
+        "description": "经典双列布局，适合资深职场人士"
+      },
+      "elegant": {
+        "name": "优雅模板",
+        "description": "居中标题单列设计，具有高级感的分隔线"
+      },
+      "creative": {
+        "name": "创意模板",
+        "description": "视觉错落设计，灵动活泼展现个性"
+      },
+      "compact": {
+        "name": "紧凑模板",
+        "description": "高效的页面利用率，适合经验丰富的信息传达"
       }
     }
   },

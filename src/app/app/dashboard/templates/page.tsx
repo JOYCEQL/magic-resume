@@ -3,27 +3,12 @@ import { useState } from "react";
 import { useTranslations } from "@/i18n/compat/client";
 import { motion } from "framer-motion";
 import { useRouter } from "@/lib/navigation";
-import Image from "@/lib/image";
-
+import { cn } from "@/lib/utils";
+import { DEFAULT_TEMPLATES } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-
-import classic from "@/assets/images/template-cover/classic.png";
-import modern from "@/assets/images/template-cover/modern.png";
-import leftRight from "@/assets/images/template-cover/left-right.png";
-import timeline from "@/assets/images/template-cover/timeline.png";
-
-import { cn } from "@/lib/utils";
-import { DEFAULT_TEMPLATES } from "@/config";
-
-const templateImages: Record<string, string> = {
-  classic,
-  modern,
-  "left-right": leftRight,
-  timeline,
-};
 
 const container = {
   hidden: { opacity: 0 },
@@ -110,15 +95,25 @@ const TemplatesPage = () => {
                         </div>
                       </div>
 
-                      <div className="h-full w-full p-3 transition-all duration-300 group-hover:scale-[1.01]">
-                        <div className="relative h-full w-full overflow-hidden rounded-lg shadow-sm">
-                          <Image
-                            src={templateImages[template.id]}
-                            alt={t(`${templateKey}.name`)}
-                            fill
-                            className="object-contain"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            priority
+                      <div className="h-full w-full py-6 transition-all duration-300 group-hover:scale-[1.02] flex items-center justify-center pointer-events-none">
+                        <div 
+                          className="relative overflow-hidden bg-white shadow-sm ring-1 ring-gray-200/50 rounded-sm"
+                          style={{
+                            width: "210px",
+                            height: "297px",
+                          }}
+                        >
+                          <iframe
+                            src={`/app/preview-template/${template.id}`}
+                            className="absolute top-0 left-0 border-0"
+                            style={{
+                              width: "210mm",
+                              height: "297mm",
+                              transform: "scale(0.264583333)", // (210px / 210mm) approximation
+                              transformOrigin: "top left"
+                            }}
+                            scrolling="no"
+                            tabIndex={-1}
                           />
                         </div>
                       </div>
@@ -180,21 +175,25 @@ const TemplatesPage = () => {
                     )}
                   </DialogTitle>
                 </div>
-                <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
-                  <div className="relative">
-                    <Image
-                      src={templateImages[previewTemplate.id]}
-                      alt={t(
-                        `${
-                          previewTemplate.id === "left-right"
-                            ? "leftRight"
-                            : previewTemplate.id
-                        }.name`
-                      )}
-                      width={600}
-                      height={848}
-                      className="rounded-md shadow-sm"
-                      priority
+                <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-950 py-8 pointer-events-none">
+                  <div 
+                    className="relative bg-white shadow-md ring-1 ring-gray-200/50"
+                    style={{
+                      width: "420px",
+                      height: "594px",
+                    }}
+                  >
+                    <iframe
+                      src={`/app/preview-template/${previewTemplate.id}`}
+                      className="absolute top-0 left-0 border-0"
+                      style={{
+                        width: "210mm",
+                        height: "297mm",
+                        transform: "scale(0.529166667)", // (420px / 210mm) approximation
+                        transformOrigin: "top left"
+                      }}
+                      scrolling="no"
+                      tabIndex={-1}
                     />
                   </div>
                 </div>

@@ -181,6 +181,26 @@
       "timeline": {
         "name": "Timeline Layout",
         "description": "Timeline style, emphasizing chronological order of experiences"
+      },
+      "minimalist": {
+        "name": "Minimalist",
+        "description": "Large amount of whitespace, clean and pure layout style"
+      },
+      "professional": {
+        "name": "Professional",
+        "description": "Classic two-column layout, suitable for senior professionals"
+      },
+      "elegant": {
+        "name": "Elegant",
+        "description": "Centered title single-column design, with a touch of elegance"
+      },
+      "creative": {
+        "name": "Creative",
+        "description": "Visual contrast design, vibrant and personalized"
+      },
+      "compact": {
+        "name": "Compact",
+        "description": "Efficient page utilization, suitable for extensive experiences"
       }
     }
   },

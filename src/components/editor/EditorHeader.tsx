@@ -67,6 +67,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
              </div>
           )}
           <Input
+            key={activeResume?.id || "resume-title"}
             defaultValue={activeResume?.title || ""}
             onBlur={(e) => {
               updateResumeTitle(e.target.value || "未命名简历");

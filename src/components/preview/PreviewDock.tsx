@@ -88,7 +88,7 @@ const PreviewDock = ({
     openaiApiEndpoint
   } = useAIConfigStore();
 
-  const { duplicateResume, activeResumeId, activeResume } = useResumeStore();
+  const { duplicateResume, setActiveResume, activeResumeId, activeResume } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
 
   const getOptimizedStyles = () => {
@@ -414,12 +414,20 @@ const PreviewDock = ({
     if (!activeResumeId) return;
     try {
       const newId = duplicateResume(activeResumeId);
+      const targetPath = `/app/workbench/${newId}`;
+      setActiveResume(newId);
       toast.success(t("copyResume.success"));
-      router.push(`/app/workbench/${newId}`);
+      router.push(targetPath);
+
+      requestAnimationFrame(() => {
+        if (window.location.pathname !== targetPath) {
+          window.location.assign(targetPath);
+        }
+      });
     } catch (error) {
       toast.error(t("copyResume.error"));
     }
-  }, [activeResumeId, duplicateResume, router, t]);
+  }, [activeResumeId, duplicateResume, router, setActiveResume, t]);
 
   const isLoading = isExporting || isExportingJson;
 

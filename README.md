@@ -17,7 +17,8 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 
 ## 📸 项目截图
 
-<img width="1200" height="676" alt="63_1x_shots_so" src="https://github.com/user-attachments/assets/bcde7758-2f1e-44c1-9123-b2673069ed2b" />
+<img width="1920" height="1440" alt="85_1x_shots_so" src="https://github.com/user-attachments/assets/4667e49a-7bf2-4379-9390-725e42799dc7" />
+
 
 ## ✨ 特性
 

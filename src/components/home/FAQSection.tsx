@@ -1,4 +1,3 @@
-"use client";
 
 import React from "react";
 import { useTranslations } from "@/i18n/compat/client";

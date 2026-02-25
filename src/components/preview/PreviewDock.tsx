@@ -1,4 +1,3 @@
-"use client";
 import React, { useCallback, useState } from "react";
 import {
   Edit2,
@@ -392,14 +391,24 @@ const PreviewDock = ({
   // ... (keep other hooks)
 
   const handleGrammarCheck = useCallback(async () => {
-    if (!resumeContentRef.current) return;
-    
     if (!checkConfiguration()) {
       return;
     }
 
     try {
-      const text = resumeContentRef.current.innerText;
+      const previewContent =
+        resumeContentRef.current || document.getElementById("resume-preview");
+      if (!previewContent) {
+        toast.error(t("grammarCheck.errorToast"));
+        return;
+      }
+
+      const text = previewContent.innerText?.trim();
+      if (!text) {
+        toast.error(t("grammarCheck.errorToast"));
+        return;
+      }
+
       await checkGrammar(text);
     } catch (error) {
       toast.error(t("grammarCheck.errorToast"));

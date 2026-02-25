@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { Folder, Trash2 } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";

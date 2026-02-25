@@ -1,4 +1,3 @@
-"use client";
 
 import { motion, Reorder, useDragControls } from "framer-motion";
 import { Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";

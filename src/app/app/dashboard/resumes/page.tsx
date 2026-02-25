@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect } from "react";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";

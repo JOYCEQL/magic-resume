@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";

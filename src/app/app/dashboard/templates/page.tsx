@@ -1,4 +1,3 @@
-"use client";
 import { useState, useRef } from "react";
 import { useTranslations } from "@/i18n/compat/client";
 import { motion } from "framer-motion";

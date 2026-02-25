@@ -1,4 +1,3 @@
-"use client";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";

@@ -1,4 +1,3 @@
-"use client";
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import { GlobalSettings } from "@/types/resume";

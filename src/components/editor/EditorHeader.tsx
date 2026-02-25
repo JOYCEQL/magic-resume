@@ -1,4 +1,3 @@
-"use client";
 import { useTranslations } from "@/i18n/compat/client";
 import { AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";

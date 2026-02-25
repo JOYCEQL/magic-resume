@@ -1,4 +1,3 @@
-"use client";
 
 import { useTranslations } from "@/i18n/compat/client";
 import Image from "@/lib/image";

@@ -1,4 +1,3 @@
-"use client";
 
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "@/i18n/compat/client";

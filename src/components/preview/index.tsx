@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import throttle from "lodash/throttle";

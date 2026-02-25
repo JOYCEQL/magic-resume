@@ -1,4 +1,3 @@
-"use client";
 
 import { forwardRef, useMemo, useState } from "react";
 import { HexColorPicker } from "react-colorful";

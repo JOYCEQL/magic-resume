@@ -28,6 +28,55 @@ interface GrammarStore {
   dismissError: (index: number) => void;
 }
 
+const markSingleError = (
+  marker: Mark,
+  error: GrammarError,
+  options?: { selected?: boolean; activeIndex?: number }
+) => {
+  const keyword = (error.text || "").trim();
+  if (!keyword) return;
+
+  let hasMarked = false;
+  marker.mark(keyword, {
+    separateWordSearch: false,
+    acrossElements: true,
+    className: cn(
+      "grammar-error",
+      error.type,
+      options?.selected && options?.activeIndex !== undefined && `active-${options.activeIndex}`
+    ),
+    filter: () => {
+      if (hasMarked) return false;
+      hasMarked = true;
+      return true;
+    }
+  });
+};
+
+const getPreviewScrollContainer = (element: HTMLElement): HTMLElement | null => {
+  const containers = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-preview-scroll-container="true"]')
+  );
+
+  for (const container of containers) {
+    if (container.contains(element)) {
+      return container;
+    }
+  }
+
+  let current: HTMLElement | null = element.parentElement;
+  while (current) {
+    const style = window.getComputedStyle(current);
+    const canScrollY = /(auto|scroll)/.test(style.overflowY);
+    if (canScrollY && current.scrollHeight > current.clientHeight) {
+      return current;
+    }
+    current = current.parentElement;
+  }
+
+  return null;
+};
+
 export const useGrammarStore = create<GrammarStore>((set, get) => ({
   isChecking: false,
   errors: [],
@@ -104,9 +153,8 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
           const marker = new Mark(preview);
           marker.unmark();
           grammarErrors.errors.forEach((error: GrammarError) => {
-            marker.mark(error.context || error.text || "", {
-              className: "bg-yellow-200 dark:bg-yellow-900",
-            });
+            // 仅标注错误片段，避免整句/全局模糊匹配造成误高亮
+            markSingleError(marker, error);
           });
         }
       } catch (parseError) {
@@ -143,21 +191,36 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     marker.unmark();
 
     errors.forEach((err, i) => {
-      marker.mark(err.context || err.text || "", {
-        className: cn(
-          "bg-yellow-200 dark:bg-yellow-900",
-          i === index && "bg-green-200 dark:bg-green-900"
-        ),
+      markSingleError(marker, err, {
+        selected: i === index,
+        activeIndex: index
       });
     });
 
     const marks = preview.querySelectorAll("mark");
     const selectedMark = marks[index];
     if (selectedMark) {
-      selectedMark.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      const scrollContainer = getPreviewScrollContainer(selectedMark as HTMLElement);
+
+      if (scrollContainer) {
+        const containerRect = scrollContainer.getBoundingClientRect();
+        const markRect = selectedMark.getBoundingClientRect();
+        const currentTop = scrollContainer.scrollTop;
+        const nextTop =
+          currentTop +
+          (markRect.top - containerRect.top) -
+          scrollContainer.clientHeight / 2 +
+          markRect.height / 2;
+        const maxTop = Math.max(
+          0,
+          scrollContainer.scrollHeight - scrollContainer.clientHeight
+        );
+
+        scrollContainer.scrollTo({
+          top: Math.max(0, Math.min(nextTop, maxTop)),
+          behavior: "smooth"
+        });
+      }
     }
   },
   dismissError: (index: number) => {
@@ -171,14 +234,10 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         const marker = new Mark(preview);
         marker.unmark();
         newErrors.forEach((error, i) => {
-             marker.mark(error.context || error.text || "", {
-              className: cn(
-                  "bg-yellow-200 dark:bg-yellow-900",
-                  state.selectedErrorIndex === i && "bg-green-200 dark:bg-green-900" 
-                  // 注意：selectedErrorIndex 可能因为删除而需要调整，这里简化处理，稍后在选中逻辑中可能需要优化
-                  // 为了保持一致性，最好是重新选中当前索引或重置选中
-              )
-             });
+          markSingleError(marker, error, {
+            selected: state.selectedErrorIndex === i,
+            activeIndex: state.selectedErrorIndex ?? undefined
+          });
         });
       }
 

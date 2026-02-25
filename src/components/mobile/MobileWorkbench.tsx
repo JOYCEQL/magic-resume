@@ -1,4 +1,3 @@
-"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -124,6 +123,7 @@ export function MobileWorkbench() {
               exit={{ opacity: 0, scale: 1.05 }}
               transition={{ duration: 0.2 }}
               className="h-full overflow-y-auto bg-gray-100"
+              data-preview-scroll-container="true"
             >
               <PreviewPanel
                 sidePanelCollapsed={true}

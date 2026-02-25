@@ -1,4 +1,3 @@
-"use client";
 import { useLocale } from "@/i18n/compat/client";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Languages } from "lucide-react";

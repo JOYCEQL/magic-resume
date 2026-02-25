@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useState, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -344,7 +343,10 @@ export default function Home() {
               defaultSize={panelSizes?.[2]}
               className="bg-gray-100"
             >
-              <div className="h-full overflow-y-auto">
+              <div
+                className="h-full overflow-y-auto"
+                data-preview-scroll-container="true"
+              >
                 <PreviewPanel
                   sidePanelCollapsed={sidePanelCollapsed}
                   editPanelCollapsed={editPanelCollapsed}

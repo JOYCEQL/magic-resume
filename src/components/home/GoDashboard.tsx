@@ -1,4 +1,3 @@
-"use client";
 
 import { useNavigate } from "@tanstack/react-router";
 

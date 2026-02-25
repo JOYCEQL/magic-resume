@@ -5,6 +5,7 @@ export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
     meta: [{ name: "robots", content: "noindex,nofollow" }]
   }),
+  ssr: false,
   component: DashboardRouteLayout
 });
 

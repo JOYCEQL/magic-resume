@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";

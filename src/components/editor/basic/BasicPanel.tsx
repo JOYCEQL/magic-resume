@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";

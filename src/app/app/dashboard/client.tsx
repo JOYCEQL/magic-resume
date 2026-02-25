@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { IconResumes, IconTemplates, IconSettings, IconAI } from "@/components/shared/icons/SidebarIcons";
 import { usePathname, useRouter } from "@/lib/navigation";

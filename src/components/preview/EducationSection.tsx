@@ -1,4 +1,3 @@
-"use client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";

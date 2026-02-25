@@ -1,4 +1,3 @@
-"use client";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import Field from "../Field";

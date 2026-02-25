@@ -14,7 +14,8 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 ## 📸 Screenshots
 
-![782shots_so](https://github.com/user-attachments/assets/dda52f82-10eb-4f8d-a643-a11c3c4da35f)
+<img width="1920" height="1440" alt="336_1x_shots_so" src="https://github.com/user-attachments/assets/18969a17-06f8-4a4b-94eb-284ba8442620" />
+
 
 ## ✨ Features
 

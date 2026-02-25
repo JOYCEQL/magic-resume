@@ -612,6 +612,10 @@
       "expand": "展开编辑面板",
       "collapse": "收起编辑面板"
     },
+    "previewPanel": {
+      "expand": "展开预览面板",
+      "collapse": "收起预览面板"
+    },
     "github": "GitHub",
     "backToDashboard": "返回仪表盘",
     "copyResume": {

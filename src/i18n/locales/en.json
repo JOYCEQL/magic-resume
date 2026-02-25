@@ -230,6 +230,10 @@
       "expand": "Expand Edit Panel",
       "collapse": "Collapse Edit Panel"
     },
+    "previewPanel": {
+      "expand": "Expand Preview Panel",
+      "collapse": "Collapse Preview Panel"
+    },
     "github": "GitHub",
     "backToDashboard": "Back to Dashboard",
     "copyResume": {

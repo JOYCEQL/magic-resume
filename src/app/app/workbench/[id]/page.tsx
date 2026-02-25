@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Edit2, Menu, PanelLeft, Minimize2 } from "lucide-react";
 import { EditorHeader } from "@/components/editor/EditorHeader";
 import { SidePanel } from "@/components/editor/SidePanel";
 import { EditPanel } from "@/components/editor/EditPanel";
 import PreviewPanel from "@/components/preview";
+import PreviewDock from "@/components/preview/PreviewDock";
 import { MobileWorkbench } from "@/components/mobile/MobileWorkbench";
 import {
   ResizableHandle,
@@ -162,6 +163,12 @@ export default function Home() {
   const [editPanelCollapsed, setEditPanelCollapsed] = useState(false);
   const [previewPanelCollapsed, setPreviewPanelCollapsed] = useState(false);
   const [panelSizes, setPanelSizes] = useState<number[]>(LAYOUT_CONFIG.DEFAULT);
+  
+  // Create a ref for the resume content that PreviewDock can access
+  // Currently we can't get the inner ref easily across component boundaries
+  // But we need to pass a mock or implement forwardRef in PreviewPanel later
+  // For now we pass null to satisfy the prop requirement
+  const resumeContentRef = React.useRef<HTMLDivElement>(null);
 
   const toggleSidePanel = () => {
     setSidePanelCollapsed(!sidePanelCollapsed);
@@ -180,6 +187,9 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // 如果预览面板已经收起，则不需要自动收起侧边栏，因为空间足够
+    if (previewPanelCollapsed) return;
+
     // 初始化检查屏幕宽度
     if (window.innerWidth < 1440) {
       setSidePanelCollapsed(true);
@@ -187,6 +197,9 @@ export default function Home() {
     
     // 监听 resize
     const handleResize = () => {
+      // 屏幕改变时，如果此时预览面板收起，也可以让侧边栏展开
+      if (previewPanelCollapsed) return;
+
       if (window.innerWidth < 1440) {
         setSidePanelCollapsed(true);
       } else {
@@ -196,7 +209,7 @@ export default function Home() {
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [previewPanelCollapsed]);
 
   useEffect(() => {
     document.body.classList.add("workbench-body-lock");
@@ -271,8 +284,12 @@ export default function Home() {
     >
       <EditorHeader />
       {/* 桌面端布局 */}
-      <div className="hidden md:block h-[calc(100vh-64px)]">
-        <ResizablePanelGroup
+      <div className="hidden md:block h-[calc(100vh-64px)] relative flex w-full">
+        <div className={cn(
+          "h-full transition-all duration-300",
+          previewPanelCollapsed ? "w-[calc(100%-4rem)]" : "w-full"
+        )}>
+          <ResizablePanelGroup
           key={panelSizes?.join("-")}
           direction="horizontal"
           className={cn(
@@ -334,11 +351,23 @@ export default function Home() {
                   previewPanelCollapsed={previewPanelCollapsed}
                   toggleSidePanel={toggleSidePanel}
                   toggleEditPanel={toggleEditPanel}
+                  togglePreviewPanel={togglePreviewPanel}
                 />
               </div>
             </ResizablePanel>
           )}
         </ResizablePanelGroup>
+        </div>
+        
+        <PreviewDock
+          sidePanelCollapsed={sidePanelCollapsed}
+          editPanelCollapsed={editPanelCollapsed}
+          previewPanelCollapsed={previewPanelCollapsed}
+          toggleSidePanel={toggleSidePanel}
+          toggleEditPanel={toggleEditPanel}
+          togglePreviewPanel={togglePreviewPanel}
+          resumeContentRef={resumeContentRef}
+        />
       </div>
 
       {/* 移动端布局 */}

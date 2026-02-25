@@ -6,7 +6,6 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import ResumeTemplateComponent from "../templates";
-import PreviewDock from "./PreviewDock";
 
 interface PreviewPanelProps {
   sidePanelCollapsed: boolean;
@@ -14,6 +13,7 @@ interface PreviewPanelProps {
   previewPanelCollapsed: boolean;
   toggleSidePanel: () => void;
   toggleEditPanel: () => void;
+  togglePreviewPanel: () => void;
 }
 
 const PageBreakLine = React.memo(
@@ -49,24 +49,31 @@ const PageBreakLine = React.memo(
 
 PageBreakLine.displayName = "PageBreakLine";
 
-const PreviewPanel = ({
-  sidePanelCollapsed,
-  editPanelCollapsed,
-  toggleSidePanel,
-  toggleEditPanel,
-}: PreviewPanelProps) => {
-  const { activeResume } = useResumeStore();
-  const template = useMemo(() => {
-    return (
-      DEFAULT_TEMPLATES.find((t) => t.id === activeResume?.templateId) ||
-      DEFAULT_TEMPLATES[0]
-    );
-  }, [activeResume?.templateId]);
+const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
+  (
+    {
+      sidePanelCollapsed,
+      editPanelCollapsed,
+      previewPanelCollapsed,
+      toggleSidePanel,
+      toggleEditPanel,
+      togglePreviewPanel,
+    },
+    ref
+  ) => {
+    const { activeResume } = useResumeStore();
+    const template = useMemo(() => {
+      return (
+        DEFAULT_TEMPLATES.find((t) => t.id === activeResume?.templateId) ||
+        DEFAULT_TEMPLATES[0]
+      );
+    }, [activeResume?.templateId]);
 
-  const startRef = useRef<HTMLDivElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
-  const resumeContentRef = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState(0);
+    const startRef = useRef<HTMLDivElement>(null);
+    const previewRef = useRef<HTMLDivElement>(null);
+    const internalResumeContentRef = useRef<HTMLDivElement>(null);
+    const resumeContentRef = (ref as React.MutableRefObject<HTMLDivElement>) || internalResumeContentRef;
+    const [contentHeight, setContentHeight] = useState(0);
 
   const updateContentHeight = () => {
     if (resumeContentRef.current) {
@@ -239,16 +246,10 @@ const PreviewPanel = ({
           </div>
         </div>
       </div>
-
-      <PreviewDock
-        sidePanelCollapsed={sidePanelCollapsed}
-        editPanelCollapsed={editPanelCollapsed}
-        toggleSidePanel={toggleSidePanel}
-        toggleEditPanel={toggleEditPanel}
-        resumeContentRef={resumeContentRef}
-      />
     </div>
   );
-};
+});
+
+PreviewPanel.displayName = "PreviewPanel";
 
 export default PreviewPanel;

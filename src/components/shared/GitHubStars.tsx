@@ -57,7 +57,7 @@ export function GitHubStars() {
       />
 
       <motion.div
-        className="relative z-10"
+        className="relative z-10 flex items-center"
         animate={isHovered ? { rotate: 180 } : { rotate: 0 }}
         transition={{ duration: 0.3 }}
       >

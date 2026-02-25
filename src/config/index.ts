@@ -152,7 +152,7 @@ export const DEFAULT_TEMPLATES: ResumeTemplate[] = [
     thumbnail: "creative",
     layout: "creative",
     colorScheme: {
-      primary: "#3b82f6",
+      primary: "#18181b",
       secondary: "#64748b",
       background: "#ffffff",
       text: "#1e293b"

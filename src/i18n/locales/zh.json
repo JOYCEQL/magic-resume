@@ -7,7 +7,10 @@
     "edit": "编辑",
     "delete": "删除",
     "newResume": "新建简历",
-    "copy": "复制"
+    "copy": "复制",
+    "cancel": "取消",
+    "confirm": "确认",
+    "deleteSuccess": "删除成功"
   },
   "home": {
     "header": {
@@ -120,7 +123,9 @@
         "title": "注意",
         "description": "建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失",
         "goToSettings": "前往设置"
-      }
+      },
+      "deleteConfirmTitle": "确认删除简历？",
+      "deleteConfirmDescription": "此操作无法撤销。这将永久删除此简历，并从设备中移除数据。"
     },
     "settings": {
       "title": "设置",

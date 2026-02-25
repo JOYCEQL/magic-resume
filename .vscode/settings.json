@@ -2,17 +2,25 @@
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
-
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-  "stylelint.validate": ["css", "less", "postcss", "scss", "sass"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "stylelint.validate": [
+    "css",
+    "less",
+    "postcss",
+    "scss",
+    "sass"
+  ],
   "typescript.tsdk": "./node_modules/typescript/lib",
-
   "search.exclude": {
     "**/node_modules": true,
     "dist": true,
     "build": true
   },
-
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -34,7 +42,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

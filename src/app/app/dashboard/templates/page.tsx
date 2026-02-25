@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "@/i18n/compat/client";
 import { motion } from "framer-motion";
 import { useRouter } from "@/lib/navigation";
@@ -9,6 +9,10 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import ResumeTemplateComponent from "@/components/templates";
+import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
+import { useLocale } from "@/i18n/compat/client";
 
 const container = {
   hidden: { opacity: 0 },
@@ -27,12 +31,49 @@ const item = {
 
 const TemplatesPage = () => {
   const t = useTranslations("dashboard.templates");
+  const locale = useLocale();
   const router = useRouter();
   const createResume = useResumeStore((state) => state.createResume);
   const [previewTemplate, setPreviewTemplate] = useState<{
     id: string;
     open: boolean;
   } | null>(null);
+  
+  const PRESET_COLORS = [
+    { name: "default", value: "" },
+    { name: "blue", value: "#3b82f6" },
+    { name: "green", value: "#10b981" },
+    { name: "purple", value: "#8b5cf6" },
+    { name: "orange", value: "#f97316" },
+    { name: "red", value: "#ef4444" },
+    { name: "slate", value: "#475569" },
+    { name: "black", value: "#000000" },
+  ];
+  const [selectedColor, setSelectedColor] = useState<string>(PRESET_COLORS[0].value);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Auto-cycle colors every 3 seconds
+  useState(() => {
+    // Only run on client
+    if (typeof window !== "undefined") {
+      let currentIndex = 0;
+      autoPlayRef.current = setInterval(() => {
+        currentIndex = (currentIndex + 1) % PRESET_COLORS.length;
+        setSelectedColor(PRESET_COLORS[currentIndex].value);
+      }, 3000);
+    }
+  });
+
+  const handleColorSelect = (value: string) => {
+    setSelectedColor(value);
+    // Stop autoplay when user manually selects a color
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+  };
+
+  const baseData = locale === "en" ? initialResumeStateEn : initialResumeState;
 
   const handleCreateResume = (templateId: string) => {
     const template = DEFAULT_TEMPLATES.find((t) => t.id === templateId);
@@ -46,7 +87,7 @@ const TemplatesPage = () => {
       updateResume(resumeId, {
         globalSettings: {
           ...resume.globalSettings,
-          themeColor: template.colorScheme.primary,
+          themeColor: selectedColor || template.colorScheme.primary,
           sectionSpacing: template.spacing.sectionGap,
           paragraphSpacing: template.spacing.itemGap,
           pagePadding: template.spacing.contentPadding,
@@ -62,10 +103,36 @@ const TemplatesPage = () => {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto py-8 px-6 lg:px-8">
-      <div className="flex flex-col space-y-8">
-        <div>
+    <ScrollArea className="h-[calc(100vh-2rem)] w-full">
+      <div className="w-full max-w-[1600px] mx-auto py-8 px-6 lg:px-8">
+        <div className="flex flex-col space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
+          
+          <div className="flex items-center space-x-2 bg-gray-50/50 dark:bg-gray-900/50 p-2 rounded-full border border-gray-100 dark:border-gray-800 backdrop-blur-sm self-start sm:self-auto overflow-x-auto">
+            {PRESET_COLORS.map((color) => (
+              <button
+                key={color.name}
+                onClick={() => handleColorSelect(color.value)}
+                className={cn(
+                  "relative w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform hover:scale-110",
+                  selectedColor === color.value ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-950 scale-110" : ""
+                )}
+                title={color.name === "default" ? "Default" : color.name}
+              >
+                {color.value ? (
+                  <div
+                    className="w-full h-full rounded-full border border-black/10 dark:border-white/10 shadow-sm"
+                    style={{ backgroundColor: color.value }}
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-300 dark:border-gray-700 shadow-sm flex items-center justify-center">
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-tighter">Tpl</span>
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
         <motion.div
@@ -103,18 +170,37 @@ const TemplatesPage = () => {
                             height: "297px",
                           }}
                         >
-                          <iframe
-                            src={`/app/preview-template/${template.id}`}
-                            className="absolute top-0 left-0 border-0"
+                          <div
+                            className="absolute top-0 left-0 bg-white"
                             style={{
                               width: "210mm",
                               height: "297mm",
                               transform: "scale(0.264583333)", // (210px / 210mm) approximation
-                              transformOrigin: "top left"
+                              transformOrigin: "top left",
+                              padding: `${template.spacing.contentPadding}px`,
+                              fontFamily: "Alibaba PuHuiTi, sans-serif",
                             }}
-                            scrolling="no"
-                            tabIndex={-1}
-                          />
+                          >
+                            <ResumeTemplateComponent
+                              data={{
+                                ...baseData,
+                                id: "preview-mock-id",
+                                templateId: template.id,
+                                globalSettings: {
+                                  ...baseData.globalSettings,
+                                  themeColor: selectedColor || template.colorScheme.primary,
+                                  sectionSpacing: template.spacing.sectionGap,
+                                  paragraphSpacing: template.spacing.itemGap,
+                                  pagePadding: template.spacing.contentPadding,
+                                },
+                                basic: {
+                                  ...baseData.basic,
+                                  layout: template.basic.layout,
+                                },
+                              } as any}
+                              template={template}
+                            />
+                          </div>
                         </div>
                       </div>
 
@@ -177,24 +263,48 @@ const TemplatesPage = () => {
                 </div>
                 <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-950 py-8 pointer-events-none">
                   <div 
-                    className="relative bg-white shadow-md ring-1 ring-gray-200/50"
+                    className="relative bg-white shadow-md ring-1 ring-gray-200/50 overflow-hidden"
                     style={{
                       width: "420px",
                       height: "594px",
                     }}
                   >
-                    <iframe
-                      src={`/app/preview-template/${previewTemplate.id}`}
-                      className="absolute top-0 left-0 border-0"
+                    <div
+                      className="absolute top-0 left-0 bg-white"
                       style={{
                         width: "210mm",
                         height: "297mm",
                         transform: "scale(0.529166667)", // (420px / 210mm) approximation
-                        transformOrigin: "top left"
+                        transformOrigin: "top left",
+                        padding: `${DEFAULT_TEMPLATES.find(t => t.id === previewTemplate.id)?.spacing.contentPadding || 32}px`,
+                        fontFamily: "Alibaba PuHuiTi, sans-serif",
                       }}
-                      scrolling="no"
-                      tabIndex={-1}
-                    />
+                    >
+                      {(() => {
+                        const tpl = DEFAULT_TEMPLATES.find(t => t.id === previewTemplate.id) || DEFAULT_TEMPLATES[0];
+                        return (
+                          <ResumeTemplateComponent
+                            data={{
+                              ...baseData,
+                              id: "preview-mock-id-large",
+                              templateId: tpl.id,
+                              globalSettings: {
+                                ...baseData.globalSettings,
+                                themeColor: selectedColor || tpl.colorScheme.primary,
+                                sectionSpacing: tpl.spacing.sectionGap,
+                                paragraphSpacing: tpl.spacing.itemGap,
+                                pagePadding: tpl.spacing.contentPadding,
+                              },
+                              basic: {
+                                ...baseData.basic,
+                                layout: tpl.basic.layout,
+                              },
+                            } as any}
+                            template={tpl}
+                          />
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
                 <div className="p-3 pt-2 border-t border-gray-100 dark:border-gray-800 flex justify-center">
@@ -213,7 +323,8 @@ const TemplatesPage = () => {
           )}
         </Dialog>
       </div>
-    </div>
+      </div>
+    </ScrollArea>
   );
 };
 

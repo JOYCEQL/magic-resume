@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { useTranslations } from "@/i18n/compat/client";
+import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
 import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,14 +18,176 @@ import { cn } from "@/lib/utils";
 import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { initialResumeState } from "@/config/initialResumeData";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import ResumeTemplateComponent from "@/components/templates";
+import { DEFAULT_TEMPLATES } from "@/config";
 
 import { generateUUID } from "@/utils/uuid";
+
 const ResumesList = () => {
   return <ResumeWorkbench />;
 };
 
+const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, deleteResume, index }: any) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [scale, setScale] = React.useState(0.24);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      const { width } = entries[0].contentRect;
+      if (width > 0) {
+        setScale(width / 793.700787); // Exact 210mm in pixels at 96dpi
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{
+        duration: 0.3,
+        delay: index * 0.1,
+      }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <Card
+        className={cn(
+          "group border transition-all duration-200 aspect-[210/297] flex flex-col overflow-hidden",
+          "hover:border-primary/40 hover:shadow-lg",
+          "dark:hover:border-primary/40"
+        )}
+      >
+        <CardContent className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer" onClick={() => { setActiveResume(id); router.push(`/app/workbench/${id}`); }}>
+          <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
+            <div className="w-full h-full relative origin-top bg-white">
+              <div
+                className="absolute top-0 left-0 bg-white"
+                style={{
+                  width: "210mm",
+                  height: "297mm",
+                  transform: `scale(${scale})`, 
+                  transformOrigin: "top left",
+                  padding: `${resume.globalSettings?.pagePadding || 32}px`,
+                  fontFamily: resume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+                }}
+              >
+                {(() => {
+                  const template = DEFAULT_TEMPLATES.find(t => t.id === resume.templateId) || DEFAULT_TEMPLATES[0];
+                  return <ResumeTemplateComponent data={resume as any} template={template} />;
+                })()}
+              </div>
+            </div>
+          </div>
+          
+          <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-gray-950 dark:via-gray-950/90 z-0"></div>
+          <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex justify-between items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-gray-950/50">
+            <div className="flex flex-col w-full">
+              <span className="text-[15px] font-semibold truncate text-gray-900 dark:text-gray-100 drop-shadow-sm w-[90%]">
+                {resume.title || t("dashboard.resumes.untitled")}
+              </span>
+              <span className="text-[11px] text-gray-600 dark:text-gray-300 mt-0.5 font-medium">
+                {t(`dashboard.templates.${DEFAULT_TEMPLATES.find(t => t.id === resume.templateId)?.id === "left-right" ? "leftRight" : (DEFAULT_TEMPLATES.find(t => t.id === resume.templateId)?.id || "classic")}.name`)} · {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(resume.updatedAt || resume.createdAt))}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="pt-2 pb-2 px-2 bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 z-10">
+          <div className="grid grid-cols-2 gap-2 w-full">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 17,
+              }}
+            >
+              <Button
+                variant="outline"
+                className="w-full text-sm hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveResume(id);
+                  router.push(`/app/workbench/${id}`);
+                }}
+              >
+                {t("common.edit")}
+              </Button>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 17,
+              }}
+            >
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full text-sm text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-500 dark:hover:bg-red-950/50 dark:hover:text-red-400"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    {t("common.delete")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("dashboard.resumes.deleteConfirmTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("dashboard.resumes.deleteConfirmDescription")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("common.cancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600 border-none"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteResume(resume);
+                        toast.success(t("common.deleteSuccess"));
+                      }}
+                    >
+                      {t("common.confirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </motion.div>
+          </div>
+        </CardFooter>
+      </Card>
+    </motion.div>
+  );
+};
+
 const ResumeWorkbench = () => {
   const t = useTranslations();
+  const locale = useLocale();
   const {
     resumes,
     setActiveResume,
@@ -125,13 +287,14 @@ const ResumeWorkbench = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="flex-1 space-y-6"
-    >
+    <ScrollArea className="h-[calc(100vh-2rem)] w-full">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex-1 space-y-6 py-8"
+      >
       <motion.div
         className="flex w-full items-center justify-center px-4"
         initial={{ y: 20, opacity: 0 }}
@@ -231,7 +394,7 @@ const ResumeWorkbench = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2 }}
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -240,12 +403,12 @@ const ResumeWorkbench = () => {
           >
             <Card
               className={cn(
-                "relative border border-dashed cursor-pointer h-[260px] transition-all duration-200",
+                "relative border border-dashed cursor-pointer transition-all duration-200 aspect-[210/297] flex flex-col",
                 "hover:border-gray-400 hover:bg-gray-50",
                 "dark:hover:border-primary dark:hover:bg-primary/10"
               )}
             >
-              <CardContent className="flex-1 pt-6 text-center flex flex-col items-center justify-center">
+              <CardContent className="flex-1 p-0 text-center flex flex-col items-center justify-center">
                 <motion.div
                   className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
                   whileHover={{ rotate: 90 }}
@@ -253,10 +416,10 @@ const ResumeWorkbench = () => {
                 >
                   <Plus className="h-8 w-8 text-gray-600 dark:text-primary" />
                 </motion.div>
-                <CardTitle className="text-xl text-gray-900 dark:text-gray-100">
+                <CardTitle className="text-xl text-gray-900 dark:text-gray-100 px-4">
                   {t("dashboard.resumes.newResume")}
                 </CardTitle>
-                <CardDescription className="mt-2 text-gray-600 dark:text-gray-400">
+                <CardDescription className="mt-2 text-gray-600 dark:text-gray-400 px-4">
                   {t("dashboard.resumes.newResumeDescription")}
                 </CardDescription>
               </CardContent>
@@ -265,97 +428,23 @@ const ResumeWorkbench = () => {
 
           <AnimatePresence>
             {Object.entries(resumes).map(([id, resume], index) => (
-              <motion.div
+              <ResumeCardItem 
                 key={id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{
-                  duration: 0.3,
-                  delay: index * 0.1,
-                }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Card
-                  className={cn(
-                    "group border transition-all duration-200 h-[260px] flex flex-col",
-                    "hover:border-gray-400 hover:bg-gray-50",
-                    "dark:hover:border-primary dark:hover:bg-primary/10"
-                  )}
-                >
-                  <CardContent className="relative flex-1 pt-6 text-center flex flex-col items-center">
-                    <motion.div
-                      className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
-                      whileHover={{ rotate: 90 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <FileText className="h-8 w-8 text-gray-600 dark:text-primary" />
-                    </motion.div>
-                    <CardTitle className="text-xl line-clamp-1 text-gray-900 dark:text-gray-100">
-                      {resume.title || "未命名简历"}
-                    </CardTitle>
-                    <CardDescription className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                      {t("dashboard.resumes.created")}
-                      <span className="ml-2">
-                        {new Date(resume.createdAt).toLocaleDateString()}
-                      </span>
-                    </CardDescription>
-                  </CardContent>
-                  <CardFooter className="pt-0 pb-4 px-4">
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 17,
-                        }}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full text-sm hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveResume(id);
-                            router.push(`/app/workbench/${id}`);
-                          }}
-                        >
-                          {t("common.edit")}
-                        </Button>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 17,
-                        }}
-                      >
-                        <Button
-                          variant="outline"
-                          className="w-full text-sm text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-500 dark:hover:bg-red-950/50 dark:hover:text-red-400"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteResume(resume);
-                          }}
-                        >
-                          {t("common.delete")}
-                        </Button>
-                      </motion.div>
-                    </div>
-                  </CardFooter>
-                </Card>
-              </motion.div>
+                id={id}
+                resume={resume}
+                t={t}
+                locale={locale}
+                setActiveResume={setActiveResume}
+                router={router}
+                deleteResume={deleteResume}
+                index={index}
+              />
             ))}
           </AnimatePresence>
         </div>
       </motion.div>
     </motion.div>
+    </ScrollArea>
   );
 };
 export const runtime = "edge";

@@ -7,7 +7,10 @@
     "edit": "Edit",
     "delete": "Delete",
     "newResume": "New Resume",
-    "copy": "Copy"
+    "copy": "Copy",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "deleteSuccess": "Deleted successfully"
   },
   "home": {
     "header": {
@@ -119,7 +122,9 @@
         "title": "Attention",
         "description": "It is recommended to configure a resume backup folder in the settings to prevent your data from being lost when the browser cache is cleared",
         "goToSettings": "Go to Settings"
-      }
+      },
+      "deleteConfirmTitle": "Confirm Delete Resume?",
+      "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this resume and remove the data from your device."
     },
     "settings": {
       "title": "Settings",

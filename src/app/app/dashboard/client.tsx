@@ -22,7 +22,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip";
 import Logo from "@/components/shared/Logo";
-import { useTranslations } from "@/i18n/compat/client";
+import { useLocale, useTranslations } from "@/i18n/compat/client";
 
 interface MenuItem {
   title: string;
@@ -60,6 +60,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
   const [open, setOpen] = useState(true);
   const [collapsible, setCollapsible] = useState<"offcanvas" | "icon" | "none">(
     "icon"
@@ -94,11 +95,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           className="border-r border-border/40 bg-card/50 backdrop-blur-xl"
         >
           <SidebarHeader className="h-16 flex items-center justify-center border-b border-border/40">
-            <div className="w-full justify-center flex items-center">
+            <div className="w-full cursor-pointer justify-center flex items-center" onClick={() => router.push(`/${locale}`)}
+            >
               <Logo
-                className="cursor-pointer hover:opacity-80 transition-opacity"
+                className=" hover:opacity-80 transition-opacity"
                 size={48}
-                onClick={() => router.push("/")}
               />
               {open && (
                 <span className="font-bold text-lg tracking-tight">
@@ -121,11 +122,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                               <SidebarMenuButton
                                 asChild
                                 isActive={active}
-                                className={`w-full transition-all duration-200 ease-in-out h-12 mb-1 [&>svg]:size-auto ${
-                                  active
-                                    ? "bg-primary/10 text-primary font-bold hover:bg-primary/20 hover:text-primary"
-                                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                                }`}
+                                className={`w-full transition-all duration-200 ease-in-out h-12 mb-1 [&>svg]:size-auto ${active
+                                  ? "bg-primary/10 text-primary font-bold hover:bg-primary/20 hover:text-primary"
+                                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                                  }`}
                               >
                                 <div
                                   className="flex items-center gap-2 px-2 cursor-pointer"
@@ -147,11 +147,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                   {item.items.map((subItem) => (
                                     <div
                                       key={subItem.href}
-                                      className={`cursor-pointer px-3 py-2 rounded-md text-sm transition-colors ${
-                                        pathname === subItem.href
-                                          ? "text-primary font-medium bg-primary/10"
-                                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                      }`}
+                                      className={`cursor-pointer px-3 py-2 rounded-md text-sm transition-colors ${pathname === subItem.href
+                                        ? "text-primary font-medium bg-primary/10"
+                                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                        }`}
                                       onClick={() => router.push(subItem.href)}
                                     >
                                       {subItem.title}

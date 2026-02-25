@@ -181,13 +181,13 @@ export default function Home() {
 
   useEffect(() => {
     // 初始化检查屏幕宽度
-    if (window.innerWidth < 1920) {
+    if (window.innerWidth < 1440) {
       setSidePanelCollapsed(true);
     }
     
     // 监听 resize
     const handleResize = () => {
-      if (window.innerWidth < 1920) {
+      if (window.innerWidth < 1440) {
         setSidePanelCollapsed(true);
       } else {
         setSidePanelCollapsed(false);

@@ -633,6 +633,12 @@
       "pdf": "导出PDF",
       "json": "导出JSON",
       "print": "导出PDF(备份）"
+    },
+    "autoOnePage": {
+      "tooltip": "自动一页纸",
+      "enabled": "已开启一页纸模式",
+      "disabled": "已关闭一页纸模式",
+      "cannotFit": "内容较多，已尽量压缩但无法完美一页，建议精简内容, 也可在此基础上调节页边距、字体大小等左侧设置栏选项"
     }
   },
   "aiPolishDialog": {

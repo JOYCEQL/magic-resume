@@ -130,6 +130,7 @@ export type GlobalSettings = {
   useIconMode?: boolean | undefined;
   centerSubtitle?: boolean | undefined;
   flexibleHeaderLayout?: boolean | undefined;
+  autoOnePage?: boolean | undefined;
 };
 
 export interface ResumeTheme {

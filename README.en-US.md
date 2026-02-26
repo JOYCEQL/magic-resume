@@ -100,7 +100,7 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 - [ ] Support for more export formats
 - [ ] Import PDF, Markdown, etc.
 - [x] Custom model
-- [ ] Smart single page
+- [x] Auto one page
 - [ ] Online resume hosting
 
 ## 📈 Star History

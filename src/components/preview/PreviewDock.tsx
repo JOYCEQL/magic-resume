@@ -10,7 +10,8 @@ import {
   Printer,
   FileJson,
   Loader2,
-  Eye
+  Eye,
+  FileText
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "@/i18n/compat/client";
@@ -87,7 +88,7 @@ const PreviewDock = ({
     openaiApiEndpoint
   } = useAIConfigStore();
 
-  const { duplicateResume, setActiveResume, activeResumeId, activeResume } = useResumeStore();
+  const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
 
   const getOptimizedStyles = () => {
@@ -168,11 +169,25 @@ const PreviewDock = ({
 
       const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
       const pagePadding = globalSettings?.pagePadding || 0;
-      clonedElement.style.setProperty(
-        "width",
-        `calc(210mm - ${2 * pagePadding}px)`,
-        "important"
-      );
+      const transformValue = clonedElement.style.transform || "";
+      const scaleMatch = transformValue.match(/scale\(([\d.]+)\)/);
+      if (scaleMatch) {
+        const scale = Number(scaleMatch[1]);
+        if (Number.isFinite(scale) && scale > 0 && scale < 1) {
+          // 服务端导出前将 transform 缩放转为 zoom，避免分页计算偏差
+          clonedElement.style.removeProperty("transform");
+          clonedElement.style.removeProperty("transform-origin");
+          clonedElement.style.setProperty("width", "100%", "important");
+          clonedElement.style.setProperty("zoom", String(scale));
+        }
+      } else {
+        // 未开启一页纸模式时，宽度需减去 padding
+        clonedElement.style.setProperty(
+          "width",
+          `calc(210mm - ${2 * pagePadding}px)`,
+          "important"
+        );
+      }
       clonedElement.style.setProperty("padding", "0", "important");
       clonedElement.style.setProperty("box-sizing", "border-box");
 
@@ -269,7 +284,7 @@ const PreviewDock = ({
     printFrame.style.zIndex = "-1";
     document.body.appendChild(printFrame);
 
-    const pagePadding = globalSettings?.pagePadding;
+    const pagePadding = globalSettings?.pagePadding || 0;
     const iframeWindow = printFrame.contentWindow;
     if (!iframeWindow) {
       console.error("IFrame window not found");
@@ -279,6 +294,24 @@ const PreviewDock = ({
 
     try {
       iframeWindow.document.open();
+
+      const clonedContent = actualContent.cloneNode(true) as HTMLElement;
+      const previewEl = clonedContent.querySelector<HTMLElement>("#resume-preview");
+      if (previewEl) {
+        const transformValue = previewEl.style.transform || "";
+        const match = transformValue.match(/scale\(([\d.]+)\)/);
+        if (match) {
+          const scale = Number(match[1]);
+          if (Number.isFinite(scale) && scale > 0 && scale < 1) {
+            // 打印时使用 zoom 参与分页布局计算，比 transform 更接近最终分页效果
+            previewEl.style.removeProperty("transform");
+            previewEl.style.removeProperty("transform-origin");
+            previewEl.style.setProperty("width", "100%");
+            previewEl.style.setProperty("zoom", String(scale));
+          }
+        }
+      }
+
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -295,7 +328,7 @@ const PreviewDock = ({
 
               @page {
                 size: A4;
-                margin: ${pagePadding}px;
+                margin: 0;
                 padding: 0;
               }
               * {
@@ -314,8 +347,10 @@ const PreviewDock = ({
               }
 
               #resume-preview {
-                padding: 0 !important;
                 margin: 0 !important;
+                padding: ${pagePadding}px !important;
+                -webkit-box-decoration-break: clone;
+                box-decoration-break: clone;
                 font-family: "Alibaba PuHuiTi", sans-serif !important;
               }
 
@@ -329,11 +364,6 @@ const PreviewDock = ({
               }
               #print-content * {
                 box-shadow: none !important;
-                transform: none !important;
-                scale: 1 !important;
-              }
-              .scale-90 {
-                transform: none !important;
               }
               
               .page-break-line {
@@ -341,22 +371,22 @@ const PreviewDock = ({
               }
 
               ${Array.from(document.styleSheets)
-                .map((sheet) => {
-                  try {
-                    return Array.from(sheet.cssRules)
-                      .map((rule) => rule.cssText)
-                      .join("\n");
-                  } catch (e) {
-                    console.warn("Could not copy styles from sheet:", e);
-                    return "";
-                  }
-                })
-                .join("\n")}
+          .map((sheet) => {
+            try {
+              return Array.from(sheet.cssRules)
+                .map((rule) => rule.cssText)
+                .join("\n");
+            } catch (e) {
+              console.warn("Could not copy styles from sheet:", e);
+              return "";
+            }
+          })
+          .join("\n")}
             </style>
           </head>
           <body>
             <div id="print-content">
-              ${actualContent.innerHTML}
+              ${clonedContent.innerHTML}
             </div>
           </body>
         </html>
@@ -365,10 +395,35 @@ const PreviewDock = ({
       iframeWindow.document.write(htmlContent);
       iframeWindow.document.close();
 
-      setTimeout(() => {
+      const printWhenReady = async () => {
         try {
+          const doc = iframeWindow.document;
+          if (doc.fonts?.ready) {
+            await doc.fonts.ready;
+          }
+
+          const images = Array.from(doc.images);
+          await Promise.all(
+            images
+              .filter((img) => !img.complete)
+              .map(
+                (img) =>
+                  new Promise<void>((resolve) => {
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                  })
+              )
+          );
+
+          await new Promise<void>((resolve) => {
+            iframeWindow.requestAnimationFrame(() => {
+              iframeWindow.requestAnimationFrame(() => resolve());
+            });
+          });
+
           iframeWindow.focus();
           iframeWindow.print();
+
           // 打印完成后清理iframe
           setTimeout(() => {
             if (document.body.contains(printFrame)) {
@@ -379,7 +434,9 @@ const PreviewDock = ({
           console.error("Error print:", error);
           document.body.removeChild(printFrame);
         }
-      }, 1000);
+      };
+
+      void printWhenReady();
     } catch (error) {
       console.error("Error setting up print:", error);
       document.body.removeChild(printFrame);
@@ -486,6 +543,37 @@ const PreviewDock = ({
                         ? t("grammarCheck.checking")
                         : t("grammarCheck.idle")}
                     </p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+              <DockIcon>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={cn(
+                        "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                        "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                        "transition-all duration-200",
+                        globalSettings?.autoOnePage && [
+                          "bg-primary text-primary-foreground",
+                          "hover:bg-primary/90 dark:hover:bg-primary/90",
+                          "shadow-sm"
+                        ]
+                      )}
+                      onClick={() => {
+                        updateGlobalSettings({ autoOnePage: !globalSettings?.autoOnePage });
+                        toast.success(
+                          globalSettings?.autoOnePage
+                            ? t("autoOnePage.disabled")
+                            : t("autoOnePage.enabled")
+                        );
+                      }}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" sideOffset={10}>
+                    <p>{t("autoOnePage.tooltip")}</p>
                   </TooltipContent>
                 </Tooltip>
               </DockIcon>

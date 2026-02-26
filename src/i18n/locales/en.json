@@ -251,6 +251,12 @@
       "pdf": "Export PDF",
       "json": "Export JSON",
       "print": "Print"
+    },
+    "autoOnePage": {
+      "tooltip": "Auto Fit One Page",
+      "enabled": "One page mode enabled",
+      "disabled": "One page mode disabled",
+      "cannotFit": "Too much content. Optimized as much as possible but cannot fit on one page. Try simplifying the content or adjusting margins and font size in the sidebar."
     }
   },
   "workbench": {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IconResumes, IconTemplates, IconSettings, IconAI } from "@/components/shared/icons/SidebarIcons";
 import { usePathname, useRouter } from "@/lib/navigation";
 import {
@@ -64,12 +64,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsible, setCollapsible] = useState<"offcanvas" | "icon" | "none">(
     "icon"
   );
-
-  useEffect(() => {
-    if (pathname.includes("/workbench")) {
-      setOpen(false);
-    }
-  }, [pathname]);
 
   const handleItemClick = (item: MenuItem) => {
     if (item.items) {

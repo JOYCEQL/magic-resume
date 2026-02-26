@@ -73,7 +73,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
           "dark:hover:border-primary/40"
         )}
       >
-        <CardContent className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer" onClick={() => { setActiveResume(id); router.push(`/app/workbench/${id}`); }}>
+        <CardContent className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer">
           <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
             <div className="w-full h-full relative origin-top bg-white">
               <div
@@ -81,7 +81,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
                 style={{
                   width: "210mm",
                   height: "297mm",
-                  transform: `scale(${scale})`, 
+                  transform: `scale(${scale})`,
                   transformOrigin: "top left",
                   padding: `${resume.globalSettings?.pagePadding || 32}px`,
                   fontFamily: resume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
@@ -94,7 +94,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
               </div>
             </div>
           </div>
-          
+
           <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-gray-950 dark:via-gray-950/90 z-0"></div>
           <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex justify-between items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-gray-950/50">
             <div className="flex flex-col w-full">
@@ -131,7 +131,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
                 {t("common.edit")}
               </Button>
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -294,155 +294,155 @@ const ResumeWorkbench = () => {
         transition={{ duration: 0.3 }}
         className="flex-1 space-y-6 py-8"
       >
-      <motion.div
-        className="flex w-full items-center justify-center px-4"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
-        {hasConfiguredFolder ? (
-          <Alert className="mb-6 bg-green-50/50 dark:bg-green-950/30 border-green-200 dark:border-green-900">
-            <AlertDescription className="flex items-center justify-between">
-              <span className="text-green-700 dark:text-green-400">
-                {t("dashboard.resumes.synced")}
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                className="ml-4 hover:bg-green-100 dark:hover:bg-green-900"
-                onClick={() => {
-                  router.push("/app/dashboard/settings");
-                }}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                {t("dashboard.resumes.view")}
-              </Button>
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <Alert
-            variant="destructive"
-            className="mb-6 bg-red-50/50 dark:bg-red-950/30 border-red-200 dark:border-red-900"
-          >
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>{t("dashboard.resumes.notice.title")}</AlertTitle>
-            <AlertDescription className="flex items-center justify-between">
-              <span className="text-red-700 dark:text-red-400">
-                {t("dashboard.resumes.notice.description")}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                className="ml-4 hover:bg-red-100 dark:hover:bg-red-900"
-                onClick={() => {
-                  router.push("/app/dashboard/settings");
-                }}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                {t("dashboard.resumes.notice.goToSettings")}
-              </Button>
-            </AlertDescription>
-          </Alert>
-        )}
-      </motion.div>
-
-      <motion.div
-        className="px-4 sm:px-6 flex items-center justify-between"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-          {t("dashboard.resumes.myResume")}
-        </h1>
-        <div className="flex items-center space-x-2">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <Button
-              onClick={handleImportJson}
-              variant="outline"
-              className="hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
-            >
-              <Upload className="mr-2 h-4 w-4" />
-              {t("dashboard.resumes.import")}
-            </Button>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <Button
-              onClick={handleCreateResume}
-              variant="default"
-              className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              {t("dashboard.resumes.create")}
-            </Button>
-          </motion.div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="flex-1 w-full p-3 sm:p-6"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            onClick={handleCreateResume}
-          >
-            <Card
-              className={cn(
-                "relative border border-dashed cursor-pointer transition-all duration-200 aspect-[210/297] flex flex-col",
-                "hover:border-gray-400 hover:bg-gray-50",
-                "dark:hover:border-primary dark:hover:bg-primary/10"
-              )}
-            >
-              <CardContent className="flex-1 p-0 text-center flex flex-col items-center justify-center">
-                <motion.div
-                  className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
-                  whileHover={{ rotate: 90 }}
-                  transition={{ duration: 0.2 }}
+        <motion.div
+          className="flex w-full items-center justify-center px-4"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          {hasConfiguredFolder ? (
+            <Alert className="mb-6 bg-green-50/50 dark:bg-green-950/30 border-green-200 dark:border-green-900">
+              <AlertDescription className="flex items-center justify-between">
+                <span className="text-green-700 dark:text-green-400">
+                  {t("dashboard.resumes.synced")}
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="ml-4 hover:bg-green-100 dark:hover:bg-green-900"
+                  onClick={() => {
+                    router.push("/app/dashboard/settings");
+                  }}
                 >
-                  <Plus className="h-8 w-8 text-gray-600 dark:text-primary" />
-                </motion.div>
-                <CardTitle className="text-xl text-gray-900 dark:text-gray-100 px-4">
-                  {t("dashboard.resumes.newResume")}
-                </CardTitle>
-                <CardDescription className="mt-2 text-gray-600 dark:text-gray-400 px-4">
-                  {t("dashboard.resumes.newResumeDescription")}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </motion.div>
+                  <Settings className="w-4 h-4 mr-2" />
+                  {t("dashboard.resumes.view")}
+                </Button>
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Alert
+              variant="destructive"
+              className="mb-6 bg-red-50/50 dark:bg-red-950/30 border-red-200 dark:border-red-900"
+            >
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>{t("dashboard.resumes.notice.title")}</AlertTitle>
+              <AlertDescription className="flex items-center justify-between">
+                <span className="text-red-700 dark:text-red-400">
+                  {t("dashboard.resumes.notice.description")}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-4 hover:bg-red-100 dark:hover:bg-red-900"
+                  onClick={() => {
+                    router.push("/app/dashboard/settings");
+                  }}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  {t("dashboard.resumes.notice.goToSettings")}
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+        </motion.div>
 
-          <AnimatePresence>
-            {Object.entries(resumes).map(([id, resume], index) => (
-              <ResumeCardItem 
-                key={id}
-                id={id}
-                resume={resume}
-                t={t}
-                locale={locale}
-                setActiveResume={setActiveResume}
-                router={router}
-                deleteResume={deleteResume}
-                index={index}
-              />
-            ))}
-          </AnimatePresence>
-        </div>
+        <motion.div
+          className="px-4 sm:px-6 flex items-center justify-between"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+            {t("dashboard.resumes.myResume")}
+          </h1>
+          <div className="flex items-center space-x-2">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Button
+                onClick={handleImportJson}
+                variant="outline"
+                className="hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                {t("dashboard.resumes.import")}
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Button
+                onClick={handleCreateResume}
+                variant="default"
+                className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {t("dashboard.resumes.create")}
+              </Button>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="flex-1 w-full p-3 sm:p-6"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              onClick={handleCreateResume}
+            >
+              <Card
+                className={cn(
+                  "relative border border-dashed cursor-pointer transition-all duration-200 aspect-[210/297] flex flex-col",
+                  "hover:border-gray-400 hover:bg-gray-50",
+                  "dark:hover:border-primary dark:hover:bg-primary/10"
+                )}
+              >
+                <CardContent className="flex-1 p-0 text-center flex flex-col items-center justify-center">
+                  <motion.div
+                    className="mb-4 p-4 rounded-full bg-gray-100 dark:bg-primary/10"
+                    whileHover={{ rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Plus className="h-8 w-8 text-gray-600 dark:text-primary" />
+                  </motion.div>
+                  <CardTitle className="text-xl text-gray-900 dark:text-gray-100 px-4">
+                    {t("dashboard.resumes.newResume")}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-gray-600 dark:text-gray-400 px-4">
+                    {t("dashboard.resumes.newResumeDescription")}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <AnimatePresence>
+              {Object.entries(resumes).map(([id, resume], index) => (
+                <ResumeCardItem
+                  key={id}
+                  id={id}
+                  resume={resume}
+                  t={t}
+                  locale={locale}
+                  setActiveResume={setActiveResume}
+                  router={router}
+                  deleteResume={deleteResume}
+                  index={index}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
     </ScrollArea>
   );
 };

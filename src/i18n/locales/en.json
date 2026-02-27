@@ -10,7 +10,8 @@
     "copy": "Copy",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "deleteSuccess": "Deleted successfully"
+    "deleteSuccess": "Deleted successfully",
+    "deleteModuleConfirm": "Are you sure you want to delete this module? This action cannot be undone."
   },
   "home": {
     "header": {

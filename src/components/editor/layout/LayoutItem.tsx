@@ -153,7 +153,7 @@ const LayoutItem = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>{t("delete")} {item.title}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  确定要删除此模块吗？
+                  {t("deleteModuleConfirm")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

@@ -10,7 +10,8 @@
     "copy": "复制",
     "cancel": "取消",
     "confirm": "确认",
-    "deleteSuccess": "删除成功"
+    "deleteSuccess": "删除成功",
+    "deleteModuleConfirm": "确定要删除此模块吗？此操作无法撤销。"
   },
   "home": {
     "header": {

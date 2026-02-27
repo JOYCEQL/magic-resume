@@ -8,7 +8,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "start": "node server.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "bumpp"
   },
   "dependencies": {
     "@heroui/checkbox": "^2.3.30",
@@ -85,6 +86,8 @@
     "@types/react-dom": "^18",
     "@types/turndown": "^5.0.6",
     "@vitejs/plugin-react": "^5.1.4",
+    "bumpp": "^10.4.1",
+    "changelogen": "^0.6.2",
     "eslint": "^8",
     "postcss": "^8",
     "postcss-normalize": "^13.0.1",

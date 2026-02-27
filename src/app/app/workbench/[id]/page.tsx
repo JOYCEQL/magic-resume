@@ -162,7 +162,7 @@ export default function Home() {
   const [editPanelCollapsed, setEditPanelCollapsed] = useState(false);
   const [previewPanelCollapsed, setPreviewPanelCollapsed] = useState(false);
   const [panelSizes, setPanelSizes] = useState<number[]>(LAYOUT_CONFIG.DEFAULT);
-  
+
   // Create a ref for the resume content that PreviewDock can access
   // Currently we can't get the inner ref easily across component boundaries
   // But we need to pass a mock or implement forwardRef in PreviewPanel later
@@ -193,7 +193,7 @@ export default function Home() {
     if (window.innerWidth < 1440) {
       setSidePanelCollapsed(true);
     }
-    
+
     // 监听 resize
     const handleResize = () => {
       // 屏幕改变时，如果此时预览面板收起，也可以让侧边栏展开
@@ -205,7 +205,7 @@ export default function Home() {
         setSidePanelCollapsed(false);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [previewPanelCollapsed]);
@@ -250,9 +250,9 @@ export default function Home() {
         } else {
           // 如果侧边栏收起且编辑区展开，预览区占64，编辑区占36
           if (sidePanelCollapsed) {
-             newSizes.push(64);
+            newSizes.push(64);
           } else {
-             newSizes.push(48);
+            newSizes.push(48);
           }
         }
       }
@@ -289,59 +289,58 @@ export default function Home() {
           previewPanelCollapsed ? "w-[calc(100%-4rem)]" : "w-full"
         )}>
           <ResizablePanelGroup
-          key={panelSizes?.join("-")}
-          direction="horizontal"
-          className={cn(
-            "h-full",
-            "h-full",
-            "border border-border bg-background"
-          )}
-        >
-          {/* 侧边栏面板 */}
-          {!sidePanelCollapsed && (
-            <>
-              <ResizablePanel
-                id="side-panel"
-                order={1}
-                defaultSize={panelSizes?.[0]}
-                className={cn(
-                  "bg-background border-r border-border"
-                )}
-              >
-                <div className="h-full overflow-y-auto">
-                  <SidePanel />
-                </div>
-              </ResizablePanel>
-              <DragHandle />
-            </>
-          )}
+            key={panelSizes?.join("-")}
+            direction="horizontal"
+            className={cn(
+              "h-full",
+              "h-full",
+              "border border-border bg-background"
+            )}
+          >
+            {/* 侧边栏面板 */}
+            {!sidePanelCollapsed && (
+              <>
+                <ResizablePanel
+                  id="side-panel"
+                  order={1}
+                  defaultSize={panelSizes?.[0]}
+                  className={cn(
+                    "bg-background border-r border-border"
+                  )}
+                >
+                  <div className="h-full overflow-y-auto">
+                    <SidePanel />
+                  </div>
+                </ResizablePanel>
+                <DragHandle />
+              </>
+            )}
 
-          {/* 编辑面板 */}
-          {!editPanelCollapsed && (
-            <>
-              <ResizablePanel
-                id="edit-panel"
-                order={2}
-                defaultSize={panelSizes?.[1]}
-                className={cn(
-                  "bg-background border-r border-border"
-                )}
-              >
-                <div className="h-full">
-                  <EditPanel />
-                </div>
-              </ResizablePanel>
-              <DragHandle />
-            </>
-          )}
-          {/* 预览面板 */}
-          {!previewPanelCollapsed && (
+            {/* 编辑面板 */}
+            {!editPanelCollapsed && (
+              <>
+                <ResizablePanel
+                  id="edit-panel"
+                  order={2}
+                  defaultSize={panelSizes?.[1]}
+                  className={cn(
+                    "bg-background border-r border-border"
+                  )}
+                >
+                  <div className="h-full">
+                    <EditPanel />
+                  </div>
+                </ResizablePanel>
+                <DragHandle />
+              </>
+            )}
+            {/* 预览面板 - 使用 CSS 隐藏而非条件渲染，确保导出时 #resume-preview 始终在 DOM 中 */}
             <ResizablePanel
               id="preview-panel"
               order={3}
               collapsible={false}
               defaultSize={panelSizes?.[2]}
-              className="bg-gray-100"
+              className={cn("bg-gray-100", previewPanelCollapsed && "hidden")}
             >
               <div
                 className="h-full overflow-y-auto"
@@ -357,10 +356,9 @@ export default function Home() {
                 />
               </div>
             </ResizablePanel>
-          )}
-        </ResizablePanelGroup>
+          </ResizablePanelGroup>
         </div>
-        
+
         <PreviewDock
           sidePanelCollapsed={sidePanelCollapsed}
           editPanelCollapsed={editPanelCollapsed}

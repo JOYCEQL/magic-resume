@@ -3,6 +3,18 @@ import { motion, Reorder, useDragControls } from "framer-motion";
 import { Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MenuSection } from "@/types/resume";
+import { useTranslations } from "@/i18n/compat/client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface LayoutItemProps {
   item: MenuSection;
@@ -24,6 +36,7 @@ const LayoutItem = ({
   menuSections
 }: LayoutItemProps) => {
   const dragControls = useDragControls();
+  const t = useTranslations("common");
 
   if (isBasic) {
     return (
@@ -33,7 +46,7 @@ const LayoutItem = ({
           "bg-card border-border",
           "hover:border-primary/50 transition-colors",
           activeSection === item.id &&
-            "border-primary text-primary ring-1 ring-primary"
+          "border-primary text-primary ring-1 ring-primary"
         )}
         onClick={() => setActiveSection(item.id)}
       >
@@ -65,7 +78,7 @@ const LayoutItem = ({
         "bg-card border-border",
         "hover:border-primary/50 transition-colors",
         activeSection === item.id &&
-          "border-primary text-primary ring-1 ring-primary"
+        "border-primary text-primary ring-1 ring-primary"
       )}
       whileHover={{ scale: 1.01 }}
       whileDrag={{ scale: 1.02 }}
@@ -122,27 +135,48 @@ const LayoutItem = ({
             )}
           </motion.button>
 
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              updateMenuSections(
-                menuSections.filter((section) => section.id !== item.id)
-              );
-              setActiveSection(
-                menuSections[
-                  menuSections.findIndex((s) => s.id === item.id) - 1
-                ].id
-              );
-            }}
-            className={cn(
-              "p-1.5 rounded-md text-primary",
-              "hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-            )}
-          >
-            <Trash2 className="w-4 h-4 text-red-400" />
-          </motion.button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => e.stopPropagation()}
+                className={cn(
+                  "p-1.5 rounded-md text-primary",
+                  "hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                )}
+              >
+                <Trash2 className="w-4 h-4 text-red-400" />
+              </motion.button>
+            </AlertDialogTrigger>
+            <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("delete")} {item.title}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  确定要删除此模块吗？
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("cancel")}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    updateMenuSections(
+                      menuSections.filter((section) => section.id !== item.id)
+                    );
+                    setActiveSection(
+                      menuSections[
+                        menuSections.findIndex((s) => s.id === item.id) - 1
+                      ].id
+                    );
+                  }}
+                  className="bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white shadow-sm border-0"
+                >
+                  {t("confirm")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </Reorder.Item>

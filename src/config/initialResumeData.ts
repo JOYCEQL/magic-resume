@@ -1,4 +1,4 @@
-import { DEFAULT_FIELD_ORDER } from ".";
+import { DEFAULT_FIELD_ORDER } from "./constants";
 import { GlobalSettings, DEFAULT_CONFIG, ResumeData } from "../types/resume";
 const initialGlobalSettings: GlobalSettings = {
   baseFontSize: 16,

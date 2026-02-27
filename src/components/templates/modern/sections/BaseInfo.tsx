@@ -63,29 +63,29 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
             <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col items-center gap-4">
                     {PhotoComponent}
-                    <div className="flex flex-col text-center">
+                    <div className="flex flex-col text-center" style={{ color: "#fff" }}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold" style={{ fontSize: "30px" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
                         )}
                     </div>
                 </div>
                 <motion.div layout="position" className="w-full flex flex-col gap-2"
                     style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "#fff" }}>
                     {allFields.map((item) => (
-                        <motion.div key={item.key} className="flex items-center whitespace-nowrap overflow-hidden text-baseFont text-[#fff]" style={{ width: "100%" }}>
+                        <motion.div key={item.key} className="flex items-center whitespace-nowrap overflow-hidden text-baseFont" style={{ width: "100%", color: "#fff" }}>
                             {useIconMode ? (
-                                <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-1" style={{ color: "#fff" }}>
                                     {getIcon(item.icon)}
-                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="underline">{item.value}</a> : <span>{item.value}</span>}
+                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="underline" style={{ color: "#fff" }}>{item.value}</a> : <span style={{ color: "#fff" }}>{item.value}</span>}
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2 overflow-hidden">
-                                    {!item.custom && <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && <span>{item.label}:</span>}
-                                    <span className="truncate" suppressHydrationWarning>{item.value}</span>
+                                <div className="flex items-center gap-2 overflow-hidden" style={{ color: "#fff" }}>
+                                    {!item.custom && <span style={{ color: "#fff" }}>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
+                                    {item.custom && <span style={{ color: "#fff" }}>{item.label}:</span>}
+                                    <span className="truncate" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</span>
                                 </div>
                             )}
                         </motion.div>

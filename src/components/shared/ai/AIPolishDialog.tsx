@@ -2,6 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslations } from "@/i18n/compat/client";
+import { Streamdown } from "streamdown";
+import "streamdown/styles.css";
+import { createMarkdownExit } from "markdown-exit";
+import TurndownService from "turndown";
 
 import {
   Dialog,
@@ -22,6 +26,19 @@ interface AIPolishDialogProps {
   content: string;
   onApply: (content: string) => void;
 }
+
+// markdown-exit 实例，用于将 AI 返回的 Markdown 转换为 Tiptap 兼容的 HTML
+const md = createMarkdownExit({
+  html: true,       // 允许 HTML 标签透传
+  breaks: true,     // 将换行符转换为 <br>
+  linkify: false,   // 简历内容不需要自动识别链接
+});
+
+// turndown 实例，用于将 Tiptap HTML 转换为 Markdown 发给 AI
+const turndownService = new TurndownService({
+  headingStyle: "atx",
+  bulletListMarker: "-",
+});
 
 export default function AIPolishDialog({
   open,
@@ -66,14 +83,14 @@ export default function AIPolishDialog({
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          content,
+          content: turndownService.turndown(content),
           apiKey: selectedModel === "doubao" ? doubaoApiKey : selectedModel === "openai" ? openaiApiKey : deepseekApiKey,
           apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
           model:
-              selectedModel === "doubao"
-                  ? doubaoModelId
-                  : selectedModel === "openai" ? openaiModelId
-                      : config.requiresModelId ? deepseekModelId : deepseekApiKey,
+            selectedModel === "doubao"
+              ? doubaoModelId
+              : selectedModel === "openai" ? openaiModelId
+                : config.requiresModelId ? deepseekModelId : deepseekApiKey,
           modelType: selectedModel
         }),
         signal: abortControllerRef.current.signal
@@ -95,16 +112,7 @@ export default function AIPolishDialog({
         if (done) break;
 
         const chunk = decoder.decode(value);
-        setPolishedContent((prev) => {
-          const newContent = prev + chunk;
-          requestAnimationFrame(() => {
-            if (polishedContentRef.current) {
-              const container = polishedContentRef.current;
-              container.scrollTop = container.scrollHeight;
-            }
-          });
-          return newContent;
-        });
+        setPolishedContent((prev) => prev + chunk);
       }
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -118,6 +126,16 @@ export default function AIPolishDialog({
       setIsPolishing(false);
     }
   };
+
+  // 自动滚动到底部
+  useEffect(() => {
+    if (polishedContent && polishedContentRef.current) {
+      const container = polishedContentRef.current;
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
+    }
+  }, [polishedContent]);
 
   useEffect(() => {
     if (open) {
@@ -141,7 +159,11 @@ export default function AIPolishDialog({
   };
 
   const handleApply = () => {
-    onApply(polishedContent);
+    // 将 Markdown 转为 HTML，并补回 Tiptap 所需的 ul/ol 类名
+    const htmlContent = md.render(polishedContent)
+      .replace(/<ul>/g, '<ul class="custom-list">')
+      .replace(/<ol>/g, '<ol class="custom-list-ordered">');
+    onApply(htmlContent);
     handleClose();
     toast.success(t("error.applied"));
   };
@@ -224,13 +246,14 @@ export default function AIPolishDialog({
                 "p-6 h-[400px] overflow-auto shadow-sm"
               )}
             >
-              <div
+              <Streamdown
                 className={cn(
                   "prose dark:prose-invert max-w-none",
                   "text-neutral-700 dark:text-neutral-300"
                 )}
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
+              >
+                {turndownService.turndown(content)}
+              </Streamdown>
             </div>
           </div>
 
@@ -260,13 +283,16 @@ export default function AIPolishDialog({
                 "p-6 h-[400px] overflow-auto shadow-sm scroll-smooth"
               )}
             >
-              <div
+              <Streamdown
+                animated
+                isAnimating={isPolishing}
                 className={cn(
                   "prose dark:prose-invert max-w-none",
                   "text-neutral-800 dark:text-neutral-200"
                 )}
-                dangerouslySetInnerHTML={{ __html: polishedContent }}
-              />
+              >
+                {polishedContent}
+              </Streamdown>
             </div>
           </div>
         </div>

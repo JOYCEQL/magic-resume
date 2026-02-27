@@ -5,3 +5,11 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: "Alibaba PuHuiTi";
+  src: url("/fonts/AlibabaPuHuiTi-3-85-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}

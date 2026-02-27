@@ -28,7 +28,7 @@ export const Route = createFileRoute("/api/polish")({
               messages: [
                 {
                   role: "system",
-                  content: `你是一个专业的简历优化助手。请帮助优化以下文本，使其更加专业和有吸引力。
+                  content: `你是一个专业的简历优化助手。请帮助优化以下 Markdown 格式的文本，使其更加专业和有吸引力。
 
               优化原则：
               1. 使用更专业的词汇和表达方式
@@ -36,9 +36,9 @@ export const Route = createFileRoute("/api/polish")({
               3. 保持简洁清晰
               4. 使用主动语气
               5. 保持原有信息的完整性
-              6. 保留我输入的格式
+              6. 严格保留原有的 Markdown 格式结构（列表项保持为列表项，加粗保持加粗等）
 
-              请直接返回优化后的文本，不要包含任何解释或其他内容。`
+              请直接返回优化后的 Markdown 文本，不要包含任何解释或其他内容。`
                 },
                 {
                   role: "user",

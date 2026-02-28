@@ -1,9 +1,9 @@
 # Changelog
 
 
-## v2.0.0...main
+## v2.0.1
 
-[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.0...main)
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.1...main)
 
 ### 🚀 Enhancements
 

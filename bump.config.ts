@@ -5,4 +5,5 @@ export default defineConfig({
   commit: true,
   tag: true,
   push: false,
+  all: true,
 })

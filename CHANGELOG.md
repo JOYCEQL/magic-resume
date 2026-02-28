@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v2.0.0...main
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.0...main)
+
+### 🚀 Enhancements
+
+- Implement resume creation modal with template selection and preview functionality ([accd34d](https://github.com/JOYCEQL/magic-resume/commit/accd34d))
+
+### 🩹 Fixes
+
+- Set white text color in BaseInfo sections of creative and modern templates. ([86d5c55](https://github.com/JOYCEQL/magic-resume/commit/86d5c55))
+
+### 🏡 Chore
+
+- Bumpp version ([0d05715](https://github.com/JOYCEQL/magic-resume/commit/0d05715))
+- Bumpp add all config ([9d43c60](https://github.com/JOYCEQL/magic-resume/commit/9d43c60))
+
+### 🎨 Styles
+
+- Dashboard  tempate card  ui ([4ba25d6](https://github.com/JOYCEQL/magic-resume/commit/4ba25d6))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+
 ## v2.0.0
 
 🎉 **Major Update: Migration to TanStack Start**

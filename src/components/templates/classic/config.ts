@@ -18,6 +18,6 @@ export const classicConfig: ResumeTemplate = {
     contentPadding: 32,
   },
   basic: {
-    layout: "center",
+    layout: "left",
   },
 };

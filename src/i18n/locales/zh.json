@@ -126,7 +126,34 @@
         "goToSettings": "前往设置"
       },
       "deleteConfirmTitle": "确认删除简历？",
-      "deleteConfirmDescription": "此操作无法撤销。这将永久删除此简历，并从设备中移除数据。"
+      "deleteConfirmDescription": "此操作无法撤销。这将永久删除此简历，并从设备中移除数据。",
+      "createDialog": {
+        "title": "新建简历",
+        "description": "从空白模板开始创建新简历",
+        "tabs": {
+          "fromTemplate": "从模板创建",
+          "uploadFile": "上传文件"
+        },
+        "namePlaceholder": "姓名",
+        "switchTemplate": "切换模板",
+        "cancel": "取消",
+        "create": "创建",
+        "blankTitle": "空白简历",
+        "startFromBlank": "从空白开始",
+        "startFromTemplate": "从模板开始",
+        "blankCardDescription": "从内置默认模板创建，空白开始",
+        "blankThumbnailDescription": "一张白纸，不受任何预设干扰，自由发挥您的创意，打造完全属于您个人风格的代码级简历",
+        "createNow": "立即创建",
+        "backToGrid": "返回模板列表",
+        "blankPreviewDescription": "选择这张白纸，一切从零开始。不受任何预设干扰，打造完全属于您个人风格的代码级可控精美简历。",
+        "useThisTemplate": "就用这个模板开始",
+        "sample": {
+          "company": "Google",
+          "position": "高级软件工程师",
+          "present": "至今",
+          "workDescription": "主导前端团队，页面性能提升 40%。"
+        }
+      }
     },
     "settings": {
       "title": "设置",

@@ -125,7 +125,34 @@
         "goToSettings": "Go to Settings"
       },
       "deleteConfirmTitle": "Confirm Delete Resume?",
-      "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this resume and remove the data from your device."
+      "deleteConfirmDescription": "This action cannot be undone. This will permanently delete this resume and remove the data from your device.",
+      "createDialog": {
+        "title": "Create New Resume",
+        "description": "Start a new resume from a blank template",
+        "tabs": {
+          "fromTemplate": "From Template",
+          "uploadFile": "Upload File"
+        },
+        "namePlaceholder": "Name",
+        "switchTemplate": "Switch Template",
+        "cancel": "Cancel",
+        "create": "Create",
+        "blankTitle": "Blank Resume",
+        "startFromBlank": "Start from Blank",
+        "startFromTemplate": "Start from Template",
+        "blankCardDescription": "Use a default built-in layout and start from scratch.",
+        "blankThumbnailDescription": "Start with a clean page and shape a code-driven resume with complete creative control.",
+        "createNow": "Create Now",
+        "backToGrid": "Back to template grid",
+        "blankPreviewDescription": "Choose a blank page and build everything from zero, without any preset constraints.",
+        "useThisTemplate": "Use This Template",
+        "sample": {
+          "company": "Google",
+          "position": "Senior Software Engineer",
+          "present": "Present",
+          "workDescription": "Led the frontend team and improved page performance by 40%."
+        }
+      }
     },
     "settings": {
       "title": "Settings",

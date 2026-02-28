@@ -33,6 +33,7 @@ import ResumeTemplateComponent from "@/components/templates";
 import { DEFAULT_TEMPLATES } from "@/config";
 
 import { generateUUID } from "@/utils/uuid";
+import { CreateResumeModal } from "./CreateResumeModal";
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -41,6 +42,11 @@ const ResumesList = () => {
 const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, deleteResume, index }: any) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [scale, setScale] = React.useState(0.24);
+  const activeTemplate =
+    DEFAULT_TEMPLATES.find((template) => template.id === resume.templateId) ??
+    DEFAULT_TEMPLATES[0];
+  const templateNameKey =
+    activeTemplate.id === "left-right" ? "leftRight" : activeTemplate.id;
 
   React.useEffect(() => {
     if (!containerRef.current) return;
@@ -87,10 +93,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
                   fontFamily: resume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
                 }}
               >
-                {(() => {
-                  const template = DEFAULT_TEMPLATES.find(t => t.id === resume.templateId) || DEFAULT_TEMPLATES[0];
-                  return <ResumeTemplateComponent data={resume as any} template={template} />;
-                })()}
+                <ResumeTemplateComponent data={resume as any} template={activeTemplate} />
               </div>
             </div>
           </div>
@@ -102,7 +105,7 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
                 {resume.title || t("dashboard.resumes.untitled")}
               </span>
               <span className="text-[11px] text-gray-600 dark:text-gray-300 mt-0.5 font-medium">
-                {t(`dashboard.templates.${DEFAULT_TEMPLATES.find(t => t.id === resume.templateId)?.id === "left-right" ? "leftRight" : (DEFAULT_TEMPLATES.find(t => t.id === resume.templateId)?.id || "classic")}.name`)} · {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(resume.updatedAt || resume.createdAt))}
+                {t(`dashboard.templates.${templateNameKey}.name`)} · {new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(resume.updatedAt || resume.createdAt))}
               </span>
             </div>
           </div>
@@ -198,6 +201,7 @@ const ResumeWorkbench = () => {
   } = useResumeStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   useEffect(() => {
     const syncResumesFromFiles = async () => {
@@ -248,10 +252,38 @@ const ResumeWorkbench = () => {
     loadSavedConfig();
   }, []);
 
-  const handleCreateResume = () => {
-    const newId = createResume(null);
+  const handleCreateFromModal = (templateId: string | null) => {
+    const newId = createResume(templateId);
+
+    if (templateId) {
+      const template = DEFAULT_TEMPLATES.find((t) => t.id === templateId);
+      if (template) {
+        const { resumes, updateResume } = useResumeStore.getState();
+        const resume = resumes[newId];
+        if (resume) {
+          updateResume(newId, {
+            globalSettings: {
+              ...resume.globalSettings,
+              themeColor: template.colorScheme.primary,
+              sectionSpacing: template.spacing.sectionGap,
+              paragraphSpacing: template.spacing.itemGap,
+              pagePadding: template.spacing.contentPadding,
+            },
+            basic: {
+              ...resume.basic,
+              layout: template.basic.layout,
+            },
+          });
+        }
+      }
+    }
+
+    setIsCreateModalOpen(false);
     setActiveResume(newId);
+    router.push(`/app/workbench/${newId}`);
   };
+
+
 
   const handleImportJson = () => {
     const input = document.createElement("input");
@@ -376,7 +408,7 @@ const ResumeWorkbench = () => {
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Button
-                onClick={handleCreateResume}
+                onClick={() => setIsCreateModalOpen(true)}
                 variant="default"
                 className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
               >
@@ -398,7 +430,7 @@ const ResumeWorkbench = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={handleCreateResume}
+              onClick={() => setIsCreateModalOpen(true)}
             >
               <Card
                 className={cn(
@@ -442,6 +474,12 @@ const ResumeWorkbench = () => {
             </AnimatePresence>
           </div>
         </motion.div>
+
+        <CreateResumeModal
+          open={isCreateModalOpen}
+          onOpenChange={setIsCreateModalOpen}
+          onCreate={handleCreateFromModal}
+        />
       </motion.div>
     </ScrollArea>
   );

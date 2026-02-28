@@ -27,6 +27,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create GitHub Release
-        run: npx changelogen --release
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          npx changelogen gh release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

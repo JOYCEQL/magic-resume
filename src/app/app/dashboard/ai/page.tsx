@@ -1,17 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Check, ExternalLink, Sparkles } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
-import { ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import DeepSeekLogo from "@/components/ai/icon/IconDeepseek";
 import IconDoubao from "@/components/ai/icon/IconDoubao";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import IconOpenAi from "@/components/ai/icon/IconOpenAi";
@@ -24,33 +17,38 @@ const AISettingsPage = () => {
     openaiApiKey,
     openaiModelId,
     openaiApiEndpoint,
+    geminiApiKey,
+    geminiModelId,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
     setOpenaiApiKey,
     setOpenaiModelId,
     setOpenaiApiEndpoint,
+    setGeminiApiKey,
+    setGeminiModelId,
     selectedModel,
     setSelectedModel,
   } = useAIConfigStore();
+  const [currentModel, setCurrentModel] = useState(selectedModel);
 
-  const [currentModel, setCurrentModel] = useState("");
+  const t = useTranslations();
 
   useEffect(() => {
     setCurrentModel(selectedModel);
   }, [selectedModel]);
 
-  const t = useTranslations();
-
   const handleApiKeyChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai"
+    type: "doubao" | "deepseek" | "openai" | "gemini"
   ) => {
     const newApiKey = e.target.value;
     if (type === "doubao") {
       setDoubaoApiKey(newApiKey);
     } else if (type === "deepseek") {
       setDeepseekApiKey(newApiKey);
+    } else if (type === "gemini") {
+      setGeminiApiKey(newApiKey);
     } else {
       setOpenaiApiKey(newApiKey);
     }
@@ -58,13 +56,15 @@ const AISettingsPage = () => {
 
   const handleModelIdChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai"
+    type: "doubao" | "deepseek" | "openai" | "gemini"
   ) => {
     const newModelId = e.target.value;
     if (type === "doubao") {
       setDoubaoModelId(newModelId);
     } else if (type === "openai") {
       setOpenaiModelId(newModelId);
+    } else if (type === "gemini") {
+      setGeminiModelId(newModelId);
     }
   };
 
@@ -109,76 +109,87 @@ const AISettingsPage = () => {
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
       isConfigured: !!(openaiApiKey && openaiModelId && openaiApiEndpoint),
     },
+    {
+      id: "gemini",
+      name: t("dashboard.settings.ai.gemini.title"),
+      description: t("dashboard.settings.ai.gemini.description"),
+      icon: Sparkles,
+      link: "https://aistudio.google.com/app/apikey",
+      color: "text-amber-500",
+      bgColor: "bg-amber-50 dark:bg-amber-950/50",
+      isConfigured: !!(geminiApiKey && geminiModelId),
+    },
   ];
 
   return (
     <div className="mx-auto py-4 px-4">
       <div className="flex gap-8">
         <div className="w-64 space-y-6">
-          <div>
-            <Label className="text-sm mb-2 block text-muted-foreground">
-              {t("dashboard.settings.ai.currentModel")}
-            </Label>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-full">
-                <SelectValue
-                  placeholder={t("dashboard.settings.ai.selectModel")}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map((model) => (
-                  <SelectItem
-                    key={model.id}
-                    value={model.id}
-                    className="flex items-center gap-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <model.icon className={cn("h-4 w-4", model.color)} />
-                      <span>{model.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="h-[1px] bg-gray-200 dark:bg-gray-800" />
-
-          {/* 配置模型列表 */}
           <div className="flex flex-col space-y-1">
             {models.map((model) => {
               const Icon = model.icon;
-              const isActive = currentModel === model.id;
+              const isChecked = selectedModel === model.id;
+              const isViewing = currentModel === model.id;
               return (
-                <button
+                <div
                   key={model.id}
-                  onClick={() => setCurrentModel(model.id)}
+                  onClick={() => {
+                    setCurrentModel(model.id as typeof currentModel);
+                  }}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-left relative",
-                    "transition-all duration-200",
-                    "hover:bg-primary/10",
-                    isActive && "bg-primary/10"
+                    "w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left border",
+                    "transition-all duration-200 cursor-pointer",
+                    "hover:bg-primary/10 hover:border-primary/30",
+                    isViewing
+                      ? "bg-primary/10 border-primary/40"
+                      : "border-transparent"
                   )}
                 >
                   <div
                     className={cn(
                       "shrink-0",
-                      isActive ? "text-primary" : "text-muted-foreground"
+                      isViewing ? "text-primary" : "text-muted-foreground"
                     )}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col items-start">
+                    >
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  <div className="flex-1 min-w-0 flex flex-col items-start">
                     <span
                       className={cn(
                         "font-medium text-sm",
-                        isActive && "text-primary"
+                        isViewing && "text-primary"
                       )}
                     >
                       {model.name}
                     </span>
+                    <span className="text-xs text-muted-foreground truncate w-full">
+                      {model.isConfigured
+                        ? t("common.configured")
+                        : t("common.notConfigured")}
+                    </span>
                   </div>
-                </button>
+                  <button
+                    type="button"
+                    aria-label={`Select ${model.name}`}
+                    onClick={() => {
+                      setSelectedModel(
+                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                      );
+                      setCurrentModel(
+                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                      );
+                    }}
+                    className={cn(
+                      "h-6 w-6 rounded-md flex items-center justify-center border transition-all",
+                      "shrink-0",
+                      isChecked
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "bg-transparent border-muted-foreground/40 text-transparent hover:border-primary/40"
+                    )}
+                  >
+                    <Check className="h-4 w-4" />
+                  </button>
+                </div>
               );
             })}
           </div>
@@ -223,12 +234,14 @@ const AISettingsPage = () => {
                             ? doubaoApiKey
                             : model.id === "openai"
                             ? openaiApiKey
+                            : model.id === "gemini"
+                            ? geminiApiKey
                             : deepseekApiKey
                         }
                         onChange={(e) =>
                           handleApiKeyChange(
                             e,
-                            model.id as "doubao" | "deepseek" | "openai"
+                            model.id as "doubao" | "deepseek" | "openai" | "gemini"
                           )
                         }
                         type="password"
@@ -244,7 +257,7 @@ const AISettingsPage = () => {
                       />
                     </div>
 
-                    {currentModel === "doubao" && (
+                    {model.id === "doubao" && (
                       <div className="space-y-4">
                         <Label className="text-base font-medium">
                           {t("dashboard.settings.ai.doubao.modelId")}
@@ -265,7 +278,7 @@ const AISettingsPage = () => {
                       </div>
                     )}
 
-                    {currentModel === "openai" && (
+                    {model.id === "openai" && (
                       <div className="space-y-4">
                         <Label className="text-base font-medium">
                           {t("dashboard.settings.ai.openai.modelId")}
@@ -286,7 +299,26 @@ const AISettingsPage = () => {
                       </div>
                     )}
 
-                    {currentModel === "openai" && (
+                    {model.id === "gemini" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.gemini.modelId")}
+                        </Label>
+                        <Input
+                          value={geminiModelId}
+                          onChange={(e) => handleModelIdChange(e, "gemini")}
+                          placeholder={t("dashboard.settings.ai.gemini.modelId")}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {model.id === "openai" && (
                       <div className="space-y-4">
                         <Label className="text-base font-medium">
                           {t("dashboard.settings.ai.openai.apiEndpoint")}

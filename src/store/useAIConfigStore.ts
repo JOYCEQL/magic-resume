@@ -11,6 +11,8 @@ interface AIConfigState {
   openaiApiKey: string;
   openaiModelId: string;
   openaiApiEndpoint: string;
+  geminiApiKey: string;
+  geminiModelId: string;
   setSelectedModel: (model: AIModelType) => void;
   setDoubaoApiKey: (apiKey: string) => void;
   setDoubaoModelId: (modelId: string) => void;
@@ -19,6 +21,8 @@ interface AIConfigState {
   setOpenaiApiKey: (apiKey: string) => void;
   setOpenaiModelId: (modelId: string) => void;
   setOpenaiApiEndpoint: (endpoint: string) => void;
+  setGeminiApiKey: (apiKey: string) => void;
+  setGeminiModelId: (modelId: string) => void;
   isConfigured: () => boolean;
 }
 
@@ -33,6 +37,8 @@ export const useAIConfigStore = create<AIConfigState>()(
       openaiApiKey: "",
       openaiModelId: "",
       openaiApiEndpoint: "",
+      geminiApiKey: "",
+      geminiModelId: "gemini-1.5-flash",
       setSelectedModel: (model: AIModelType) => set({ selectedModel: model }),
       setDoubaoApiKey: (apiKey: string) => set({ doubaoApiKey: apiKey }),
       setDoubaoModelId: (modelId: string) => set({ doubaoModelId: modelId }),
@@ -41,6 +47,8 @@ export const useAIConfigStore = create<AIConfigState>()(
       setOpenaiApiKey: (apiKey: string) => set({ openaiApiKey: apiKey }),
       setOpenaiModelId: (modelId: string) => set({ openaiModelId: modelId }),
       setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint }),
+      setGeminiApiKey: (apiKey: string) => set({ geminiApiKey: apiKey }),
+      setGeminiModelId: (modelId: string) => set({ geminiModelId: modelId }),
       isConfigured: () => {
         const state = get();
         const config = AI_MODEL_CONFIGS[state.selectedModel];

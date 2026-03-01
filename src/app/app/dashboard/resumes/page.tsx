@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
-import { Plus, FileText, Settings, AlertCircle, Upload } from "lucide-react";
+import { Plus, Settings, AlertCircle, Upload, Braces } from "lucide-react";
+import { PdfIcon } from "@/components/shared/icons/PdfIcon";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,142 @@ import { DEFAULT_TEMPLATES } from "@/config";
 
 import { generateUUID } from "@/utils/uuid";
 import { CreateResumeModal } from "./CreateResumeModal";
+import { ImportResumeDialog } from "./ImportResumeDialog";
+import { useAIConfigStore } from "@/store/useAIConfigStore";
+import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
+
+const MAX_PDF_IMPORT_PAGES = 3;
+const PDF_IMAGE_QUALITY = 0.82;
+const PDF_MAX_IMAGE_WIDTH = 1600;
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+const toString = (value: unknown) =>
+  typeof value === "string" ? value.trim() : "";
+
+const toStringArray = (value: unknown) => {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => toString(item))
+      .filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(/\r?\n/)
+      .map((line) => line.replace(/^[-*•\d.)\s]+/, "").trim())
+      .filter(Boolean);
+  }
+
+  return [] as string[];
+};
+
+const toListHtml = (value: unknown) => {
+  const items = toStringArray(value);
+  if (items.length === 0) return "";
+  return `<ul class="custom-list">${items
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("")}</ul>`;
+};
+
+const extractJsonContent = (content: string) => {
+  const direct = content.trim();
+  try {
+    return JSON.parse(direct);
+  } catch (error) { }
+
+  const fencedMatch = direct.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fencedMatch?.[1]) {
+    try {
+      return JSON.parse(fencedMatch[1].trim());
+    } catch (error) { }
+  }
+
+  const objectMatch = direct.match(/\{[\s\S]*\}/);
+  if (objectMatch?.[0]) {
+    try {
+      return JSON.parse(objectMatch[0]);
+    } catch (error) { }
+  }
+
+  throw new Error("Invalid AI JSON content");
+};
+
+const createResumeFromAIResult = (result: any, fileName: string) => {
+  const now = new Date().toISOString();
+  const id = generateUUID();
+
+  const education = Array.isArray(result?.education) ? result.education : [];
+  const experience = Array.isArray(result?.experience) ? result.experience : [];
+  const projects = Array.isArray(result?.projects) ? result.projects : [];
+
+  const skillSource = result?.skillContent ?? result?.skills;
+  const skillContent = toListHtml(skillSource);
+
+  return {
+    ...initialResumeState,
+    id,
+    title: toString(result?.title) || fileName || `Imported Resume ${id.slice(0, 6)}`,
+    createdAt: now,
+    updatedAt: now,
+    templateId: DEFAULT_TEMPLATES[0]?.id,
+    basic: {
+      ...initialResumeState.basic,
+      name: toString(result?.basic?.name),
+      title: toString(result?.basic?.title),
+      email: toString(result?.basic?.email),
+      phone: toString(result?.basic?.phone),
+      location: toString(result?.basic?.location),
+      employementStatus: toString(result?.basic?.employementStatus),
+      birthDate: toString(result?.basic?.birthDate),
+      customFields: [],
+      photo: "",
+      githubKey: "",
+      githubUseName: "",
+      githubContributionsVisible: false,
+    },
+    education: education
+      .map((item: any) => ({
+        id: generateUUID(),
+        school: toString(item?.school),
+        major: toString(item?.major),
+        degree: toString(item?.degree),
+        startDate: toString(item?.startDate),
+        endDate: toString(item?.endDate),
+        gpa: toString(item?.gpa),
+        description: toListHtml(item?.description),
+        visible: true,
+      }))
+      .filter((item: any) => item.school || item.major || item.degree),
+    experience: experience
+      .map((item: any) => ({
+        id: generateUUID(),
+        company: toString(item?.company),
+        position: toString(item?.position),
+        date: toString(item?.date),
+        details: toListHtml(item?.details || item?.description),
+        visible: true,
+      }))
+      .filter((item: any) => item.company || item.position || item.date || item.details),
+    projects: projects
+      .map((item: any) => ({
+        id: generateUUID(),
+        name: toString(item?.name),
+        role: toString(item?.role),
+        date: toString(item?.date),
+        description: toListHtml(item?.description || item?.details),
+        link: toString(item?.link),
+        visible: true,
+      }))
+      .filter((item: any) => item.name || item.role || item.date || item.description),
+    skillContent,
+    customData: {},
+  };
+};
 
 const ResumesList = () => {
   return <ResumeWorkbench />;
@@ -187,21 +324,76 @@ const ResumeCardItem = ({ id, resume, t, locale, setActiveResume, router, delete
   );
 };
 
+const AnimatedImportButton = ({ onClick, t }: { onClick: () => void; t: any }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  return (
+    <motion.div
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    >
+      <Button
+        onClick={onClick}
+        variant="outline"
+        className={cn(
+          "relative h-10 overflow-hidden px-4 font-medium transition-all duration-300",
+          "border-border/60 bg-background hover:border-primary/50 hover:bg-accent/50 hover:shadow-sm",
+          "dark:border-border/40 dark:hover:border-primary/40"
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <div className="relative h-5 w-5 overflow-hidden">
+            <motion.div
+              animate={{
+                y: isHovered ? -20 : 0,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 20,
+              }}
+              className="flex flex-col"
+            >
+              <div className="flex h-5 w-5 items-center justify-center">
+                <Braces className="h-4 w-4 text-blue-500" />
+              </div>
+              <div className="flex h-5 w-5 items-center justify-center">
+                <PdfIcon className="h-4 w-4 text-red-500" />
+              </div>
+            </motion.div>
+          </div>
+          <span className="relative z-10">{t("dashboard.resumes.import")}</span>
+        </div>
+      </Button>
+    </motion.div>
+  );
+};
+
 const ResumeWorkbench = () => {
   const t = useTranslations();
   const locale = useLocale();
   const {
     resumes,
     setActiveResume,
-    updateResume,
     updateResumeFromFile,
     addResume,
     deleteResume,
     createResume,
   } = useResumeStore();
+  const {
+    geminiApiKey,
+    geminiModelId,
+  } = useAIConfigStore();
   const router = useRouter();
   const [hasConfiguredFolder, setHasConfiguredFolder] = React.useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = React.useState(false);
+  const [isImporting, setIsImporting] = React.useState(false);
+  const jsonFileInputRef = React.useRef<HTMLInputElement>(null);
+  const pdfFileInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const syncResumesFromFiles = async () => {
@@ -214,7 +406,7 @@ const ResumeWorkbench = () => {
 
         const dirHandle = handle as FileSystemDirectoryHandle;
 
-        for await (const entry of dirHandle.values()) {
+        for await (const entry of (dirHandle as any).values()) {
           if (entry.kind === "file" && entry.name.endsWith(".json")) {
             try {
               const file = await entry.getFile();
@@ -234,7 +426,7 @@ const ResumeWorkbench = () => {
     if (Object.keys(resumes).length === 0) {
       syncResumesFromFiles();
     }
-  }, [resumes, updateResume]);
+  }, [resumes, updateResumeFromFile]);
 
   useEffect(() => {
     const loadSavedConfig = async () => {
@@ -283,39 +475,158 @@ const ResumeWorkbench = () => {
     setActiveResume(newId);
     router.push(`/app/workbench/${newId}`);
   };
-
-
-
-  const handleImportJson = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      try {
-        const content = await file.text();
-        const config = JSON.parse(content);
-
-        const newResume = {
-          ...initialResumeState,
-          ...config,
-          id: generateUUID(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        addResume(newResume);
-        toast.success(t("dashboard.resumes.importSuccess"));
-      } catch (error) {
-        console.error("Import error:", error);
-        toast.error(t("dashboard.resumes.importError"));
-      }
+  const importResumeFromJson = async (file: File) => {
+    const content = await file.text();
+    const config = JSON.parse(content);
+    const now = new Date().toISOString();
+    const newResume = {
+      ...initialResumeState,
+      ...config,
+      id: generateUUID(),
+      createdAt: now,
+      updatedAt: now,
     };
+    const resumeId = addResume(newResume);
+    setActiveResume(resumeId);
+    setIsImportDialogOpen(false);
+    toast.success(t("dashboard.resumes.importSuccess"));
+    router.push(`/app/workbench/${resumeId}`);
+  };
 
-    input.click();
+  const extractImagesFromPdf = async (file: File) => {
+    const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+    const buffer = await file.arrayBuffer();
+    const typedPdfjs = pdfjs as any;
+
+    typedPdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+
+    const loadingTask = typedPdfjs.getDocument({
+      data: new Uint8Array(buffer),
+    });
+    const pdf = await loadingTask.promise;
+    const pageImages: string[] = [];
+    const totalPages = Math.min(pdf.numPages, MAX_PDF_IMPORT_PAGES);
+
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const baseViewport = page.getViewport({ scale: 2 });
+      const widthScale = Math.min(1, PDF_MAX_IMAGE_WIDTH / baseViewport.width);
+      const viewport = page.getViewport({ scale: 2 * widthScale });
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d", { alpha: false });
+
+      if (!context) {
+        throw new Error("Unable to create canvas context");
+      }
+
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+
+      await page.render({
+        canvasContext: context,
+        viewport,
+      }).promise;
+
+      const imageDataUrl = canvas.toDataURL("image/jpeg", PDF_IMAGE_QUALITY);
+      pageImages.push(imageDataUrl);
+
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+
+    return pageImages;
+  };
+
+  const importResumeFromPdf = async (file: File) => {
+    if (!geminiApiKey || !geminiModelId) {
+      toast.error(t("dashboard.resumes.importDialog.geminiConfigRequired"));
+      router.push("/app/dashboard/ai");
+      return;
+    }
+
+    const pdfImages = await extractImagesFromPdf(file);
+    if (pdfImages.length === 0) {
+      throw new Error("No extractable PDF pages");
+    }
+
+    const response = await fetch("/api/resume-import", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        images: pdfImages,
+        apiKey: geminiApiKey,
+        model: geminiModelId,
+        locale,
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      const message = data?.details
+        ? `${data?.error || "Resume import failed"}\n${data.details}`
+        : data?.error || "Resume import failed";
+      throw new Error(message);
+    }
+
+    const aiResume = data?.resume
+      ? data.resume
+      : data?.choices?.[0]?.message?.content
+        ? extractJsonContent(data.choices[0].message.content)
+        : null;
+
+    if (!aiResume) {
+      throw new Error("Invalid AI response");
+    }
+
+    const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
+    const resume = createResumeFromAIResult(aiResume, nameWithoutExt);
+    const resumeId = addResume(resume);
+    setActiveResume(resumeId);
+    setIsImportDialogOpen(false);
+    toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
+    router.push(`/app/workbench/${resumeId}`);
+  };
+
+  const handleJsonFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || isImporting) return;
+
+    try {
+      setIsImporting(true);
+      await importResumeFromJson(file);
+    } catch (error) {
+      console.error("Import JSON error:", error);
+      toast.error(t("dashboard.resumes.importError"));
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handlePdfFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || isImporting) return;
+
+    try {
+      setIsImporting(true);
+      await importResumeFromPdf(file);
+    } catch (error) {
+      console.error("Import PDF error:", error);
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : t("dashboard.resumes.importDialog.pdfError");
+      toast.error(message);
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   return (
@@ -389,20 +700,7 @@ const ResumeWorkbench = () => {
             {t("dashboard.resumes.myResume")}
           </h1>
           <div className="flex items-center space-x-2">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <Button
-                onClick={handleImportJson}
-                variant="outline"
-                className="hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                {t("dashboard.resumes.import")}
-              </Button>
-            </motion.div>
+            <AnimatedImportButton onClick={() => setIsImportDialogOpen(true)} t={t} />
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -480,6 +778,16 @@ const ResumeWorkbench = () => {
           open={isCreateModalOpen}
           onOpenChange={setIsCreateModalOpen}
           onCreate={handleCreateFromModal}
+        />
+
+        <ImportResumeDialog
+          open={isImportDialogOpen}
+          isImporting={isImporting}
+          onOpenChange={setIsImportDialogOpen}
+          jsonFileInputRef={jsonFileInputRef}
+          pdfFileInputRef={pdfFileInputRef}
+          onJsonFileChange={handleJsonFileChange}
+          onPdfFileChange={handlePdfFileChange}
         />
       </motion.div>
     </ScrollArea>

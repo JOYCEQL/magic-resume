@@ -11,7 +11,9 @@
     "cancel": "取消",
     "confirm": "确认",
     "deleteSuccess": "删除成功",
-    "deleteModuleConfirm": "确定要删除此模块吗？此操作无法撤销。"
+    "deleteModuleConfirm": "确定要删除此模块吗？此操作无法撤销。",
+    "configured": "已配置",
+    "notConfigured": "未配置"
   },
   "home": {
     "header": {
@@ -116,10 +118,21 @@
       "create": "新建简历",
       "newResume": "新建简历",
       "newResumeDescription": "创建一个新简历以开始。",
-      "import": "导入 JSON 配置",
+      "import": "导入简历",
       "untitled": "未命名简历",
       "importSuccess": "配置导入成功",
       "importError": "配置导入失败，请检查文件格式",
+      "importDialog": {
+        "title": "导入简历",
+        "jsonTitle": "导入 JSON",
+        "jsonDescription": "导入已导出的简历配置文件（.json）",
+        "pdfTitle": "导入 PDF",
+        "pdfDescription": "使用 Gemini 自动识别生成简历结构",
+        "importing": "正在导入，请稍候...",
+        "geminiConfigRequired": "请先在 AI 服务商设置页配置 Gemini API Key 和模型 ID",
+        "pdfSuccess": "PDF 导入成功",
+        "pdfError": "PDF 导入失败，请检查 PDF 内容或 Gemini 配置"
+      },
       "notice": {
         "title": "注意",
         "description": "建议在设置里中配置简历备份文件夹，防止您的数据可能会在浏览器清除缓存后丢失",
@@ -192,6 +205,12 @@
           "apiKey": "API Key",
           "modelId": "模型 ID",
           "apiEndpoint": "API 端点，如：https://openai.example.org/v1"
+        },
+        "gemini": {
+          "title": "Gemini",
+          "description": "支持润色、语法检查和 PDF 图片识别导入。推荐模型 ID：gemini-flash-latest",
+          "apiKey": "Gemini API Key",
+          "modelId": "Gemini 模型 ID"
         }
       }
     },

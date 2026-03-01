@@ -12,6 +12,7 @@
     "release": "bumpp"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@heroui/checkbox": "^2.3.30",
     "@heroui/date-input": "^2.3.30",
     "@heroui/react": "^2.8.8",
@@ -62,6 +63,7 @@
     "mark.js": "^8.11.1",
     "markdown-exit": "1.0.0-beta.8",
     "next-themes": "^0.4.3",
+    "pdfjs-dist": "^5.4.624",
     "puppeteer": "^23.9.0",
     "puppeteer-core": "^23.9.0",
     "react": "^18",
@@ -75,6 +77,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "turndown": "^7.2.2",
+    "undici": "^7.22.0",
     "uuid": "^11.0.5",
     "vaul": "^1.1.1",
     "zustand": "^4.5.4"

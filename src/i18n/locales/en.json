@@ -11,7 +11,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "deleteSuccess": "Deleted successfully",
-    "deleteModuleConfirm": "Are you sure you want to delete this module? This action cannot be undone."
+    "deleteModuleConfirm": "Are you sure you want to delete this module? This action cannot be undone.",
+    "configured": "Configured",
+    "notConfigured": "Not configured"
   },
   "home": {
     "header": {
@@ -115,10 +117,21 @@
       "create": "Create Resume",
       "newResume": "New Resume",
       "newResumeDescription": "Create a new resume to get started.",
-      "import": "Import JSON Config",
+      "import": "Import Resume",
       "untitled": "Untitled Resume",
       "importSuccess": "Configuration imported successfully",
       "importError": "Import failed, please check the file format",
+      "importDialog": {
+        "title": "Import Resume",
+        "jsonTitle": "Import JSON",
+        "jsonDescription": "Import an exported resume config file (.json)",
+        "pdfTitle": "Import PDF",
+        "pdfDescription": "Use Gemini into structured resume data",
+        "importing": "Importing, please wait...",
+        "geminiConfigRequired": "Please configure Gemini API Key and Model ID in AI settings first",
+        "pdfSuccess": "PDF imported successfully",
+        "pdfError": "PDF import failed. Please check PDF content or Gemini configuration"
+      },
       "notice": {
         "title": "Attention",
         "description": "It is recommended to configure a resume backup folder in the settings to prevent your data from being lost when the browser cache is cleared",
@@ -191,6 +204,12 @@
           "apiKey": "OpenAI API Key",
           "modelId": "Model ID",
           "apiEndpoint": "API Endpoint, example: https://openai.example.org/v1"
+        },
+        "gemini": {
+          "title": "Gemini",
+          "description": "Supports polish, grammar check, and PDF image resume import. Recommended model: gemini-flash-latest",
+          "apiKey": "Gemini API Key",
+          "modelId": "Gemini Model ID"
         }
       }
     },

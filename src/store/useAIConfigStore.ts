@@ -38,7 +38,7 @@ export const useAIConfigStore = create<AIConfigState>()(
       openaiModelId: "",
       openaiApiEndpoint: "",
       geminiApiKey: "",
-      geminiModelId: "gemini-1.5-flash",
+      geminiModelId: "gemini-flash-latest",
       setSelectedModel: (model: AIModelType) => set({ selectedModel: model }),
       setDoubaoApiKey: (apiKey: string) => set({ doubaoApiKey: apiKey }),
       setDoubaoModelId: (modelId: string) => set({ doubaoModelId: modelId }),

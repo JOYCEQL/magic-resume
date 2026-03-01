@@ -52,7 +52,7 @@ export const Route = createFileRoute("/api/grammar")({
             再次强调：**只找错别字和标点错误，不要做任何润色！**`;
 
           if (modelType === "gemini") {
-            const geminiModel = model || "gemini-1.5-flash";
+            const geminiModel = model || "gemini-flash-latest";
             const modelInstance = getGeminiModelInstance({
               apiKey,
               model: geminiModel,

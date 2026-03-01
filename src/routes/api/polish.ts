@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/polish")({
               请直接返回优化后的 Markdown 文本，不要包含任何解释或其他内容。`;
 
           if (modelType === "gemini") {
-            const geminiModel = model || "gemini-1.5-flash";
+            const geminiModel = model || "gemini-flash-latest";
             const modelInstance = getGeminiModelInstance({
               apiKey,
               model: geminiModel,

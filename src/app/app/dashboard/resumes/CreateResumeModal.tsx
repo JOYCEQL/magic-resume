@@ -114,7 +114,7 @@ const TemplateThumbnail = ({
         },
         basic: {
             ...initialResumeState.basic,
-            layout: template.basic?.layout || "classic",
+            layout: (template.basic?.layout as any) || "left",
         },
         // Feed richer mock content in large preview.
         experience: sampleExperience,

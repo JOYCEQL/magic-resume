@@ -253,7 +253,8 @@ const ResumeWorkbench = () => {
   }, []);
 
   const handleCreateFromModal = (templateId: string | null) => {
-    const newId = createResume(templateId);
+    const isBlank = !templateId;
+    const newId = createResume(templateId, isBlank);
 
     if (templateId) {
       const template = DEFAULT_TEMPLATES.find((t) => t.id === templateId);

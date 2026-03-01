@@ -18,8 +18,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
-import { THEME_COLORS } from "@/types/resume";
+import { THEME_COLORS, MenuSection } from "@/types/resume";
 import { ColorPicker } from "@/components/ui/color-picker";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Plus } from "lucide-react";
+import { STANDARD_MODULES } from "@/config/modules";
+import { DEFAULT_TEMPLATES } from "@/config";
 
 const fontOptions = [
   { value: "sans", label: "无衬线体" },
@@ -84,6 +92,18 @@ export function SidePanel() {
   const { themeColor = THEME_COLORS[0] } = globalSettings;
   const t = useTranslations("workbench.sidePanel");
 
+  const currentTemplate = DEFAULT_TEMPLATES.find(
+    (t) => t.id === activeResume?.templateId
+  );
+
+  const availableModules = useMemo(() => {
+    return (
+      currentTemplate?.availableSections
+        ?.map((id) => STANDARD_MODULES[id])
+        .filter(Boolean) || []
+    );
+  }, [currentTemplate]);
+
   const fontOptions = [
     { value: "sans", label: t("typography.font.sans") },
     { value: "serif", label: t("typography.font.serif") },
@@ -145,15 +165,57 @@ export function SidePanel() {
             reorderSections={reorderSections}
           />
 
-          <div className="space-y-2  py-4">
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleCreateSection}
-              className="flex justify-center w-full rounded-lg items-center gap-2 py-2 px-3  text-sm font-medium text-primary bg-primary/5"
-            >
-              {t("layout.addCustomSection")}
-            </motion.button>
+          <div className="space-y-2 py-4">
+            <Popover>
+              <PopoverTrigger asChild>
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="flex justify-center w-full rounded-lg items-center gap-2 py-2 px-3 text-sm font-medium text-primary bg-primary/5 border border-dashed border-primary/20 hover:bg-primary/10 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  {t("layout.addCustomSection")}
+                </motion.button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-1" align="center">
+                <div className="flex flex-col gap-1">
+                  {/* Standard Sections Library */}
+                  {availableModules.map((section) => (
+                    <button
+                      key={section.id}
+                      onClick={() => {
+                        const newSection = {
+                          id: section.id,
+                          title: t(`layout.standardSections.${section.titleKey}`),
+                          icon: section.icon,
+                          enabled: true,
+                          order: menuSections.length,
+                        };
+                        updateMenuSections([...menuSections, newSection]);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left"
+                    >
+                      <span className="text-lg">{section.icon}</span>
+                      <span>{t(`layout.standardSections.${section.titleKey}`)}</span>
+                    </button>
+                  ))}
+
+                  {/* Divider for Custom Section */}
+                  {availableModules.length > 0 && (
+                    <div className="h-px bg-border my-1" />
+                  )}
+
+                  {/* Add Custom Section */}
+                  <button
+                    onClick={handleCreateSection}
+                    className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left text-muted-foreground italic"
+                  >
+                    <Plus className="w-4 h-4" />
+                    {t("layout.addCustomSectionOption")}
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </SettingCard>
 

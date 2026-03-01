@@ -20,6 +20,7 @@ export interface ResumeTemplate {
   basic: {
     layout?: "left" | "center" | "right";
   };
+  availableSections?: string[];
 }
 
 export interface TemplateConfig {

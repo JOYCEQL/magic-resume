@@ -251,7 +251,14 @@
     "sidePanel": {
       "layout": {
         "title": "布局",
-        "addCustomSection": "添加自定义模块"
+        "addCustomSection": "添加模块",
+        "addCustomSectionOption": "添加自定义模块",
+        "standardSections": {
+          "skills": "专业技能",
+          "experience": "工作经验",
+          "projects": "项目经历",
+          "education": "教育经历"
+        }
       },
       "theme": {
         "title": "主题色",

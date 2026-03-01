@@ -50,7 +50,7 @@ export const initialResumeState = {
       id: "1",
       school: "北京大学",
       major: "计算机科学与技术",
-      degree: "本科",
+      degree: "",
       startDate: "2013-09",
       endDate: "2017-06",
       visible: true,
@@ -325,4 +325,48 @@ export const initialResumeStateEn = {
   customData: {},
   activeSection: "basic",
   globalSettings: initialGlobalSettings,
+};
+
+export const blankResumeState = {
+  ...initialResumeState,
+  title: "新建简历",
+  basic: {
+    ...initialResumeState.basic,
+    name: "",
+    title: "",
+    email: "",
+    phone: "",
+    location: "",
+    birthDate: "",
+    employementStatus: "",
+    photo: "",
+    customFields: [],
+  },
+  education: [],
+  skillContent: "",
+  experience: [],
+  projects: [],
+  menuSections: [initialResumeState.menuSections[0]],
+};
+
+export const blankResumeStateEn = {
+  ...initialResumeStateEn,
+  title: "New Resume",
+  basic: {
+    ...initialResumeStateEn.basic,
+    name: "",
+    title: "",
+    email: "",
+    phone: "",
+    location: "",
+    birthDate: "",
+    employementStatus: "",
+    photo: "",
+    customFields: [],
+  },
+  education: [],
+  skillContent: "",
+  experience: [],
+  projects: [],
+  menuSections: [initialResumeStateEn.menuSections[0]],
 };

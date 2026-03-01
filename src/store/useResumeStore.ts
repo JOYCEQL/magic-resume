@@ -15,6 +15,8 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import {
   initialResumeState,
   initialResumeStateEn,
+  blankResumeState,
+  blankResumeStateEn,
 } from "@/config/initialResumeData";
 import { generateUUID } from "@/utils/uuid";
 interface ResumeStore {
@@ -22,7 +24,7 @@ interface ResumeStore {
   activeResumeId: string | null;
   activeResume: ResumeData | null;
 
-  createResume: (templateId: string | null) => string;
+  createResume: (templateId: string | null, isBlank?: boolean) => string;
   deleteResume: (resume: ResumeData) => void;
   duplicateResume: (resumeId: string) => string;
   updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
@@ -113,7 +115,7 @@ export const useResumeStore = create(
       activeResumeId: null,
       activeResume: null,
 
-      createResume: (templateId = null) => {
+      createResume: (templateId = null, isBlank = false) => {
         const locale =
           typeof document !== "undefined"
             ? document.cookie
@@ -122,8 +124,14 @@ export const useResumeStore = create(
                 ?.split("=")[1] || "zh"
             : "zh";
 
-        const initialResumeData =
-          locale === "en" ? initialResumeStateEn : initialResumeState;
+        let initialResumeData: any;
+        if (isBlank) {
+          initialResumeData =
+            locale === "en" ? blankResumeStateEn : blankResumeState;
+        } else {
+          initialResumeData =
+            locale === "en" ? initialResumeStateEn : initialResumeState;
+        }
 
         const id = generateUUID();
         const template = templateId

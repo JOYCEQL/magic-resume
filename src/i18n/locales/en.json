@@ -291,7 +291,14 @@
     "sidePanel": {
       "layout": {
         "title": "Layout",
-        "addCustomSection": "Add Custom Section"
+        "addCustomSection": "Add Module",
+        "addCustomSectionOption": "Add Custom Section",
+        "standardSections": {
+          "skills": "Skills",
+          "experience": "Experience",
+          "projects": "Projects",
+          "education": "Education"
+        }
       },
       "theme": {
         "title": "Theme Color",

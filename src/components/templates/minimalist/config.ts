@@ -20,4 +20,5 @@ export const minimalistConfig: ResumeTemplate = {
   basic: {
     layout: "center",
   },
+  availableSections: ["skills", "experience", "projects", "education"],
 };

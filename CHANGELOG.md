@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v2.0.2
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.1...main)
+
+### 🚀 Enhancements
+
+- Implement blank resume creation and enhance section management with standard modules and a new section addition UI ([5c6dc7f](https://github.com/JOYCEQL/magic-resume/commit/5c6dc7f))
+- Integrate Gemini API for resume import  && AI polishing &&  AI grammar ([7dda46a](https://github.com/JOYCEQL/magic-resume/commit/7dda46a))
+
+### 📖 Documentation
+
+- Add WeChat group contact information and QR code to READMEs ([e3e8cec](https://github.com/JOYCEQL/magic-resume/commit/e3e8cec))
+
+### 🏡 Chore
+
+- New post-bump script ([0a9d71b](https://github.com/JOYCEQL/magic-resume/commit/0a9d71b))
+
+### 🤖 CI
+
+- Add GitHub Actions workflow for automated releases and update changelog version ([34ff7ba](https://github.com/JOYCEQL/magic-resume/commit/34ff7ba))
+- Bumpp and release ([950a328](https://github.com/JOYCEQL/magic-resume/commit/950a328))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+
 ## v2.0.1
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.1...main)

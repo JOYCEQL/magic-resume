@@ -13,8 +13,8 @@ export const modernConfig: ResumeTemplate = {
     text: "#212529",
   },
   spacing: {
-    sectionGap: 20,
-    itemGap: 20,
+    sectionGap: 8,
+    itemGap: 4,
     contentPadding: 1,
   },
   basic: {

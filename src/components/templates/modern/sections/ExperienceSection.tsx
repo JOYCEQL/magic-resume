@@ -4,7 +4,7 @@ import { Experience, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
-import { formatDateString } from "@/lib/utils";
+import { formatDateString, cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
 
 interface ExperienceSectionProps {
@@ -25,16 +25,16 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
             <AnimatePresence mode="popLayout">
                 {visibleExperiences?.map((exp) => (
                     <motion.div key={exp.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                        <motion.div className="flex items-center gap-2">
-                            <div className={`font-bold ${flexLayout ? "" : "flex-[1.5]"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                        <motion.div className="flex items-center justify-between gap-4">
+                            <div className={cn("font-bold truncate", flexLayout ? "" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 {exp.company}
                             </div>
                             {centerSubtitle && (
-                                <motion.div className={`text-subtitleFont ${flexLayout ? "ml-[16px]" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                <motion.div className={cn("text-subtitleFont truncate", flexLayout ? "ml-[16px]" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                     {exp.position}
                                 </motion.div>
                             )}
-                            <div className={`text-subtitleFont shrink-0 ${flexLayout ? "ml-auto" : "flex-1 text-right"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                            <div className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 {formatDateString(exp.date, locale)}
                             </div>
                         </motion.div>

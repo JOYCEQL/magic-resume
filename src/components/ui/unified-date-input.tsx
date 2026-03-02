@@ -2,7 +2,8 @@
 import { DateInput } from "@heroui/date-input";
 import { HeroUIProvider } from "@heroui/react";
 import { CalendarDate, parseDate } from "@internationalized/date";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 interface UnifiedDateInputProps {
   value: string;
@@ -31,9 +32,15 @@ export function UnifiedDateInput({
     }
   };
 
+  const isPresent = value === "至今" || value === "Present" || value.includes("Present") || value.includes("至今");
+
   const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(() =>
     parseValue(value)
   );
+
+  useEffect(() => {
+    setSelectedDate(parseValue(value));
+  }, [value]);
 
   const handleDateChange = (date: CalendarDate | null) => {
     setSelectedDate(date);
@@ -49,16 +56,16 @@ export function UnifiedDateInput({
     <div className={className}>
       <HeroUIProvider locale="ja-JP">
         <DateInput
-          label={label}
-          value={selectedDate}
+          value={isPresent ? null : selectedDate}
           onChange={handleDateChange}
           isRequired={isRequired}
-          granularity="month"
+          granularity={"month" as any}
           variant="bordered"
           labelPlacement="outside"
           shouldForceLeadingZeros
+          isDisabled={isPresent}
+          className={cn(isPresent && "opacity-50")}
           classNames={{
-            label: "text-sm font-medium text-foreground",
             inputWrapper:
               "shadow-sm hover:border-primary/50 focus-within:ring-2 focus-within:ring-primary focus-within:border-primary bg-background",
           }}

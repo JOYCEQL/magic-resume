@@ -498,7 +498,8 @@
   },
   "field": {
     "selectDate": "选择日期",
-    "enterYear": "输入年份"
+    "enterYear": "输入年份",
+    "toPresent": "至今"
   },
   "richEditor": {
     "bold": "加粗",

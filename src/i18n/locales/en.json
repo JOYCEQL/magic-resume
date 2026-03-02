@@ -537,7 +537,8 @@
   },
   "field": {
     "selectDate": "Select Date",
-    "enterYear": "Enter Year"
+    "enterYear": "Enter Year",
+    "toPresent": "To Present"
   },
   "richEditor": {
     "bold": "Bold",

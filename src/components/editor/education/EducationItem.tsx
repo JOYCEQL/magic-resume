@@ -86,6 +86,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             type="date"
             placeholder="YYYY-MM"
             required
+            showPresentSwitch={true}
           />
         </div>
 

@@ -69,6 +69,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
             onChange={(value) => handleChange("date", value)}
             type="date-range"
             placeholder={t("placeholders.date")}
+            showPresentSwitch={true}
           />
         </div>
         <Field

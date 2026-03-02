@@ -61,12 +61,17 @@ export function UnifiedDateRangeInput({
     () => parseRange(value)
   );
 
-  const updateValue = (newStart: CalendarDate | null, newEnd: CalendarDate | null) => {
+  const isPresent = value.includes("至今") || value.includes("Present");
+
+  const updateValue = (
+    newStart: CalendarDate | null,
+    newEnd: CalendarDate | null
+  ) => {
     const format = (d: CalendarDate) =>
       `${d.year}/${d.month.toString().padStart(2, "0")}`;
 
     const startStr = newStart ? format(newStart) : "";
-    const endStr = newEnd ? format(newEnd) : "";
+    const endStr = isPresent ? (value.includes("至今") ? "至今" : "Present") : (newEnd ? format(newEnd) : "");
 
     if (!startStr && !endStr) {
       onChange("");
@@ -106,7 +111,7 @@ export function UnifiedDateRangeInput({
               value={range.start}
               onChange={handleStartChange}
               variant="bordered"
-              granularity="month"
+              granularity={"month" as any}
               shouldForceLeadingZeros
               aria-label="Start Date"
               classNames={{
@@ -119,12 +124,14 @@ export function UnifiedDateRangeInput({
           <span className="text-muted-foreground">-</span>
           <div className="flex-1 relative">
             <DateInput
-              value={range.end}
+              value={isPresent ? null : range.end}
               onChange={handleEndChange}
               variant="bordered"
-              granularity="month"
+              granularity={"month" as any}
               shouldForceLeadingZeros
               aria-label="End Date"
+              isDisabled={isPresent}
+              className={cn(isPresent && "opacity-50")}
               classNames={{
                 inputWrapper:
                   "bg-background hover:bg-muted/20 h-9 min-h-0 py-0 px-3 shadow-sm ring-1 ring-inset ring-input border-0",

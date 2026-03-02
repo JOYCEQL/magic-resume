@@ -12,6 +12,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../shared/rich-editor/RichEditor";
 import AIPolishDialog from "../shared/ai/AIPolishDialog";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
@@ -26,6 +27,7 @@ interface FieldProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  showPresentSwitch?: boolean;
 }
 
 const Field = ({
@@ -36,6 +38,7 @@ const Field = ({
   placeholder,
   required,
   className,
+  showPresentSwitch,
 }: FieldProps) => {
   const [yearInput, setYearInput] = useState("");
   const [displayMonth, setDisplayMonth] = useState<Date>(new Date());
@@ -70,19 +73,38 @@ const Field = ({
     }
   }, [type, currentDate, fromDate]);
 
+  const isPresentValue = useMemo(() => {
+    return value === t("field.toPresent") || value.endsWith(` - ${t("field.toPresent")}`);
+  }, [value, t]);
+
+  const handlePresentToggle = (checked: boolean) => {
+    if (type === "date") {
+      onChange(checked ? t("field.toPresent") : "");
+    } else if (type === "date-range") {
+      const [start] = value.split(" - ");
+      onChange(checked ? `${start || ""} - ${t("field.toPresent")}` : start || "");
+    }
+  };
+
   const renderLabel = () => {
     if (!label) return null;
     return (
-      <div className="flex items-center justify-between">
-        <span
-          className={cn(
-            "block text-sm font-medium",
-            "text-foreground"
-          )}
-        >
+      <div className="flex items-center justify-between mb-1.5 font-medium">
+        <span className="text-sm text-foreground">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </span>
+        {showPresentSwitch && (
+          <div className="flex items-center gap-2">
+            <Switch
+              checked={isPresentValue}
+              onCheckedChange={handlePresentToggle}
+            />
+            <span className="text-xs text-muted-foreground">
+              {t("field.toPresent")}
+            </span>
+          </div>
+        )}
       </div>
     );
   };

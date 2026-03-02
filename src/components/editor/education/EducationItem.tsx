@@ -42,14 +42,12 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             value={education.school}
             onChange={(value) => handleChange("school", value)}
             placeholder={t("placeholders.school")}
-            required
           />
           <Field
             label={t("labels.major")}
             value={education.major}
             onChange={(value) => handleChange("major", value)}
             placeholder={t("placeholders.major")}
-            required
           />
         </div>
 
@@ -59,7 +57,6 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             value={education.degree}
             onChange={(value) => handleChange("degree", value)}
             placeholder={t("placeholders.degree")}
-            required
           />
 
           <Field
@@ -77,7 +74,6 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             onChange={(value) => handleChange("startDate", value)}
             type="date"
             placeholder="YYYY-MM"
-            required
           />
           <Field
             label={t("labels.endDate")}
@@ -85,7 +81,6 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             onChange={(value) => handleChange("endDate", value)}
             type="date"
             placeholder="YYYY-MM"
-            required
             showPresentSwitch={true}
           />
         </div>

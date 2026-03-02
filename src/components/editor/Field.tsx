@@ -92,7 +92,6 @@ const Field = ({
       <div className="flex items-center justify-between mb-1.5 font-medium">
         <span className="text-sm text-foreground">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
         </span>
         {showPresentSwitch && (
           <div className="flex items-center gap-2">

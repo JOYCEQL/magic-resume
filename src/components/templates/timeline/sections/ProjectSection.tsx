@@ -53,7 +53,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                 <a href={project.link.startsWith("http") ? project.link : `https://${project.link}`} target="_blank" rel="noopener noreferrer" className="underline" title={project.link}>{project.link}</a>
                             )}
                             {project.description && (
-                                <motion.div layout="position" className="mt-2 text-baseFont"
+                                <motion.div layout="position" className="mt-1 text-baseFont"
                                     style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                                     dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(project.description) }}
                                 />

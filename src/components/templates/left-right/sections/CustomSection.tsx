@@ -43,7 +43,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                             <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{item.subtitle}</motion.div>
                         )}
                         {item.description && (
-                            <motion.div layout="position" className="mt-2 text-baseFont"
+                            <motion.div layout="position" className="mt-1 text-baseFont"
                                 style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(item.description) }}
                             />

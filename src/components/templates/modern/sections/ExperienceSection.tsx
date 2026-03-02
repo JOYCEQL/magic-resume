@@ -42,7 +42,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                             <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{exp.position}</motion.div>
                         )}
                         {exp.details && (
-                            <motion.div className="mt-2 text-baseFont" dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
+                            <motion.div className="mt-1 text-baseFont" dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
                                 style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                             />
                         )}

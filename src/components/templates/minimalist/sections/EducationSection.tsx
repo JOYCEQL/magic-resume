@@ -46,7 +46,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                             </motion.div>
                         )}
                         {edu.description && (
-                            <motion.div layout="position" className="mt-2 text-baseFont"
+                            <motion.div layout="position" className="mt-1 text-baseFont"
                                 style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(edu.description) }}
                             />

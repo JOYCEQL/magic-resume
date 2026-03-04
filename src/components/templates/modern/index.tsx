@@ -43,7 +43,10 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
     const otherSections = enabledSections.filter((s) => s.id !== "basic" && s.id !== "education");
 
     return (
-        <div className="grid grid-cols-3 w-full min-h-full">
+        <div
+            className="grid grid-cols-3 w-full min-h-full"
+            style={{ minHeight: `calc(297mm - ${(data.globalSettings?.pagePadding || 32) * 2}px)` }}
+        >
             <div className="col-span-1 p-4" style={{ backgroundColor: data.globalSettings.themeColor, color: "#ffffff", paddingTop: data.globalSettings.sectionSpacing }}>
                 {basicSection && renderSection(basicSection.id)}
                 {educationSection && (

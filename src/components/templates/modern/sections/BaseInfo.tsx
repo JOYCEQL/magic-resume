@@ -63,12 +63,12 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
             <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col items-center gap-4">
                     {PhotoComponent}
-                    <div className="flex flex-col text-center" style={{ color: "#fff" }}>
+                    <div className="flex flex-col text-center min-w-0" style={{ color: "#fff" }}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold whitespace-pre-wrap break-words" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" className="whitespace-pre-wrap break-words" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
                         )}
                     </div>
                 </div>

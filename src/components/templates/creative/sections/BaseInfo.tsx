@@ -60,9 +60,9 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     );
 
     const layoutStyles = {
-        left: { container: "flex items-center justify-between gap-6", leftContent: "flex items-center gap-6", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start", nameTitle: "text-left" },
-        right: { container: "flex items-center justify-between gap-6 flex-row-reverse", leftContent: "flex justify-end items-center gap-6", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start", nameTitle: "text-right" },
-        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-start items-center flex-wrap gap-3", nameTitle: "text-center" },
+        left: { container: "flex items-center justify-between gap-6", leftContent: "flex items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-left min-w-0" },
+        right: { container: "flex items-center justify-between gap-6 flex-row-reverse", leftContent: "flex justify-end items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-right min-w-0" },
+        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-start items-center flex-wrap gap-3", nameTitle: "text-center min-w-0" },
     };
 
     const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;
@@ -74,10 +74,10 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                     {PhotoComponent}
                     <div className={cn("flex flex-col", styles.nameTitle)} style={{ color: "#fff" }}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold whitespace-pre-wrap break-words" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" className="whitespace-pre-wrap break-words" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
                         )}
                     </div>
                 </div>

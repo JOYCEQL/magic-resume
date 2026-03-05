@@ -20,5 +20,5 @@ export const modernConfig: ResumeTemplate = {
   basic: {
     layout: "center",
   },
-  availableSections: ["skills", "experience", "projects", "education"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
 };

@@ -20,5 +20,5 @@ export const leftRightConfig: ResumeTemplate = {
   basic: {
     layout: "left",
   },
-  availableSections: ["skills", "experience", "projects", "education"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
 };

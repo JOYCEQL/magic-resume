@@ -76,6 +76,7 @@ export const initialResumeState = {
     <li>技术管理：具备团队管理经验，主导过多个大型项目的技术选型和架构设计</li>
   </ul>
 </div>`,
+  selfEvaluationContent: "",
   experience: [
     {
       id: "1",
@@ -224,6 +225,7 @@ export const initialResumeStateEn = {
     <li>Technical Leadership: Team management experience, led technology selection and architecture design for large projects</li>
   </ul>
 </div>`,
+  selfEvaluationContent: "",
   experience: [
     {
       id: "1",
@@ -344,6 +346,7 @@ export const blankResumeState = {
   },
   education: [],
   skillContent: "",
+  selfEvaluationContent: "",
   experience: [],
   projects: [],
   menuSections: [initialResumeState.menuSections[0]],
@@ -366,6 +369,7 @@ export const blankResumeStateEn = {
   },
   education: [],
   skillContent: "",
+  selfEvaluationContent: "",
   experience: [],
   projects: [],
   menuSections: [initialResumeStateEn.menuSections[0]],

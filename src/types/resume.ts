@@ -183,6 +183,7 @@ export interface ResumeData {
   projects: Project[];
   customData: Record<string, CustomItem[]>;
   skillContent: string;
+  selfEvaluationContent: string;
   activeSection: string;
   draggingProjectId: string | null;
   menuSections: MenuSection[];

@@ -316,7 +316,8 @@
           "skills": "Skills",
           "experience": "Experience",
           "projects": "Projects",
-          "education": "Education"
+          "education": "Education",
+          "selfEvaluation": "Self Evaluation"
         }
       },
       "theme": {

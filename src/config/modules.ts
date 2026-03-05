@@ -9,4 +9,5 @@ export const STANDARD_MODULES: Record<string, ResumeModule> = {
   experience: { id: "experience", titleKey: "experience", icon: "💼" },
   projects: { id: "projects", titleKey: "projects", icon: "🚀" },
   education: { id: "education", titleKey: "education", icon: "🎓" },
+  selfEvaluation: { id: "selfEvaluation", titleKey: "selfEvaluation", icon: "💬" },
 };

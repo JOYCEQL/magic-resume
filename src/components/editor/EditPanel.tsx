@@ -9,6 +9,7 @@ import ProjectPanel from "./project/ProjectPanel";
 import ExperiencePanel from "./experience/ExperiencePanel";
 import CustomPanel from "./custom/CustomPanel";
 import SkillPanel from "./skills/SkillPanel";
+import SelfEvaluationPanel from "./self-evaluation/SelfEvaluationPanel";
 import {
   Tooltip,
   TooltipContent,
@@ -34,6 +35,8 @@ export function EditPanel() {
         return <ExperiencePanel />;
       case "skills":
         return <SkillPanel />;
+      case "selfEvaluation":
+        return <SelfEvaluationPanel />;
       default:
         if (activeSection?.startsWith("custom")) {
           return <CustomPanel sectionId={activeSection} />;

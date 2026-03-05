@@ -44,6 +44,7 @@ interface ResumeStore {
   deleteProject: (id: string) => void;
   setDraggingProjectId: (id: string | null) => void;
   updateSkillContent: (skillContent: string) => void;
+  updateSelfEvaluationContent: (content: string) => void;
   reorderSections: (newOrder: ResumeData["menuSections"]) => void;
   toggleSectionVisibility: (sectionId: string) => void;
   setActiveSection: (sectionId: string) => void;
@@ -414,6 +415,13 @@ export const useResumeStore = create(
         const { activeResumeId } = get();
         if (activeResumeId) {
           get().updateResume(activeResumeId, { skillContent });
+        }
+      },
+
+      updateSelfEvaluationContent: (selfEvaluationContent) => {
+        const { activeResumeId } = get();
+        if (activeResumeId) {
+          get().updateResume(activeResumeId, { selfEvaluationContent });
         }
       },
 

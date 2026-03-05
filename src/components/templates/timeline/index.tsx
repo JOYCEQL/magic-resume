@@ -6,6 +6,7 @@ import ExperienceSection from "./sections/ExperienceSection";
 import EducationSection from "./sections/EducationSection";
 import ProjectSection from "./sections/ProjectSection";
 import SkillSection from "./sections/SkillSection";
+import SelfEvaluationSection from "./sections/SelfEvaluationSection";
 import CustomSection from "./sections/CustomSection";
 
 interface TimelineTemplateProps {
@@ -40,6 +41,8 @@ const TimelineTemplate: React.FC<TimelineTemplateProps> = ({ data, template }) =
                 return <SkillSection skill={data.skillContent} globalSettings={data.globalSettings} showTitle={false} />;
             case "projects":
                 return <ProjectSection projects={data.projects} globalSettings={data.globalSettings} showTitle={false} />;
+            case "selfEvaluation":
+                return <SelfEvaluationSection content={data.selfEvaluationContent} globalSettings={data.globalSettings} showTitle={false} />;
             default:
                 if (sectionId in data.customData) {
                     const title = data.menuSections.find((s) => s.id === sectionId)?.title || sectionId;

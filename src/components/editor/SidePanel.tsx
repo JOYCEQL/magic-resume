@@ -104,6 +104,12 @@ export function SidePanel() {
     );
   }, [currentTemplate]);
 
+  // 过滤掉 menuSections 中已存在的模块，避免重复添加和 key 冲突
+  const filteredModules = useMemo(() => {
+    const existingIds = new Set(menuSections.map((s: MenuSection) => s.id));
+    return availableModules.filter((m) => !existingIds.has(m.id));
+  }, [availableModules, menuSections]);
+
   const fontOptions = [
     { value: "sans", label: t("typography.font.sans") },
     { value: "serif", label: t("typography.font.serif") },
@@ -180,7 +186,7 @@ export function SidePanel() {
               <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-1" align="center">
                 <div className="flex flex-col gap-1">
                   {/* Standard Sections Library */}
-                  {availableModules.map((section) => (
+                  {filteredModules.map((section) => (
                     <button
                       key={section.id}
                       onClick={() => {
@@ -201,7 +207,7 @@ export function SidePanel() {
                   ))}
 
                   {/* Divider for Custom Section */}
-                  {availableModules.length > 0 && (
+                  {filteredModules.length > 0 && (
                     <div className="h-px bg-border my-1" />
                   )}
 

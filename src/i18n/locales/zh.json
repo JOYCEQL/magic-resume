@@ -276,7 +276,8 @@
           "skills": "专业技能",
           "experience": "工作经验",
           "projects": "项目经历",
-          "education": "教育经历"
+          "education": "教育经历",
+          "selfEvaluation": "自我评价"
         }
       },
       "theme": {

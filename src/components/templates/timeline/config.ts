@@ -20,5 +20,5 @@ export const timelineConfig: ResumeTemplate = {
   basic: {
     layout: "right",
   },
-  availableSections: ["skills", "experience", "projects", "education"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
 };

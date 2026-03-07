@@ -46,24 +46,46 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
     const otherSections = enabledSections.filter((s) => s.id !== "basic" && s.id !== "education");
 
     return (
-        <div
-            className="grid grid-cols-3 w-full min-h-full"
-            style={{ minHeight: `calc(297mm - ${(data.globalSettings?.pagePadding || 32) * 2}px)` }}
+        <table
+            className="w-full border-collapse"
+            style={{
+                height: `calc(297mm - ${(data.globalSettings?.pagePadding || 32) * 2}px)`,
+                tableLayout: 'fixed'
+            }}
         >
-            <div className="col-span-1 p-4" style={{ backgroundColor: data.globalSettings.themeColor, color: "#ffffff", paddingTop: data.globalSettings.sectionSpacing }}>
-                {basicSection && renderSection(basicSection.id)}
-                {educationSection && (
-                    <div className="mt-6">
-                        <EducationSection education={data.education} globalSettings={data.globalSettings} variant="sidebar" />
-                    </div>
-                )}
-            </div>
-            <div className="col-span-2 p-4 pt-0" style={{ backgroundColor: colorScheme.background, color: colorScheme.text }}>
-                {otherSections.map((section) => (
-                    <div key={section.id}>{renderSection(section.id)}</div>
-                ))}
-            </div>
-        </div>
+            <tbody>
+                <tr>
+                    <td
+                        className="p-4 align-top relative"
+                        style={{
+                            width: '33.333333%',
+                            backgroundColor: data.globalSettings.themeColor,
+                            color: "#ffffff",
+                            paddingTop: data.globalSettings.sectionSpacing,
+                        }}
+                    >
+                        {basicSection && renderSection(basicSection.id)}
+                        {educationSection && (
+                            <div className="mt-6">
+                                <EducationSection education={data.education} globalSettings={data.globalSettings} variant="sidebar" />
+                            </div>
+                        )}
+                    </td>
+                    <td
+                        className="p-4 pt-0 align-top relative"
+                        style={{
+                            width: '66.666667%',
+                            backgroundColor: colorScheme.background,
+                            color: colorScheme.text,
+                        }}
+                    >
+                        {otherSections.map((section) => (
+                            <div key={section.id}>{renderSection(section.id)}</div>
+                        ))}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     );
 };
 

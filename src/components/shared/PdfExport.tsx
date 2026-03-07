@@ -219,14 +219,6 @@ const PdfExport = () => {
       return;
     }
 
-    const actualContent = resumeContent.parentElement;
-    if (!actualContent) {
-      console.error("Actual content not found");
-      return;
-    }
-
-    console.log("Found content:", actualContent);
-
     const pagePadding = globalSettings?.pagePadding || 0;
     const iframeWindow = printFrameRef.current.contentWindow;
     if (!iframeWindow) {
@@ -236,20 +228,17 @@ const PdfExport = () => {
 
     try {
       iframeWindow.document.open();
-      const clonedContent = actualContent.cloneNode(true) as HTMLElement;
-      const previewEl = clonedContent.querySelector<HTMLElement>("#resume-preview");
-      if (previewEl) {
-        const transformValue = previewEl.style.transform || "";
-        const match = transformValue.match(/scale\(([\d.]+)\)/);
-        if (match) {
-          const scale = Number(match[1]);
-          if (Number.isFinite(scale) && scale > 0 && scale < 1) {
-            // 打印时使用 zoom 参与分页布局计算，比 transform 更接近最终分页效果
-            previewEl.style.removeProperty("transform");
-            previewEl.style.removeProperty("transform-origin");
-            previewEl.style.setProperty("width", "100%");
-            previewEl.style.setProperty("zoom", String(scale));
-          }
+      const clonedContent = resumeContent.cloneNode(true) as HTMLElement;
+      const transformValue = clonedContent.style.transform || "";
+      const match = transformValue.match(/scale\(([\d.]+)\)/);
+      if (match) {
+        const scale = Number(match[1]);
+        if (Number.isFinite(scale) && scale > 0 && scale < 1) {
+          // 打印时使用 zoom 参与分页布局计算，比 transform 更接近最终分页效果
+          clonedContent.style.removeProperty("transform");
+          clonedContent.style.removeProperty("transform-origin");
+          clonedContent.style.setProperty("width", "100%");
+          clonedContent.style.setProperty("zoom", String(scale));
         }
       }
 
@@ -280,6 +269,8 @@ const PdfExport = () => {
                 padding: 0;
                 width: 100%;
                 background: white;
+                height: auto !important;
+                overflow: visible !important;
               }
               body {
                 font-family: sans-serif;
@@ -297,7 +288,6 @@ const PdfExport = () => {
 
               #print-content {
                 width: 210mm;
-                min-height: 297mm;
                 margin: 0 auto;
                 padding: 0;
                 background: white;
@@ -305,6 +295,12 @@ const PdfExport = () => {
               }
               #print-content * {
                 box-shadow: none !important;
+              }
+
+              #resume-preview .min-h-screen,
+              #resume-preview .min-h-full,
+              #resume-preview [style*="min-height"] {
+                min-height: 0 !important;
               }
               
               .page-break-line {
@@ -327,7 +323,7 @@ const PdfExport = () => {
           </head>
           <body>
             <div id="print-content">
-              ${clonedContent.innerHTML}
+              ${clonedContent.outerHTML}
             </div>
           </body>
         </html>
@@ -424,8 +420,10 @@ const PdfExport = () => {
         ref={printFrameRef}
         style={{
           position: "absolute",
-          width: "210mm",
-          height: "297mm",
+          width: "1px",
+          height: "1px",
+          left: "-9999px",
+          top: 0,
           visibility: "hidden",
           zIndex: -1
         }}

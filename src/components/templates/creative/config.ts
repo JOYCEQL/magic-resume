@@ -13,9 +13,9 @@ export const creativeConfig: ResumeTemplate = {
     text: "#1e293b",
   },
   spacing: {
-    sectionGap: 24,
+    sectionGap: 16,
     itemGap: 16,
-    contentPadding: 28,
+    contentPadding: 14,
   },
   basic: {
     layout: "left",

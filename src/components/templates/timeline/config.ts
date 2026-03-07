@@ -18,7 +18,7 @@ export const timelineConfig: ResumeTemplate = {
     contentPadding: 24,
   },
   basic: {
-    layout: "right",
+    layout: "left",
   },
   availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
 };

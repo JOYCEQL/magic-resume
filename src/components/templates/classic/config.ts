@@ -13,8 +13,8 @@ export const classicConfig: ResumeTemplate = {
     text: "#212529",
   },
   spacing: {
-    sectionGap: 24,
-    itemGap: 16,
+    sectionGap: 16,
+    itemGap: 12,
     contentPadding: 32,
   },
   basic: {

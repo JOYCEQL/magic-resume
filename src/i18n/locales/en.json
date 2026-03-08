@@ -317,7 +317,8 @@
           "experience": "Experience",
           "projects": "Projects",
           "education": "Education",
-          "selfEvaluation": "Self Evaluation"
+          "selfEvaluation": "Self Evaluation",
+          "certificates": "Certificates"
         }
       },
       "theme": {
@@ -534,6 +535,14 @@
         "show": "Show",
         "hide": "Hide"
       }
+    },
+    "certificatesPanel": {
+      "title": "Certificates",
+      "addButton": "Add Certificate",
+      "tips": "Upload or paste (Cmd/Ctrl + V) images directly. Adjust width ratio for horizontal layout.",
+      "width": "Width (%)",
+      "delete": "Delete",
+      "empty": "No images yet. Please upload or paste images."
     }
   },
   "field": {

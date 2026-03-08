@@ -10,6 +10,7 @@ import {
   CustomItem,
   ResumeData,
   MenuSection,
+  Certificate,
 } from "../types/resume";
 import { DEFAULT_TEMPLATES } from "@/config";
 import {
@@ -63,6 +64,10 @@ interface ResumeStore {
   setThemeColor: (color: string) => void;
   setTemplate: (templateId: string) => void;
   addResume: (resume: ResumeData) => string;
+  addCertificate: (certificate: Certificate) => void;
+  updateCertificate: (id: string, updates: Partial<Certificate>) => void;
+  updateCertificatesBatch: (certificates: Certificate[]) => void;
+  removeCertificate: (id: string) => void;
 }
 
 // 同步简历到文件系统
@@ -562,6 +567,53 @@ export const useResumeStore = create(
           };
           get().updateResume(activeResumeId, { customData: updatedCustomData });
         }
+      },
+
+      addCertificate: (certificate) => {
+        const { activeResumeId, resumes } = get();
+        if (!activeResumeId) return;
+
+        const currentResume = resumes[activeResumeId];
+        const newCertificates = currentResume.certificates.some(
+          (c) => c.id === certificate.id
+        )
+          ? currentResume.certificates.map((c) =>
+              c.id === certificate.id ? certificate : c
+            )
+          : [...currentResume.certificates, certificate];
+
+        get().updateResume(activeResumeId, { certificates: newCertificates });
+      },
+
+      updateCertificate: (id, updates) => {
+        const { activeResumeId, resumes } = get();
+        if (!activeResumeId) return;
+
+        const currentResume = resumes[activeResumeId];
+        const newCertificates = currentResume.certificates.map((c) =>
+          c.id === id ? { ...c, ...updates } : c
+        );
+
+        get().updateResume(activeResumeId, { certificates: newCertificates });
+      },
+
+      updateCertificatesBatch: (certificates) => {
+        const { activeResumeId } = get();
+        if (activeResumeId) {
+          get().updateResume(activeResumeId, { certificates });
+        }
+      },
+
+      removeCertificate: (id) => {
+        const { activeResumeId, resumes } = get();
+        if (!activeResumeId) return;
+
+        const currentResume = resumes[activeResumeId];
+        const updatedCertificates = currentResume.certificates.filter(
+          (c) => c.id !== id
+        );
+
+        get().updateResume(activeResumeId, { certificates: updatedCertificates });
       },
 
       updateGlobalSettings: (settings: Partial<GlobalSettings>) => {

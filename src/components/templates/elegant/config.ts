@@ -20,5 +20,5 @@ export const elegantConfig: ResumeTemplate = {
   basic: {
     layout: "center",
   },
-  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation", "certificates"],
 };

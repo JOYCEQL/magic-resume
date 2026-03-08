@@ -277,7 +277,8 @@
           "experience": "工作经验",
           "projects": "项目经历",
           "education": "教育经历",
-          "selfEvaluation": "自我评价"
+          "selfEvaluation": "自我评价",
+          "certificates": "证书作品"
         }
       },
       "theme": {
@@ -495,6 +496,14 @@
         "show": "显示",
         "hide": "隐藏"
       }
+    },
+    "certificatesPanel": {
+      "title": "证书作品",
+      "addButton": "添加照片或证书",
+      "tips": "支持点击上传或快捷键 (Cmd/Ctrl + V) 直接粘贴图片。拖动滑块可调整宽度实现横向拼接。",
+      "width": "宽度 (横向拼接占比)",
+      "delete": "删除",
+      "empty": "暂无图片，请上传或粘贴图片"
     }
   },
   "field": {

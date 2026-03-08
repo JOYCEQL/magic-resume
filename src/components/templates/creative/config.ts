@@ -20,5 +20,5 @@ export const creativeConfig: ResumeTemplate = {
   basic: {
     layout: "left",
   },
-  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation", "certificates"],
 };

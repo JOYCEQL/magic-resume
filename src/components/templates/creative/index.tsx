@@ -9,6 +9,10 @@ import ProjectSection from "./sections/ProjectSection";
 import SkillSection from "./sections/SkillSection";
 import SelfEvaluationSection from "./sections/SelfEvaluationSection";
 import CustomSection from "./sections/CustomSection";
+import SectionTitle from "./sections/SectionTitle";
+import SectionWrapper from "../shared/SectionWrapper";
+import CertificatesSection from "../shared/CertificatesSection";
+
 
 interface CreativeTemplateProps {
     data: ResumeData;
@@ -32,6 +36,14 @@ const CreativeTemplate: React.FC<CreativeTemplateProps> = ({ data, template }) =
                 return <SkillSection skill={data.skillContent} globalSettings={data.globalSettings} />;
             case "projects":
                 return <ProjectSection projects={data.projects} globalSettings={data.globalSettings} />;
+            case "certificates":
+                return (
+                    <SectionWrapper sectionId="certificates" style={{ marginTop: `${data.globalSettings?.sectionSpacing || 24}px` }}>
+                        <SectionTitle type="certificates" globalSettings={data.globalSettings} />
+                        <CertificatesSection certificates={data.certificates} />
+                    </SectionWrapper>
+                );
+
             case "selfEvaluation":
                 return <SelfEvaluationSection content={data.selfEvaluationContent} globalSettings={data.globalSettings} />;
             default:

@@ -289,9 +289,9 @@
         "title": "排版",
         "font": {
           "title": "字体",
-          "sans": "无衬线体",
-          "serif": "衬线体",
-          "mono": "等宽体"
+          "alibaba": "阿里巴巴普惠体",
+          "msyahei": "微软雅黑",
+          "notoserifsc": "思源宋体"
         },
         "lineHeight": {
           "title": "行高",

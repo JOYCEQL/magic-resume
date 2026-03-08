@@ -181,7 +181,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
         ref={previewRef}
         className="relative w-full h-full  bg-gray-100"
         style={{
-          fontFamily: "Alibaba PuHuiTi, sans-serif",
+          fontFamily: activeResume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
         }}
       >
         <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top md:scale-90 md:origin-top-left">

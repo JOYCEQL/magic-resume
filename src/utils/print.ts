@@ -74,7 +74,7 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
               padding: ${pagePadding}px !important;
               -webkit-box-decoration-break: clone;
               box-decoration-break: clone;
-              font-family: "Alibaba PuHuiTi", sans-serif !important;
+              font-family: ${resumeContent.style.fontFamily || '"Alibaba PuHuiTi", sans-serif'} !important;
             }
 
             #print-content {

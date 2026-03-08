@@ -283,7 +283,7 @@ const PdfExport = () => {
                 padding: ${pagePadding}px !important;
                 -webkit-box-decoration-break: clone;
                 box-decoration-break: clone;
-                font-family: "Alibaba PuHuiTi", sans-serif !important;
+                font-family: ${globalSettings?.fontFamily || '"Alibaba PuHuiTi", sans-serif'} !important;
               }
 
               #print-content {
@@ -308,17 +308,17 @@ const PdfExport = () => {
               }
 
               ${Array.from(document.styleSheets)
-                .map((sheet) => {
-                  try {
-                    return Array.from(sheet.cssRules)
-                      .map((rule) => rule.cssText)
-                      .join("\n");
-                  } catch (e) {
-                    console.warn("Could not copy styles from sheet:", e);
-                    return "";
-                  }
-                })
-                .join("\n")}
+          .map((sheet) => {
+            try {
+              return Array.from(sheet.cssRules)
+                .map((rule) => rule.cssText)
+                .join("\n");
+            } catch (e) {
+              console.warn("Could not copy styles from sheet:", e);
+              return "";
+            }
+          })
+          .join("\n")}
             </style>
           </head>
           <body>
@@ -375,8 +375,8 @@ const PdfExport = () => {
   const loadingText = isExporting
     ? t("button.exporting")
     : isExportingJson
-    ? t("button.exportingJson")
-    : "";
+      ? t("button.exportingJson")
+      : "";
 
   return (
     <>

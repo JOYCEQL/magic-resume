@@ -111,9 +111,9 @@ export function SidePanel() {
   }, [availableModules, menuSections]);
 
   const fontOptions = [
-    { value: "sans", label: t("typography.font.sans") },
-    { value: "serif", label: t("typography.font.serif") },
-    { value: "mono", label: t("typography.font.mono") },
+    { value: "Alibaba PuHuiTi, sans-serif", label: t("typography.font.alibaba") },
+    { value: "\"Microsoft YaHei\", \"微软雅黑\", sans-serif", label: t("typography.font.msyahei") },
+    { value: "\"Noto Serif SC\", \"Source Han Serif SC\", serif", label: t("typography.font.notoserifsc") },
   ];
 
   const lineHeightOptions = [
@@ -280,12 +280,12 @@ export function SidePanel() {
         {/* 排版设置 */}
         <SettingCard icon={Type} title={t("typography.title")}>
           <div className="space-y-6">
-            {/* <div className="space-y-2">
+            <div className="space-y-2">
               <Label className="text-muted-foreground">
                 {t('typography.font.title')}
               </Label>
               <Select
-                value={globalSettings?.fontFamily}
+                value={globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif"}
                 onValueChange={(value) =>
                   updateGlobalSettings?.({ fontFamily: value })
                 }
@@ -314,7 +314,7 @@ export function SidePanel() {
                   ))}
                 </SelectContent>
               </Select>
-            </div> */}
+            </div>
 
             {/* 行高选择 */}
             <div className="space-y-2">

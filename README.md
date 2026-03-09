@@ -125,7 +125,7 @@ docker compose up -d
 - 邮箱：18806723365@163.com
 - 微信群：扫码加入开发交流群
   
-  <img src="./images/wechat.png" width="200" alt="WeChat Group">
+![ffa7de95e395f256aa902e95cce54480](https://github.com/user-attachments/assets/c0609db1-505e-4826-99b4-76146180d5f2)
 
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

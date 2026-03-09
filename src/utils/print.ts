@@ -1,4 +1,4 @@
-export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePadding: number) => {
+export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pagePadding: number) => {
   const printFrame = document.createElement("iframe");
   printFrame.style.position = "absolute";
   printFrame.style.width = "1px";
@@ -59,7 +59,7 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
               margin: 0;
               padding: 0;
               width: 100%;
-              background: white;
+              background: white !important;
               height: auto !important;
               overflow: visible !important;
             }
@@ -75,6 +75,7 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
               -webkit-box-decoration-break: clone;
               box-decoration-break: clone;
               font-family: "Alibaba PuHuiTi", sans-serif !important;
+              background: white !important;
             }
 
             #print-content {
@@ -89,7 +90,8 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
             }
 
             #resume-preview .min-h-screen,
-            #resume-preview .min-h-full {
+            #resume-preview .min-h-full,
+            #resume-preview [style*="min-height"] {
               min-height: 0 !important;
             }
             
@@ -102,13 +104,13 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
                 try {
                   return Array.from(sheet.cssRules)
                     .map((rule) => rule.cssText)
-                    .join("\\n");
+                    .join("\n");
                 } catch (e) {
                   console.warn("Could not copy styles from sheet:", e);
                   return "";
                 }
               })
-              .join("\\n")}
+              .join("\n")}
           </style>
         </head>
         <body>
@@ -125,10 +127,13 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
     const printWhenReady = async () => {
       try {
         const doc = iframeWindow.document;
+        
+        // 等待字体加载
         if (doc.fonts?.ready) {
           await doc.fonts.ready;
         }
 
+        // 等待所有图片加载完成
         const images = Array.from(doc.images);
         await Promise.all(
           images
@@ -142,6 +147,7 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
             )
         );
 
+        // 给予额外的渲染帧缓冲
         await new Promise<void>((resolve) => {
           iframeWindow.requestAnimationFrame(() => {
             iframeWindow.requestAnimationFrame(() => resolve());
@@ -159,13 +165,17 @@ export const exportResumeToBrowserPrint = (resumeContent: HTMLElement, pagePaddi
         }, 1000);
       } catch (error) {
         console.error("Error print:", error);
-        document.body.removeChild(printFrame);
+        if (document.body.contains(printFrame)) {
+          document.body.removeChild(printFrame);
+        }
       }
     };
 
     void printWhenReady();
   } catch (error) {
     console.error("Error setting up print:", error);
-    document.body.removeChild(printFrame);
+    if (document.body.contains(printFrame)) {
+      document.body.removeChild(printFrame);
+    }
   }
 };

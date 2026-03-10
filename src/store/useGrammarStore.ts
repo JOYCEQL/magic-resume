@@ -99,6 +99,8 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       openaiApiKey,
       openaiModelId,
       openaiApiEndpoint,
+      openrouterApiKey,
+      openrouterModelId,
       geminiApiKey,
       geminiModelId
     } = useAIConfigStore.getState();
@@ -109,6 +111,8 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         ? doubaoApiKey
         : selectedModel === "openai"
           ? openaiApiKey
+          : selectedModel === "openrouter"
+            ? openrouterApiKey
           : selectedModel === "gemini"
             ? geminiApiKey
             : deepseekApiKey;
@@ -117,6 +121,8 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         ? doubaoModelId
         : selectedModel === "openai"
           ? openaiModelId
+          : selectedModel === "openrouter"
+            ? openrouterModelId
           : selectedModel === "gemini"
             ? geminiModelId
             : deepseekModelId;

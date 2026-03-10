@@ -58,6 +58,8 @@ export default function AIPolishDialog({
     openaiApiKey,
     openaiModelId,
     openaiApiEndpoint,
+    openrouterApiKey,
+    openrouterModelId,
     geminiApiKey,
     geminiModelId,
     isConfigured
@@ -84,6 +86,8 @@ export default function AIPolishDialog({
           ? doubaoApiKey
           : selectedModel === "openai"
             ? openaiApiKey
+            : selectedModel === "openrouter"
+              ? openrouterApiKey
             : selectedModel === "gemini"
               ? geminiApiKey
               : deepseekApiKey;
@@ -92,6 +96,8 @@ export default function AIPolishDialog({
           ? doubaoModelId
           : selectedModel === "openai"
             ? openaiModelId
+            : selectedModel === "openrouter"
+              ? openrouterModelId
             : selectedModel === "gemini"
               ? geminiModelId
               : deepseekModelId;

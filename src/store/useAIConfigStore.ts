@@ -11,6 +11,8 @@ interface AIConfigState {
   openaiApiKey: string;
   openaiModelId: string;
   openaiApiEndpoint: string;
+  openrouterApiKey: string;
+  openrouterModelId: string;
   geminiApiKey: string;
   geminiModelId: string;
   setSelectedModel: (model: AIModelType) => void;
@@ -21,6 +23,8 @@ interface AIConfigState {
   setOpenaiApiKey: (apiKey: string) => void;
   setOpenaiModelId: (modelId: string) => void;
   setOpenaiApiEndpoint: (endpoint: string) => void;
+  setOpenrouterApiKey: (apiKey: string) => void;
+  setOpenrouterModelId: (modelId: string) => void;
   setGeminiApiKey: (apiKey: string) => void;
   setGeminiModelId: (modelId: string) => void;
   isConfigured: () => boolean;
@@ -37,6 +41,8 @@ export const useAIConfigStore = create<AIConfigState>()(
       openaiApiKey: "",
       openaiModelId: "",
       openaiApiEndpoint: "",
+      openrouterApiKey: "",
+      openrouterModelId: "openrouter/auto",
       geminiApiKey: "",
       geminiModelId: "gemini-flash-latest",
       setSelectedModel: (model: AIModelType) => set({ selectedModel: model }),
@@ -47,6 +53,8 @@ export const useAIConfigStore = create<AIConfigState>()(
       setOpenaiApiKey: (apiKey: string) => set({ openaiApiKey: apiKey }),
       setOpenaiModelId: (modelId: string) => set({ openaiModelId: modelId }),
       setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint }),
+      setOpenrouterApiKey: (apiKey: string) => set({ openrouterApiKey: apiKey }),
+      setOpenrouterModelId: (modelId: string) => set({ openrouterModelId: modelId }),
       setGeminiApiKey: (apiKey: string) => set({ geminiApiKey: apiKey }),
       setGeminiModelId: (modelId: string) => set({ geminiModelId: modelId }),
       isConfigured: () => {

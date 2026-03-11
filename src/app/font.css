@@ -16,16 +16,8 @@
 
 @font-face {
   font-family: "MiSans";
-  src: url("/fonts/MiSans-VF.ttf") format("truetype");
+  src: url("/fonts/MiSans-Normal.ttf") format("truetype");
   font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Microsoft YaHei Local";
-  src: url("/fonts/%E5%BE%AE%E8%BD%AF%E9%9B%85%E9%BB%91.ttf") format("truetype");
-  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }

@@ -331,9 +331,9 @@
           "title": "Font",
           "alibaba": "Alibaba PuHuiTi",
           "misans": "MiSans",
-          "msyahei": "Microsoft YaHei",
           "notosanssc": "Noto Sans SC",
-          "sourcehanserifsc": "Source Han Serif SC"
+          "sourcehanserifsc": "Source Han Serif SC",
+          "note": "MiSans is used under its free commercial license. Keep MiSans attribution when distributing this project."
         },
         "lineHeight": {
           "title": "Line Height",

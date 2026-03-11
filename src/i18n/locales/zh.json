@@ -291,9 +291,9 @@
           "title": "字体",
           "alibaba": "阿里巴巴普惠体",
           "misans": "MiSans",
-          "msyahei": "微软雅黑",
           "notosanssc": "Noto Sans SC",
-          "sourcehanserifsc": "思源宋体"
+          "sourcehanserifsc": "思源宋体",
+          "note": "MiSans 依据其许可免费商用；使用本项目时请保留 MiSans 字体说明。"
         },
         "lineHeight": {
           "title": "行高",

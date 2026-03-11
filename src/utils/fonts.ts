@@ -42,11 +42,14 @@ const FONT_DEFINITIONS: FontDefinition[] = [
   },
   {
     labelKey: "misans",
-    value: "\"MiSans\", \"Microsoft YaHei\", \"微软雅黑\", sans-serif",
+    value: "\"MiSans\", sans-serif",
     aliases: [
       "\"MiSans\", \"Microsoft YaHei\", \"微软雅黑\", sans-serif",
+      "\"Microsoft YaHei\", \"微软雅黑\", sans-serif",
+      "\"Microsoft YaHei Local\", \"Microsoft YaHei\", \"微软雅黑\", sans-serif",
       "\"MiSans\", sans-serif",
-      "MiSans, sans-serif"
+      "MiSans, sans-serif",
+      "Microsoft YaHei, sans-serif"
     ],
     sources: [
       {
@@ -54,24 +57,6 @@ const FONT_DEFINITIONS: FontDefinition[] = [
         url: "/fonts/MiSans-Normal.ttf",
         format: "truetype",
         weight: "100 900",
-        style: "normal"
-      }
-    ]
-  },
-  {
-    labelKey: "msyahei",
-    value: "\"Microsoft YaHei Local\", \"Microsoft YaHei\", \"微软雅黑\", sans-serif",
-    aliases: [
-      "\"Microsoft YaHei\", \"微软雅黑\", sans-serif",
-      "\"Microsoft YaHei Local\", \"Microsoft YaHei\", \"微软雅黑\", sans-serif",
-      "Microsoft YaHei, sans-serif"
-    ],
-    sources: [
-      {
-        family: "Microsoft YaHei Local",
-        url: "/fonts/%E5%BE%AE%E8%BD%AF%E9%9B%85%E9%BB%91.ttf",
-        format: "truetype",
-        weight: "400",
         style: "normal"
       }
     ]

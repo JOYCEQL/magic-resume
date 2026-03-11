@@ -306,6 +306,9 @@ export function SidePanel() {
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs leading-5 text-muted-foreground">
+                {t("typography.font.note")}
+              </p>
             </div>
 
             {/* 行高选择 */}

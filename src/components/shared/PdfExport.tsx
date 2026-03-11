@@ -142,7 +142,11 @@ const PdfExport = () => {
       const styles = `
         ${capturedStyles}
         html, body { background: white !important; background-color: white !important; }
-        #resume-preview { background: white !important; background-color: white !important; }
+        #resume-preview { 
+          background: white !important; 
+          background-color: white !important; 
+          font-family: ${globalSettings?.fontFamily || '"Alibaba PuHuiTi", sans-serif'} !important;
+        }
       `;
 
       const response = await fetch(PDF_EXPORT_CONFIG.SERVER_URL, {

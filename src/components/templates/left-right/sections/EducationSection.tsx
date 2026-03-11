@@ -3,7 +3,7 @@ import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { useLocale } from "@/i18n/compat/client";
-import { normalizeRichTextContent } from "@/lib/richText";
+import { hasMeaningfulRichTextContent, normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 
 interface EducationSectionProps {
@@ -25,7 +25,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                 {visibleEducation?.map((edu) => (
                     <motion.div key={edu.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                         <motion.div layout="position" className="flex items-center gap-2">
-                            <div className={`font-bold ${flexLayout ? "" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                            <div className={`font-bold ${flexLayout ? "" : "flex-[1.5]"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 {edu.school}
                             </div>
                             {centerSubtitle && (
@@ -45,7 +45,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                                 {edu.gpa && ` · GPA ${edu.gpa}`}
                             </motion.div>
                         )}
-                        {edu.description && (
+                        {hasMeaningfulRichTextContent(edu.description) && (
                             <motion.div layout="position" className="mt-1 text-baseFont"
                                 style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(edu.description) }}

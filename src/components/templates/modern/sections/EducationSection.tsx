@@ -3,7 +3,7 @@ import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { useLocale } from "@/i18n/compat/client";
-import { normalizeRichTextContent } from "@/lib/richText";
+import { hasMeaningfulRichTextContent, normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString, cn } from "@/lib/utils";
 
 interface EducationSectionProps {
@@ -57,7 +57,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true, variant
                                 {edu.gpa && ` · GPA ${edu.gpa}`}
                             </div>
                         )}
-                        {edu.description && (
+                        {hasMeaningfulRichTextContent(edu.description) && (
                             <motion.div layout="position" className={cn("mt-1 text-baseFont", isSidebar && " opacity-80")}
                                 style={{
                                     fontSize: `${isSidebar ? (globalSettings?.baseFontSize || 14) - 2 : (globalSettings?.baseFontSize || 14)}px`,

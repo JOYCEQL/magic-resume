@@ -40,22 +40,22 @@ const buildTemplatePreviewData = (
   selectedColor: string,
   mockId: string
 ) =>
-  ({
-    ...baseData,
-    id: mockId,
-    templateId: template.id,
-    globalSettings: {
-      ...baseData.globalSettings,
-      themeColor: selectedColor || template.colorScheme.primary,
-      sectionSpacing: template.spacing.sectionGap,
-      paragraphSpacing: template.spacing.itemGap,
-      pagePadding: template.spacing.contentPadding,
-    },
-    basic: {
-      ...baseData.basic,
-      layout: template.basic.layout,
-    },
-  } as any);
+({
+  ...baseData,
+  id: mockId,
+  templateId: template.id,
+  globalSettings: {
+    ...baseData.globalSettings,
+    themeColor: selectedColor || template.colorScheme.primary,
+    sectionSpacing: template.spacing.sectionGap,
+    paragraphSpacing: template.spacing.itemGap,
+    pagePadding: template.spacing.contentPadding,
+  },
+  basic: {
+    ...baseData.basic,
+    layout: template.basic.layout,
+  },
+} as any);
 
 interface TemplateCardItemProps {
   index: number;
@@ -138,7 +138,7 @@ const TemplateCardItem = ({
                   transform: `scale(${scale})`,
                   transformOrigin: "top left",
                   padding: `${template.spacing.contentPadding}px`,
-                  fontFamily: "Alibaba PuHuiTi, sans-serif",
+                  fontFamily: previewData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
                 }}
               >
                 <ResumeTemplateComponent data={previewData} template={template} />
@@ -352,7 +352,7 @@ const TemplatesPage = () => {
                           transform: `scale(${PREVIEW_MODAL_SCALE})`,
                           transformOrigin: "top left",
                           padding: `${activePreviewTemplate.spacing.contentPadding}px`,
-                          fontFamily: "Alibaba PuHuiTi, sans-serif",
+                          fontFamily: selectedColor ? `Alibaba PuHuiTi, sans-serif` : `Alibaba PuHuiTi, sans-serif`, // Base on standard since it's just a general preview
                         }}
                       >
                         <ResumeTemplateComponent

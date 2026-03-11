@@ -127,7 +127,7 @@ export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pag
     const printWhenReady = async () => {
       try {
         const doc = iframeWindow.document;
-        
+
         // 等待字体加载
         if (doc.fonts?.ready) {
           await doc.fonts.ready;

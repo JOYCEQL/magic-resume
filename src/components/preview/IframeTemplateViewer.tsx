@@ -10,14 +10,14 @@ import { ResumeTemplate } from "../../types/template";
 
 const IframeTemplateViewer = () => {
   const { id } = useParams({ from: "/app/preview-template/$id" });
-  
+
   // Use cookie to determine locale
   const locale =
     typeof document !== "undefined"
       ? document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("NEXT_LOCALE="))
-          ?.split("=")[1] || "zh"
+        .split("; ")
+        .find((row) => row.startsWith("NEXT_LOCALE="))
+        ?.split("=")[1] || "zh"
       : "zh";
 
   const template = useMemo(() => {
@@ -55,7 +55,7 @@ const IframeTemplateViewer = () => {
           "relative mx-auto origin-top-left"
         )}
         style={{
-          fontFamily: "Alibaba PuHuiTi, sans-serif",
+          fontFamily: mockData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
           padding: `${template.spacing.contentPadding}px`,
         }}
       >

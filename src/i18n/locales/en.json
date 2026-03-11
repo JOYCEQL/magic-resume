@@ -329,9 +329,9 @@
         "title": "Typography",
         "font": {
           "title": "Font",
-          "sans": "Sans-serif",
-          "serif": "Serif",
-          "mono": "Monospace"
+          "alibaba": "Alibaba PuHuiTi",
+          "msyahei": "Microsoft YaHei",
+          "notoserifsc": "Noto Serif SC"
         },
         "lineHeight": {
           "title": "Line Height",

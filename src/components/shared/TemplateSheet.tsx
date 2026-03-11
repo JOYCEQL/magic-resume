@@ -89,7 +89,7 @@ const TemplatePreview = ({
                 transformOrigin: "top left",
                 boxSizing: "border-box",
                 padding: `${template.spacing.contentPadding}px`,
-                fontFamily: "Alibaba PuHuiTi, sans-serif",
+                fontFamily: baseData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
               }}
             >
               <ResumeTemplateComponent

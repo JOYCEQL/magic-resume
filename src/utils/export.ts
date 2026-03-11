@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { PDF_EXPORT_CONFIG } from "@/config";
-import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
+import { normalizeFontFamily } from "@/utils/fonts";
 
 export const getOptimizedStyles = () => {
   const styleCache = new Map();
@@ -125,15 +125,13 @@ export const exportToPdf = async ({
       line.style.display = "none";
     });
 
-    const [capturedStyles, fontFaceStyles] = await Promise.all([
+    const [capturedStyles] = await Promise.all([
       getOptimizedStyles(),
-      getFontFaceCss(selectedFontFamily, true),
       optimizeImages(clonedElement)
     ]);
 
     // 注入 PdfExport.tsx 中的样式增强
     const styles = `
-      ${fontFaceStyles}
       ${capturedStyles}
       html, body { background: white !important; background-color: white !important; }
       html, body, #${elementId} {

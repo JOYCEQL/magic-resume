@@ -1,6 +1,6 @@
 {
   "name": "magic-resume",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.3.0",

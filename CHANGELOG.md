@@ -1,6 +1,50 @@
 # Changelog
 
 
+## v2.0.3
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.2...main)
+
+### 🚀 Enhancements
+
+- Add 'To Present' switch for date and date range inputs, disabling the end date picker when active ([023c9cb](https://github.com/JOYCEQL/magic-resume/commit/023c9cb))
+- Introduce a sidebar layout for the Modern template, relocating the Education section and refining section styling, spacing, and truncation ([3330265](https://github.com/JOYCEQL/magic-resume/commit/3330265))
+- Modern template's content height ([dbddd4f](https://github.com/JOYCEQL/magic-resume/commit/dbddd4f))
+- Add self-evaluation section ([c5225a2](https://github.com/JOYCEQL/magic-resume/commit/c5225a2))
+- Chnage modern template to use table layout for  print background ([dc9e547](https://github.com/JOYCEQL/magic-resume/commit/dc9e547))
+- Add certificates section with image ([e870bd4](https://github.com/JOYCEQL/magic-resume/commit/e870bd4))
+- Add more fonts config ([a875349](https://github.com/JOYCEQL/magic-resume/commit/a875349))
+- Export font ([0a4dfd9](https://github.com/JOYCEQL/magic-resume/commit/0a4dfd9))
+- More font config ([395eda2](https://github.com/JOYCEQL/magic-resume/commit/395eda2))
+
+### 🔥 Performance
+
+- Update default Gemini model to `gemini-flash-latest` in API routes and AI config store ([c62e983](https://github.com/JOYCEQL/magic-resume/commit/c62e983))
+
+### 🩹 Fixes
+
+- PreviewDock  bar  export ([dee081e](https://github.com/JOYCEQL/magic-resume/commit/dee081e))
+
+### 💅 Refactors
+
+- Extract resume list page components and utilities into dedicated files ([f78518b](https://github.com/JOYCEQL/magic-resume/commit/f78518b))
+
+### 📖 Documentation
+
+- Update readme.md with wechat ([620c3ab](https://github.com/JOYCEQL/magic-resume/commit/620c3ab))
+- Wechat group ([108b823](https://github.com/JOYCEQL/magic-resume/commit/108b823))
+
+### 🎨 Styles
+
+- Reduce top margin for descriptions and details across various resume template sections ([84acbc8](https://github.com/JOYCEQL/magic-resume/commit/84acbc8))
+- Remove  required prop and asterisk indicator from Field component and its usages in EducationItem ([b149f1a](https://github.com/JOYCEQL/magic-resume/commit/b149f1a))
+- Optimize templates ui ([4628a39](https://github.com/JOYCEQL/magic-resume/commit/4628a39))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+- Siyue ([@JOYCEQL](https://github.com/JOYCEQL))
+
 ## v2.0.2
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.1...main)

@@ -330,8 +330,10 @@
         "font": {
           "title": "Font",
           "alibaba": "Alibaba PuHuiTi",
+          "misans": "MiSans",
           "msyahei": "Microsoft YaHei",
-          "notoserifsc": "Noto Serif SC"
+          "notosanssc": "Noto Sans SC",
+          "sourcehanserifsc": "Source Han Serif SC"
         },
         "lineHeight": {
           "title": "Line Height",

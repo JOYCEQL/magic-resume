@@ -7,6 +7,7 @@ import ResumeTemplateComponent from "../templates";
 import { cn } from "../../lib/utils";
 import { ResumeData } from "../../types/resume";
 import { ResumeTemplate } from "../../types/template";
+import { normalizeFontFamily } from "@/utils/fonts";
 
 const IframeTemplateViewer = () => {
   const { id } = useParams({ from: "/app/preview-template/$id" });
@@ -45,6 +46,9 @@ const IframeTemplateViewer = () => {
       },
     } as ResumeData;
   }, [locale, template]);
+  const selectedFontFamily = normalizeFontFamily(
+    mockData.globalSettings?.fontFamily
+  );
 
   return (
     <div className="w-full h-full min-h-screen bg-white flex justify-center items-start overflow-hidden">
@@ -55,7 +59,7 @@ const IframeTemplateViewer = () => {
           "relative mx-auto origin-top-left"
         )}
         style={{
-          fontFamily: mockData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+          fontFamily: selectedFontFamily,
           padding: `${template.spacing.contentPadding}px`,
         }}
       >

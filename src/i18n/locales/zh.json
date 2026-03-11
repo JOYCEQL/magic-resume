@@ -290,8 +290,10 @@
         "font": {
           "title": "字体",
           "alibaba": "阿里巴巴普惠体",
+          "misans": "MiSans",
           "msyahei": "微软雅黑",
-          "notoserifsc": "思源宋体"
+          "notosanssc": "Noto Sans SC",
+          "sourcehanserifsc": "思源宋体"
         },
         "lineHeight": {
           "title": "行高",

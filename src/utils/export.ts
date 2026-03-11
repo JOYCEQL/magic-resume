@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { PDF_EXPORT_CONFIG } from "@/config";
+import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
 
 export const getOptimizedStyles = () => {
   const styleCache = new Map();
@@ -71,6 +72,7 @@ export interface ExportToPdfOptions {
   elementId: string;
   title: string;
   pagePadding: number;
+  fontFamily?: string;
   onStart?: () => void;
   onEnd?: () => void;
   successMessage?: string;
@@ -81,6 +83,7 @@ export const exportToPdf = async ({
   elementId,
   title,
   pagePadding,
+  fontFamily,
   onStart,
   onEnd,
   successMessage,
@@ -96,6 +99,7 @@ export const exportToPdf = async ({
     }
 
     const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
+    const selectedFontFamily = normalizeFontFamily(fontFamily);
     const transformValue = clonedElement.style.transform || "";
     const scaleMatch = transformValue.match(/scale\(([\d.]+)\)/);
     
@@ -114,22 +118,29 @@ export const exportToPdf = async ({
     clonedElement.style.setProperty("width", "100%", "important");
     clonedElement.style.setProperty("padding", "0", "important");
     clonedElement.style.setProperty("box-sizing", "border-box");
+    clonedElement.style.setProperty("font-family", selectedFontFamily, "important");
 
     const pageBreakLines = clonedElement.querySelectorAll<HTMLElement>(".page-break-line");
     pageBreakLines.forEach((line) => {
       line.style.display = "none";
     });
 
-    const [capturedStyles] = await Promise.all([
+    const [capturedStyles, fontFaceStyles] = await Promise.all([
       getOptimizedStyles(),
+      getFontFaceCss(selectedFontFamily, true),
       optimizeImages(clonedElement)
     ]);
 
     // 注入 PdfExport.tsx 中的样式增强
     const styles = `
+      ${fontFaceStyles}
       ${capturedStyles}
       html, body { background: white !important; background-color: white !important; }
-      #${elementId} { background: white !important; background-color: white !important; }
+      html, body, #${elementId} {
+        background: white !important;
+        background-color: white !important;
+        font-family: ${selectedFontFamily} !important;
+      }
     `;
 
     const response = await fetch(PDF_EXPORT_CONFIG.SERVER_URL, {

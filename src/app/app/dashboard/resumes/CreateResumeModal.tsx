@@ -15,6 +15,7 @@ import type { Translator } from "@/i18n/compat/utils";
 import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
 import { ChevronLeft, FilePlus, Sparkles, X } from "lucide-react";
+import { normalizeFontFamily } from "@/utils/fonts";
 
 interface CreateResumeModalProps {
     open: boolean;
@@ -137,7 +138,7 @@ const TemplateThumbnail = ({
                         height: "297mm",
                         transform: `scale(${scale})`,
                         padding: `${template.spacing?.contentPadding || 32}px`,
-                        fontFamily: previewData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+                        fontFamily: normalizeFontFamily(previewData.globalSettings?.fontFamily),
                     }}
                 >
                     <ResumeTemplateComponent

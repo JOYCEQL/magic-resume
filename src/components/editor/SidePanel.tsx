@@ -28,12 +28,7 @@ import {
 import { Plus } from "lucide-react";
 import { STANDARD_MODULES } from "@/config/modules";
 import { DEFAULT_TEMPLATES } from "@/config";
-
-const fontOptions = [
-  { value: "sans", label: "无衬线体" },
-  { value: "serif", label: "衬线体" },
-  { value: "mono", label: "等宽体" },
-];
+import { getFontOptions, normalizeFontFamily } from "@/utils/fonts";
 
 const lineHeightOptions = [
   { value: "normal", label: "默认" },
@@ -110,11 +105,8 @@ export function SidePanel() {
     return availableModules.filter((m) => !existingIds.has(m.id));
   }, [availableModules, menuSections]);
 
-  const fontOptions = [
-    { value: "Alibaba PuHuiTi, sans-serif", label: t("typography.font.alibaba") },
-    { value: "\"Microsoft YaHei\", \"微软雅黑\", sans-serif", label: t("typography.font.msyahei") },
-    { value: "\"Noto Serif SC\", \"Source Han Serif SC\", serif", label: t("typography.font.notoserifsc") },
-  ];
+  const fontOptions = getFontOptions((key) => t(`typography.font.${key}`));
+  const selectedFontFamily = normalizeFontFamily(globalSettings?.fontFamily);
 
   const lineHeightOptions = [
     { value: "normal", label: t("typography.lineHeight.normal") },
@@ -285,7 +277,7 @@ export function SidePanel() {
                 {t('typography.font.title')}
               </Label>
               <Select
-                value={globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif"}
+                value={selectedFontFamily}
                 onValueChange={(value) =>
                   updateGlobalSettings?.({ fontFamily: value })
                 }

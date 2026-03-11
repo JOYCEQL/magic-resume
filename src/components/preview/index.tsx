@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAutoOnePage } from "@/hooks/useAutoOnePage";
 import { useTranslations } from "@/i18n/compat/client";
+import { normalizeFontFamily } from "@/utils/fonts";
 import ResumeTemplateComponent from "../templates";
 
 interface PreviewPanelProps {
@@ -64,6 +65,9 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     ref
   ) => {
     const { activeResume } = useResumeStore();
+    const selectedFontFamily = normalizeFontFamily(
+      activeResume?.globalSettings?.fontFamily
+    );
     const t = useTranslations("previewDock");
     const template = useMemo(() => {
       return (
@@ -181,7 +185,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
         ref={previewRef}
         className="relative w-full h-full  bg-gray-100"
         style={{
-          fontFamily: activeResume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+          fontFamily: selectedFontFamily,
         }}
       >
         <div className="py-4 ml-4 px-4 min-h-screen flex justify-center scale-[58%] origin-top md:scale-90 md:origin-top-left">
@@ -198,6 +202,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               ref={resumeContentRef}
               id="resume-preview"
               style={{
+                fontFamily: selectedFontFamily,
                 padding: `${activeResume.globalSettings?.pagePadding}px`,
                 ...(isScaled
                   ? {

@@ -98,6 +98,7 @@ const PreviewDock = ({
       elementId: "resume-preview",
       title: title || "resume",
       pagePadding: globalSettings?.pagePadding || 0,
+      fontFamily: globalSettings?.fontFamily,
       onStart: () => setIsExporting(true),
       onEnd: () => setIsExporting(false),
       successMessage: tPdf("toast.success"),
@@ -137,7 +138,11 @@ const PreviewDock = ({
       return;
     }
     const pagePadding = globalSettings?.pagePadding || 0;
-    exportResumeToBrowserPrint(resumeContent, pagePadding);
+    exportResumeToBrowserPrint(
+      resumeContent,
+      pagePadding,
+      globalSettings?.fontFamily
+    );
   };
 
   const { checkConfiguration } = useAIConfiguration();

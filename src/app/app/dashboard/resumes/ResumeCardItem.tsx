@@ -21,6 +21,7 @@ import {
 import ResumeTemplateComponent from "@/components/templates";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
+import { normalizeFontFamily } from "@/utils/fonts";
 
 interface ResumeCardItemProps {
     id: string;
@@ -93,7 +94,7 @@ export const ResumeCardItem = ({
                                     transform: `scale(${scale})`,
                                     transformOrigin: "top left",
                                     padding: `${resume.globalSettings?.pagePadding || 32}px`,
-                                    fontFamily: resume.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+                                    fontFamily: normalizeFontFamily(resume.globalSettings?.fontFamily),
                                 }}
                             >
                                 <ResumeTemplateComponent data={resume as any} template={activeTemplate} />

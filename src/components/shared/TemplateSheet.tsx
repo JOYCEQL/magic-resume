@@ -17,6 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ResumeTemplateComponent from "@/components/templates";
 import { useLocale } from "@/i18n/compat/client";
 import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
+import { normalizeFontFamily } from "@/utils/fonts";
 
 const A4_WIDTH_PX = 794;
 const A4_HEIGHT_PX = 1123;
@@ -89,7 +90,7 @@ const TemplatePreview = ({
                 transformOrigin: "top left",
                 boxSizing: "border-box",
                 padding: `${template.spacing.contentPadding}px`,
-                fontFamily: baseData.globalSettings?.fontFamily || "Alibaba PuHuiTi, sans-serif",
+                fontFamily: normalizeFontFamily(baseData.globalSettings?.fontFamily),
               }}
             >
               <ResumeTemplateComponent

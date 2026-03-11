@@ -1,4 +1,10 @@
-export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pagePadding: number) => {
+import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
+
+export const exportResumeToBrowserPrint = async (
+  resumeContent: HTMLElement,
+  pagePadding: number,
+  fontFamily?: string
+) => {
   const printFrame = document.createElement("iframe");
   printFrame.style.position = "absolute";
   printFrame.style.width = "1px";
@@ -20,6 +26,7 @@ export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pag
     iframeWindow.document.open();
 
     const clonedContent = resumeContent.cloneNode(true) as HTMLElement;
+    const selectedFontFamily = normalizeFontFamily(fontFamily);
     const transformValue = clonedContent.style.transform || "";
     const match = transformValue.match(/scale\(([\d.]+)\)/);
     if (match) {
@@ -33,19 +40,16 @@ export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pag
       }
     }
 
+    clonedContent.style.setProperty("font-family", selectedFontFamily, "important");
+    const fontFaceStyles = await getFontFaceCss(selectedFontFamily);
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
         <head>
           <title>Print Resume</title>
           <style>
-            @font-face {
-              font-family: "Alibaba PuHuiTi";
-              src: url("/fonts/AlibabaPuHuiTi-3-55-Regular.ttf") format("truetype");
-              font-weight: normal;
-              font-style: normal;
-              font-display: swap;
-            }
+            ${fontFaceStyles}
 
             @page {
               size: A4;
@@ -64,7 +68,7 @@ export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pag
               overflow: visible !important;
             }
             body {
-              font-family: sans-serif;
+              font-family: ${selectedFontFamily};
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
             }
@@ -74,7 +78,7 @@ export const exportResumeToBrowserPrint = async (resumeContent: HTMLElement, pag
               padding: ${pagePadding}px !important;
               -webkit-box-decoration-break: clone;
               box-decoration-break: clone;
-              font-family: "Alibaba PuHuiTi", sans-serif !important;
+              font-family: ${selectedFontFamily} !important;
               background: white !important;
             }
 

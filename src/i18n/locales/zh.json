@@ -711,6 +711,7 @@
   "aiPolishDialog": {
     "title": "AI 润色",
     "description": {
+      "ready": "填写可选的自定义要求后，点击「开始润色」",
       "polishing": "正在为您润色内容...",
       "finished": "已经为您优化了内容，请查看效果"
     },
@@ -723,7 +724,10 @@
       "original": "原始内容",
       "polished": "润色后的内容"
     },
+    "customInstructions": "自定义要求",
+    "customInstructionsPlaceholder": "例如：请用更技术化的表述、突出量化成果、语气偏正式…（选填，留空则按默认规则润色）",
     "button": {
+      "start": "开始润色",
       "regenerate": "重新生成",
       "generating": "生成中...",
       "apply": "应用内容"

@@ -8,12 +8,13 @@ export const Route = createFileRoute("/api/polish")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, content, modelType, apiEndpoint } = body as {
+          const { apiKey, model, content, modelType, apiEndpoint, customInstructions } = body as {
             apiKey: string;
             model: string;
             content: string;
             modelType: AIModelType;
             apiEndpoint?: string;
+            customInstructions?: string;
           };
 
           const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/api/polish")({
             throw new Error("Invalid model type");
           }
 
-          const systemPrompt = `你是一个专业的简历优化助手。请帮助优化以下 Markdown 格式的文本，使其更加专业和有吸引力。
+          let systemPrompt = `你是一个专业的简历优化助手。请帮助优化以下 Markdown 格式的文本，使其更加专业和有吸引力。
 
               优化原则：
               1. 使用更专业的词汇和表达方式
@@ -32,6 +33,10 @@ export const Route = createFileRoute("/api/polish")({
               6. 严格保留原有的 Markdown 格式结构（列表项保持为列表项，加粗保持加粗等）
 
               请直接返回优化后的 Markdown 文本，不要包含任何解释或其他内容。`;
+
+          if (customInstructions?.trim()) {
+            systemPrompt += `\n\n用户额外要求：\n${customInstructions.trim()}`;
+          }
 
           if (modelType === "gemini") {
             const geminiModel = model || "gemini-flash-latest";

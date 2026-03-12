@@ -666,6 +666,7 @@
   "aiPolishDialog": {
     "title": "AI Polish",
     "description": {
+      "ready": "Add optional instructions, then click \"Start polish\"",
       "polishing": "Polishing your content...",
       "finished": "Content has been optimized, please check the result"
     },
@@ -678,7 +679,10 @@
       "original": "Original Content",
       "polished": "Polished Content"
     },
+    "customInstructions": "Custom instructions",
+    "customInstructionsPlaceholder": "e.g. Use more technical terms, highlight metrics, keep tone formal… (optional)",
     "button": {
+      "start": "Start polish",
       "regenerate": "Regenerate",
       "generating": "Generating...",
       "apply": "Apply Content"

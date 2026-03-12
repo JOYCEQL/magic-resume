@@ -205,6 +205,12 @@
           "modelId": "Model ID",
           "apiEndpoint": "API Endpoint, example: https://openai.example.org/v1"
         },
+        "openrouter": {
+          "title": "OpenRouter",
+          "description": "Only an OpenRouter API key is required. Default model: openrouter/auto",
+          "apiKey": "OpenRouter API Key",
+          "modelId": "Model ID (optional, default: openrouter/auto)"
+        },
         "gemini": {
           "title": "Gemini",
           "description": "Supports polish, grammar check, and PDF image resume import. Recommended model: gemini-flash-latest",

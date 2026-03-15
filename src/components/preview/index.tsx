@@ -64,7 +64,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     },
     ref
   ) => {
-    const { activeResume } = useResumeStore();
+    const { activeResume, setActiveSection } = useResumeStore();
     const selectedFontFamily = normalizeFontFamily(
       activeResume?.globalSettings?.fontFamily
     );
@@ -180,6 +180,22 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
 
     if (!activeResume) return null;
 
+    const handlePreviewClickCapture = (
+      event: React.MouseEvent<HTMLDivElement>
+    ) => {
+      const target = event.target as HTMLElement | null;
+      const sectionElement = target?.closest<HTMLElement>(
+        "[data-resume-section-id]"
+      );
+      const sectionId = sectionElement?.dataset.resumeSectionId;
+
+      if (!sectionId || sectionId === activeResume.activeSection) {
+        return;
+      }
+
+      setActiveSection(sectionId);
+    };
+
     return (
       <div
         ref={previewRef}
@@ -201,6 +217,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
             <div
               ref={resumeContentRef}
               id="resume-preview"
+              onClickCapture={handlePreviewClickCapture}
               style={{
                 fontFamily: selectedFontFamily,
                 padding: `${activeResume.globalSettings?.pagePadding}px`,

@@ -93,6 +93,21 @@
   }
 }
 
+.tiptap a,
+#resume-preview a.rich-text-link {
+  color: #2563eb;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.tiptap a:hover,
+#resume-preview a.rich-text-link:hover {
+  color: #1d4ed8;
+}
+
 .control-group {
   border: 1px solid #d1d5db;
   border-bottom: none;

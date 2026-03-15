@@ -70,6 +70,8 @@ interface ResumeStore {
   removeCertificate: (id: string) => void;
 }
 
+type PersistedResumeStore = Pick<ResumeStore, "resumes" | "activeResumeId">;
+
 // 同步简历到文件系统
 const syncResumeToFile = async (
   resumeData: ResumeData,
@@ -202,6 +204,8 @@ export const useResumeStore = create(
             ...state.resumes,
             [resume.id]: resume,
           },
+          activeResume:
+            state.activeResumeId === resume.id ? resume : state.activeResume,
         }));
       },
 
@@ -678,6 +682,7 @@ export const useResumeStore = create(
             [resume.id]: resume,
           },
           activeResumeId: resume.id,
+          activeResume: resume,
         }));
 
         syncResumeToFile(resume);
@@ -686,6 +691,24 @@ export const useResumeStore = create(
     }),
     {
       name: "resume-storage",
+      partialize: (state): PersistedResumeStore => ({
+        resumes: state.resumes,
+        activeResumeId: state.activeResumeId,
+      }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<PersistedResumeStore>;
+        const resumes = persisted.resumes ?? currentState.resumes;
+        const activeResumeId =
+          persisted.activeResumeId ?? currentState.activeResumeId;
+
+        return {
+          ...currentState,
+          ...persisted,
+          resumes,
+          activeResumeId,
+          activeResume: activeResumeId ? resumes[activeResumeId] ?? null : null,
+        };
+      },
     }
   )
 );

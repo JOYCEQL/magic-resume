@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Metadata } from "next";
 import "./globals.css";
 import "./font.css";
+import "@/styles/tiptap.scss";
 
 type Props = {
   children: ReactNode;

@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import { useTranslations } from "@/i18n/compat/client";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
+import Link from "@tiptap/extension-link";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -27,14 +29,17 @@ import {
   PaintBucket,
   Highlighter,
   Wand2,
+  Link2,
+  Unlink,
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
+import { normalizeLinkHref } from "@/lib/richText";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import { BetterSpace } from "./BetterSpace";
-
+import { toast } from "sonner";
 import "@/styles/tiptap.scss";
 
 interface RichTextEditorProps {
@@ -68,15 +73,6 @@ const getColors = (t: any): ColorOption[] => [
 ];
 
 const getBgColors = getColors;
-
-interface MenuButtonProps {
-  onClick: () => void;
-  isActive?: boolean;
-  disabled?: boolean;
-  children: React.ReactNode;
-  className?: string;
-  tooltip?: string;
-}
 
 interface MenuButtonProps {
   onClick: () => void;
@@ -140,7 +136,7 @@ const MenuButton = ({
   );
 };
 
-const TextColorButton = ({ editor }) => {
+const TextColorButton = ({ editor }: { editor: Editor }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
   const t = useTranslations("richEditor");
   const colors = getColors(t);
@@ -216,7 +212,7 @@ const TextColorButton = ({ editor }) => {
   );
 };
 
-const BackgroundColorButton = ({ editor }) => {
+const BackgroundColorButton = ({ editor }: { editor: Editor }) => {
   const [activeBgColor, setActiveBgColor] = React.useState<string | null>(null);
   const t = useTranslations("richEditor");
   const bgColors = getBgColors(t);
@@ -306,6 +302,104 @@ const BackgroundColorButton = ({ editor }) => {
   );
 };
 
+const LinkButton = ({ editor }: { editor: Editor }) => {
+  const [open, setOpen] = React.useState(false);
+  const [linkUrl, setLinkUrl] = React.useState("");
+  const t = useTranslations("richEditor");
+  const canManageLink = editor.isActive("link") || !editor.state.selection.empty;
+
+  React.useEffect(() => {
+    if (!open) return;
+    setLinkUrl(editor.getAttributes("link").href || "");
+  }, [editor, open]);
+
+  const applyLink = () => {
+    const normalizedHref = normalizeLinkHref(linkUrl);
+
+    if (!normalizedHref) {
+      toast.error(t("linkInvalid"));
+      return;
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({
+        href: normalizedHref,
+        target: "_blank",
+        rel: "noopener noreferrer",
+      })
+      .run();
+
+    setLinkUrl(normalizedHref);
+    setOpen(false);
+  };
+
+  const removeLink = () => {
+    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    setLinkUrl("");
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant={editor.isActive("link") ? "secondary" : "ghost"}
+          size="sm"
+          disabled={!canManageLink}
+          className={cn(
+            "h-9 w-9 p-0 rounded-md transition-all duration-200 hover:scale-105",
+            editor.isActive("link")
+              ? "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+              : "hover:bg-primary/5 dark:hover:bg-neutral-800"
+          )}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <Link2 className="h-5 w-5" />
+          <span className="sr-only">{t("link")}</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-3 rounded-lg" align="start">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <Link2 className="h-4 w-4" />
+            <span className="text-sm font-medium">{t("link")}</span>
+          </div>
+          <Input
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            placeholder={t("linkPlaceholder")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                applyLink();
+              }
+            }}
+          />
+          <div className="flex items-center justify-end gap-2">
+            {editor.isActive("link") && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={removeLink}
+              >
+                <Unlink className="h-4 w-4 mr-1.5" />
+                {t("linkRemove")}
+              </Button>
+            )}
+            <Button type="button" size="sm" onClick={applyLink}>
+              {t("linkApply")}
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const RichTextEditor = ({
   content = "",
   onChange,
@@ -340,6 +434,19 @@ const RichTextEditor = ({
       TextStyle,
       Underline,
       Color,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        linkOnPaste: true,
+        defaultProtocol: "https",
+        HTMLAttributes: {
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+        isAllowedUri: (url, ctx) =>
+          ctx.defaultValidate(url) && Boolean(normalizeLinkHref(url)),
+        shouldAutoLink: (url) => Boolean(normalizeLinkHref(url)),
+      }),
       Highlight.configure({ multicolor: true }),
       BetterSpace,
     ],
@@ -412,6 +519,7 @@ const RichTextEditor = ({
           >
             <UnderlineIcon className="h-5 w-5" />
           </MenuButton>
+          <LinkButton editor={editor} />
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
         </div>

@@ -95,6 +95,9 @@ importers:
       '@tiptap/extension-highlight':
         specifier: ^2.9.1
         version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-link':
+        specifier: ^2.27.2
+        version: 2.27.2(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
       '@tiptap/extension-list-item':
         specifier: ^2.4.0
         version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
@@ -3402,6 +3405,12 @@ packages:
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
+  '@tiptap/extension-link@2.27.2':
+    resolution: {integrity: sha512-bnP61qkr0Kj9Cgnop1hxn2zbOCBzNtmawxr92bVTOE31fJv6FhtCnQiD6tuPQVGMYhcmAj7eihtvuEMFfqEPcQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+      '@tiptap/pm': ^2.7.0
+
   '@tiptap/extension-list-item@2.11.5':
     resolution: {integrity: sha512-Mp5RD/pbkfW1vdc6xMVxXYcta73FOwLmblQlFNn/l/E5/X1DUSA4iGhgDDH4EWO3swbs03x2f7Zka/Xoj3+WLg==}
     peerDependencies:
@@ -4617,6 +4626,9 @@ packages:
 
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
+
+  linkifyjs@4.3.2:
+    resolution: {integrity: sha512-NT1CJtq3hHIreOianA8aSXn6Cw0JzYOuDQbOrSPe7gqFnCpKP++MQe3ODgO3oh2GJFORkAAdqredOa60z63GbA==}
 
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
@@ -9861,6 +9873,12 @@ snapshots:
     dependencies:
       '@tiptap/core': 2.11.5(@tiptap/pm@2.11.5)
 
+  '@tiptap/extension-link@2.27.2(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)':
+    dependencies:
+      '@tiptap/core': 2.11.5(@tiptap/pm@2.11.5)
+      '@tiptap/pm': 2.11.5
+      linkifyjs: 4.3.2
+
   '@tiptap/extension-list-item@2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))':
     dependencies:
       '@tiptap/core': 2.11.5(@tiptap/pm@2.11.5)
@@ -11195,6 +11213,8 @@ snapshots:
   linkify-it@5.0.0:
     dependencies:
       uc.micro: 2.1.0
+
+  linkifyjs@4.3.2: {}
 
   locate-path@6.0.0:
     dependencies:

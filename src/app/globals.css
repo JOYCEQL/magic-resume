@@ -264,6 +264,7 @@
 .custom-list-ordered {
   list-style-position: inside;
   list-style-type: decimal;
+  padding:0;
 
   p {
     display: inline;

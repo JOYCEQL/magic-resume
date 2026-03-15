@@ -2,6 +2,34 @@ import { NextResponse } from "next/server";
 import { AIModelType } from "@/config/ai";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 
+type ContentLanguage = "zh" | "en" | "mixed";
+
+const detectContentLanguage = (content: string): ContentLanguage => {
+  const chineseChars = (content.match(/[\u4e00-\u9fff]/g) || []).length;
+  const englishChars = (content.match(/[A-Za-z]/g) || []).length;
+
+  if (chineseChars === 0 && englishChars === 0) {
+    return "mixed";
+  }
+  if (chineseChars > englishChars * 1.2) {
+    return "zh";
+  }
+  if (englishChars > chineseChars * 1.2) {
+    return "en";
+  }
+  return "mixed";
+};
+
+const getLanguageInstruction = (language: ContentLanguage) => {
+  if (language === "zh") {
+    return "7. 输出必须保持为中文，严禁翻译成英文或其他语言。";
+  }
+  if (language === "en") {
+    return "7. Output must remain in English. Do not translate into Chinese or any other language.";
+  }
+  return "7. 保持原文语种：中文内容继续用中文，英文内容继续用英文；禁止跨语种翻译。";
+};
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -11,6 +39,9 @@ export async function POST(req: Request) {
     if (!modelConfig) {
       throw new Error("Invalid model type");
     }
+
+    const language = detectContentLanguage(content || "");
+    const languageInstruction = getLanguageInstruction(language);
 
     const response = await fetch(modelConfig.url(apiEndpoint), {
       method: "POST",
@@ -29,6 +60,7 @@ export async function POST(req: Request) {
               4. 使用主动语气
               5. 保持原有信息的完整性
               6. 保留我输入的格式
+              ${languageInstruction}
               
               请直接返回优化后的文本，不要包含任何解释或其他内容。`,
           },

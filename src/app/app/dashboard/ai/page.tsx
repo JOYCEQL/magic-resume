@@ -8,6 +8,7 @@ import IconDoubao from "@/components/ai/icon/IconDoubao";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import IconOpenAi from "@/components/ai/icon/IconOpenAi";
+import { AIModelType } from "@/config/ai";
 
 const AISettingsPage = () => {
   const {
@@ -17,6 +18,8 @@ const AISettingsPage = () => {
     openaiApiKey,
     openaiModelId,
     openaiApiEndpoint,
+    openrouterApiKey,
+    openrouterModelId,
     geminiApiKey,
     geminiModelId,
     setDoubaoApiKey,
@@ -25,6 +28,8 @@ const AISettingsPage = () => {
     setOpenaiApiKey,
     setOpenaiModelId,
     setOpenaiApiEndpoint,
+    setOpenrouterApiKey,
+    setOpenrouterModelId,
     setGeminiApiKey,
     setGeminiModelId,
     selectedModel,
@@ -40,7 +45,7 @@ const AISettingsPage = () => {
 
   const handleApiKeyChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: AIModelType
   ) => {
     const newApiKey = e.target.value;
     if (type === "doubao") {
@@ -49,6 +54,8 @@ const AISettingsPage = () => {
       setDeepseekApiKey(newApiKey);
     } else if (type === "gemini") {
       setGeminiApiKey(newApiKey);
+    } else if (type === "openrouter") {
+      setOpenrouterApiKey(newApiKey);
     } else {
       setOpenaiApiKey(newApiKey);
     }
@@ -56,13 +63,15 @@ const AISettingsPage = () => {
 
   const handleModelIdChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: AIModelType
   ) => {
     const newModelId = e.target.value;
     if (type === "doubao") {
       setDoubaoModelId(newModelId);
     } else if (type === "openai") {
       setOpenaiModelId(newModelId);
+    } else if (type === "openrouter") {
+      setOpenrouterModelId(newModelId);
     } else if (type === "gemini") {
       setGeminiModelId(newModelId);
     }
@@ -108,6 +117,16 @@ const AISettingsPage = () => {
       color: "text-blue-500",
       bgColor: "bg-blue-50 dark:bg-blue-950/50",
       isConfigured: !!(openaiApiKey && openaiModelId && openaiApiEndpoint),
+    },
+    {
+      id: "openrouter",
+      name: t("dashboard.settings.ai.openrouter.title"),
+      description: t("dashboard.settings.ai.openrouter.description"),
+      icon: IconOpenAi,
+      link: "https://openrouter.ai/keys",
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-50 dark:bg-emerald-950/50",
+      isConfigured: !!openrouterApiKey,
     },
     {
       id: "gemini",
@@ -173,10 +192,10 @@ const AISettingsPage = () => {
                     aria-label={`Select ${model.name}`}
                     onClick={() => {
                       setSelectedModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                        model.id as AIModelType
                       );
                       setCurrentModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                        model.id as AIModelType
                       );
                     }}
                     className={cn(
@@ -234,6 +253,8 @@ const AISettingsPage = () => {
                             ? doubaoApiKey
                             : model.id === "openai"
                             ? openaiApiKey
+                            : model.id === "openrouter"
+                            ? openrouterApiKey
                             : model.id === "gemini"
                             ? geminiApiKey
                             : deepseekApiKey
@@ -241,7 +262,7 @@ const AISettingsPage = () => {
                         onChange={(e) =>
                           handleApiKeyChange(
                             e,
-                            model.id as "doubao" | "deepseek" | "openai" | "gemini"
+                            model.id as AIModelType
                           )
                         }
                         type="password"
@@ -288,6 +309,27 @@ const AISettingsPage = () => {
                           onChange={(e) => handleModelIdChange(e, "openai")}
                           placeholder={t(
                             "dashboard.settings.ai.openai.modelId"
+                          )}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {model.id === "openrouter" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.openrouter.modelId")}
+                        </Label>
+                        <Input
+                          value={openrouterModelId}
+                          onChange={(e) => handleModelIdChange(e, "openrouter")}
+                          placeholder={t(
+                            "dashboard.settings.ai.openrouter.modelId"
                           )}
                           className={cn(
                             "h-11",

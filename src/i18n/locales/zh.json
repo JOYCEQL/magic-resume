@@ -206,6 +206,12 @@
           "modelId": "模型 ID",
           "apiEndpoint": "API 端点，如：https://openai.example.org/v1"
         },
+        "openrouter": {
+          "title": "OpenRouter",
+          "description": "仅需配置 OpenRouter API Key 即可使用，模型默认使用 openrouter/auto",
+          "apiKey": "OpenRouter API Key",
+          "modelId": "模型 ID（可选，默认：openrouter/auto）"
+        },
         "gemini": {
           "title": "Gemini",
           "description": "支持润色、语法检查和 PDF 图片识别导入。推荐模型 ID：gemini-flash-latest",

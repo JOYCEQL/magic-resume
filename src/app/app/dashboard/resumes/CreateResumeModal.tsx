@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTranslations } from "@/i18n/compat/client";
+import { useLocale, useTranslations } from "@/i18n/compat/client";
 import {
     Dialog,
     DialogContent,
@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { initialResumeState } from "@/config/initialResumeData";
 import ResumeTemplateComponent from "@/components/templates";
+import { useTemplateSnapshots } from "@/hooks/useTemplateSnapshots";
 import type { Translator } from "@/i18n/compat/utils";
 import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
@@ -45,6 +46,54 @@ const NORMAL_TEMPLATES: NormalTemplate[] = DEFAULT_TEMPLATES.map((template) => (
     nameKey: toTemplateNameKey(template.id),
 }));
 
+const BlankTemplateThumbnail = ({ t }: { t: Translator }) => (
+    <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800/50">
+        <div className="w-24 h-24 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center mb-6 text-gray-400 group-hover:text-primary transition-colors">
+            <FilePlus className="w-12 h-12" />
+        </div>
+        <span className="text-2xl font-bold text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors">
+            {t("dashboard.resumes.createDialog.blankTitle")}
+        </span>
+        <p className="text-gray-500 mt-4 text-base px-8 text-center leading-relaxed">
+            {t("dashboard.resumes.createDialog.blankThumbnailDescription")}
+        </p>
+    </div>
+);
+
+const TemplateCardThumbnail = ({
+    template,
+    t,
+    snapshotSrc,
+}: {
+    template: TemplateOption,
+    t: Translator,
+    snapshotSrc?: string | null,
+}) => {
+    if (template.isBlank) {
+        return <BlankTemplateThumbnail t={t} />;
+    }
+
+    if (snapshotSrc) {
+        return (
+            <img
+                src={snapshotSrc}
+                alt={t(`dashboard.templates.${template.nameKey}.name`)}
+                className="h-full w-full object-cover object-top"
+                loading="eager"
+                draggable={false}
+            />
+        );
+    }
+
+    return (
+        <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800/50">
+            <span className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                {t(`dashboard.templates.${template.nameKey}.name`)}
+            </span>
+        </div>
+    );
+};
+
 const TemplateThumbnail = ({
     template,
     t,
@@ -72,19 +121,7 @@ const TemplateThumbnail = ({
     }, [template.isBlank, scaleModifier]);
 
     if (template.isBlank) {
-        return (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-800/50">
-                <div className="w-24 h-24 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center mb-6 text-gray-400 group-hover:text-primary transition-colors">
-                    <FilePlus className="w-12 h-12" />
-                </div>
-                <span className="text-2xl font-bold text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors">
-                    {t("dashboard.resumes.createDialog.blankTitle")}
-                </span>
-                <p className="text-gray-500 mt-4 text-base px-8 text-center leading-relaxed">
-                    {t("dashboard.resumes.createDialog.blankThumbnailDescription")}
-                </p>
-            </div>
-        );
+        return <BlankTemplateThumbnail t={t} />;
     }
 
     const sampleExperience = quality === "high"
@@ -157,6 +194,8 @@ export const CreateResumeModal = ({
     onCreate,
 }: CreateResumeModalProps) => {
     const t = useTranslations();
+    const locale = useLocale();
+    const { snapshotMap } = useTemplateSnapshots(locale);
     const [previewTarget, setPreviewTarget] = useState<TemplateOption | null>(null);
 
     const handleCreate = (template: TemplateOption) => {
@@ -263,7 +302,11 @@ export const CreateResumeModal = ({
                                                         layoutId={`card-image-${template.id}`}
                                                         className="aspect-[210/297] rounded-2xl overflow-hidden border border-gray-200/60 dark:border-gray-800/60 shadow-sm transition-all duration-300 group-hover:shadow-xl group-hover:border-primary/50 dark:group-hover:border-primary/50 bg-white dark:bg-gray-900 relative"
                                                     >
-                                                        <TemplateThumbnail template={template} t={t} quality="low" />
+                                                        <TemplateCardThumbnail
+                                                            template={template}
+                                                            t={t}
+                                                            snapshotSrc={snapshotMap[template.id]}
+                                                        />
                                                         <div className="absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/5 rounded-2xl pointer-events-none" />
                                                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                                     </motion.div>

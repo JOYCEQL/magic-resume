@@ -1,64 +1,71 @@
 
 import React, { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
-import { DEFAULT_TEMPLATES } from "../../config";
-import { initialResumeState, initialResumeStateEn } from "../../config/initialResumeData";
 import ResumeTemplateComponent from "../templates";
 import { cn } from "../../lib/utils";
-import { ResumeData } from "../../types/resume";
-import { ResumeTemplate } from "../../types/template";
 import { normalizeFontFamily } from "@/utils/fonts";
+import {
+  TEMPLATE_PREVIEW_HEIGHT_PX,
+  TEMPLATE_PREVIEW_WIDTH_PX,
+  TEMPLATE_SNAPSHOT_ROOT_ATTRIBUTE,
+  createTemplatePreviewData,
+  getTemplateById,
+  isTemplatePreviewLocale,
+} from "@/lib/templatePreview";
 
 const IframeTemplateViewer = () => {
   const { id } = useParams({ from: "/app/preview-template/$id" });
-
-  // Use cookie to determine locale
-  const locale =
+  const searchParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null;
+  const localeParam = searchParams?.get("locale");
+  const cookieLocale =
     typeof document !== "undefined"
       ? document.cookie
         .split("; ")
         .find((row) => row.startsWith("NEXT_LOCALE="))
-        ?.split("=")[1] || "zh"
+        ?.split("=")[1]
+      : null;
+  const locale = isTemplatePreviewLocale(localeParam)
+    ? localeParam
+    : isTemplatePreviewLocale(cookieLocale)
+      ? cookieLocale
       : "zh";
+  const isSnapshotMode = searchParams?.get("snapshot") === "1";
 
   const template = useMemo(() => {
-    return DEFAULT_TEMPLATES.find((t: ResumeTemplate) => t.id === id) || DEFAULT_TEMPLATES[0];
+    return getTemplateById(id);
   }, [id]);
 
-  const mockData: ResumeData = useMemo(() => {
-    const baseData = locale === "en" ? initialResumeStateEn : initialResumeState;
-    return {
-      ...baseData,
-      id: "preview-mock-id",
-      templateId: template.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      globalSettings: {
-        ...baseData.globalSettings,
-        themeColor: template.colorScheme.primary,
-        sectionSpacing: template.spacing.sectionGap,
-        paragraphSpacing: template.spacing.itemGap,
-        pagePadding: template.spacing.contentPadding,
-      },
-      basic: {
-        ...baseData.basic,
-        layout: template.basic.layout,
-      },
-    } as ResumeData;
+  const mockData = useMemo(() => {
+    return createTemplatePreviewData(template, locale);
   }, [locale, template]);
   const selectedFontFamily = normalizeFontFamily(
     mockData.globalSettings?.fontFamily
   );
 
   return (
-    <div className="w-full h-full min-h-screen bg-white flex justify-center items-start overflow-hidden">
+    <div
+      className={cn(
+        "w-full min-h-screen overflow-hidden bg-white",
+        isSnapshotMode ? "flex items-start justify-start p-0" : "flex items-start justify-center"
+      )}
+    >
       <div
+        {...{ [TEMPLATE_SNAPSHOT_ROOT_ATTRIBUTE]: "" }}
         className={cn(
-          "w-[210mm] min-w-[210mm] min-h-[297mm]",
-          "bg-white",
-          "relative mx-auto origin-top-left"
+          "bg-white relative origin-top-left",
+          isSnapshotMode ? "" : "mx-auto"
         )}
         style={{
+          width: `${TEMPLATE_PREVIEW_WIDTH_PX}px`,
+          minWidth: `${TEMPLATE_PREVIEW_WIDTH_PX}px`,
+          height: isSnapshotMode
+            ? `${TEMPLATE_PREVIEW_HEIGHT_PX}px`
+            : undefined,
+          minHeight: `${TEMPLATE_PREVIEW_HEIGHT_PX}px`,
+          overflow: "hidden",
           fontFamily: selectedFontFamily,
           padding: `${template.spacing.contentPadding}px`,
         }}

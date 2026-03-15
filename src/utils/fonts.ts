@@ -56,7 +56,14 @@ const FONT_DEFINITIONS: FontDefinition[] = [
         family: "MiSans",
         url: "/fonts/MiSans-Normal.ttf",
         format: "truetype",
-        weight: "100 900",
+        weight: "400",
+        style: "normal"
+      },
+      {
+        family: "MiSans",
+        url: "/fonts/MiSans-Bold.ttf",
+        format: "truetype",
+        weight: "700",
         style: "normal"
       }
     ]
@@ -71,9 +78,23 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "Noto Sans SC",
-        url: "/fonts/NotoSansSC.ttf",
-        format: "truetype",
+        url: "/fonts/NotoSansSC-Regular.otf",
+        format: "opentype",
         weight: "400",
+        style: "normal"
+      },
+      {
+        family: "Noto Sans SC",
+        url: "/fonts/NotoSansSC-Medium.otf",
+        format: "opentype",
+        weight: "500",
+        style: "normal"
+      },
+      {
+        family: "Noto Sans SC",
+        url: "/fonts/NotoSansSC-Bold.otf",
+        format: "opentype",
+        weight: "700",
         style: "normal"
       }
     ]
@@ -90,9 +111,23 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "Source Han Serif SC",
-        url: "/fonts/Source_Han_Serif_SC_Light_Light.otf",
+        url: "/fonts/SourceHanSerifSC-Regular.otf",
         format: "opentype",
-        weight: "300",
+        weight: "400",
+        style: "normal"
+      },
+      {
+        family: "Source Han Serif SC",
+        url: "/fonts/SourceHanSerifSC-Medium.otf",
+        format: "opentype",
+        weight: "500",
+        style: "normal"
+      },
+      {
+        family: "Source Han Serif SC",
+        url: "/fonts/SourceHanSerifSC-Bold.otf",
+        format: "opentype",
+        weight: "700",
         style: "normal"
       }
     ]

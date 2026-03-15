@@ -218,7 +218,7 @@
       "title": "模板",
       "useTemplate": "使用此模板",
       "preview": "预览",
-      "switchTemplate": "切换模版",
+      "switchTemplate": "切换模板",
       "classic": {
         "name": "经典模板",
         "description": "传统简约的简历布局，适合大多数求职场景"
@@ -673,7 +673,7 @@
     }
   },
   "previewDock": {
-    "switchTemplate": "切换模版",
+    "switchTemplate": "切换模板",
     "grammarCheck": {
       "idle": "AI语法纠错",
       "checking": "检查中...",

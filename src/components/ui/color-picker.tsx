@@ -42,9 +42,9 @@ const ColorPicker = forwardRef<HTMLInputElement, ColorPickerProps>(
               className
             )}
             onClick={() => setOpen(true)}
-            style={{ backgroundColor: parsedValue }}
+            style={{ backgroundColor: parsedValue, ...props.style }}
           >
-             <span className="sr-only">Pick a color</span>
+             {props.children || <span className="sr-only">Pick a color</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-3">

@@ -764,5 +764,27 @@
     "apply_error": "Text not found, cannot apply automatically",
     "no_errors_title": "Perfect!",
     "no_errors_desc": "No grammar or punctuation errors found."
+  },
+  "faqDialog": {
+    "title": "Frequently Asked Questions (FAQ)",
+    "description": "Common tips and solutions for the Magic Resume workbench.",
+    "items": {
+      "browser-compatibility": {
+        "question": "Which browser is recommended?",
+        "answer": "We recommend using the latest version of Chrome or Edge for the best layout and export experience. Some outdated browsers may cause styling issues."
+      },
+      "export-failure": {
+        "question": "What if export fails or style is broken?",
+        "answer": "1. We recommend using Google Chrome (https://www.google.cn/intl/zh-CN/chrome/) for best compatibility.\n2. If it still fails, try in 'Incognito Mode' to exclude extension interference.\n3. Alternatively, click 'PDF (Backup)' in the export menu and select 'Save as PDF' in the print dialog."
+      },
+      "export-methods": {
+        "question": "What's the difference between the two export methods?",
+        "answer": "• Export PDF: Uses a backend service for high-precision rendering, 100% restoring the layout. Recommended for formal submission to HR.\n\n• Browser Print: Invokes your current browser's native print function (Save as PDF). Suitable when the backend export service is busy or you need to fine-tune print margins via your browser."
+      },
+      "drag-and-drop": {
+        "question": "How do I drag and drop to reorder modules?",
+        "answer": "In the 'Layout' settings of the left edit panel, hover your cursor over the 'Drag Handle' (usually represented by a six-dot icon) on the left side of the module card. Click and hold the left mouse button to drag the module up or down to reorder the sections of your entire resume."
+      }
+    }
   }
 }

@@ -14,6 +14,7 @@ import {
   FileText
 } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 import { useTranslations } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
 import { exportResumeToBrowserPrint } from "@/utils/print";
@@ -40,6 +41,7 @@ import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
+import { FAQDialog } from "./FAQDialog";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -63,6 +65,27 @@ const Icons = {
     </svg>
   )
 };
+
+const MagicThread = ({ height = 40 }: { height?: number }) => (
+  <div className="relative flex flex-col items-center" style={{ height }}>
+    {/* Base dashed line */}
+    <div className="absolute inset-y-0 w-[1px] border-l border-dashed border-primary/30" />
+    
+    {/* Traveling pulse */}
+    <motion.div
+      className="absolute top-0 w-[1px] h-4 bg-gradient-to-b from-transparent via-primary to-transparent"
+      animate={{
+        top: ["0%", "100%"],
+        opacity: [0, 1, 0],
+      }}
+      transition={{
+        duration: 2.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  </div>
+);
 const PreviewDock = ({
   sidePanelCollapsed,
   editPanelCollapsed,
@@ -201,9 +224,9 @@ const PreviewDock = ({
 
   return (
     <>
-      <div className="hidden md:block fixed top-1/2 right-3 transform -translate-y-1/2">
+      <div className="hidden md:flex flex-col items-center fixed top-1/2 right-3 transform -translate-y-1/2 z-[50]">
         <TooltipProvider delayDuration={0}>
-          <Dock className="bg-background/80 border border-border/40 shadow-xl">
+          <Dock className="bg-background/80 border border-border/40 shadow-xl mb-0">
             <div className="flex flex-col gap-2">
               <DockIcon>
                 <Tooltip>
@@ -353,7 +376,7 @@ const PreviewDock = ({
                   <TooltipTrigger asChild>
                     <button
                       onClick={toggleSidePanel}
-                      className={cn(
+                       className={cn(
                         "flex h-[30px] w-[30px] items-center justify-center rounded-sm transition-all",
                         "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
                         "active:scale-95",
@@ -430,7 +453,7 @@ const PreviewDock = ({
                 </Tooltip>
               </DockIcon>
               <div className="w-full h-[1px] bg-gray-200" />
-
+ 
               <DockIcon>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -471,6 +494,12 @@ const PreviewDock = ({
             </div>
           </Dock>
         </TooltipProvider>
+
+        <MagicThread height={60} />
+        
+        <div className="w-[56px] flex justify-center">
+          <FAQDialog />
+        </div>
       </div>
     </>
   );

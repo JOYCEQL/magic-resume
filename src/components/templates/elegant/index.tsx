@@ -55,7 +55,7 @@ const ElegantTemplate: React.FC<ElegantTemplateProps> = ({ data, template }) => 
 
     return (
         <div className="flex flex-col w-full min-h-screen items-center" style={{ backgroundColor: colorScheme.background, color: colorScheme.text }}>
-            <div className="w-full max-w-4xl px-8">
+            <div className="w-full max-w-4xl">
                 {enabledSections.map((section) => (
                     <div key={section.id} className="w-full">{renderSection(section.id)}</div>
                 ))}

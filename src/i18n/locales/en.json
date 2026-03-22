@@ -246,6 +246,10 @@
       "creative": {
         "name": "Creative",
         "description": "Visual contrast design, vibrant and personalized"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "Luxurious blend of bold serif and refined sans-serif typography"
       }
     }
   },

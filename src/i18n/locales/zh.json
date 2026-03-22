@@ -247,6 +247,10 @@
       "creative": {
         "name": "创意模板",
         "description": "视觉错落设计，灵动活泼展现个性"
+      },
+      "editorial": {
+        "name": "画报风模板",
+        "description": "大号精美衬线体与窄体无衬线的完美结合，极具奢华感"
       }
     }
   },

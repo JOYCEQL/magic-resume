@@ -9,6 +9,7 @@ import { timelineConfig } from "./timeline/config";
 import { minimalistConfig } from "./minimalist/config";
 import { elegantConfig } from "./elegant/config";
 import { creativeConfig } from "./creative/config";
+import { editorialConfig } from "./editorial/config";
 
 // Import components
 import ClassicTemplate from "./classic";
@@ -18,6 +19,7 @@ import TimelineTemplate from "./timeline";
 import MinimalistTemplate from "./minimalist";
 import ElegantTemplate from "./elegant";
 import CreativeTemplate from "./creative";
+import EditorialTemplate from "./editorial";
 
 export interface TemplateRegistryEntry {
   config: ResumeTemplate;
@@ -37,6 +39,7 @@ export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
   { config: minimalistConfig, Component: MinimalistTemplate },
   { config: elegantConfig, Component: ElegantTemplate },
   { config: creativeConfig, Component: CreativeTemplate },
+  { config: editorialConfig, Component: EditorialTemplate },
 ];
 
 /** All template configs — drop-in replacement for the old DEFAULT_TEMPLATES */

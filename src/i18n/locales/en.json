@@ -308,6 +308,11 @@
       "enabled": "One page mode enabled",
       "disabled": "One page mode disabled",
       "cannotFit": "Too much content. Optimized as much as possible but cannot fit on one page. Try simplifying the content or adjusting margins and font size in the sidebar."
+    },
+    "backup": {
+      "configured": "Backup Configured",
+      "notConfigured": "Backup Not Configured",
+      "clickToConfigure": "Click to configure"
     }
   },
   "workbench": {

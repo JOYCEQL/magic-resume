@@ -80,13 +80,11 @@ const syncResumeToFile = async (
   try {
     const handle = await getFileHandle("syncDirectory");
     if (!handle) {
-      console.warn("No directory handle found");
       return;
     }
 
     const hasPermission = await verifyPermission(handle);
     if (!hasPermission) {
-      console.warn("No permission to write to directory");
       return;
     }
 
@@ -114,6 +112,19 @@ const syncResumeToFile = async (
   } catch (error) {
     console.error("Error syncing resume to file:", error);
   }
+};
+
+// 防抖同步：合并高频写入，1.5秒内多次编辑只触发一次文件写入
+let syncTimer: ReturnType<typeof setTimeout> | null = null;
+const debouncedSyncToFile = (
+  resumeData: ResumeData,
+  prevResume?: ResumeData
+) => {
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => {
+    syncResumeToFile(resumeData, prevResume);
+    syncTimer = null;
+  }, 1500);
 };
 
 export const useResumeStore = create(
@@ -182,7 +193,7 @@ export const useResumeStore = create(
             ...data,
           };
 
-          syncResumeToFile(updatedResume, resume);
+          debouncedSyncToFile(updatedResume, resume);
 
           return {
             resumes: {
@@ -288,6 +299,7 @@ export const useResumeStore = create(
       },
 
       updateBasicInfo: (data) => {
+        const prevResume = get().activeResume;
         set((state) => {
           if (!state.activeResume) return state;
 
@@ -299,18 +311,20 @@ export const useResumeStore = create(
             },
           };
 
-          const newState = {
+          return {
             resumes: {
               ...state.resumes,
               [state.activeResume.id]: updatedResume,
             },
             activeResume: updatedResume,
           };
-
-          syncResumeToFile(updatedResume, state.activeResume);
-
-          return newState;
         });
+
+        // 在 set() 外部处理副作用
+        const updatedResume = get().activeResume;
+        if (updatedResume) {
+          debouncedSyncToFile(updatedResume, prevResume || undefined);
+        }
       },
 
       updateEducation: (education) => {
@@ -674,6 +688,8 @@ export const useResumeStore = create(
           },
           activeResume: updatedResume,
         });
+
+        debouncedSyncToFile(updatedResume);
       },
       addResume: (resume: ResumeData) => {
         set((state) => ({

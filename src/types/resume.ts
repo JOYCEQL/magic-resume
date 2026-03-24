@@ -60,6 +60,7 @@ export interface CustomFieldType {
   icon?: string;
   visible?: boolean;
   custom?: boolean;
+  displayLabel?: boolean;
 }
 export interface BasicInfo {
   birthDate: string;
@@ -115,6 +116,7 @@ export interface Project {
   description: string;
   visible: boolean;
   link?: string;
+  linkLabel?: string;
 }
 
 export interface Certificate {

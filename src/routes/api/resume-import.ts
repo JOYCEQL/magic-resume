@@ -121,7 +121,8 @@ JSON 结构：
       "role": "",
       "date": "",
       "description": ["", ""],
-      "link": ""
+      "link": "",
+      "linkLabel": ""
     }
   ],
   "skills": ["", ""]

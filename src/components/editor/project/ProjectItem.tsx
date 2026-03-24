@@ -12,16 +12,8 @@ import { useCallback, useState } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
-
-interface Project {
-  id: string;
-  name: string;
-  role: string;
-  date: string;
-  description: string;
-  visible: boolean;
-  link?: string;
-}
+import { Project } from "@/types/resume";
+import { Input } from "@/components/ui/input";
 
 interface ProjectEditorProps {
   project: Project;
@@ -42,7 +34,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
   return (
     <div className="space-y-5">
       <div className="grid gap-5">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <Field
             label={t("labels.name")}
             value={project.name}
@@ -56,22 +48,48 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
             placeholder={t("placeholders.role")}
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Field
-            label={t("labels.link")}
-            value={project.link || ""}
-            onChange={(value) => handleChange("link", value)}
-            placeholder={t("placeholders.link")}
-          />
-          <Field
-            label={t("labels.date")}
-            value={project.date}
-            onChange={(value) => handleChange("date", value)}
-            type="date-range"
-            placeholder={t("placeholders.date")}
-            showPresentSwitch={true}
-          />
+        <div className="space-y-2">
+          <div className="flex items-center justify-between font-medium">
+            <span className="text-sm text-foreground">{t("labels.link")}</span>
+          </div>
+          <div className="rounded-lg border border-input bg-background/40 p-3">
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="block space-y-1.5">
+                <span className="text-xs text-muted-foreground">
+                  {t("labels.link")}
+                </span>
+                <Input
+                  type="text"
+                  value={project.link || ""}
+                  onChange={(e) => handleChange("link", e.target.value)}
+                  placeholder={t("placeholders.link")}
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="text-xs text-muted-foreground">
+                  {t("labels.linkLabel")}
+                </span>
+                <Input
+                  type="text"
+                  value={project.linkLabel || ""}
+                  onChange={(e) => handleChange("linkLabel", e.target.value)}
+                  placeholder={t("placeholders.linkLabel")}
+                />
+              </label>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              {t("hints.linkLabel")}
+            </p>
+          </div>
         </div>
+        <Field
+          label={t("labels.date")}
+          value={project.date}
+          onChange={(value) => handleChange("date", value)}
+          type="date-range"
+          placeholder={t("placeholders.date")}
+          showPresentSwitch={true}
+        />
         <Field
           label={t("labels.description")}
           value={project.description}

@@ -5,6 +5,7 @@ import { BasicInfo, GlobalSettings, getBorderRadiusValue } from "@/types/resume"
 import SectionWrapper from "../../shared/SectionWrapper";
 import { formatDateString } from "@/lib/utils";
 import { useLocale, useTranslations } from "@/i18n/compat/client";
+import { getCustomFieldDisplayText, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 
 interface BaseInfoProps {
   basic: BasicInfo;
@@ -34,11 +35,21 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
       .filter((item) => !!item.value);
   }, [basic, locale]);
 
-  const customFields = basic.customFields?.filter((f) => f.visible !== false && !!f.value) || [];
+  const customFields =
+    basic.customFields?.filter(
+      (f) => f.visible !== false && Boolean(getCustomFieldDisplayText(f))
+    ) || [];
 
   const allFields = [
     ...getOrderedFields,
-    ...customFields.map((f) => ({ key: f.id, value: f.value, custom: true, label: f.label, icon: f.icon })),
+    ...customFields.map((f) => ({
+      key: f.id,
+      value: getCustomFieldDisplayText(f),
+      custom: true,
+      label: f.label,
+      icon: f.icon,
+      displayLabel: f.displayLabel,
+    })),
   ];
 
   const nameField = basic.fieldOrder?.find((f) => f.key === "name") || { visible: true };
@@ -118,7 +129,13 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                     </a>
                   ) : (
                     <span className="truncate block">
-                      {globalSettings?.useIconMode ? "" : `${item.custom ? item.label : t(`basicPanel.basicFields.${item.key}`)}: `}
+                      {globalSettings?.useIconMode
+                        ? ""
+                        : item.custom
+                          ? shouldShowCustomFieldLabelPrefix(item)
+                            ? `${item.label}: `
+                            : ""
+                          : `${t(`basicPanel.basicFields.${item.key}`)}: `}
                       {item.value}
                     </span>
                   )}

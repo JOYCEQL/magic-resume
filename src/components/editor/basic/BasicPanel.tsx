@@ -43,7 +43,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
       <motion.div
         {...itemAnimations}
         className={cn(
-          "grid grid-cols-[auto,auto,1fr,1fr,auto] gap-3 items-center p-3",
+          "grid grid-cols-[auto,auto,1fr,1fr,auto,auto] gap-3 items-center p-3",
           "bg-card rounded-xl",
           "border border-border",
           "transition-all duration-200",
@@ -99,6 +99,21 @@ const CustomField: React.FC<CustomFieldProps> = ({
             "placeholder-muted-foreground"
           )}
         />
+
+        <div className="flex items-center gap-2 whitespace-nowrap">
+          <Switch
+            checked={field.displayLabel ?? false}
+            onCheckedChange={(checked) =>
+              onUpdate({
+                ...field,
+                displayLabel: checked,
+              })
+            }
+          />
+          <span className="text-xs text-muted-foreground">
+            {t("customFields.displayLabel")}
+          </span>
+        </div>
 
         <div className="flex items-center space-x-1">
           <Button
@@ -199,6 +214,7 @@ const BasicPanel: React.FC = () => {
       value: "",
       icon: "User",
       visible: true,
+      displayLabel: false,
     };
     const updatedFields = [...customFields, fieldToAdd];
     setCustomFields(updatedFields);

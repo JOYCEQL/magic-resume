@@ -396,6 +396,7 @@
           "label": "Label",
           "value": "Value"
         },
+        "displayLabel": "Show label",
         "addButton": "Add Custom Field"
       },
       "basicFields": {
@@ -478,7 +479,8 @@
         "date": "Project Period",
         "description": "Project Description",
         "technologies": "Tech Stack",
-        "link": "Project Link"
+        "link": "Project Link",
+        "linkLabel": "Display Text"
       },
       "placeholders": {
         "name": "Enter project name",
@@ -486,7 +488,11 @@
         "date": "Project time range",
         "description": "Briefly describe project background and goals",
         "technologies": "Technologies and tools used",
-        "link": "Project link"
+        "link": "Project link",
+        "linkLabel": "Display text"
+      },
+      "hints": {
+        "linkLabel": "If display text is empty, the domain or full URL will be shown automatically. Only http:// and https:// links are supported."
       },
       "buttons": {
         "edit": "Edit",

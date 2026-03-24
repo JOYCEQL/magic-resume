@@ -6,6 +6,7 @@ import { Project, GlobalSettings } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import { getProjectLinkMeta } from "@/lib/projectLink";
 
 interface ProjectSectionProps {
   projects: Project[];
@@ -20,7 +21,10 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
     <SectionWrapper sectionId="projects" className="w-full" style={{ marginTop: `${globalSettings?.sectionSpacing || 32}px` }}>
       <SectionTitle type="projects" globalSettings={globalSettings} showTitle={showTitle} />
       <AnimatePresence mode="popLayout">
-        {visibleProjects.map((project) => (
+        {visibleProjects.map((project) => {
+          const projectLink = getProjectLinkMeta(project);
+
+          return (
           <motion.div key={project.id} layout="position" className="relative pb-6 last:pb-0" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
             
             <motion.h4 layout="position" className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
@@ -31,11 +35,11 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
               {project.role && <span className="font-semibold text-black">{project.role}</span>}
               {project.role && " • "}
               {formatDateString(project.date, locale)}
-              {project.link && (
+              {projectLink && (
                 <>
                   <span className="mx-2">•</span>
-                  <a href={project.link.startsWith("http") ? project.link : `https://${project.link}`} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">
-                     {(() => { try { return new URL(project.link.startsWith("http") ? project.link : `https://${project.link}`).hostname.replace(/^www\./, ""); } catch { return project.link; } })()}
+                  <a href={projectLink.href} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors" title={projectLink.title}>
+                     {projectLink.label}
                   </a>
                 </>
               )}
@@ -50,7 +54,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
               />
             )}
           </motion.div>
-        ))}
+        )})}
       </AnimatePresence>
     </SectionWrapper>
   );

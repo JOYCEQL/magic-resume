@@ -355,6 +355,7 @@
           "label": "标签",
           "value": "值"
         },
+        "displayLabel": "显示标签",
         "addButton": "添加自定义字段"
       },
       "basicFields": {
@@ -437,14 +438,19 @@
         "role": "项目角色",
         "date": "项目时间",
         "description": "项目描述",
-        "link": "项目链接"
+        "link": "项目链接",
+        "linkLabel": "显示文字"
       },
       "placeholders": {
         "name": "请输入项目名称",
         "role": "你在项目中的角色",
         "date": "项目时间范围",
         "description": "简要描述项目背景和目标",
-        "link": "项目链接（可选）"
+        "link": "项目链接",
+        "linkLabel": "显示文字"
+      },
+      "hints": {
+        "linkLabel": "显示文字留空时，将自动显示域名或完整链接。链接仅支持 http:// 或 https:// 链接。"
       },
       "buttons": {
         "edit": "编辑",

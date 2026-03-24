@@ -6,6 +6,7 @@ import { Project, GlobalSettings } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import { getProjectLinkMeta } from "@/lib/projectLink";
 
 interface ProjectSectionProps {
     projects: Project[];
@@ -24,19 +25,24 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
             <SectionTitle type="projects" globalSettings={globalSettings} showTitle={showTitle} />
             <motion.div layout="position">
                 <AnimatePresence mode="popLayout">
-                    {visibleProjects.map((project) => (
+                    {visibleProjects.map((project) => {
+                        const projectLink = getProjectLinkMeta(project, {
+                            preferFullUrl: centerSubtitle,
+                        });
+
+                        return (
                         <motion.div key={project.id} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                             <motion.div className="flex items-center gap-2">
                                 <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>
                                     <h3 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{project.name}</h3>
                                 </div>
-                                {project.link && !centerSubtitle && (
-                                    <a href={project.link.startsWith("http") ? project.link : `https://${project.link}`} target="_blank" rel="noopener noreferrer"
-                                        className={`underline ${flexLayout ? "" : "flex-1"}`} title={project.link}>
-                                        {(() => { try { return new URL(project.link.startsWith("http") ? project.link : `https://${project.link}`).hostname.replace(/^www\./, ""); } catch { return project.link; } })()}
+                                {projectLink && !centerSubtitle && (
+                                    <a href={projectLink.href} target="_blank" rel="noopener noreferrer"
+                                        className={`underline ${flexLayout ? "" : "flex-1"}`} title={projectLink.title}>
+                                        {projectLink.label}
                                     </a>
                                 )}
-                                {!project.link && !centerSubtitle && !flexLayout && <div className="flex-1" />}
+                                {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-1" />}
                                 {centerSubtitle && (
                                     <motion.div layout="position" className={`text-subtitleFont ${flexLayout ? "ml-[16px]" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                         {project.role}
@@ -49,8 +55,8 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                             {project.role && !centerSubtitle && (
                                 <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{project.role}</motion.div>
                             )}
-                            {project.link && centerSubtitle && (
-                                <a href={project.link.startsWith("http") ? project.link : `https://${project.link}`} target="_blank" rel="noopener noreferrer" className="underline" title={project.link}>{project.link}</a>
+                            {projectLink && centerSubtitle && (
+                                <a href={projectLink.href} target="_blank" rel="noopener noreferrer" className="underline" title={projectLink.title}>{projectLink.label}</a>
                             )}
                             {project.description && (
                                 <motion.div layout="position" className="mt-1 text-baseFont"
@@ -59,7 +65,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                 />
                             )}
                         </motion.div>
-                    ))}
+                    )})}
                 </AnimatePresence>
             </motion.div>
         </SectionWrapper>

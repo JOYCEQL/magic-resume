@@ -7,6 +7,7 @@ import { ResumeTemplate } from "@/types/template";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import GithubContribution from "@/components/shared/GithubContribution";
+import { getCustomFieldDisplayText, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 
 interface BaseInfoProps {
     basic: BasicInfo | undefined;
@@ -41,8 +42,8 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
     const allFields = [
         ...getOrderedFields,
-        ...(basic.customFields?.filter((field) => field.visible !== false).map((field) => ({
-            key: field.id, value: field.value, icon: field.icon, label: field.label, visible: true, custom: true,
+        ...(basic.customFields?.filter((field) => field.visible !== false && Boolean(getCustomFieldDisplayText(field))).map((field) => ({
+            key: field.id, value: getCustomFieldDisplayText(field), icon: field.icon, label: field.label, visible: true, custom: true, displayLabel: field.displayLabel,
         })) || []),
     ];
 
@@ -90,7 +91,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                             ) : (
                                 <div className="flex items-center gap-2 overflow-hidden">
                                     {!item.custom && <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && <span>{item.label}:</span>}
+                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span>{item.label}:</span>}
                                     <span className="truncate" suppressHydrationWarning>{item.value}</span>
                                 </div>
                             )}

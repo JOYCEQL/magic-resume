@@ -5,7 +5,7 @@ import { BasicInfo, GlobalSettings, getBorderRadiusValue } from "@/types/resume"
 import SectionWrapper from "../../shared/SectionWrapper";
 import { formatDateString } from "@/lib/utils";
 import { useLocale, useTranslations } from "@/i18n/compat/client";
-import { getCustomFieldDisplayText, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
+import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 
 interface BaseInfoProps {
   basic: BasicInfo;
@@ -49,6 +49,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
       label: f.label,
       icon: f.icon,
       displayLabel: f.displayLabel,
+      href: getCustomFieldHref(f),
     })),
   ];
 
@@ -109,7 +110,13 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
           )}
 
           <motion.div layout="position" className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 mt-1 w-[80%] flex-shrink-0" style={{ fontSize: `${globalSettings?.baseFontSize || 14}px` }}>
-            {allFields.map((item) => (
+            {allFields.map((item) => {
+              const customFieldHref =
+                item.custom && "href" in item && typeof item.href === "string"
+                  ? item.href
+                  : null;
+
+              return (
               <div key={item.key} className="flex items-center gap-2 overflow-hidden">
                 {globalSettings?.useIconMode && (
                   <span className="text-gray-400 shrink-0">
@@ -127,6 +134,10 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                       {globalSettings?.useIconMode ? "" : `${item.label}: `}
                       {item.value.replace(/^https?:\/\//, "")}
                     </a>
+                  ) : customFieldHref ? (
+                    <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors truncate block underline">
+                      {item.value}
+                    </a>
                   ) : (
                     <span className="truncate block">
                       {globalSettings?.useIconMode
@@ -141,7 +152,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                   )}
                 </div>
               </div>
-            ))}
+            )})}
           </motion.div>
         </div>
       </div>

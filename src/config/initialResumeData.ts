@@ -55,7 +55,7 @@ export const initialResumeState = {
       endDate: "2017-06",
       visible: true,
       gpa: "",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>
         <li>专业排名前 5%，连续三年获得一等奖学金</li>
         <li>担任计算机协会技术部部长，组织多次技术分享会</li>
@@ -64,7 +64,7 @@ export const initialResumeState = {
     },
   ],
   skillContent: `<div class="skill-content">
-  <ul class="custom-list">
+  <ul>
     <li>前端框架：熟悉 React、Vue.js，熟悉 Next.js、Nuxt.js 等 SSR 框架</li>
     <li>开发语言：TypeScript、JavaScript(ES6+)、HTML5、CSS3</li>
     <li>UI/样式：熟悉 TailwindCSS、Sass/Less、CSS Module、Styled-components</li>
@@ -84,7 +84,7 @@ export const initialResumeState = {
       position: "高级前端工程师",
       date: "2021.07 - 2024.12",
       visible: true,
-      details: `<ul class="custom-list">
+      details: `<ul>
       <li>负责抖音创作者平台的开发与维护，主导多个核心功能的技术方案设计</li>
       <li>优化项目工程化配置，将构建时间从 8 分钟优化至 2 分钟，提升团队开发效率</li>
       <li>设计并实现组件库，提升代码复用率达 70%，显著减少开发时间</li>
@@ -100,7 +100,7 @@ export const initialResumeState = {
       name: "抖音创作者中台",
       role: "前端负责人",
       date: "2022.06 - 2023.12",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>基于 React 开发的创作者数据分析和内容管理平台，服务百万级创作者群体</li>
         <li>包含数据分析、内容管理、收益管理等多个子系统</li>
         <li>使用 Redux 进行状态管理，实现复杂数据流的高效处理</li>
@@ -114,7 +114,7 @@ export const initialResumeState = {
       name: "微信小程序开发者工具",
       role: "核心开发者",
       date: "2020.03 - 2021.06",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>为开发者提供小程序开发、调试和发布的一站式解决方案</li>
         <li>基于 Electron 构建的跨平台桌面应用</li>
         <li>支持多平台开发，包括 Windows、macOS 和 Linux</li>
@@ -128,7 +128,7 @@ export const initialResumeState = {
       name: "前端监控平台",
       role: "技术负责人",
       date: "2021.09 - 2022.03",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能。</li>
         <li>基于 Vue 和 Element UI 构建，提供实时的监控数据和可视化分析工具。</li>
         <li>支持多种监控指标，包括错误日志、性能指标、用户行为分析等。</li>
@@ -205,7 +205,7 @@ export const initialResumeStateEn = {
       endDate: "2017-06",
       visible: true,
       gpa: "",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>Core courses: Data Structures, Algorithms, Operating Systems, Computer Networks, Web Development</li>
         <li>Top 5% of class, received Dean's List honors for three consecutive years</li>
         <li>Served as Technical Director of the Computer Science Association, organized multiple tech workshops</li>
@@ -214,7 +214,7 @@ export const initialResumeStateEn = {
     },
   ],
   skillContent: `<div class="skill-content">
-  <ul class="custom-list">
+  <ul>
     <li>Frontend Frameworks: React, Vue.js, Next.js, Nuxt.js and other SSR frameworks</li>
     <li>Languages: TypeScript, JavaScript(ES6+), HTML5, CSS3</li>
     <li>UI/Styling: TailwindCSS, Sass/Less, CSS Modules, Styled-components</li>
@@ -234,7 +234,7 @@ export const initialResumeStateEn = {
       position: "Senior Frontend Engineer",
       date: "2021.07 - 2024.12",
       visible: true,
-      details: `<ul class="custom-list">
+      details: `<ul>
       <li>Responsible for development and maintenance of TikTok Creator Platform, leading technical solution design for core features</li>
       <li>Optimized build configuration, reducing build time from 8 minutes to 2 minutes, improving team development efficiency</li>
       <li>Designed and implemented component library, increasing code reuse by 70%, significantly reducing development time</li>
@@ -250,7 +250,7 @@ export const initialResumeStateEn = {
       name: "TikTok Creator Platform",
       role: "Frontend Lead",
       date: "2022.06 - 2023.12",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>React-based analytics and content management platform serving millions of creators</li>
         <li>Includes data analytics, content management, and revenue management subsystems</li>
         <li>Implemented Redux for state management, enabling efficient handling of complex data flows</li>
@@ -264,7 +264,7 @@ export const initialResumeStateEn = {
       name: "WeChat Mini Program Developer Tools",
       role: "Core Developer",
       date: "2020.03 - 2021.06",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>All-in-one solution for mini program development, debugging, and publishing</li>
         <li>Cross-platform desktop application built with Electron</li>
         <li>Supports multiple platforms including Windows, macOS, and Linux</li>
@@ -278,7 +278,7 @@ export const initialResumeStateEn = {
       name: "Frontend Monitoring Platform",
       role: "Technical Lead",
       date: "2021.09 - 2022.05",
-      description: `<ul class="custom-list">
+      description: `<ul>
         <li>Complete frontend monitoring solution including error tracking, performance monitoring, and user behavior analysis</li>
         <li>Built with Vue and Element UI, providing real-time monitoring data and visualization tools</li>
         <li>Supports various monitoring metrics including error logs, performance indicators, and user behavior analysis</li>

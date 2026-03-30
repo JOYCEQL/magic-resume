@@ -177,10 +177,7 @@ export default function AIPolishDialog({
   };
 
   const handleApply = () => {
-    // 将 Markdown 转为 HTML，并补回 Tiptap 所需的 ul/ol 类名
-    const htmlContent = md.render(polishedContent)
-      .replace(/<ul>/g, '<ul class="custom-list">')
-      .replace(/<ol>/g, '<ol class="custom-list-ordered">');
+    const htmlContent = md.render(polishedContent);
     onApply(htmlContent);
     handleClose();
     toast.success(t("error.applied"));

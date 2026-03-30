@@ -31,7 +31,7 @@ export const toStringArray = (value: unknown) => {
 export const toListHtml = (value: unknown) => {
   const items = toStringArray(value);
   if (items.length === 0) return "";
-  return `<ul class="custom-list">${items
+  return `<ul>${items
     .map((item) => `<li>${escapeHtml(item)}</li>`)
     .join("")}</ul>`;
 };

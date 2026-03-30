@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import { useTranslations } from "@/i18n/compat/client";
 import StarterKit from "@tiptap/starter-kit";
+import { ListKit } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
+import { TextStyle } from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
 import Link from "@tiptap/extension-link";
@@ -34,10 +35,7 @@ import {
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
-import { normalizeLinkHref } from "@/lib/richText";
-import ListItem from "@tiptap/extension-list-item";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
+import { normalizeLinkHref, stripLegacyRichTextClasses } from "@/lib/richText";
 import { BetterSpace } from "./BetterSpace";
 import { toast } from "sonner";
 import "@/styles/tiptap.scss";
@@ -406,27 +404,32 @@ const RichTextEditor = ({
   onPolish,
 }: RichTextEditorProps) => {
   const t = useTranslations("richEditor");
-  const editor = useEditor({
-    extensions: [
+  const initialContent = useMemo(
+    () => stripLegacyRichTextClasses(content),
+    []
+  );
+
+  const extensions = useMemo(
+    () => [
       StarterKit.configure({
         bulletList: false,
         orderedList: false,
         listItem: false,
+        listKeymap: false,
+        link: false,
+        underline: false,
         heading: {
           levels: [1, 2, 3],
         },
       }),
-      BulletList.configure({
-        HTMLAttributes: {
-          class: "custom-list",
-        },
+      ListKit.configure({
+        bulletList: {},
+        orderedList: {},
+        listItem: {},
+        listKeymap: {},
+        taskItem: false,
+        taskList: false,
       }),
-      OrderedList.configure({
-        HTMLAttributes: {
-          class: "custom-list-ordered",
-        },
-      }),
-      ListItem,
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"],
@@ -450,32 +453,37 @@ const RichTextEditor = ({
       Highlight.configure({ multicolor: true }),
       BetterSpace,
     ],
-    content,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
+    []
+  );
+
+  const editorProps = useMemo(
+    () => ({
       attributes: {
         class: cn(
-          "prose prose-sm sm:prose lg:prose-lg max-w-none focus:outline-none min-h-[150px] px-4 py-3",
-          "dark:prose-invert",
-          "dark:prose-headings:text-neutral-200",
-          "dark:prose-p:text-neutral-300",
-          "dark:prose-strong:text-neutral-200",
-          "dark:prose-em:text-neutral-200",
-          "dark:prose-blockquote:text-neutral-300",
-          "dark:prose-blockquote:border-neutral-700",
-          "dark:prose-ul:text-neutral-300",
-          "dark:prose-ol:text-neutral-300"
+          "tiptap max-w-none focus:outline-none min-h-[150px] px-4 py-3",
+          "text-neutral-900 dark:text-neutral-200"
         ),
       },
+    }),
+    []
+  );
+
+  const editor = useEditor({
+    extensions,
+    content: initialContent,
+    onUpdate: ({ editor }) => {
+      onChange(stripLegacyRichTextClasses(editor.getHTML()));
     },
+    editorProps,
     immediatelyRender: false,
+    shouldRerenderOnTransaction: true,
   });
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
+    const normalizedContent = stripLegacyRichTextClasses(content);
+
+    if (editor && normalizedContent !== editor.getHTML()) {
+      editor.commands.setContent(normalizedContent, { emitUpdate: false });
     }
   }, [content, editor]);
 

@@ -5,11 +5,13 @@ const HTML_ANY_TAG_REGEX = /<\/?[^>]+>/g;
 const INVISIBLE_WHITESPACE_REGEX = /[\s\u200B-\u200D\uFEFF]/g;
 const RICH_TEXT_ANCHOR_REGEX = /<a\b([^>]*)>/gi;
 const CLASS_ATTRIBUTE_REGEX = /\bclass\s*=\s*("([^"]*)"|'([^']*)')/i;
+const CLASS_ATTRIBUTE_GLOBAL_REGEX = /\bclass\s*=\s*("([^"]*)"|'([^']*)')/gi;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DOMAIN_REGEX =
   /^(?:www\.)?[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+(?:[/?#][^\s]*)?$/i;
 const SAFE_LINK_PROTOCOL_REGEX = /^(https?:|mailto:|tel:)/i;
 const ANY_PROTOCOL_REGEX = /^[a-z][a-z\d+\-.]*:/i;
+const LEGACY_RICH_TEXT_CLASSES = new Set(["custom-list", "custom-list-ordered"]);
 
 const escapeHtml = (text: string) =>
   text
@@ -34,6 +36,23 @@ const decorateRichTextAnchors = (content: string) =>
 
     return `<a class="rich-text-link"${attrs}>`;
   });
+
+export const stripLegacyRichTextClasses = (content?: string) => {
+  if (!content) return "";
+
+  return content.replace(
+    CLASS_ATTRIBUTE_GLOBAL_REGEX,
+    (_match, quotedValue, doubleQuoted, singleQuoted) => {
+      const currentValue = doubleQuoted ?? singleQuoted ?? quotedValue ?? "";
+      const classes = currentValue
+        .split(/\s+/)
+        .filter(Boolean)
+        .filter((className) => !LEGACY_RICH_TEXT_CLASSES.has(className));
+
+      return classes.length ? `class="${classes.join(" ")}"` : "";
+    }
+  );
+};
 
 export const normalizeLinkHref = (href?: string) => {
   if (!href) return null;
@@ -78,7 +97,7 @@ export const normalizeRichTextContent = (content?: string) => {
     normalized = escapeHtml(content).replace(/\r\n|\r|\n/g, "<br />");
   }
 
-  return decorateRichTextAnchors(normalized).replace(
+  return decorateRichTextAnchors(stripLegacyRichTextClasses(normalized)).replace(
     EMPTY_PARAGRAPH_REGEX,
     "<p><br /></p>"
   );

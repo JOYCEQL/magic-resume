@@ -1,24 +1,62 @@
 .tiptap {
   min-height: 300px;
   border-radius: 0 0 4px 4px;
-  ul,
-  ol {
+  ul {
     list-style-type: disc;
-    padding: 0 1rem;
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
 
-    li p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
+    li {
+      margin: 0.25rem 0;
+    }
+
+    li > p {
+      margin: 0;
     }
   }
+
+  ul ul {
+    list-style-type: circle;
+  }
+
+  ul ul ul {
+    list-style-type: square;
+  }
+
   ol {
     list-style-type: decimal;
-    padding: 1rem;
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
 
-    li p {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
+    li {
+      margin: 0.25rem 0;
     }
+
+    li > p {
+      margin: 0;
+    }
+  }
+
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+
+  ol ol ol ol {
+    list-style-type: upper-alpha;
+  }
+
+  ul ul,
+  ul ol,
+  ol ul,
+  ol ol {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
   }
   /* Heading styles */
   h1,
@@ -91,6 +129,77 @@
     border-top: 1px solid gray;
     margin: 2rem 0;
   }
+}
+
+#resume-preview ul,
+#resume-preview ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+#resume-preview ul {
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+#resume-preview ul ul {
+  list-style-type: circle;
+}
+
+#resume-preview ul ul ul {
+  list-style-type: square;
+}
+
+#resume-preview ol {
+  list-style: none;
+  counter-reset: resume-preview-ol;
+  padding-left: 1.5rem;
+}
+
+#resume-preview ol > li {
+  counter-increment: resume-preview-ol;
+  position: relative;
+}
+
+#resume-preview ol > li::before {
+  content: counter(resume-preview-ol, decimal) ".";
+  position: absolute;
+  left: -1.4rem;
+  width: 1.1rem;
+  text-align: left;
+}
+
+#resume-preview ol ol {
+  counter-reset: resume-preview-ol;
+}
+
+#resume-preview ol ol > li::before {
+  content: counter(resume-preview-ol, lower-alpha) ".";
+}
+
+#resume-preview ol ol ol > li::before {
+  content: counter(resume-preview-ol, lower-roman) ".";
+}
+
+#resume-preview ol ol ol ol > li::before {
+  content: counter(resume-preview-ol, upper-alpha) ".";
+}
+
+#resume-preview li {
+  margin: 0.25rem 0;
+}
+
+#resume-preview li > p {
+  display: inline;
+  margin: 0;
+}
+
+#resume-preview ul ul,
+#resume-preview ul ol,
+#resume-preview ol ul,
+#resume-preview ol ol {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .tiptap a,

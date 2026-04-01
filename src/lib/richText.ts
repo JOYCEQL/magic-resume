@@ -3,6 +3,8 @@ const EMPTY_PARAGRAPH_REGEX = /<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi;
 const HTML_BREAK_REGEX = /<br\s*\/?>/gi;
 const HTML_ANY_TAG_REGEX = /<\/?[^>]+>/g;
 const INVISIBLE_WHITESPACE_REGEX = /[\s\u200B-\u200D\uFEFF]/g;
+const TRAILING_LIST_PARAGRAPH_REGEX =
+  /(<\/(?:ul|ol)>)\s*<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>\s*$/i;
 const RICH_TEXT_ANCHOR_REGEX = /<a\b([^>]*)>/gi;
 const CLASS_ATTRIBUTE_REGEX = /\bclass\s*=\s*("([^"]*)"|'([^']*)')/i;
 const CLASS_ATTRIBUTE_GLOBAL_REGEX = /\bclass\s*=\s*("([^"]*)"|'([^']*)')/gi;
@@ -47,11 +49,23 @@ export const stripLegacyRichTextClasses = (content?: string) => {
       const classes = currentValue
         .split(/\s+/)
         .filter(Boolean)
-        .filter((className) => !LEGACY_RICH_TEXT_CLASSES.has(className));
+        .filter((className: string) => !LEGACY_RICH_TEXT_CLASSES.has(className));
 
       return classes.length ? `class="${classes.join(" ")}"` : "";
     }
   );
+};
+
+export const stripTrailingListParagraph = (content?: string) => {
+  if (!content) return "";
+
+  let normalized = content;
+
+  while (TRAILING_LIST_PARAGRAPH_REGEX.test(normalized)) {
+    normalized = normalized.replace(TRAILING_LIST_PARAGRAPH_REGEX, "$1");
+  }
+
+  return normalized;
 };
 
 export const normalizeLinkHref = (href?: string) => {
@@ -97,7 +111,9 @@ export const normalizeRichTextContent = (content?: string) => {
     normalized = escapeHtml(content).replace(/\r\n|\r|\n/g, "<br />");
   }
 
-  return decorateRichTextAnchors(stripLegacyRichTextClasses(normalized)).replace(
+  return decorateRichTextAnchors(
+    stripTrailingListParagraph(stripLegacyRichTextClasses(normalized))
+  ).replace(
     EMPTY_PARAGRAPH_REGEX,
     "<p><br /></p>"
   );

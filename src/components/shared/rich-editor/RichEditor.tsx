@@ -35,7 +35,11 @@ import {
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
-import { normalizeLinkHref, stripLegacyRichTextClasses } from "@/lib/richText";
+import {
+  normalizeLinkHref,
+  stripLegacyRichTextClasses,
+  stripTrailingListParagraph,
+} from "@/lib/richText";
 import { BetterSpace } from "./BetterSpace";
 import { toast } from "sonner";
 import "@/styles/tiptap.scss";
@@ -405,7 +409,7 @@ const RichTextEditor = ({
 }: RichTextEditorProps) => {
   const t = useTranslations("richEditor");
   const initialContent = useMemo(
-    () => stripLegacyRichTextClasses(content),
+    () => stripTrailingListParagraph(stripLegacyRichTextClasses(content)),
     []
   );
 
@@ -472,7 +476,9 @@ const RichTextEditor = ({
     extensions,
     content: initialContent,
     onUpdate: ({ editor }) => {
-      onChange(stripLegacyRichTextClasses(editor.getHTML()));
+      onChange(
+        stripTrailingListParagraph(stripLegacyRichTextClasses(editor.getHTML()))
+      );
     },
     editorProps,
     immediatelyRender: false,
@@ -480,7 +486,9 @@ const RichTextEditor = ({
   });
 
   useEffect(() => {
-    const normalizedContent = stripLegacyRichTextClasses(content);
+    const normalizedContent = stripTrailingListParagraph(
+      stripLegacyRichTextClasses(content)
+    );
 
     if (editor && normalizedContent !== editor.getHTML()) {
       editor.commands.setContent(normalizedContent, { emitUpdate: false });

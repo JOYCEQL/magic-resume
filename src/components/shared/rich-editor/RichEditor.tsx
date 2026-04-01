@@ -36,6 +36,7 @@ import {
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
 import {
+  hasMeaningfulRichTextContent,
   normalizeLinkHref,
   stripLegacyRichTextClasses,
   stripTrailingListParagraph,
@@ -55,6 +56,9 @@ interface ColorOption {
   label: string;
   value: string;
 }
+
+const normalizeEditorHtml = (value?: string) =>
+  stripTrailingListParagraph(stripLegacyRichTextClasses(value));
 
 const getColors = (t: any): ColorOption[] => [
   { label: t("colors.black"), value: "#000000" },
@@ -144,8 +148,19 @@ const TextColorButton = ({ editor }: { editor: Editor }) => {
   const colors = getColors(t);
 
   React.useEffect(() => {
-    const color = editor?.getAttributes("textStyle").color;
-    setActiveColor(color);
+    const syncActiveColor = () => {
+      const color = editor.getAttributes("textStyle").color;
+      setActiveColor(typeof color === "string" ? color : null);
+    };
+
+    syncActiveColor();
+    editor.on("selectionUpdate", syncActiveColor);
+    editor.on("transaction", syncActiveColor);
+
+    return () => {
+      editor.off("selectionUpdate", syncActiveColor);
+      editor.off("transaction", syncActiveColor);
+    };
   }, [editor]);
 
   return (
@@ -220,11 +235,25 @@ const BackgroundColorButton = ({ editor }: { editor: Editor }) => {
   const bgColors = getBgColors(t);
 
   useEffect(() => {
-    // highlight 属性可能直接返回颜色值
-    const highlight =
-      editor?.getAttributes("highlight").color ||
-      editor?.getAttributes("highlight");
-    setActiveBgColor(typeof highlight === "string" ? highlight : null);
+    const syncActiveBgColor = () => {
+      const highlight = editor.getAttributes("highlight");
+      const highlightColor =
+        typeof highlight === "string"
+          ? highlight
+          : typeof highlight?.color === "string"
+            ? highlight.color
+            : null;
+      setActiveBgColor(highlightColor);
+    };
+
+    syncActiveBgColor();
+    editor.on("selectionUpdate", syncActiveBgColor);
+    editor.on("transaction", syncActiveBgColor);
+
+    return () => {
+      editor.off("selectionUpdate", syncActiveBgColor);
+      editor.off("transaction", syncActiveBgColor);
+    };
   }, [editor]);
 
   return (
@@ -308,7 +337,6 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
   const [open, setOpen] = React.useState(false);
   const [linkUrl, setLinkUrl] = React.useState("");
   const t = useTranslations("richEditor");
-  const canManageLink = editor.isActive("link") || !editor.state.selection.empty;
 
   React.useEffect(() => {
     if (!open) return;
@@ -350,7 +378,6 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
         <Button
           variant={editor.isActive("link") ? "secondary" : "ghost"}
           size="sm"
-          disabled={!canManageLink}
           className={cn(
             "h-9 w-9 p-0 rounded-md transition-all duration-200 hover:scale-105",
             editor.isActive("link")
@@ -404,13 +431,18 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
 
 const RichTextEditor = ({
   content = "",
+  placeholder = "",
   onChange,
   onPolish,
 }: RichTextEditorProps) => {
   const t = useTranslations("richEditor");
   const initialContent = useMemo(
-    () => stripTrailingListParagraph(stripLegacyRichTextClasses(content)),
+    () => normalizeEditorHtml(content),
     []
+  );
+  const lastSyncedContentRef = React.useRef(initialContent);
+  const [isEditorEmpty, setIsEditorEmpty] = React.useState(
+    !hasMeaningfulRichTextContent(content)
   );
 
   const extensions = useMemo(
@@ -476,9 +508,15 @@ const RichTextEditor = ({
     extensions,
     content: initialContent,
     onUpdate: ({ editor }) => {
-      onChange(
-        stripTrailingListParagraph(stripLegacyRichTextClasses(editor.getHTML()))
-      );
+      const normalizedHtml = normalizeEditorHtml(editor.getHTML());
+      setIsEditorEmpty(editor.isEmpty);
+
+      if (normalizedHtml === lastSyncedContentRef.current) {
+        return;
+      }
+
+      lastSyncedContentRef.current = normalizedHtml;
+      onChange(normalizedHtml);
     },
     editorProps,
     immediatelyRender: false,
@@ -486,13 +524,23 @@ const RichTextEditor = ({
   });
 
   useEffect(() => {
-    const normalizedContent = stripTrailingListParagraph(
-      stripLegacyRichTextClasses(content)
-    );
+    if (!editor) return;
 
-    if (editor && normalizedContent !== editor.getHTML()) {
-      editor.commands.setContent(normalizedContent, { emitUpdate: false });
+    const normalizedContent = normalizeEditorHtml(content);
+    const normalizedEditorContent = normalizeEditorHtml(editor.getHTML());
+
+    if (
+      normalizedContent === lastSyncedContentRef.current ||
+      normalizedContent === normalizedEditorContent
+    ) {
+      lastSyncedContentRef.current = normalizedContent;
+      setIsEditorEmpty(editor.isEmpty);
+      return;
     }
+
+    editor.commands.setContent(normalizedContent, { emitUpdate: false });
+    lastSyncedContentRef.current = normalizedContent;
+    setIsEditorEmpty(editor.isEmpty);
   }, [content, editor]);
 
   if (!editor) {
@@ -629,7 +677,14 @@ const RichTextEditor = ({
       </div>
 
       {/* Editor Content */}
-      <EditorContent editor={editor} />
+      <div className="relative">
+        {placeholder && isEditorEmpty && (
+          <div className="pointer-events-none absolute left-4 top-3 text-muted-foreground text-sm">
+            {placeholder}
+          </div>
+        )}
+        <EditorContent editor={editor} />
+      </div>
 
       {/* Bubble Menu */}
       {/* {editor && (

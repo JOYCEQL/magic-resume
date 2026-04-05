@@ -87,17 +87,17 @@ const AlignSelector: React.FC<AlignSelectorProps> = ({ value, onChange }) => {
         >
           {/* Icon wrapper to control size */}
           <div className="w-10 h-10 flex items-center justify-center">
-             {React.cloneElement(layout.icon as React.ReactElement, {
-                width: "100%",
-                height: "100%",
-                className: "fill-current"
-             })}
+            {React.cloneElement(layout.icon as React.ReactElement, {
+              width: "100%",
+              height: "100%",
+              className: "fill-current"
+            })}
           </div>
           {/* <span className="text-[10px] mt-2 font-medium opacity-80">
             {layout.tooltip}
           </span> */}
-          
-           {value === layout.value && (
+
+          {value === layout.value && (
             <div className="absolute inset-0 rounded-xl ring-2 ring-primary ring-offset-2 ring-offset-background opacity-0 animate-in fade-in zoom-in-95 duration-200 fill-mode-forwards" />
           )}
         </button>

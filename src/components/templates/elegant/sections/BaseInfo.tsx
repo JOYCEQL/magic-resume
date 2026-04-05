@@ -61,7 +61,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const layoutStyles = {
         left: { container: "flex items-center justify-between gap-6", leftContent: "flex items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-left min-w-0" },
         right: { container: "flex items-center justify-between gap-6 flex-row-reverse", leftContent: "flex justify-end items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-right min-w-0" },
-        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-start items-center flex-wrap gap-3", nameTitle: "text-center min-w-0" },
+        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-center items-center flex-wrap gap-3", nameTitle: "text-center min-w-0" },
     };
 
     const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;

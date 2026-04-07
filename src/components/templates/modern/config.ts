@@ -15,7 +15,7 @@ export const modernConfig: ResumeTemplate = {
   spacing: {
     sectionGap: 8,
     itemGap: 4,
-    contentPadding: 1,
+    contentPadding: 0,
   },
   basic: {
     layout: "center",

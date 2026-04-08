@@ -137,3 +137,23 @@ You can follow the latest updates via:
 ## 🌟 Support
 
 If you find this project helpful, please give it a star ⭐️
+
+## ❤️ Sponsors
+
+<div align="center">
+  <h3>Sponsors</h3>
+  <p>If you sponsored this project but are not listed here, please contact me.</p>
+  <p>
+    <a href="https://github.com/yj147">
+      <img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" />
+    </a>
+    <a href="https://github.com/someone1128">
+      <img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" />
+    </a>
+    <!-- Add more sponsors here:
+    <a href="https://github.com/<username>">
+      <img src="https://github.com/<username>.png?size=40" width="40" height="40" alt="@<username>" />
+    </a>
+    -->
+  </p>
+</div>

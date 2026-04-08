@@ -137,3 +137,23 @@ docker compose up -d
 ## 🌟 支持项目
 
 <img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" width="320"  alt="图片描述">
+
+## ❤️ 赞助名单
+
+<div align="center">
+  <h3>Sponsors</h3>
+  <p>如果您赞助了本项目，但没展示在这里，请联系我。</p>
+  <p>
+    <a href="https://github.com/yj147">
+      <img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" />
+    </a>
+    <a href="https://github.com/someone1128">
+      <img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" />
+    </a>
+    <!-- 在这里继续添加赞助者：
+    <a href="https://github.com/<username>">
+      <img src="https://github.com/<username>.png?size=40" width="40" height="40" alt="@<username>" />
+    </a>
+    -->
+  </p>
+</div>

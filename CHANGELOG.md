@@ -1,6 +1,69 @@
 # Changelog
 
 
+## v2.0.5
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.3...main)
+
+### 🚀 Enhancements
+
+- Font copyright ([4ecf99d](https://github.com/JOYCEQL/magic-resume/commit/4ecf99d))
+- Add rich text link functionality ([b6f01d9](https://github.com/JOYCEQL/magic-resume/commit/b6f01d9))
+- Implement template snapshot ([0ec010e](https://github.com/JOYCEQL/magic-resume/commit/0ec010e))
+- Introduce pre-generated template snapshots ([fd76ba1](https://github.com/JOYCEQL/magic-resume/commit/fd76ba1))
+- Add custom instructions feature to AIPolishDialog ([9d1d6c4](https://github.com/JOYCEQL/magic-resume/commit/9d1d6c4))
+- Redesign theme color selection in side panel ([78ccc3e](https://github.com/JOYCEQL/magic-resume/commit/78ccc3e))
+- Add faq ([1d936e4](https://github.com/JOYCEQL/magic-resume/commit/1d936e4))
+- Add new 'Editorial' resume template ([107a9d8](https://github.com/JOYCEQL/magic-resume/commit/107a9d8))
+- Add backup configuration status ([9e35a5e](https://github.com/JOYCEQL/magic-resume/commit/9e35a5e))
+- Implement debounced file sync ([52d65ec](https://github.com/JOYCEQL/magic-resume/commit/52d65ec))
+- Add custom link labels for projects and support custom field display labels ([3f3e9a6](https://github.com/JOYCEQL/magic-resume/commit/3f3e9a6))
+- Add clickable links for custom fields in BaseInfo sections ([475d9e2](https://github.com/JOYCEQL/magic-resume/commit/475d9e2))
+- Update web-shot screenshot asset ([6eb7b34](https://github.com/JOYCEQL/magic-resume/commit/6eb7b34))
+- Add markdown export ([2277da9](https://github.com/JOYCEQL/magic-resume/commit/2277da9))
+
+### 🔥 Performance
+
+- Font-weight render ([d6e723d](https://github.com/JOYCEQL/magic-resume/commit/d6e723d))
+
+### 🩹 Fixes
+
+- Font export ([b5468f6](https://github.com/JOYCEQL/magic-resume/commit/b5468f6))
+- Wechat.jpg ([6a74d8a](https://github.com/JOYCEQL/magic-resume/commit/6a74d8a))
+- Remove trailing empty paragraphs after lists in rich text content ([7111b3f](https://github.com/JOYCEQL/magic-resume/commit/7111b3f))
+- Improve RichEditor state ([afb8f5d](https://github.com/JOYCEQL/magic-resume/commit/afb8f5d))
+- Center align base info fields across templates and clean up layout code formatting ([9585b00](https://github.com/JOYCEQL/magic-resume/commit/9585b00))
+
+### 💅 Refactors
+
+- Upgrade Tiptap to v3 and replace legacy list classes with native CSS styling ([99b4ae2](https://github.com/JOYCEQL/magic-resume/commit/99b4ae2))
+
+### 📖 Documentation
+
+- Update license ([757030e](https://github.com/JOYCEQL/magic-resume/commit/757030e))
+- Readme.md ([b0f7827](https://github.com/JOYCEQL/magic-resume/commit/b0f7827))
+- Update wechat ([70389bf](https://github.com/JOYCEQL/magic-resume/commit/70389bf))
+- Update readme.md ([f1f05da](https://github.com/JOYCEQL/magic-resume/commit/f1f05da))
+- Update wechat ([042bb72](https://github.com/JOYCEQL/magic-resume/commit/042bb72))
+- Readme.md ([675f38d](https://github.com/JOYCEQL/magic-resume/commit/675f38d))
+- Update FAQ ([5c53ece](https://github.com/JOYCEQL/magic-resume/commit/5c53ece))
+- Add sponsors section to README files ([92e7a57](https://github.com/JOYCEQL/magic-resume/commit/92e7a57))
+
+### 🏡 Chore
+
+- Release v2.0.4 ([cfe74e5](https://github.com/JOYCEQL/magic-resume/commit/cfe74e5))
+
+### 🎨 Styles
+
+- Education preview ([8d4aa02](https://github.com/JOYCEQL/magic-resume/commit/8d4aa02))
+- Reduce contentPadding to 0 in modern template configuration ([342f1ba](https://github.com/JOYCEQL/magic-resume/commit/342f1ba))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+- Siyue ([@JOYCEQL](https://github.com/JOYCEQL))
+- Hanle <hanle200391@163.com>
+
 ## v2.0.4
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.3...main)

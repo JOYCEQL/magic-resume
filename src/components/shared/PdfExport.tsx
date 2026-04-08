@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useTranslations } from "@/i18n/compat/client";
 import {
   Download,
@@ -7,10 +7,10 @@ import {
   Printer,
   ChevronDown
 } from "lucide-react";
-import { toast } from "sonner";
+import { RiMarkdownLine } from "@remixicon/react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
-import { exportToPdf } from "@/utils/export";
+import { exportResumeAsJson, exportResumeAsMarkdown, exportToPdf } from "@/utils/export";
 import { exportResumeToBrowserPrint } from "@/utils/print";
 import {
   DropdownMenu,
@@ -22,10 +22,11 @@ import {
 const PdfExport = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [isExportingJson, setIsExportingJson] = useState(false);
+  const [isExportingMarkdown, setIsExportingMarkdown] = useState(false);
   const { activeResume } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
   const t = useTranslations("pdfExport");
-  const printFrameRef = useRef<HTMLIFrameElement>(null);
+  const tBasicField = useTranslations("workbench.basicPanel.basicFields");
 
   const handleExport = async () => {
     await exportToPdf({
@@ -41,28 +42,36 @@ const PdfExport = () => {
   };
 
   const handleJsonExport = () => {
-    try {
-      setIsExportingJson(true);
-      if (!activeResume) {
-        throw new Error("No active resume");
+    exportResumeAsJson({
+      resume: activeResume,
+      title,
+      onStart: () => setIsExportingJson(true),
+      onEnd: () => setIsExportingJson(false),
+      successMessage: t("toast.jsonSuccess"),
+      errorMessage: t("toast.jsonError")
+    });
+  };
+
+  const handleMarkdownExport = () => {
+    exportResumeAsMarkdown({
+      resume: activeResume,
+      title,
+      onStart: () => setIsExportingMarkdown(true),
+      onEnd: () => setIsExportingMarkdown(false),
+      successMessage: t("toast.markdownSuccess"),
+      errorMessage: t("toast.markdownError"),
+      markdownOptions: {
+        basicFieldLabels: {
+          name: tBasicField("name"),
+          title: tBasicField("title"),
+          employementStatus: tBasicField("employementStatus"),
+          birthDate: tBasicField("birthDate"),
+          email: tBasicField("email"),
+          phone: tBasicField("phone"),
+          location: tBasicField("location")
+        }
       }
-
-      const jsonStr = JSON.stringify(activeResume, null, 2);
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${title}.json`;
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-      toast.success(t("toast.jsonSuccess"));
-    } catch (error) {
-      console.error("JSON export error:", error);
-      toast.error(t("toast.jsonError"));
-    } finally {
-      setIsExportingJson(false);
-    }
+    });
   };
 
   const handlePrint = async () => {
@@ -80,11 +89,13 @@ const PdfExport = () => {
     );
   };
 
-  const isLoading = isExporting || isExportingJson;
+  const isLoading = isExporting || isExportingJson || isExportingMarkdown;
   const loadingText = isExporting
     ? t("button.exporting")
     : isExportingJson
       ? t("button.exportingJson")
+      : isExportingMarkdown
+        ? t("button.exportingMarkdown")
       : "";
 
   return (
@@ -122,6 +133,10 @@ const PdfExport = () => {
           <DropdownMenuItem onClick={handleJsonExport} disabled={isLoading}>
             <FileJson className="w-4 h-4 mr-2" />
             {t("button.exportJson")}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleMarkdownExport} disabled={isLoading}>
+            <RiMarkdownLine className="w-4 h-4 mr-2" />
+            {t("button.exportMarkdown")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

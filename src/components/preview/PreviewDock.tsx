@@ -13,12 +13,13 @@ import {
   Eye,
   FileText
 } from "lucide-react";
+import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useTranslations } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
 import { exportResumeToBrowserPrint } from "@/utils/print";
-import { exportToPdf } from "@/utils/export";
+import { exportResumeAsJson, exportResumeAsMarkdown, exportToPdf } from "@/utils/export";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
 import {
@@ -98,9 +99,11 @@ const PreviewDock = ({
   const router = useRouter();
   const t = useTranslations("previewDock");
   const tPdf = useTranslations("pdfExport");
+  const tBasicField = useTranslations("workbench.basicPanel.basicFields");
   const { checkGrammar, isChecking } = useGrammarCheck();
   const [isExporting, setIsExporting] = useState(false);
   const [isExportingJson, setIsExportingJson] = useState(false);
+  const [isExportingMarkdown, setIsExportingMarkdown] = useState(false);
 
   const {
     selectedModel,
@@ -130,28 +133,36 @@ const PreviewDock = ({
   };
 
   const handleExportJson = () => {
-    try {
-      setIsExportingJson(true);
-      if (!activeResume) {
-        throw new Error("No active resume");
+    exportResumeAsJson({
+      resume: activeResume,
+      title,
+      onStart: () => setIsExportingJson(true),
+      onEnd: () => setIsExportingJson(false),
+      successMessage: tPdf("toast.jsonSuccess"),
+      errorMessage: tPdf("toast.jsonError")
+    });
+  };
+
+  const handleExportMarkdown = () => {
+    exportResumeAsMarkdown({
+      resume: activeResume,
+      title,
+      onStart: () => setIsExportingMarkdown(true),
+      onEnd: () => setIsExportingMarkdown(false),
+      successMessage: tPdf("toast.markdownSuccess"),
+      errorMessage: tPdf("toast.markdownError"),
+      markdownOptions: {
+        basicFieldLabels: {
+          name: tBasicField("name"),
+          title: tBasicField("title"),
+          employementStatus: tBasicField("employementStatus"),
+          birthDate: tBasicField("birthDate"),
+          email: tBasicField("email"),
+          phone: tBasicField("phone"),
+          location: tBasicField("location")
+        }
       }
-
-      const jsonStr = JSON.stringify(activeResume, null, 2);
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${title}.json`;
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-      toast.success(tPdf("toast.jsonSuccess"));
-    } catch (error) {
-      console.error("JSON export error:", error);
-      toast.error(tPdf("toast.jsonError"));
-    } finally {
-      setIsExportingJson(false);
-    }
+    });
   };
 
   const handlePrint = () => {
@@ -220,7 +231,7 @@ const PreviewDock = ({
     }
   }, [activeResumeId, duplicateResume, router, setActiveResume, t]);
 
-  const isLoading = isExporting || isExportingJson;
+  const isLoading = isExporting || isExportingJson || isExportingMarkdown;
 
   return (
     <>
@@ -348,6 +359,13 @@ const PreviewDock = ({
                     >
                       <FileJson className="w-4 h-4 mr-2" />
                       {t("export.json")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={handleExportMarkdown}
+                      disabled={isLoading}
+                    >
+                      <RiMarkdownLine className="w-4 h-4 mr-2" />
+                      {t("export.markdown")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -506,4 +524,3 @@ const PreviewDock = ({
 };
 
 export default PreviewDock;
-

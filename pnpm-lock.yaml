@@ -74,6 +74,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.3
         version: 1.1.7(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@remixicon/react':
+        specifier: ^4.9.0
+        version: 4.9.0(react@18.3.1)
       '@sparticuz/chromium':
         specifier: ^131.0.0
         version: 131.0.1
@@ -3048,6 +3051,11 @@ packages:
 
   '@remirror/core-constants@3.0.0':
     resolution: {integrity: sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg==}
+
+  '@remixicon/react@4.9.0':
+    resolution: {integrity: sha512-5/jLDD4DtKxH2B4QVXTobvV1C2uL8ab9D5yAYNtFt+w80O0Ys1xFOrspqROL3fjrZi+7ElFUWE37hBfaAl6U+Q==}
+    peerDependencies:
+      react: '>=18.2.0'
 
   '@rolldown/pluginutils@1.0.0-beta.40':
     resolution: {integrity: sha512-s3GeJKSQOwBlzdUrj4ISjJj5SfSh+aqn0wjOar4Bx95iV1ETI7F6S/5hLcfAxZ9kXDcyrAkxPlqmd1ZITttf+w==}
@@ -9565,6 +9573,10 @@ snapshots:
       react: 18.3.1
 
   '@remirror/core-constants@3.0.0': {}
+
+  '@remixicon/react@4.9.0(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
 
   '@rolldown/pluginutils@1.0.0-beta.40': {}
 

@@ -259,15 +259,19 @@
       "export": "导出",
       "exportPdf": "PDF",
       "exportJson": "JSON配置",
+      "exportMarkdown": "Markdown",
       "exporting": "导出中...",
       "exportingJson": "导出中...",
+      "exportingMarkdown": "导出中...",
       "print": "PDF(备份)"
     },
     "toast": {
       "success": "PDF导出成功",
       "error": "PDF导出失败",
       "jsonSuccess": "配置导出成功",
-      "jsonError": "配置导出失败"
+      "jsonError": "配置导出失败",
+      "markdownSuccess": "Markdown 导出成功",
+      "markdownError": "Markdown 导出失败"
     }
   },
   "workbench": {
@@ -714,6 +718,7 @@
       "tooltip": "导出简历",
       "pdf": "导出PDF",
       "json": "导出JSON",
+      "markdown": "导出Markdown",
       "print": "导出PDF(备份）"
     },
     "autoOnePage": {

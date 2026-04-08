@@ -258,15 +258,19 @@
       "export": "Export",
       "exportPdf": "Export PDF (Server)",
       "exportJson": "Export JSON Config",
+      "exportMarkdown": "Export Markdown",
       "exporting": "Exporting...",
       "exportingJson": "Exporting...",
+      "exportingMarkdown": "Exporting...",
       "print": "Browser Print"
     },
     "toast": {
       "success": "PDF exported successfully",
       "error": "PDF export failed",
       "jsonSuccess": "Configuration exported successfully",
-      "jsonError": "Configuration export failed"
+      "jsonError": "Configuration export failed",
+      "markdownSuccess": "Markdown exported successfully",
+      "markdownError": "Markdown export failed"
     }
   },
   "previewDock": {
@@ -301,6 +305,7 @@
       "tooltip": "Export Resume",
       "pdf": "Export PDF",
       "json": "Export JSON",
+      "markdown": "Export Markdown",
       "print": "Print"
     },
     "autoOnePage": {

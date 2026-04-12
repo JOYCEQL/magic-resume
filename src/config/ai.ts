@@ -41,7 +41,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
     validate: (context: AIValidationContext) => !!context.deepseekApiKey,
   },
   openai: {
-    url: (endpoint?: string) => `${endpoint}/chat/completions`,
+    url: (endpoint?: string) => `${(endpoint || "").trim().replace(/\/+$/, "")}/chat/completions`,
     requiresModelId: true,
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",

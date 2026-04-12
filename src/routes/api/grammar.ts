@@ -2,6 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AIModelType, AI_MODEL_CONFIGS } from "@/config/ai";
 import { formatGeminiErrorMessage, getGeminiModelInstance } from "@/lib/server/gemini";
 
+const parseUpstreamError = (raw: string, fallback: string) => {
+  if (!raw) return { message: fallback };
+  try {
+    const data = JSON.parse(raw) as {
+      error?: { message?: string; code?: string };
+      message?: string;
+    };
+    return {
+      message: data.error?.message || data.message || fallback,
+      code: data.error?.code
+    };
+  } catch {
+    return { message: raw };
+  }
+};
+
 export const Route = createFileRoute("/api/grammar")({
   server: {
     handlers: {
@@ -98,7 +114,26 @@ export const Route = createFileRoute("/api/grammar")({
             })
           });
 
-          const data = await response.json();
+          const raw = await response.text();
+          if (!response.ok) {
+            const fallbackMessage = `Upstream API error: ${response.status} ${response.statusText}`;
+            const parsedError = parseUpstreamError(raw, fallbackMessage);
+            return Response.json(
+              { error: parsedError },
+              { status: response.status }
+            );
+          }
+
+          let data: unknown;
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {
+            return Response.json(
+              { error: "Invalid upstream response: expected JSON payload" },
+              { status: 502 }
+            );
+          }
+
           return Response.json(data);
         } catch (error) {
           console.error("Error in grammar check:", error);

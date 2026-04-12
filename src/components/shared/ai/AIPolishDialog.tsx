@@ -68,11 +68,53 @@ export default function AIPolishDialog({
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
 
+  const getPolishErrorMessage = async (response: Response) => {
+    const fallback = `${t("error.polishFailed")} (${response.status})`;
+
+    try {
+      const contentType = response.headers.get("content-type") || "";
+      const rawText = await response.text();
+
+      if (!rawText) {
+        if (response.status === 401) {
+          return "认证失败（401），请检查 API Key、模型和 API Endpoint 配置。";
+        }
+        return fallback;
+      }
+
+      if (contentType.includes("application/json") || rawText.startsWith("{")) {
+        const data = JSON.parse(rawText) as {
+          error?: string | { message?: string };
+          message?: string;
+        };
+
+        if (typeof data.error === "string" && data.error.trim()) {
+          return data.error.trim();
+        }
+        if (typeof data.error === "object" && data.error?.message?.trim()) {
+          return data.error.message.trim();
+        }
+        if (data.message?.trim()) {
+          return data.message.trim();
+        }
+      } else if (rawText.trim()) {
+        return rawText.trim();
+      }
+    } catch {
+
+    }
+
+    if (response.status === 401) {
+      return "认证失败（401），请检查 API Key、模型和 API Endpoint 配置。";
+    }
+
+    return fallback;
+  };
+
   const handlePolish = async () => {
     try {
       if (!isConfigured()) {
         toast.error(t("error.configRequired"));
-        onOpenChange(false);
         return;
       }
 
@@ -116,7 +158,8 @@ export default function AIPolishDialog({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to polish content");
+        const errorMessage = await getPolishErrorMessage(response);
+        throw new Error(errorMessage);
       }
 
       if (!response.body) {
@@ -139,8 +182,7 @@ export default function AIPolishDialog({
         return;
       }
       console.error("Polish error:", error);
-      toast.error(t("error.polishFailed"));
-      onOpenChange(false);
+      toast.error(error instanceof Error ? error.message : t("error.polishFailed"));
     } finally {
       setIsPolishing(false);
     }

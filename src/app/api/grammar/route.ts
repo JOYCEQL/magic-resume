@@ -2,6 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { AIModelType } from "@/config/ai";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 
+const parseUpstreamError = (raw: string, fallback: string) => {
+  if (!raw) return { message: fallback };
+  try {
+    const data = JSON.parse(raw) as {
+      error?: { message?: string; code?: string };
+      message?: string;
+    };
+    return {
+      message: data.error?.message || data.message || fallback,
+      code: data.error?.code
+    };
+  } catch {
+    return { message: raw };
+  }
+};
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -62,7 +78,26 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    const data = await response.json();
+    const raw = await response.text();
+    if (!response.ok) {
+      const fallbackMessage = `Upstream API error: ${response.status} ${response.statusText}`;
+      const parsedError = parseUpstreamError(raw, fallbackMessage);
+      return NextResponse.json(
+        { error: parsedError },
+        { status: response.status }
+      );
+    }
+
+    let data: unknown;
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid upstream response: expected JSON payload" },
+        { status: 502 }
+      );
+    }
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error in grammar check:", error);

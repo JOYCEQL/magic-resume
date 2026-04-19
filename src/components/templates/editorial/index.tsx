@@ -55,7 +55,7 @@ const EditorialTemplate: React.FC<EditorialTemplateProps> = ({ data, template })
     <div
       className="flex flex-col min-h-[297mm] text-[#1a1a1a] editorial-print-container"
       style={{
-        backgroundColor: colorScheme.background || "#FAF8F5",
+        backgroundColor: colorScheme.background || "#FFFFFF",
         color: colorScheme.text || "#1a1a1a",
         margin: `-${data.globalSettings?.pagePadding || 0}px`,
         padding: `${data.globalSettings?.pagePadding || 0}px`,

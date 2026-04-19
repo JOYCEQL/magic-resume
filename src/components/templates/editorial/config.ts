@@ -10,7 +10,7 @@ export const editorialConfig: ResumeTemplate = {
     primary: "#000000",
     secondary: "#666666",
     text: "#1a1a1a",
-    background: "#FAF8F5",
+    background: "#FFFFFF",
   },
   spacing: {
     sectionGap: 32,

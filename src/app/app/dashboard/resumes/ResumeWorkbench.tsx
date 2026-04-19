@@ -14,7 +14,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { getConfig, getFileHandle, verifyPermission } from "@/utils/fileSystem";
+import { getConfig, getFileHandle } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { DEFAULT_TEMPLATES } from "@/config";
@@ -39,7 +39,6 @@ export const ResumeWorkbench = () => {
     const {
         resumes,
         setActiveResume,
-        updateResumeFromFile,
         addResume,
         deleteResume,
         createResume,
@@ -55,39 +54,6 @@ export const ResumeWorkbench = () => {
     const [isImporting, setIsImporting] = useState(false);
     const jsonFileInputRef = useRef<HTMLInputElement>(null);
     const pdfFileInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        const syncResumesFromFiles = async () => {
-            try {
-                const handle = await getFileHandle("syncDirectory");
-                if (!handle) return;
-
-                const hasPermission = await verifyPermission(handle);
-                if (!hasPermission) return;
-
-                const dirHandle = handle as FileSystemDirectoryHandle;
-
-                for await (const entry of (dirHandle as any).values()) {
-                    if (entry.kind === "file" && entry.name.endsWith(".json")) {
-                        try {
-                            const file = await entry.getFile();
-                            const content = await file.text();
-                            const resumeData = JSON.parse(content);
-                            updateResumeFromFile(resumeData);
-                        } catch (error) {
-                            console.error("Error reading resume file:", error);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("Error syncing resumes from files:", error);
-            }
-        };
-
-        if (Object.keys(resumes).length === 0) {
-            syncResumesFromFiles();
-        }
-    }, [resumes, updateResumeFromFile]);
 
     useEffect(() => {
         const loadSavedConfig = async () => {

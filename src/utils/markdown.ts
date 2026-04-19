@@ -51,6 +51,12 @@ export interface ResumeMarkdownOptions {
 }
 
 const normalizeText = (value?: string) => value?.trim() || "";
+const normalizeDateRangeText = (value?: string) =>
+  normalizeText(value)
+    .split(/\s+-\s*/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(" - ");
 
 const createTurndownService = () =>
   new TurndownService({
@@ -176,7 +182,7 @@ const renderExperienceSection = (title: string, resume: ResumeData) => {
       const heading = [normalizeText(item.company), normalizeText(item.position)]
         .filter(Boolean)
         .join(" | ");
-      const date = normalizeText(item.date);
+      const date = normalizeDateRangeText(item.date);
       const details = markdownFromText(item.details);
       const lines: string[] = [];
 
@@ -197,7 +203,7 @@ const renderProjectSection = (title: string, resume: ResumeData) => {
     .filter((item) => item.visible)
     .map((item) => {
       const heading = normalizeText(item.name);
-      const meta = [normalizeText(item.role), normalizeText(item.date)]
+      const meta = [normalizeText(item.role), normalizeDateRangeText(item.date)]
         .filter(Boolean)
         .join(" | ");
       const description = markdownFromText(item.description);
@@ -272,7 +278,7 @@ const renderCustomSection = (title: string, items: CustomItem[]) => {
         normalizeText(item.subtitle) ||
         `Item ${index + 1}`;
       const subtitle = normalizeText(item.subtitle);
-      const dateRange = normalizeText(item.dateRange);
+      const dateRange = normalizeDateRangeText(item.dateRange);
       const details = markdownFromText(item.description);
       const metadata = [subtitle !== heading ? subtitle : "", dateRange]
         .filter(Boolean)

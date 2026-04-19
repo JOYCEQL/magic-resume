@@ -5,6 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+const DATE_RANGE_SEPARATOR = " - ";
+
 function parseToDate(dateStr: string): Date | null {
   let year: number | null = null;
   let month: number | null = null;
@@ -36,9 +38,9 @@ function parseToDate(dateStr: string): Date | null {
 export function formatDateString(dateStr: string | undefined, locale: string = "zh"): string {
   if (!dateStr) return "";
 
-  if (dateStr.includes(" - ")) {
-    const [start, end] = dateStr.split(" - ");
-    return `${formatDateString(start, locale)} - ${formatDateString(end, locale)}`;
+  if (dateStr.includes(DATE_RANGE_SEPARATOR)) {
+    const [start, end] = dateStr.split(DATE_RANGE_SEPARATOR);
+    return formatDateRange(start, end, locale);
   }
 
   const date = parseToDate(dateStr);
@@ -57,4 +59,15 @@ export function formatDateString(dateStr: string | undefined, locale: string = "
   } catch (e) {
       return dateStr;
   }
+}
+
+export function formatDateRange(
+  startDate: string | undefined,
+  endDate: string | undefined,
+  locale: string = "zh"
+): string {
+  const start = formatDateString(startDate, locale).trim();
+  const end = formatDateString(endDate, locale).trim();
+
+  return [start, end].filter(Boolean).join(DATE_RANGE_SEPARATOR);
 }

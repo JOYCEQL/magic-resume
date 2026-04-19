@@ -5,7 +5,7 @@ import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
-import { formatDateString } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
 
 interface EducationSectionProps {
@@ -34,7 +34,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education, globalSe
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
               {[edu.degree, edu.major].filter(Boolean).join(" in ")}
               {(edu.degree || edu.major) ? " • " : ""}
-              {`${formatDateString(edu.startDate, locale)} - ${formatDateString(edu.endDate, locale)}`}
+              {formatDateRange(edu.startDate, edu.endDate, locale)}
               {edu.gpa && ` • GPA: ${edu.gpa}`}
             </motion.div>
             

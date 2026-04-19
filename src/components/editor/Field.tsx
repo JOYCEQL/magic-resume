@@ -82,7 +82,11 @@ const Field = ({
       onChange(checked ? t("field.toPresent") : "");
     } else if (type === "date-range") {
       const [start] = value.split(" - ");
-      onChange(checked ? `${start || ""} - ${t("field.toPresent")}` : start || "");
+      onChange(
+        checked
+          ? [start, t("field.toPresent")].filter(Boolean).join(" - ")
+          : start || ""
+      );
     }
   };
 

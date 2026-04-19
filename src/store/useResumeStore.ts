@@ -30,7 +30,10 @@ interface ResumeStore {
   duplicateResume: (resumeId: string) => string;
   updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
   setActiveResume: (resumeId: string) => void;
-  updateResumeFromFile: (resume: ResumeData) => void;
+  updateResumeFromFile: (
+    resume: ResumeData,
+    sourceModifiedAt?: number
+  ) => boolean;
 
   updateResumeTitle: (title: string) => void;
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
@@ -71,6 +74,72 @@ interface ResumeStore {
 }
 
 type PersistedResumeStore = Pick<ResumeStore, "resumes" | "activeResumeId">;
+
+const parseTimestamp = (value?: string): number | null => {
+  if (!value) {
+    return null;
+  }
+
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) ? timestamp : null;
+};
+
+const shouldImportResumeFromFile = (
+  fileResume: ResumeData,
+  localResume?: ResumeData,
+  sourceModifiedAt?: number
+) => {
+  if (!localResume) {
+    return true;
+  }
+
+  const fileUpdatedAt = parseTimestamp(fileResume.updatedAt);
+  const localUpdatedAt = parseTimestamp(localResume.updatedAt);
+  const fileModifiedAt =
+    typeof sourceModifiedAt === "number" && Number.isFinite(sourceModifiedAt)
+      ? sourceModifiedAt
+      : null;
+
+  if (fileUpdatedAt !== null && localUpdatedAt !== null) {
+    if (fileUpdatedAt !== localUpdatedAt) {
+      return fileUpdatedAt > localUpdatedAt;
+    }
+
+    return fileModifiedAt !== null && fileModifiedAt > localUpdatedAt + 1000;
+  }
+
+  if (fileUpdatedAt !== null && localUpdatedAt === null) {
+    return true;
+  }
+
+  if (fileUpdatedAt === null && localUpdatedAt !== null) {
+    return fileModifiedAt !== null && fileModifiedAt > localUpdatedAt + 1000;
+  }
+
+  return fileModifiedAt !== null;
+};
+
+const normalizeImportedResume = (
+  resume: ResumeData,
+  sourceModifiedAt?: number
+) => {
+  if (
+    typeof sourceModifiedAt !== "number" ||
+    !Number.isFinite(sourceModifiedAt)
+  ) {
+    return resume;
+  }
+
+  const fileUpdatedAt = parseTimestamp(resume.updatedAt);
+  if (fileUpdatedAt !== null && fileUpdatedAt >= sourceModifiedAt) {
+    return resume;
+  }
+
+  return {
+    ...resume,
+    updatedAt: new Date(sourceModifiedAt).toISOString(),
+  };
+};
 
 // 同步简历到文件系统
 const syncResumeToFile = async (
@@ -191,6 +260,7 @@ export const useResumeStore = create(
           const updatedResume = {
             ...resume,
             ...data,
+            updatedAt: new Date().toISOString(),
           };
 
           debouncedSyncToFile(updatedResume, resume);
@@ -209,15 +279,26 @@ export const useResumeStore = create(
       },
 
       // 从文件更新，直接更新resumes
-      updateResumeFromFile: (resume) => {
+      updateResumeFromFile: (resume, sourceModifiedAt) => {
+        const localResume = get().resumes[resume.id];
+        if (!shouldImportResumeFromFile(resume, localResume, sourceModifiedAt)) {
+          return false;
+        }
+
+        const importedResume = normalizeImportedResume(resume, sourceModifiedAt);
+
         set((state) => ({
           resumes: {
             ...state.resumes,
-            [resume.id]: resume,
+            [importedResume.id]: importedResume,
           },
           activeResume:
-            state.activeResumeId === resume.id ? resume : state.activeResume,
+            state.activeResumeId === importedResume.id
+              ? importedResume
+              : state.activeResume,
         }));
+
+        return true;
       },
 
       updateResumeTitle: (title) => {
@@ -293,9 +374,7 @@ export const useResumeStore = create(
 
       setActiveResume: (resumeId) => {
         const resume = get().resumes[resumeId];
-        if (resume) {
-          set({ activeResume: resume, activeResumeId: resumeId });
-        }
+        set({ activeResume: resume ?? null, activeResumeId: resumeId });
       },
 
       updateBasicInfo: (data) => {
@@ -305,6 +384,7 @@ export const useResumeStore = create(
 
           const updatedResume = {
             ...state.activeResume,
+            updatedAt: new Date().toISOString(),
             basic: {
               ...state.activeResume.basic,
               ...data,
@@ -667,6 +747,7 @@ export const useResumeStore = create(
 
         const updatedResume = {
           ...resumes[activeResumeId],
+          updatedAt: new Date().toISOString(),
           templateId,
           globalSettings: {
             ...resumes[activeResumeId].globalSettings,

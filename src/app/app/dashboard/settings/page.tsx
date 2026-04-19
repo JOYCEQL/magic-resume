@@ -16,12 +16,17 @@ import {
   storeConfig,
   verifyPermission,
 } from "@/utils/fileSystem";
+import { useResumeStore } from "@/store/useResumeStore";
+import { syncResumesFromDirectory } from "@/utils/resumeFileSync";
 
 const SettingsPage = () => {
   const [directoryHandle, setDirectoryHandle] =
     useState<FileSystemDirectoryHandle | null>(null);
   const [folderPath, setFolderPath] = useState<string>("");
   const t = useTranslations();
+  const updateResumeFromFile = useResumeStore(
+    (state) => state.updateResumeFromFile
+  );
 
   useEffect(() => {
     const loadSavedConfig = async () => {
@@ -61,6 +66,7 @@ const SettingsPage = () => {
         setFolderPath(path);
         await storeFileHandle("syncDirectory", handle);
         await storeConfig("syncDirectoryPath", path);
+        await syncResumesFromDirectory(updateResumeFromFile);
       }
     } catch (error) {
       console.error("Error selecting directory:", error);

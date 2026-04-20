@@ -254,6 +254,14 @@
     }
   },
   "pdfExport": {
+    "modal": {
+      "title": "Export Resume",
+      "subtitle": "Select the format you want to export your resume",
+      "pdfDesc": "High-precision rendering with 100% format accuracy. Recommended for job applications.",
+      "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
+      "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
+      "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models."
+    },
     "button": {
       "export": "Export",
       "exportPdf": "Export PDF (Server)",

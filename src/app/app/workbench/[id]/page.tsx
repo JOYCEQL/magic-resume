@@ -34,7 +34,7 @@ const DragHandle = ({ show = true }) => {
   if (!show) return null;
 
   return (
-    <PanelResizeHandle className="relative flex w-3 items-center justify-center outline-none group cursor-col-resize">
+    <PanelResizeHandle className="relative flex w-px items-center justify-center outline-none group cursor-col-resize">
       {/* 垂直分割线 - 最底层 */}
       <div
         className={cn(
@@ -308,9 +308,7 @@ export default function Home() {
                   id="side-panel"
                   order={1}
                   defaultSize={panelSizes?.[0]}
-                  className={cn(
-                    "bg-background border-r border-border"
-                  )}
+                  className="bg-background"
                 >
                   <div className="h-full overflow-y-auto">
                     <SidePanel />
@@ -327,9 +325,7 @@ export default function Home() {
                   id="edit-panel"
                   order={2}
                   defaultSize={panelSizes?.[1]}
-                  className={cn(
-                    "bg-background border-r border-border"
-                  )}
+                  className="bg-background"
                 >
                   <div className="h-full">
                     <EditPanel />

@@ -149,7 +149,7 @@ export function SidePanel() {
   return (
     <motion.div
       className={cn(
-        "w-[80] border-r overflow-y-auto",
+        "w-[80]  overflow-y-auto",
         "bg-background border-border"
       )}
       initial={{ x: -100, opacity: 0 }}
@@ -221,8 +221,8 @@ export function SidePanel() {
         </SettingCard>
 
         {/* 主题色设置  */}
-        <SettingCard 
-          icon={Palette} 
+        <SettingCard
+          icon={Palette}
           title={t("theme.title")}
           action={
             <ColorPicker
@@ -239,9 +239,9 @@ export function SidePanel() {
             >
               <Palette className="w-3.5 h-3.5" />
               <span className="text-xs font-medium">{t("theme.custom")}</span>
-              
+
               {!THEME_COLORS.includes(themeColor) && (
-                <div 
+                <div
                   className="w-2.5 h-2.5 rounded-full ml-0.5 border border-primary/20 shadow-sm"
                   style={{ backgroundColor: themeColor }}
                 />

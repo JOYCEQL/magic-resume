@@ -8,6 +8,7 @@ import { EditPanel } from "@/components/editor/EditPanel";
 import PreviewPanel from "@/components/preview";
 import PreviewDock from "@/components/preview/PreviewDock";
 import { MobileWorkbench } from "@/components/mobile/MobileWorkbench";
+import { PanelResizeHandle } from "react-resizable-panels";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -33,25 +34,28 @@ const DragHandle = ({ show = true }) => {
   if (!show) return null;
 
   return (
-    <ResizableHandle className="relative w-1.5 group">
+    <PanelResizeHandle className="relative flex w-3 items-center justify-center outline-none group cursor-col-resize">
+      {/* 垂直分割线 - 最底层 */}
       <div
         className={cn(
-          "absolute inset-y-0 left-1/2 w-1 -translate-x-1/2",
-          "group-hover:bg-primary/20 group-data-[dragging=true]:bg-primary",
-          "bg-border"
+          "absolute inset-y-0 left-1/2 z-0 w-[1px] -translate-x-1/2 bg-border",
+          "transition-colors duration-200",
+          "group-hover:bg-primary/40 group-active:bg-primary/60 data-[resize-handle-state=drag]:bg-primary/60"
         )}
       />
+      {/* 扩大拖拽区域热区 */}
+      <div className="absolute inset-y-0 left-1/2 z-10 w-5 -translate-x-1/2 bg-transparent" />
+      {/* 小椭圆胶囊 - 适当加宽 (w-2: 8px) 以便更加显眼 */}
       <div
         className={cn(
-          "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-4 h-8 rounded-full opacity-0 group-hover:opacity-100",
-          "flex items-center justify-center",
-          "bg-background border border-border"
+          "absolute top-1/2 left-1/2 z-20 h-7 w-2 -translate-x-1/2 -translate-y-1/2",
+          "rounded-full border border-border/80 bg-white dark:bg-neutral-900 shadow-sm", // 强制实体背景
+          "transition-all duration-200",
+          "group-hover:border-primary/50 group-hover:scale-110",
+          "group-active:border-primary group-active:scale-105"
         )}
-      >
-        <div className="w-0.5 h-4 bg-muted-foreground/50 rounded-full" />
-      </div>
-    </ResizableHandle>
+      />
+    </PanelResizeHandle>
   );
 };
 

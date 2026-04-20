@@ -1,6 +1,6 @@
 export const TEMPLATE_SNAPSHOT_MANIFEST = {
   "version": 1,
-  "generatedAt": "2026-03-22T15:40:35.007Z",
+  "generatedAt": "2026-04-18T17:37:35.391Z",
   "locales": {
     "zh": {
       "classic": "/template-snapshots/zh/classic.png?v=2026-03-22T15%3A40%3A35.007Z",
@@ -10,7 +10,7 @@ export const TEMPLATE_SNAPSHOT_MANIFEST = {
       "minimalist": "/template-snapshots/zh/minimalist.png?v=2026-03-22T15%3A40%3A35.007Z",
       "elegant": "/template-snapshots/zh/elegant.png?v=2026-03-22T15%3A40%3A35.007Z",
       "creative": "/template-snapshots/zh/creative.png?v=2026-03-22T15%3A40%3A35.007Z",
-      "editorial": "/template-snapshots/zh/editorial.png?v=2026-03-22T15%3A40%3A35.007Z"
+      "editorial": "/template-snapshots/zh/editorial.png?v=2026-04-18T17%3A37%3A35.391Z"
     },
     "en": {
       "classic": "/template-snapshots/en/classic.png?v=2026-03-22T15%3A40%3A35.007Z",
@@ -20,7 +20,7 @@ export const TEMPLATE_SNAPSHOT_MANIFEST = {
       "minimalist": "/template-snapshots/en/minimalist.png?v=2026-03-22T15%3A40%3A35.007Z",
       "elegant": "/template-snapshots/en/elegant.png?v=2026-03-22T15%3A40%3A35.007Z",
       "creative": "/template-snapshots/en/creative.png?v=2026-03-22T15%3A40%3A35.007Z",
-      "editorial": "/template-snapshots/en/editorial.png?v=2026-03-22T15%3A40%3A35.007Z"
+      "editorial": "/template-snapshots/en/editorial.png?v=2026-04-18T17%3A37%3A35.391Z"
     }
   }
 } as const;

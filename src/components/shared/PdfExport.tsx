@@ -75,7 +75,7 @@ const ExportCard = ({
   );
 };
 
-const PdfExport = () => {
+const PdfExport = ({ children }: { children?: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
@@ -169,23 +169,25 @@ const PdfExport = () => {
       setIsOpen(val);
     }}>
       <DialogTrigger asChild>
-        <Button
-          className="px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>{loadingText}</span>
-            </>
-          ) : (
-            <>
-              <Download className="w-4 h-4" />
-              <span>{t("button.export")}</span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-60 ml-0.5" />
-            </>
-          )}
-        </Button>
+        {children ? children : (
+          <Button
+            className="px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-all hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{loadingText}</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                <span>{t("button.export")}</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-60 ml-0.5" />
+              </>
+            )}
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-w-4xl gap-8 p-8 sm:rounded-2xl border-none shadow-2xl bg-gradient-to-b from-background to-muted/20">

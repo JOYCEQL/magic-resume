@@ -18,8 +18,6 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useTranslations } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
-import { exportResumeToBrowserPrint } from "@/utils/print";
-import { exportResumeAsJson, exportResumeAsMarkdown, exportToPdf } from "@/utils/export";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,12 +26,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import TemplateSheet from "@/components/shared/TemplateSheet";
 import { GITHUB_REPO_URL, PDF_EXPORT_CONFIG } from "@/config";
 import { cn } from "@/lib/utils";
@@ -43,6 +35,7 @@ import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 import { FAQDialog } from "./FAQDialog";
+import PdfExport from "@/components/shared/PdfExport";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -98,12 +91,7 @@ const PreviewDock = ({
 }: PreviewDockProps) => {
   const router = useRouter();
   const t = useTranslations("previewDock");
-  const tPdf = useTranslations("pdfExport");
-  const tBasicField = useTranslations("workbench.basicPanel.basicFields");
   const { checkGrammar, isChecking } = useGrammarCheck();
-  const [isExporting, setIsExporting] = useState(false);
-  const [isExportingJson, setIsExportingJson] = useState(false);
-  const [isExportingMarkdown, setIsExportingMarkdown] = useState(false);
 
   const {
     selectedModel,
@@ -117,67 +105,7 @@ const PreviewDock = ({
   } = useAIConfigStore();
 
   const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
-  const { globalSettings = {}, title } = activeResume || {};
-
-  const handleExportPdf = async () => {
-    await exportToPdf({
-      elementId: "resume-preview",
-      title: title || "resume",
-      pagePadding: globalSettings?.pagePadding || 0,
-      fontFamily: globalSettings?.fontFamily,
-      onStart: () => setIsExporting(true),
-      onEnd: () => setIsExporting(false),
-      successMessage: tPdf("toast.success"),
-      errorMessage: tPdf("toast.error")
-    });
-  };
-
-  const handleExportJson = () => {
-    exportResumeAsJson({
-      resume: activeResume,
-      title,
-      onStart: () => setIsExportingJson(true),
-      onEnd: () => setIsExportingJson(false),
-      successMessage: tPdf("toast.jsonSuccess"),
-      errorMessage: tPdf("toast.jsonError")
-    });
-  };
-
-  const handleExportMarkdown = () => {
-    exportResumeAsMarkdown({
-      resume: activeResume,
-      title,
-      onStart: () => setIsExportingMarkdown(true),
-      onEnd: () => setIsExportingMarkdown(false),
-      successMessage: tPdf("toast.markdownSuccess"),
-      errorMessage: tPdf("toast.markdownError"),
-      markdownOptions: {
-        basicFieldLabels: {
-          name: tBasicField("name"),
-          title: tBasicField("title"),
-          employementStatus: tBasicField("employementStatus"),
-          birthDate: tBasicField("birthDate"),
-          email: tBasicField("email"),
-          phone: tBasicField("phone"),
-          location: tBasicField("location")
-        }
-      }
-    });
-  };
-
-  const handlePrint = () => {
-    const resumeContent = document.getElementById("resume-preview");
-    if (!resumeContent) {
-      console.error("Resume content not found");
-      return;
-    }
-    const pagePadding = globalSettings?.pagePadding || 0;
-    exportResumeToBrowserPrint(
-      resumeContent,
-      pagePadding,
-      globalSettings?.fontFamily
-    );
-  };
+  const { globalSettings = {} } = activeResume || {};
 
   const { checkConfiguration } = useAIConfiguration();
 
@@ -230,8 +158,6 @@ const PreviewDock = ({
       toast.error(t("copyResume.error"));
     }
   }, [activeResumeId, duplicateResume, router, setActiveResume, t]);
-
-  const isLoading = isExporting || isExportingJson || isExportingMarkdown;
 
   return (
     <>
@@ -314,61 +240,24 @@ const PreviewDock = ({
                 </Tooltip>
               </DockIcon>
               <DockIcon>
-                <DropdownMenu>
-                  <Tooltip>
+                <Tooltip>
+                  <PdfExport>
                     <TooltipTrigger asChild>
-                      <DropdownMenuTrigger asChild>
-                        <div
-                          className={cn(
-                            "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
-                            "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
-                            "transition-all duration-200",
-                            isLoading && "animate-pulse"
-                          )}
-                        >
-                          {isLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Download className="h-4 w-4" />
-                          )}
-                        </div>
-                      </DropdownMenuTrigger>
+                      <button
+                        className={cn(
+                          "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                          "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                          "transition-all duration-200"
+                        )}
+                      >
+                        <Download className="h-4 w-4" />
+                      </button>
                     </TooltipTrigger>
-                    <TooltipContent side="left" sideOffset={10}>
-                      <p>{t("export.tooltip")}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                  <DropdownMenuContent align="end" side="left">
-                    <DropdownMenuItem
-                      onClick={handleExportPdf}
-                      disabled={isLoading}
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      {t("export.pdf")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handlePrint}
-                      disabled={isLoading}
-                    >
-                      <Printer className="w-4 h-4 mr-2" />
-                      {t("export.print")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handleExportJson}
-                      disabled={isLoading}
-                    >
-                      <FileJson className="w-4 h-4 mr-2" />
-                      {t("export.json")}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={handleExportMarkdown}
-                      disabled={isLoading}
-                    >
-                      <RiMarkdownLine className="w-4 h-4 mr-2" />
-                      {t("export.markdown")}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                  </PdfExport>
+                  <TooltipContent side="left" sideOffset={10}>
+                    <p>{t("export.tooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
               </DockIcon>
               <DockIcon>
                 <Tooltip>

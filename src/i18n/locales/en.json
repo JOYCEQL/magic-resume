@@ -260,7 +260,8 @@
       "pdfDesc": "High-precision rendering with 100% format accuracy. Recommended for job applications.",
       "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
       "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
-      "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models."
+      "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models.",
+      "privacyNotice": "Magic Resume promise never to collect, upload, or store any of your resume data. Your privacy is fully protected."
     },
     "button": {
       "export": "Export",

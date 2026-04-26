@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslations } from "@/i18n/compat/client";
-import { Download, Loader2, ChevronDown } from "lucide-react";
+import { Download, Loader2, ChevronDown, ShieldCheck } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
 import { exportResumeAsJson, exportResumeAsMarkdown, exportToPdf } from "@/utils/export";
@@ -46,10 +46,13 @@ const ExportCard = ({
         if (!isLoading) onClick();
       }}
       className={cn(
-        "group relative flex flex-col justify-center overflow-hidden p-6 pl-[130px] min-h-[140px] rounded-3xl border bg-card text-card-foreground shadow-sm transition-all duration-500",
-        isLoading ? "opacity-70 cursor-not-allowed" : cn("cursor-pointer hover:shadow-xl active:scale-[0.98] hover:-translate-y-1", hoverBorderClass)
+        "group relative flex flex-col justify-center overflow-hidden p-6 pl-[136px] min-h-[130px] rounded-3xl border border-border/50 bg-card text-card-foreground shadow-sm transition-all duration-500",
+        isLoading ? "opacity-70 cursor-not-allowed" : cn("cursor-pointer hover:shadow-2xl active:scale-[0.98] hover:-translate-y-1 hover:bg-muted/10", hoverBorderClass)
       )}
     >
+      {/* 顶部内发光高光，增加卡片立体感 */}
+      <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 pointer-events-none mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
       {/* 底部环境光晕，让图标色渗入背景 */}
       <div className={cn(
         "absolute inset-0 pointer-events-none transition-opacity duration-500 bg-gradient-to-r to-transparent",
@@ -57,17 +60,18 @@ const ExportCard = ({
         bgGradientClass
       )} />
 
+      {/* 调整后的图标层：完全收入卡片内部，尺寸克制 */}
       <div className={cn(
-        "absolute -left-6 top-1/2 -translate-y-1/2 w-40 h-40 transition-transform duration-500 will-change-transform drop-shadow-xl pointer-events-none",
-        isLoading ? "-rotate-12 scale-[1.08] opacity-80" : "-rotate-12 group-hover:scale-[1.08]"
+        "absolute left-6 top-1/2 -translate-y-1/2 w-24 h-24 transition-transform duration-500 will-change-transform drop-shadow-xl pointer-events-none",
+        isLoading ? "-rotate-6 scale-[1.05] opacity-80" : "-rotate-6 group-hover:scale-[1.1] group-hover:-rotate-3"
       )}>
         <Icon className="w-full h-full object-contain" isLoading={isLoading} />
       </div>
 
-      {/* 文本内容说明 (Z-indexed above icon) */}
+      {/* 文本内容说明 */}
       <div className="relative z-10 flex flex-col pointer-events-none">
-        <h3 className="font-bold text-[17px] mb-2 tracking-tight text-foreground/90 transition-colors">{title}</h3>
-        <p className="text-[13px] text-muted-foreground/80 leading-relaxed line-clamp-3 group-hover:text-muted-foreground transition-colors">
+        <h3 className="font-semibold text-[17px] mb-1.5 tracking-tight text-foreground/90 transition-colors">{title}</h3>
+        <p className="text-[13px] text-muted-foreground/75 leading-relaxed line-clamp-3 group-hover:text-muted-foreground/90 transition-colors">
           {description}
         </p>
       </div>
@@ -190,53 +194,70 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
         )}
       </DialogTrigger>
 
-      <DialogContent className="max-w-4xl gap-8 p-8 sm:rounded-2xl border-none shadow-2xl bg-gradient-to-b from-background to-muted/20">
-        <DialogHeader className="gap-2">
-          <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            {t("modal.title")}
-          </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground/80 mt-1">
-            {t("modal.subtitle")}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl gap-0 p-0 sm:rounded-[2rem] border border-border/60 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] bg-background overflow-hidden">
+        {/* 头部区域：带精美网格和高光 */}
+        <div className="relative p-8 pb-6 border-b border-border/40 bg-muted/10">
+          {/* SaaS 网格底纹背景 */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <ExportCard
-            icon={PdfGlassIcon}
-            title={t("button.exportPdf")}
-            description={t("modal.pdfDesc")}
-            isLoading={isExporting}
-            onClick={handleExport}
-            bgGradientClass="from-rose-500/10 dark:from-rose-500/20"
-            hoverBorderClass="hover:border-rose-500/40 hover:ring-1 hover:ring-rose-500/20"
-          />
-          <ExportCard
-            icon={PrintGlassIcon}
-            title={t("button.print")}
-            description={t("modal.printDesc")}
-            isLoading={isPrinting}
-            onClick={handlePrint}
-            bgGradientClass="from-sky-500/10 dark:from-sky-500/20"
-            hoverBorderClass="hover:border-sky-500/40 hover:ring-1 hover:ring-sky-500/20"
-          />
-          <ExportCard
-            icon={JsonGlassIcon}
-            title={t("button.exportJson")}
-            description={t("modal.jsonDesc")}
-            isLoading={isExportingJson}
-            onClick={handleJsonExport}
-            bgGradientClass="from-amber-500/10 dark:from-amber-500/20"
-            hoverBorderClass="hover:border-amber-500/40 hover:ring-1 hover:ring-amber-500/20"
-          />
-          <ExportCard
-            icon={MarkdownGlassIcon}
-            title={t("button.exportMarkdown")}
-            description={t("modal.markdownDesc")}
-            isLoading={isExportingMarkdown}
-            onClick={handleMarkdownExport}
-            bgGradientClass="from-indigo-500/10 dark:from-indigo-500/20"
-            hoverBorderClass="hover:border-indigo-500/40 hover:ring-1 hover:ring-indigo-500/20"
-          />
+          <DialogHeader className="relative gap-2">
+            <DialogTitle className="text-2xl font-bold tracking-tight">
+              {t("modal.title")}
+            </DialogTitle>
+            <DialogDescription className="text-[15px] text-muted-foreground/80 mt-1">
+              {t("modal.subtitle")}
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        {/* 卡片展示区域 */}
+        <div className="p-8 bg-background">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 relative">
+            <ExportCard
+              icon={PdfGlassIcon}
+              title={t("button.exportPdf")}
+              description={t("modal.pdfDesc")}
+              isLoading={isExporting}
+              onClick={handleExport}
+              bgGradientClass="from-rose-500/10 dark:from-rose-500/20"
+              hoverBorderClass="hover:border-rose-500/40 hover:ring-1 hover:ring-rose-500/20"
+            />
+            <ExportCard
+              icon={PrintGlassIcon}
+              title={t("button.print")}
+              description={t("modal.printDesc")}
+              isLoading={isPrinting}
+              onClick={handlePrint}
+              bgGradientClass="from-sky-500/10 dark:from-sky-500/20"
+              hoverBorderClass="hover:border-sky-500/40 hover:ring-1 hover:ring-sky-500/20"
+            />
+            <ExportCard
+              icon={JsonGlassIcon}
+              title={t("button.exportJson")}
+              description={t("modal.jsonDesc")}
+              isLoading={isExportingJson}
+              onClick={handleJsonExport}
+              bgGradientClass="from-amber-500/10 dark:from-amber-500/20"
+              hoverBorderClass="hover:border-amber-500/40 hover:ring-1 hover:ring-amber-500/20"
+            />
+            <ExportCard
+              icon={MarkdownGlassIcon}
+              title={t("button.exportMarkdown")}
+              description={t("modal.markdownDesc")}
+              isLoading={isExportingMarkdown}
+              onClick={handleMarkdownExport}
+              bgGradientClass="from-indigo-500/10 dark:from-indigo-500/20"
+              hoverBorderClass="hover:border-indigo-500/40 hover:ring-1 hover:ring-indigo-500/20"
+            />
+          </div>
+
+          {/* 隐私保护横幅 */}
+          <div className="mt-6 flex items-center gap-2 p-3 sm:px-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+            <ShieldCheck className="w-4 h-4 shrink-0" />
+            <p className="text-[13px] font-medium">
+              {t("modal.privacyNotice")}
+            </p>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

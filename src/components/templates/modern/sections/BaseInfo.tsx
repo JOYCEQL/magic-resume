@@ -21,6 +21,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const t = useTranslations("workbench");
     const locale = useLocale();
     const useIconMode = globalSettings?.useIconMode ?? false;
+    const layout = basic?.layout || "left";
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
@@ -59,12 +60,20 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
         </motion.div>
     );
 
+    const layoutStyles = {
+        left: { container: "flex flex-col gap-3", header: "flex items-center gap-4", nameTitle: "text-left min-w-0", fields: "w-full flex flex-col gap-2" },
+        right: { container: "flex flex-col gap-3", header: "flex flex-row-reverse items-center gap-4", nameTitle: "text-right min-w-0", fields: "w-full flex flex-col gap-2" },
+        center: { container: "flex flex-col items-center gap-3", header: "flex flex-col items-center gap-4", nameTitle: "text-center min-w-0", fields: "w-full flex flex-col gap-2" },
+    };
+
+    const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;
+
     return (
         <SectionWrapper sectionId="basic">
-            <div className="flex flex-col items-center gap-3">
-                <div className="flex flex-col items-center gap-4">
+            <div className={styles.container}>
+                <div className={styles.header}>
                     {PhotoComponent}
-                    <div className="flex flex-col text-center min-w-0" style={{ color: "#fff" }}>
+                    <div className={`flex flex-col ${styles.nameTitle}`} style={{ color: "#fff" }}>
                         {nameField.visible !== false && basic[nameField.key] && (
                             <motion.h1 layout="position" className="font-bold whitespace-pre-wrap break-words" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
@@ -73,7 +82,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         )}
                     </div>
                 </div>
-                <motion.div layout="position" className="w-full flex flex-col gap-2"
+                <motion.div layout="position" className={styles.fields}
                     style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "#fff" }}>
                     {allFields.map((item) => {
                         const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;

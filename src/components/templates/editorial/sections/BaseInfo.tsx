@@ -58,7 +58,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
 
   const getIcon = (iconName: string | undefined) => {
     const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-    return IconComponent ? <IconComponent className="w-3.5 h-3.5" /> : null;
+    return IconComponent ? <IconComponent className="mt-[0.2em] h-3.5 w-3.5 shrink-0" /> : null;
   };
 
   const showPhoto = basic.photo && basic.photoConfig?.visible;
@@ -71,7 +71,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             {basic.name && nameField.visible !== false && (
               <motion.h1
                 layout="position"
-                className="font-bold tracking-widest whitespace-pre-wrap break-words text-black"
+                className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:normal] text-black"
                 style={{ fontSize: `${(globalSettings?.headerSize || 20) * 2}px`, lineHeight: "1.1", marginBottom: "8px" }}
               >
                 {basic.name}
@@ -101,7 +101,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             <div className="flex-1 min-w-[100px] shrink-0">
               <motion.h2
                 layout="position"
-                className="font-normal tracking-wide text-gray-700 whitespace-pre-wrap break-words"
+                className="font-normal tracking-wide text-gray-700 whitespace-normal break-normal [overflow-wrap:normal]"
                 style={{ fontSize: `${globalSettings?.subheaderSize || 16}px`, lineHeight: "1.3" }}
               >
                 {basic.title}
@@ -117,29 +117,29 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                   : null;
 
               return (
-                <div key={item.key} className="flex items-center gap-2 overflow-hidden">
+                <div key={item.key} className="flex items-start gap-2">
                   {globalSettings?.useIconMode && (
-                    <span className="text-gray-400 shrink-0">
+                    <span className="inline-flex shrink-0 text-gray-400">
                       {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
                     </span>
                   )}
-                  <div className="truncate min-w-0">
+                  <div className="min-w-0">
                     {item.key === "email" ? (
-                      <a href={`mailto:${item.value}`} className="hover:text-black transition-colors truncate block">
+                      <a href={`mailto:${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
                         {globalSettings?.useIconMode ? "" : `${t(`basicPanel.basicFields.${item.key}`)}: `}
                         {item.value}
                       </a>
                     ) : item.key === "website" || item.key === "github" ? (
-                      <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="hover:text-black transition-colors truncate block">
+                      <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
                         {globalSettings?.useIconMode ? "" : `${item.label}: `}
                         {item.value.replace(/^https?:\/\//, "")}
                       </a>
                     ) : customFieldHref ? (
-                      <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors truncate block underline">
+                      <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
                         {item.value}
                       </a>
                     ) : (
-                      <span className="truncate block">
+                      <span className="block min-w-0 [overflow-wrap:anywhere]">
                         {globalSettings?.useIconMode
                           ? ""
                           : item.custom

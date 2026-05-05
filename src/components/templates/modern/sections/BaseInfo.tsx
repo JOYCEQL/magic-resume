@@ -25,7 +25,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-        return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
+        return IconComponent ? <IconComponent className="mt-[0.2em] h-4 w-4 shrink-0" /> : null;
     };
 
     const getOrderedFields = React.useMemo(() => {
@@ -61,9 +61,9 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     );
 
     const layoutStyles = {
-        left: { container: "flex flex-col gap-3", header: "flex items-center gap-4", nameTitle: "text-left min-w-0", fields: "w-full flex flex-col gap-2" },
-        right: { container: "flex flex-col gap-3", header: "flex flex-row-reverse items-center gap-4", nameTitle: "text-right min-w-0", fields: "w-full flex flex-col gap-2" },
-        center: { container: "flex flex-col items-center gap-3", header: "flex flex-col items-center gap-4", nameTitle: "text-center min-w-0", fields: "w-full flex flex-col gap-2" },
+        left: { container: "flex flex-col gap-3", header: "flex items-center gap-4", nameTitle: "text-left min-w-[10rem] max-w-full flex-1", fields: "w-full flex flex-col gap-2" },
+        right: { container: "flex flex-col gap-3", header: "flex flex-row-reverse items-center gap-4", nameTitle: "text-right min-w-[10rem] max-w-full flex-1", fields: "w-full flex flex-col gap-2" },
+        center: { container: "flex flex-col items-center gap-3", header: "flex flex-col items-center gap-4", nameTitle: "text-center min-w-0 max-w-full", fields: "w-full flex flex-col gap-2" },
     };
 
     const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;
@@ -75,10 +75,10 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                     {PhotoComponent}
                     <div className={`flex flex-col ${styles.nameTitle}`} style={{ color: "#fff" }}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold whitespace-pre-wrap break-words" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "30px", color: "#fff" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" className="whitespace-pre-wrap break-words" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px", color: "#fff" }}>{basic[titleField.key] as string}</motion.h2>
                         )}
                     </div>
                 </div>
@@ -88,17 +88,17 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
 
                         return (
-                        <motion.div key={item.key} className="flex items-center whitespace-nowrap overflow-hidden text-baseFont" style={{ width: "100%", color: "#fff" }}>
+                        <motion.div key={item.key} className="flex min-w-0 items-start text-baseFont" style={{ width: "100%", color: "#fff" }}>
                             {useIconMode ? (
-                                <div className="flex items-center gap-1" style={{ color: "#fff" }}>
+                                <div className="flex min-w-0 items-start gap-1" style={{ color: "#fff" }}>
                                     {getIcon(item.icon)}
-                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="underline" style={{ color: "#fff" }}>{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="underline truncate" style={{ color: "#fff" }}>{item.value}</a> : <span style={{ color: "#fff" }}>{item.value}</span>}
+                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]" style={{ color: "#fff" }}>{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" style={{ color: "#fff" }}>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" style={{ color: "#fff" }}>{item.value}</span>}
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2 overflow-hidden" style={{ color: "#fff" }}>
-                                    {!item.custom && <span style={{ color: "#fff" }}>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span style={{ color: "#fff" }}>{item.label}:</span>}
-                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="truncate underline" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</a> : <span className="truncate" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</span>}
+                                <div className="flex min-w-0 items-start gap-2" style={{ color: "#fff" }}>
+                                    {!item.custom && <span className="shrink-0" style={{ color: "#fff" }}>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
+                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0" style={{ color: "#fff" }}>{item.label}:</span>}
+                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning style={{ color: "#fff" }}>{item.value}</span>}
                                 </div>
                             )}
                         </motion.div>

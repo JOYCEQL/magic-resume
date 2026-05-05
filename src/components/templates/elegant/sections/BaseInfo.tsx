@@ -23,7 +23,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-        return IconComponent ? <IconComponent className="w-4 h-4" /> : null;
+        return IconComponent ? <IconComponent className="mt-[0.2em] h-4 w-4 shrink-0" /> : null;
     };
 
     const getOrderedFields = React.useMemo(() => {
@@ -59,9 +59,9 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     );
 
     const layoutStyles = {
-        left: { container: "flex items-center justify-between gap-6", leftContent: "flex items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-left min-w-0" },
-        right: { container: "flex items-center justify-between gap-6 flex-row-reverse", leftContent: "flex flex-row-reverse justify-start items-center gap-6 flex-1 min-w-0", fields: "grid grid-cols-2 gap-x-8 gap-y-2 justify-start shrink-0", nameTitle: "text-right min-w-0" },
-        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-center items-center flex-wrap gap-3", nameTitle: "text-center min-w-0" },
+        left: { container: "flex items-center justify-between gap-6", leftContent: "flex items-center gap-6 shrink-0 min-w-0 max-w-[42%]", fields: "grid flex-1 min-w-0 grid-cols-2 gap-x-6 gap-y-2 justify-start", nameTitle: "text-left min-w-0 max-w-[16rem] flex-1" },
+        right: { container: "flex items-center justify-between gap-6 flex-row-reverse", leftContent: "flex flex-row-reverse justify-start items-center gap-6 shrink-0 min-w-0 max-w-[42%]", fields: "grid flex-1 min-w-0 grid-cols-2 gap-x-6 gap-y-2 justify-start", nameTitle: "text-right min-w-0 max-w-[16rem] flex-1" },
+        center: { container: "flex flex-col items-center gap-3", leftContent: "flex flex-col items-center gap-4", fields: "w-full flex justify-center items-center flex-wrap gap-3", nameTitle: "text-center min-w-0 max-w-full" },
     };
 
     const styles = layoutStyles[layout as keyof typeof layoutStyles] || layoutStyles.left;
@@ -73,10 +73,10 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                     {PhotoComponent}
                     <div className={cn("flex flex-col", styles.nameTitle)}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold whitespace-pre-wrap break-words" style={{ fontSize: "30px" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "30px" }}>{basic[nameField.key] as string}</motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" className="whitespace-pre-wrap break-words" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
                         )}
                     </div>
                 </div>
@@ -85,17 +85,17 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
 
                         return (
-                        <motion.div key={item.key} className="flex items-center whitespace-nowrap overflow-hidden text-baseFont">
+                        <motion.div key={item.key} className="flex min-w-0 items-start text-baseFont">
                             {useIconMode ? (
-                                <div className="flex items-center gap-1">
+                                <div className="flex min-w-0 items-start gap-1">
                                     {getIcon(item.icon)}
-                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="underline">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="underline truncate">{item.value}</a> : <span>{item.value}</span>}
+                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]">{item.value}</span>}
                                 </div>
                             ) : (
-                                <div className="flex items-center gap-2 overflow-hidden">
-                                    {!item.custom && <span>{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span>{item.label}:</span>}
-                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="truncate underline" suppressHydrationWarning>{item.value}</a> : <span className="truncate" suppressHydrationWarning>{item.value}</span>}
+                                <div className="flex min-w-0 items-start gap-2">
+                                    {!item.custom && <span className="shrink-0">{t(`basicPanel.basicFields.${item.key}`)}:</span>}
+                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0">{item.label}:</span>}
+                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
                                 </div>
                             )}
                         </motion.div>

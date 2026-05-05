@@ -22,6 +22,7 @@ import ResumeTemplateComponent from "@/components/templates";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
 import { normalizeFontFamily } from "@/utils/fonts";
+import { Edit2, Copy, Trash2 } from "lucide-react";
 
 interface ResumeCardItemProps {
     id: string;
@@ -31,6 +32,7 @@ interface ResumeCardItemProps {
     setActiveResume: (id: string) => void;
     router: any;
     deleteResume: (resume: any) => void;
+    duplicateResume: (resume: any) => void;
     index: number;
 }
 
@@ -42,10 +44,13 @@ export const ResumeCardItem = ({
     setActiveResume,
     router,
     deleteResume,
+    duplicateResume,
     index,
 }: ResumeCardItemProps) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [scale, setScale] = React.useState(0.24);
+    const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    
     const activeTemplate =
         DEFAULT_TEMPLATES.find((template) => template.id === resume.templateId) ??
         DEFAULT_TEMPLATES[0];
@@ -83,7 +88,14 @@ export const ResumeCardItem = ({
                     "dark:hover:border-primary/40"
                 )}
             >
-                <CardContent className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer">
+                <CardContent 
+                    className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveResume(id);
+                        router.push(`/app/workbench/${id}`);
+                    }}
+                >
                     <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
                         <div className="w-full h-full relative origin-top bg-white">
                             <div
@@ -121,79 +133,71 @@ export const ResumeCardItem = ({
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="pt-2 pb-2 px-2 bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 z-10">
-                    <div className="grid grid-cols-2 gap-2 w-full">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 17,
+                <CardFooter className="p-0 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 overflow-hidden">
+                    <div className="flex w-full h-11 divide-x divide-gray-100 dark:divide-gray-800">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveResume(id);
+                                router.push(`/app/workbench/${id}`);
                             }}
+                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-primary font-medium text-sm group"
                         >
-                            <Button
-                                variant="outline"
-                                className="w-full text-sm hover:bg-gray-100 dark:border-primary/50 dark:hover:bg-primary/10"
-                                size="sm"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setActiveResume(id);
-                                    router.push(`/app/workbench/${id}`);
-                                }}
-                            >
-                                {t("common.edit")}
-                            </Button>
-                        </motion.div>
+                            <Edit2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform opacity-70 group-hover:opacity-100" />
+                            <span>{t("common.edit")}</span>
+                        </button>
 
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 17,
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                duplicateResume(resume);
                             }}
+                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm group"
                         >
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="w-full text-sm text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-500 dark:hover:bg-red-950/50 dark:hover:text-red-400"
-                                        size="sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        {t("common.delete")}
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>{t("dashboard.resumes.deleteConfirmTitle")}</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            {t("dashboard.resumes.deleteConfirmDescription")}
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel onClick={(e) => e.stopPropagation()}>{t("common.cancel")}</AlertDialogCancel>
-                                        <AlertDialogAction
-                                            className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600 border-none"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                deleteResume(resume);
-                                                toast.success(t("common.deleteSuccess"));
-                                            }}
-                                        >
-                                            {t("common.confirm")}
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </motion.div>
+                            <Copy className="w-3.5 h-3.5 group-hover:scale-110 transition-transform opacity-70 group-hover:opacity-100" />
+                            <span>{t("common.copy")}</span>
+                        </button>
+
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowDeleteDialog(true);
+                            }}
+                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-red-50 dark:hover:bg-red-950/40 transition-all duration-200 text-red-600 dark:text-red-400 font-medium text-sm group"
+                        >
+                            <Trash2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform opacity-80 group-hover:opacity-100" />
+                            <span>{t("common.delete")}</span>
+                        </button>
                     </div>
                 </CardFooter>
             </Card>
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t("dashboard.resumes.deleteConfirmTitle")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t("dashboard.resumes.deleteConfirmDescription")}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={(e) => { e.stopPropagation(); setShowDeleteDialog(false); }}>
+                            {t("common.cancel")}
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600 border-none"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                deleteResume(resume);
+                                setShowDeleteDialog(false);
+                                toast.success(t("common.deleteSuccess"));
+                            }}
+                        >
+                            {t("common.confirm")}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </motion.div>
     );
 };

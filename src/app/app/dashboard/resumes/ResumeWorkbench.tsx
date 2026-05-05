@@ -103,6 +103,23 @@ export const ResumeWorkbench = () => {
         router.push(`/app/workbench/${newId}`);
     };
 
+    const duplicateResume = async (resume: any) => {
+        const { generateUUID } = await import("@/utils/uuid");
+        const now = new Date().toISOString();
+        
+        const { id, ...rest } = resume;
+        const newResume = {
+            ...rest,
+            id: generateUUID(),
+            title: `${resume.title || t("dashboard.resumes.untitled")} - ${t("common.copy")}`,
+            createdAt: now,
+            updatedAt: now,
+        };
+        
+        const resumeId = addResume(newResume);
+        toast.success(t("previewDock.copyResume.success"));
+    };
+
     const importResumeFromJson = async (file: File) => {
         const content = await file.text();
         const config = JSON.parse(content);
@@ -404,6 +421,7 @@ export const ResumeWorkbench = () => {
                                         setActiveResume={setActiveResume}
                                         router={router}
                                         deleteResume={deleteResume}
+                                        duplicateResume={duplicateResume}
                                         index={index}
                                     />
                                 ))}

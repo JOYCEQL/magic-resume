@@ -737,8 +737,8 @@
       "cannotFit": "内容较多，已尽量压缩但无法完美一页，建议精简内容, 也可在此基础上调节页边距、字体大小等左侧设置栏选项"
     },
     "backup": {
-      "configured": "备份已配置",
-      "notConfigured": "未配置备份目录",
+      "configured": "已备份",
+      "notConfigured": "未备份",
       "clickToConfigure": "点击前往设置"
     }
   },

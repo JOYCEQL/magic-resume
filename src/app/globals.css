@@ -151,7 +151,13 @@
   #resume-preview h3, 
   #resume-preview h4, 
   #resume-preview h5, 
-  #resume-preview h6 {
+  #resume-preview h6,
+  .resume-preview h1,
+  .resume-preview h2,
+  .resume-preview h3,
+  .resume-preview h4,
+  .resume-preview h5,
+  .resume-preview h6 {
     font-family: inherit;
   }
 

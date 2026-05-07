@@ -132,7 +132,7 @@ const TemplateCardItem = ({
           >
             <div className="w-full h-full relative origin-top bg-white">
               <div
-                className="absolute top-0 left-0 bg-white"
+                className="resume-preview absolute top-0 left-0 bg-white"
                 style={{
                   width: "210mm",
                   height: "297mm",
@@ -346,7 +346,7 @@ const TemplatesPage = () => {
                       style={{ width: "420px", height: "594px" }}
                     >
                       <div
-                        className="absolute top-0 left-0 bg-white"
+                        className="resume-preview absolute top-0 left-0 bg-white"
                         style={{
                           width: "210mm",
                           height: "297mm",

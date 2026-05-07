@@ -99,7 +99,7 @@ export const ResumeCardItem = ({
                     <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
                         <div className="w-full h-full relative origin-top bg-white">
                             <div
-                                className="absolute top-0 left-0 bg-white"
+                                className="resume-preview absolute top-0 left-0 bg-white"
                                 style={{
                                     width: "210mm",
                                     height: "297mm",

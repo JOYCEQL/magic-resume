@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import appCss from "../app/globals.css?url";
 import appFontCss from "../app/font.css?url";
+import tiptapCss from "../styles/tiptap.scss?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -33,6 +34,10 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: appFontCss
+      },
+      {
+        rel: "stylesheet",
+        href: tiptapCss
       }
     ]
   }),

@@ -259,6 +259,7 @@
       "title": "导出简历",
       "subtitle": "选择您希望导出简历的格式",
       "pdfDesc": "通过高精度渲染生成，100% 还原格式，简历投递首选。",
+      "longPagePdfDesc": "通过浏览器渲染生成一页简历，适合不需要分页的简历。",
       "printDesc": "调用系统打印工具另存为 PDF，当主渲染拥堵或需手动干预边距时的备用方案。",
       "jsonDesc": "保存您的配置档案副本。日后更换设备或清理缓存后，可使用此文件一键无损导入恢复进度。",
       "markdownDesc": "转换为极简的文本标记语言文件，方便快速粘贴给各种 AI 模型或是其他文本编辑器。",
@@ -267,6 +268,7 @@
     "button": {
       "export": "导出",
       "exportPdf": "PDF",
+      "exportLongPagePdf": "PDF(长页)",
       "exportJson": "JSON配置",
       "exportMarkdown": "Markdown",
       "exporting": "导出中...",
@@ -735,6 +737,11 @@
       "enabled": "已开启一页纸模式",
       "disabled": "已关闭一页纸模式",
       "cannotFit": "内容较多，已尽量压缩但无法完美一页，建议精简内容, 也可在此基础上调节页边距、字体大小等左侧设置栏选项"
+    },
+    "pageBreakLine": {
+      "tooltip": "分页线",
+      "visible": "已显示分页线",
+      "hidden": "已隐藏分页线"
     },
     "backup": {
       "configured": "已备份",

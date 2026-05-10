@@ -258,6 +258,7 @@
       "title": "Export Resume",
       "subtitle": "Select the format you want to export your resume",
       "pdfDesc": "High-precision rendering with 100% format accuracy. Recommended for job applications.",
+      "longPagePdfDesc": "Browser-rendered as a single long page. Best for resumes that do not need pagination.",
       "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
       "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
       "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models.",
@@ -266,6 +267,7 @@
     "button": {
       "export": "Export",
       "exportPdf": "Export PDF (Server)",
+      "exportLongPagePdf": "PDF (Long Page)",
       "exportJson": "Export JSON Config",
       "exportMarkdown": "Export Markdown",
       "exporting": "Exporting...",
@@ -322,6 +324,11 @@
       "enabled": "One page mode enabled",
       "disabled": "One page mode disabled",
       "cannotFit": "Too much content. Optimized as much as possible but cannot fit on one page. Try simplifying the content or adjusting margins and font size in the sidebar."
+    },
+    "pageBreakLine": {
+      "tooltip": "Page Break Line",
+      "visible": "Page break line shown",
+      "hidden": "Page break line hidden"
     },
     "backup": {
       "configured": "Backed up",

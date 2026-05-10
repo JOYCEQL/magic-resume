@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { PDF_EXPORT_CONFIG } from "@/config";
-import { normalizeFontFamily } from "@/utils/fonts";
+import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
 import { ResumeData } from "@/types/resume";
 import { generateResumeMarkdown, ResumeMarkdownOptions } from "@/utils/markdown";
 
@@ -106,6 +106,28 @@ export interface ExportToPdfOptions {
   errorMessage?: string;
 }
 
+const A4_WIDTH_MM = 210;
+const PX_PER_MM = 96 / 25.4;
+const LONG_PAGE_HEIGHT_BUFFER_MM = 2;
+const LONG_PAGE_CAPTURE_BUFFER_PX = 8;
+const LONG_PAGE_BOTTOM_SAFE_AREA_PX = 8;
+
+const keepOnlyFirstPage = (pdf: jsPDF) => {
+  const pdfWithPageControl = pdf as jsPDF & {
+    getNumberOfPages?: () => number;
+    deletePage?: (pageNumber: number) => void;
+  };
+
+  const totalPages = pdfWithPageControl.getNumberOfPages?.() ?? 1;
+  if (totalPages <= 1 || !pdfWithPageControl.deletePage) {
+    return;
+  }
+
+  for (let pageNumber = totalPages; pageNumber > 1; pageNumber -= 1) {
+    pdfWithPageControl.deletePage(pageNumber);
+  }
+};
+
 interface ExportResumeFileOptions {
   resume?: ResumeData | null;
   title?: string;
@@ -174,6 +196,172 @@ export const exportResumeAsMarkdown = ({
   }
 };
 
+const hidePageBreakLines = (element: HTMLElement) => {
+  const pageBreakLines = element.querySelectorAll<HTMLElement>(".page-break-line");
+  pageBreakLines.forEach((line) => {
+    line.remove();
+  });
+};
+
+const removeLongPageHeightConstraints = (element: HTMLElement) => {
+  const rootElement = element.firstElementChild as HTMLElement | null;
+  if (rootElement) {
+    rootElement.style.setProperty("height", "auto", "important");
+    rootElement.style.setProperty("min-height", "0", "important");
+  }
+
+  const constrainedElements = element.querySelectorAll<HTMLElement>(".min-h-screen, .min-h-full, .editorial-print-container");
+  constrainedElements.forEach((node) => {
+    node.style.setProperty("height", "auto", "important");
+    node.style.setProperty("min-height", "0", "important");
+  });
+};
+
+const getPreviewScale = (element: HTMLElement) => {
+  const transformValue = element.style.transform || "";
+  const scaleMatch = transformValue.match(/scale\(([\d.]+)\)/);
+  if (!scaleMatch) return 1;
+
+  const scale = Number(scaleMatch[1]);
+  return Number.isFinite(scale) && scale > 0 ? scale : 1;
+};
+
+const waitForImages = async (element: HTMLElement) => {
+  const images = Array.from(element.getElementsByTagName("img"));
+  await Promise.all(
+    images
+      .filter((img) => !img.complete)
+      .map(
+        (img) =>
+          new Promise<void>((resolve) => {
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+          })
+      )
+  );
+};
+
+export const exportToLongPagePdf = async ({
+  elementId,
+  title,
+  pagePadding,
+  fontFamily,
+  onStart,
+  onEnd,
+  successMessage,
+  errorMessage
+}: ExportToPdfOptions) => {
+  const exportStartTime = performance.now();
+  onStart?.();
+
+  let container: HTMLDivElement | null = null;
+
+  try {
+    const pdfElement = document.querySelector<HTMLElement>(`#${elementId}`);
+    if (!pdfElement) {
+      throw new Error(`PDF element #${elementId} not found`);
+    }
+
+    const selectedFontFamily = normalizeFontFamily(fontFamily);
+    const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
+    const previewScale = getPreviewScale(clonedElement);
+    hidePageBreakLines(clonedElement);
+    removeLongPageHeightConstraints(clonedElement);
+    await optimizeImages(clonedElement);
+
+    clonedElement.style.setProperty("padding", `${pagePadding}px`, "important");
+    clonedElement.style.setProperty("box-sizing", "border-box", "important");
+    clonedElement.style.setProperty("background", "white", "important");
+    clonedElement.style.setProperty("font-family", selectedFontFamily, "important");
+
+    const bottomSpacer = document.createElement("div");
+    bottomSpacer.setAttribute("aria-hidden", "true");
+    bottomSpacer.style.width = "100%";
+    bottomSpacer.style.height = `${Math.ceil(LONG_PAGE_BOTTOM_SAFE_AREA_PX / previewScale)}px`;
+    bottomSpacer.style.pointerEvents = "none";
+    clonedElement.appendChild(bottomSpacer);
+
+    container = document.createElement("div");
+    container.style.position = "fixed";
+    container.style.left = "-10000px";
+    container.style.top = "0";
+    container.style.width = `${A4_WIDTH_MM}mm`;
+    container.style.background = "white";
+    container.style.pointerEvents = "none";
+    container.style.zIndex = "-1";
+
+    const fontStyles = document.createElement("style");
+    fontStyles.textContent = await getFontFaceCss(selectedFontFamily);
+    container.appendChild(fontStyles);
+    container.appendChild(clonedElement);
+    document.body.appendChild(container);
+
+    await waitForImages(clonedElement);
+    if (document.fonts?.ready) {
+      await document.fonts.ready;
+    }
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+
+    const renderedRect = clonedElement.getBoundingClientRect();
+    const contentWidthPx =
+      renderedRect.width || clonedElement.scrollWidth || A4_WIDTH_MM * PX_PER_MM;
+    const contentHeightPx = Math.max(
+      renderedRect.height,
+      clonedElement.scrollHeight * previewScale,
+      1
+    );
+    const pageHeightMm = Math.max(
+      contentHeightPx * (A4_WIDTH_MM / contentWidthPx) + LONG_PAGE_HEIGHT_BUFFER_MM,
+      1
+    );
+    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+      import("html2canvas"),
+      import("jspdf")
+    ]);
+
+    const fileName = `${getSafeFileName(title)}.pdf`;
+    const canvas = await html2canvas(clonedElement, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: Math.ceil(contentWidthPx),
+      windowHeight: Math.ceil(contentHeightPx + LONG_PAGE_CAPTURE_BUFFER_PX)
+    });
+
+    const imageHeightMm = canvas.height * (A4_WIDTH_MM / canvas.width);
+    const canvasPageHeightMm = Math.max(
+      imageHeightMm + LONG_PAGE_HEIGHT_BUFFER_MM,
+      pageHeightMm
+    );
+    const pdf = new jsPDF({
+      unit: "mm",
+      format: [A4_WIDTH_MM, canvasPageHeightMm],
+      orientation: "portrait",
+      compress: true
+    });
+    const imageData = canvas.toDataURL("image/png");
+    pdf.addImage(imageData, "PNG", 0, 0, A4_WIDTH_MM, imageHeightMm);
+    keepOnlyFirstPage(pdf);
+    pdf.save(fileName);
+
+    if (successMessage) toast.success(successMessage);
+    console.log(`Total long page export took ${performance.now() - exportStartTime}ms`);
+  } catch (error) {
+    console.error("Long page export error:", error);
+    if (errorMessage) toast.error(errorMessage);
+  } finally {
+    if (container?.parentNode) {
+      container.parentNode.removeChild(container);
+    }
+    onEnd?.();
+  }
+};
+
 export const exportToPdf = async ({
   elementId,
   title,
@@ -215,10 +403,7 @@ export const exportToPdf = async ({
     clonedElement.style.setProperty("box-sizing", "border-box");
     clonedElement.style.setProperty("font-family", selectedFontFamily, "important");
 
-    const pageBreakLines = clonedElement.querySelectorAll<HTMLElement>(".page-break-line");
-    pageBreakLines.forEach((line) => {
-      line.style.display = "none";
-    });
+    hidePageBreakLines(clonedElement);
 
     const [capturedStyles] = await Promise.all([
       getOptimizedStyles(),

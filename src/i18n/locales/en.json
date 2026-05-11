@@ -88,7 +88,7 @@
         },
         {
           "question": "What export formats are supported?",
-          "answer": "We currently support PDF export, ensuring your resume maintains consistent formatting on any device. We plan to support more export formats in the future."
+          "answer": "We currently support PDF export, PNG long image export, browser print, JSON config export, and Markdown export. PDF is best for formal applications and archiving, while PNG long image is useful for mobile previews, portfolio display, or image-upload workflows."
         },
         {
           "question": "How can I sync across devices?",
@@ -259,6 +259,7 @@
       "subtitle": "Select the format you want to export your resume",
       "pdfDesc": "High-precision rendering with 100% format accuracy. Recommended for job applications.",
       "longPagePdfDesc": "Browser-rendered as a single long page. Best for resumes that do not need pagination.",
+      "longPageImageDesc": "Browser-rendered as a single PNG long image. Best for mobile previews, portfolio display, or image-upload workflows.",
       "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
       "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
       "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models.",
@@ -268,6 +269,7 @@
       "export": "Export",
       "exportPdf": "Export PDF (Server)",
       "exportLongPagePdf": "PDF (Long Page)",
+      "exportLongPageImage": "PNG (Long Image)",
       "exportJson": "Export JSON Config",
       "exportMarkdown": "Export Markdown",
       "exporting": "Exporting...",
@@ -278,6 +280,8 @@
     "toast": {
       "success": "PDF exported successfully",
       "error": "PDF export failed",
+      "imageSuccess": "PNG long image exported successfully",
+      "imageError": "PNG long image export failed",
       "jsonSuccess": "Configuration exported successfully",
       "jsonError": "Configuration export failed",
       "markdownSuccess": "Markdown exported successfully",

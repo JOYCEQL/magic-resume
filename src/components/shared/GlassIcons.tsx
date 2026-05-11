@@ -116,3 +116,28 @@ export const MarkdownGlassIcon = ({ className, isLoading }: GlassIconProps) => (
     </path>
   </svg>
 );
+
+export const ImageGlassIcon = ({ className, isLoading }: GlassIconProps) => (
+  <svg viewBox="0 0 100 100" fill="none" className={className}>
+    <defs>
+      <filter id="img-glow"><feGaussianBlur stdDeviation="8" /></filter>
+      <linearGradient id="img-glass" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.68" />
+        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.08" />
+      </linearGradient>
+      <linearGradient id="img-border" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.18" />
+      </linearGradient>
+    </defs>
+    <rect x="20" y="18" width="56" height="64" rx="10" fill="#0f766e" filter="url(#img-glow)" opacity="0.62" />
+    <rect x="18" y="16" width="60" height="68" rx="12" fill="#0f766e" />
+    <rect x="12" y="10" width="68" height="74" rx="14" fill="url(#img-glass)" stroke="url(#img-border)" strokeWidth="1.5" />
+    <circle cx="35" cy="31" r="5" fill="#ffffff" opacity="0.9" />
+    <path d="M22 67 L38 49 L48 59 L59 45 L74 67" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" opacity="0.95" />
+    <path d="M23 70H75" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" opacity="0.28" />
+    <rect x="26" y="73" width={isLoading ? "18" : "24"} height="4" rx="2" fill="#ffffff" opacity="0.72">
+      {isLoading && <animate attributeName="width" values="14;26;14" dur="1.2s" repeatCount="indefinite" />}
+    </rect>
+  </svg>
+);

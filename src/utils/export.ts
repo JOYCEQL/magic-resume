@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import type { jsPDF as JsPDF } from "jspdf";
 import { PDF_EXPORT_CONFIG } from "@/config";
 import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
 import { ResumeData } from "@/types/resume";
@@ -112,8 +113,8 @@ const LONG_PAGE_HEIGHT_BUFFER_MM = 2;
 const LONG_PAGE_CAPTURE_BUFFER_PX = 8;
 const LONG_PAGE_BOTTOM_SAFE_AREA_PX = 8;
 
-const keepOnlyFirstPage = (pdf: jsPDF) => {
-  const pdfWithPageControl = pdf as jsPDF & {
+const keepOnlyFirstPage = (pdf: JsPDF) => {
+  const pdfWithPageControl = pdf as JsPDF & {
     getNumberOfPages?: () => number;
     deletePage?: (pageNumber: number) => void;
   };
@@ -241,19 +242,19 @@ const waitForImages = async (element: HTMLElement) => {
   );
 };
 
-export const exportToLongPagePdf = async ({
-  elementId,
-  title,
-  pagePadding,
-  fontFamily,
-  onStart,
-  onEnd,
-  successMessage,
-  errorMessage
-}: ExportToPdfOptions) => {
-  const exportStartTime = performance.now();
-  onStart?.();
+interface LongPageCapture {
+  container: HTMLDivElement;
+  clonedElement: HTMLElement;
+  contentWidthPx: number;
+  contentHeightPx: number;
+  pageHeightMm: number;
+}
 
+const prepareLongPageCapture = async ({
+  elementId,
+  pagePadding,
+  fontFamily
+}: Pick<ExportToPdfOptions, "elementId" | "pagePadding" | "fontFamily">): Promise<LongPageCapture> => {
   let container: HTMLDivElement | null = null;
 
   try {
@@ -316,27 +317,91 @@ export const exportToLongPagePdf = async ({
       contentHeightPx * (A4_WIDTH_MM / contentWidthPx) + LONG_PAGE_HEIGHT_BUFFER_MM,
       1
     );
-    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-      import("html2canvas"),
-      import("jspdf")
-    ]);
+
+    return {
+      container,
+      clonedElement,
+      contentWidthPx,
+      contentHeightPx,
+      pageHeightMm
+    };
+  } catch (error) {
+    if (container?.parentNode) {
+      container.parentNode.removeChild(container);
+    }
+    throw error;
+  }
+};
+
+const renderLongPageCanvas = async ({
+  clonedElement,
+  contentWidthPx,
+  contentHeightPx
+}: Pick<LongPageCapture, "clonedElement" | "contentWidthPx" | "contentHeightPx">) => {
+  const { default: html2canvas } = await import("html2canvas");
+
+  return html2canvas(clonedElement, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: "#ffffff",
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: Math.ceil(contentWidthPx),
+    windowHeight: Math.ceil(contentHeightPx + LONG_PAGE_CAPTURE_BUFFER_PX)
+  });
+};
+
+const getCanvasPngBlob = (canvas: HTMLCanvasElement) =>
+  new Promise<Blob>((resolve, reject) => {
+    try {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          reject(new Error("PNG conversion failed"));
+          return;
+        }
+
+        resolve(blob);
+      }, "image/png");
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+export const exportToLongPagePdf = async ({
+  elementId,
+  title,
+  pagePadding,
+  fontFamily,
+  onStart,
+  onEnd,
+  successMessage,
+  errorMessage
+}: ExportToPdfOptions) => {
+  const exportStartTime = performance.now();
+  onStart?.();
+
+  let capture: LongPageCapture | null = null;
+  let canvas: HTMLCanvasElement | null = null;
+
+  try {
+    capture = await prepareLongPageCapture({
+      elementId,
+      pagePadding,
+      fontFamily
+    });
 
     const fileName = `${getSafeFileName(title)}.pdf`;
-    const canvas = await html2canvas(clonedElement, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: "#ffffff",
-      scrollX: 0,
-      scrollY: 0,
-      windowWidth: Math.ceil(contentWidthPx),
-      windowHeight: Math.ceil(contentHeightPx + LONG_PAGE_CAPTURE_BUFFER_PX)
-    });
+    const [{ jsPDF }, renderedCanvas] = await Promise.all([
+      import("jspdf"),
+      renderLongPageCanvas(capture)
+    ]);
+    canvas = renderedCanvas;
 
     const imageHeightMm = canvas.height * (A4_WIDTH_MM / canvas.width);
     const canvasPageHeightMm = Math.max(
       imageHeightMm + LONG_PAGE_HEIGHT_BUFFER_MM,
-      pageHeightMm
+      capture.pageHeightMm
     );
     const pdf = new jsPDF({
       unit: "mm",
@@ -355,8 +420,57 @@ export const exportToLongPagePdf = async ({
     console.error("Long page export error:", error);
     if (errorMessage) toast.error(errorMessage);
   } finally {
-    if (container?.parentNode) {
-      container.parentNode.removeChild(container);
+    if (canvas) {
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    if (capture?.container.parentNode) {
+      capture.container.parentNode.removeChild(capture.container);
+    }
+    onEnd?.();
+  }
+};
+
+export const exportToLongPageImage = async ({
+  elementId,
+  title,
+  pagePadding,
+  fontFamily,
+  onStart,
+  onEnd,
+  successMessage,
+  errorMessage
+}: ExportToPdfOptions) => {
+  const exportStartTime = performance.now();
+  onStart?.();
+
+  let capture: LongPageCapture | null = null;
+  let canvas: HTMLCanvasElement | null = null;
+
+  try {
+    capture = await prepareLongPageCapture({
+      elementId,
+      pagePadding,
+      fontFamily
+    });
+
+    canvas = await renderLongPageCanvas(capture);
+    const blob = await getCanvasPngBlob(canvas);
+    const fileName = `${getSafeFileName(title)}.png`;
+    downloadBlob(blob, fileName);
+
+    if (successMessage) toast.success(successMessage);
+    console.log(`Total long page image export took ${performance.now() - exportStartTime}ms`);
+  } catch (error) {
+    console.error("Long page image export error:", error);
+    if (errorMessage) toast.error(errorMessage);
+  } finally {
+    if (canvas) {
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+    if (capture?.container.parentNode) {
+      capture.container.parentNode.removeChild(capture.container);
     }
     onEnd?.();
   }

@@ -128,9 +128,7 @@ You can follow the latest updates via:
 - X: @GuangzhouY81070
 - Discord: Join our community https://discord.gg/9mWgZrW3VN
 - Email: 18806723365@163.com
-- WeChat Group: Scan to join our developer community
 
-  <img src="./images/wechat.jpg" width="200" alt="WeChat Group">
 
 - Project Homepage: https://github.com/JOYCEQL/magic-resume
 

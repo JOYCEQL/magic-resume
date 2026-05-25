@@ -128,9 +128,7 @@ docker compose up -d
 - X: @GuangzhouY81070
 - Discord: 欢迎加入群组 https://discord.gg/9mWgZrW3VN
 - 邮箱：18806723365@163.com
-- 微信群：扫码加入开发交流群
   
-<img src="./images/wechat.jpg" width="200" alt="WeChat Group">
 
 - 项目主页：https://github.com/JOYCEQL/magic-resume
 

@@ -1,6 +1,58 @@
 # Changelog
 
 
+## v2.0.6
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.5...main)
+
+### 🚀 Enhancements
+
+- Implement robust resume file synchronization with conflict resolution and date range formatting improvements ([5d108f4](https://github.com/JOYCEQL/magic-resume/commit/5d108f4))
+- Replace export dropdown with a glass-morphism themed dialog ([da12188](https://github.com/JOYCEQL/magic-resume/commit/da12188))
+- Encapsulate export logic into PdfExport component to simplify PreviewDock ([16eda66](https://github.com/JOYCEQL/magic-resume/commit/16eda66))
+- Implement resume duplication ([9ea60ac](https://github.com/JOYCEQL/magic-resume/commit/9ea60ac))
+- Add inline resume title editor to header ([3567e91](https://github.com/JOYCEQL/magic-resume/commit/3567e91))
+- Implement swiss resume template ([3789fe4](https://github.com/JOYCEQL/magic-resume/commit/3789fe4))
+
+### 🔥 Performance
+
+- Optimize reorder performance in BasicPanel ([0c00fb0](https://github.com/JOYCEQL/magic-resume/commit/0c00fb0))
+
+### 🩹 Fixes
+
+- Improve AI stream parsing, error handling ([a6c4aa9](https://github.com/JOYCEQL/magic-resume/commit/a6c4aa9))
+- Project link font size not responding to typography subheaderSize ([3658c99](https://github.com/JOYCEQL/magic-resume/commit/3658c99))
+- Date range input bug in newly created work experience ([4bd98e7](https://github.com/JOYCEQL/magic-resume/commit/4bd98e7))
+- **editorial:** Unify white background for PDF export ([5d7b9fc](https://github.com/JOYCEQL/magic-resume/commit/5d7b9fc))
+
+### 💅 Refactors
+
+- Standardize BaseInfo component layouts ([2395638](https://github.com/JOYCEQL/magic-resume/commit/2395638))
+
+### 📖 Documentation
+
+- Update readme.md ([d23e855](https://github.com/JOYCEQL/magic-resume/commit/d23e855))
+
+### 🏡 Chore
+
+- Update WeChat QR code image ([c85ecc7](https://github.com/JOYCEQL/magic-resume/commit/c85ecc7))
+
+### 🎨 Styles
+
+- Delete  modal ui ([042acf2](https://github.com/JOYCEQL/magic-resume/commit/042acf2))
+- Update drag handle styling for improved interaction ([60fc4fb](https://github.com/JOYCEQL/magic-resume/commit/60fc4fb))
+- Remove side panel borders ([0105215](https://github.com/JOYCEQL/magic-resume/commit/0105215))
+- Export modal ([f6f1b20](https://github.com/JOYCEQL/magic-resume/commit/f6f1b20))
+- Standardize BaseInfo layout and text wrapping across all resume templates ([a9be325](https://github.com/JOYCEQL/magic-resume/commit/a9be325))
+- Unify resume preview styles with .resume-preview class and import tiptap.scss globally ([baec353](https://github.com/JOYCEQL/magic-resume/commit/baec353))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+- Jul1en_lin <1577045857@qq.com>
+- Zpekii <Zpekii3156@qq.com>
+- Liu Zhening ([@HYPERVAPOR](https://github.com/HYPERVAPOR))
+
 ## v2.0.5
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.3...main)

@@ -250,6 +250,10 @@
       "editorial": {
         "name": "Editorial",
         "description": "Luxurious blend of bold serif and refined sans-serif typography"
+      },
+      "swiss": {
+        "name": "Swiss Aesthetic",
+        "description": "Artistic Bauhaus layout with strong typographic hierarchy and geometric accents, showing modern minimalism"
       }
     }
   },

@@ -1,0 +1,906 @@
+{
+  "common": {
+    "title": "Halname",
+    "subtitle": "AI destekli CV ve ATS optimizasyonu",
+    "openSettings": "Ayarları Aç",
+    "description": "Halname, ATS filtrelerini geçen yapay zeka destekli CV oluşturucudur. Gizlilik öncelikli, kayıt gerektirmez — tüm verileriniz kendi cihazınızda kalır.",
+    "dashboard": "Panel",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "newResume": "Yeni CV",
+    "copy": "Kopyala",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "deleteSuccess": "Başarıyla silindi",
+    "deleteModuleConfirm": "Bu modülü silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "configured": "Yapılandırıldı",
+    "notConfigured": "Yapılandırılmadı"
+  },
+  "home": {
+    "header": {
+      "title": "Halname",
+      "startButton": "Editörü Aç",
+      "features": "Özellikler",
+      "pricing": "Fiyatlandırma",
+      "about": "Hakkında",
+      "login": "Giriş",
+      "register": "Kayıt",
+      "dashboard": "Panel"
+    },
+    "hero": {
+      "badge": "Yapay zeka destekli ATS optimizasyonu",
+      "title": "ATS filtrelerini geçen bir CV oluşturun.",
+      "subtitle": "Halname, dakikalar içinde temiz, ATS uyumlu bir CV hazırlamanıza yardımcı olur — yapay zeka destekli iyileştirmeler ve neyi düzelteceğinizi gösteren gerçek zamanlı skor ile.",
+      "cta": "CV Düzenlemeye Başla",
+      "secondary": "Şablonları İncele"
+    },
+    "features": {
+      "title": "Neden Halname?",
+      "subtitle": "Profesyonellerin Halname'i tercih etmesinin üç nedeni.",
+      "fast": {
+        "badge": "Hızlı",
+        "title": "Taslaktan tamamlanmış CV'ye dakikalar içinde",
+        "description": "Sade editör, akıllı varsayılanlar, anlık önizleme — biçimlendirmeyle değil içerikle ilgilenin."
+      },
+      "easy": {
+        "badge": "Kolay",
+        "title": "Öğrenme eğrisi yok",
+        "description": "Tıklayın, yazın, sürükleyin. Gerisini Halname halleder — karmaşık araçlar yok, uğraşılacak şablonlar yok."
+      },
+      "ats": {
+        "badge": "ATS Uyumlu",
+        "title": "Başvuru takip sistemlerinden daha yüksek skor alın",
+        "description": "Yapay zeka destekli bölüm bazlı ATS analizi. Nerede puan kaybettiğinizi ve nasıl iyileştireceğinizi tam olarak görün."
+      }
+    },
+    "aiFeatures": {
+      "badge": "AI Connector",
+      "title": "Kendi yapay zekanızı getirin",
+      "subtitle": "OpenAI, Gemini, OpenRouter veya uyumlu herhangi bir sağlayıcıyı kendi API anahtarınızla bağlayın. İçeriğiniz, modeliniz, gizliliğiniz.",
+      "items": {
+        "polish": {
+          "title": "İçerik iyileştirme",
+          "description": "Madde işaretlerini daha öz, etkili ve işverene hazır şekilde yeniden yazın."
+        },
+        "grammar": {
+          "title": "Dilbilgisi ve ton",
+          "description": "İşe alım uzmanına ulaşmadan önce yazım, noktalama ve ton hatalarını yakalayın."
+        },
+        "ats": {
+          "title": "ATS analizi",
+          "description": "Her bölümü puanlayın, önerileri görün ve başvurmadan önce iyileştirin."
+        }
+      },
+      "cta": "AI'yı Yapılandır"
+    },
+    "atsSection": {
+      "badge": "ATS Analizi",
+      "title": "CV'nizi işe alım uzmanlarının gördüğü gibi görün.",
+      "subtitle": "Başvuru Takip Sistemleri (ATS), CV'lerin büyük çoğunluğunu bir insan görmeden eler. Halname size tam olarak nerede durduğunuzu söyler.",
+      "cards": {
+        "overall": {
+          "label": "Genel skor",
+          "description": "CV'nizin tüm bölümlerinin ağırlıklı ortalaması."
+        },
+        "sections": {
+          "label": "Bölüm dökümü",
+          "description": "Özet, deneyim, beceri, eğitim, proje — her biri 0–100 arası puanlanır."
+        },
+        "suggestions": {
+          "label": "Uygulanabilir öneriler",
+          "description": "Etkiye göre sıralanmış, somut düzenlemeler — önce önemli olanı düzeltin."
+        }
+      },
+      "cta": "ATS Analizini Dene"
+    },
+    "news": {
+      "label": "Yeni",
+      "content": "ATS Analizi yayında — CV'nizi bölüm bölüm puanlayın ve iyileştirin"
+    },
+    "footer": {
+      "copyright": " 2025 Halname. Tüm hakları saklıdır."
+    },
+    "changelog": "Sürüm notları",
+    "cta": {
+      "title": "Bir sonraki pozisyonunuz tek bir CV uzağınızda.",
+      "description": "Editörü açın, deneyiminizi ekleyin ve Halname size nerede daha yüksek skor alabileceğinizi göstersin.",
+      "button": "CV Düzenleyiciyi Aç"
+    },
+    "faq": {
+      "title": "Sıkça sorulan sorular",
+      "items": [
+        {
+          "question": "Halname ücretsiz mi?",
+          "answer": "Evet. Halname kullanımı ücretsizdir. AI sağlayıcı API anahtarınızı kendiniz getirdiğiniz için ek bir AI kullanım ücreti de oluşmaz."
+        },
+        {
+          "question": "ATS Analizi nasıl çalışır?",
+          "answer": "Halname, yapılandırdığınız AI sağlayıcısını kullanarak CV'nizin her bölümünü ATS en iyi uygulamalarına göre değerlendirir. Bölüm başına skor, genel ağırlıklı skor ve somut öneriler alırsınız."
+        },
+        {
+          "question": "CV verilerim güvende mi?",
+          "answer": "Her CV tarayıcınızda yerel olarak saklanır. Halname'in sunucu tarafında veritabanı yoktur — yedek almayı seçmediğiniz sürece verileriniz cihazınızda kalır."
+        },
+        {
+          "question": "Hangi AI sağlayıcıları destekleniyor?",
+          "answer": "OpenAI uyumlu uç noktalar, Google Gemini, DeepSeek ve Doubao. API anahtarınızı bir kez ekleyin; iyileştirme, dilbilgisi kontrolü ve ATS analizinde çalışsın."
+        },
+        {
+          "question": "CV'mi PDF olarak dışa aktarabilir miyim?",
+          "answer": "Evet — sunucu taraflı PDF dışa aktarımı, tarayıcı yazdırma, JSON yapılandırma dışa aktarımı ve Markdown dışa aktarımı yerleşik olarak gelir."
+        }
+      ]
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "appName": "Halname",
+      "resumes": "CV'ler",
+      "settings": "Ayarlar",
+      "templates": "Şablonlar",
+      "ai": "AI Yapılandırması"
+    },
+    "resumes": {
+      "created": "Oluşturulma",
+      "synced": "Senkronize Dosyalar",
+      "view": "Görüntüle",
+      "myResume": "CV'lerim",
+      "create": "CV Oluştur",
+      "newResume": "Yeni CV",
+      "newResumeDescription": "Başlamak için yeni bir CV oluşturun.",
+      "import": "CV İçe Aktar",
+      "untitled": "Adsız CV",
+      "importSuccess": "Yapılandırma başarıyla içe aktarıldı",
+      "importError": "İçe aktarma başarısız, lütfen dosya biçimini kontrol edin",
+      "importDialog": {
+        "title": "CV İçe Aktar",
+        "jsonTitle": "JSON İçe Aktar",
+        "jsonDescription": "Dışa aktarılmış bir CV yapılandırma dosyasını (.json) içe aktarın",
+        "pdfTitle": "PDF İçe Aktar",
+        "pdfDescription": "Gemini ile yapılandırılmış CV verisine çevirin",
+        "importing": "İçe aktarılıyor, lütfen bekleyin...",
+        "geminiConfigRequired": "Lütfen önce AI ayarlarında Gemini API Anahtarı ve Model ID yapılandırın",
+        "pdfSuccess": "PDF başarıyla içe aktarıldı",
+        "pdfError": "PDF içe aktarma başarısız. Lütfen PDF içeriğini veya Gemini yapılandırmasını kontrol edin"
+      },
+      "notice": {
+        "title": "Dikkat",
+        "description": "Tarayıcı önbelleği temizlendiğinde veri kaybını önlemek için ayarlardan bir yedek klasörü yapılandırmanız önerilir",
+        "goToSettings": "Ayarlara Git"
+      },
+      "deleteConfirmTitle": "CV'yi silmek istediğinizden emin misiniz?",
+      "deleteConfirmDescription": "Bu işlem geri alınamaz. CV ve verileri cihazınızdan kalıcı olarak silinecektir.",
+      "createDialog": {
+        "title": "Yeni CV Oluştur",
+        "description": "Boş bir şablondan yeni bir CV başlatın",
+        "tabs": {
+          "fromTemplate": "Şablondan",
+          "uploadFile": "Dosya Yükle"
+        },
+        "namePlaceholder": "İsim",
+        "switchTemplate": "Şablonu Değiştir",
+        "cancel": "İptal",
+        "create": "Oluştur",
+        "blankTitle": "Boş CV",
+        "startFromBlank": "Sıfırdan başla",
+        "startFromTemplate": "Şablondan başla",
+        "blankCardDescription": "Yerleşik varsayılan düzeni kullanın ve sıfırdan başlayın.",
+        "blankThumbnailDescription": "Boş bir sayfayla başlayın ve tamamen kendi kontrolünüzde bir CV oluşturun.",
+        "createNow": "Şimdi Oluştur",
+        "backToGrid": "Şablon ızgarasına dön",
+        "blankPreviewDescription": "Boş bir sayfa seçin ve her şeyi sıfırdan, önceden tanımlı kısıtlamalar olmadan oluşturun.",
+        "useThisTemplate": "Bu Şablonu Kullan",
+        "sample": {
+          "company": "Google",
+          "position": "Kıdemli Yazılım Mühendisi",
+          "present": "Devam ediyor",
+          "workDescription": "Frontend ekibini yönettim ve sayfa performansını %40 artırdım."
+        }
+      }
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "syncDirectory": {
+        "title": "Senkronizasyon Klasörü",
+        "description": "CV'lerinizi senkronize edip yedeklemek için bir klasör seçin.",
+        "currentSyncFolder": "Mevcut senkronizasyon klasörü",
+        "noFolderConfigured": "Klasör yapılandırılmamış",
+        "changeFolder": "Klasörü Değiştir",
+        "selectFolder": "Klasör Seç"
+      },
+      "sync": {
+        "title": "Senkronizasyon Klasörü",
+        "description": "CV'lerinizi senkronize edip yedeklemek için bir klasör seçin.",
+        "select": "Klasör Seç"
+      },
+      "ai": {
+        "title": "AI Yapılandırması",
+        "currentModel": "Mevcut Model",
+        "selectModel": "Model Seç",
+        "getApiKey": "API Anahtarı Al",
+        "doubao": {
+          "title": "Doubao",
+          "description": "Volcengine'den API anahtarı alın",
+          "apiKey": "Doubao API Anahtarı",
+          "modelId": "Model ID"
+        },
+        "deepseek": {
+          "title": "DeepSeek",
+          "description": "DeepSeek Platformundan API anahtarı alın",
+          "apiKey": "DeepSeek API Anahtarı"
+        },
+        "openai": {
+          "title": "OpenAI",
+          "description": "OpenAI'dan veya OpenAI biçimiyle uyumlu bir platformdan API anahtarını alın",
+          "apiKey": "OpenAI API Anahtarı",
+          "modelId": "Model ID",
+          "apiEndpoint": "API Uç Noktası, örnek: https://openai.example.org/v1"
+        },
+        "gemini": {
+          "title": "Gemini",
+          "description": "İçerik iyileştirme, dilbilgisi kontrolü ve PDF CV içe aktarımını destekler. Önerilen model: gemini-flash-latest",
+          "apiKey": "Gemini API Anahtarı",
+          "modelId": "Gemini Model ID"
+        }
+      }
+    },
+    "templates": {
+      "title": "Şablonlar",
+      "useTemplate": "Şablonu Kullan",
+      "preview": "Önizleme",
+      "switchTemplate": "Şablonu Değiştir",
+      "classic": {
+        "name": "Klasik",
+        "description": "Geleneksel ve sade düzen, çoğu iş başvurusu için uygundur"
+      },
+      "modern": {
+        "name": "İki Sütun",
+        "description": "Klasik iki sütunlu düzen, kişisel özellikleri vurgular"
+      },
+      "leftRight": {
+        "name": "Vurgulu Başlıklar",
+        "description": "Arkaplan rengiyle ayırt edilen bölüm başlıkları"
+      },
+      "timeline": {
+        "name": "Zaman Çizelgesi",
+        "description": "Deneyimlerin kronolojik sırasını vurgulayan zaman çizelgesi stili"
+      },
+      "minimalist": {
+        "name": "Minimalist",
+        "description": "Yoğun beyaz boşluk, sade ve net düzen"
+      },
+
+      "elegant": {
+        "name": "Zarif",
+        "description": "Ortalanmış başlıklı tek sütun tasarım, hafif bir zarafet dokunuşuyla"
+      },
+      "creative": {
+        "name": "Yaratıcı",
+        "description": "Görsel kontrastlı tasarım, canlı ve kişisel"
+      },
+      "editorial": {
+        "name": "Editöryel",
+        "description": "Kalın serif ve zarif sans-serif tipografinin lüks birleşimi"
+      },
+      "swiss": {
+        "name": "İsviçre Estetiği",
+        "description": "Güçlü tipografik hiyerarşi ve geometrik vurgularla Bauhaus düzeni"
+      }
+    }
+  },
+  "pdfExport": {
+    "modal": {
+      "title": "CV'yi Dışa Aktar",
+      "subtitle": "CV'nizi dışa aktarmak istediğiniz biçimi seçin",
+      "pdfDesc": "%100 biçim doğruluğu ile yüksek hassasiyetli render. Başvurular için önerilir.",
+      "printDesc": "Sistem yazdırma diyaloğu ile kaydedin. Yedek olarak veya özel kenar boşlukları için kullanın.",
+      "jsonDesc": "Yedeklemek veya cihazlar arası taşımak için CV verinizi JSON olarak dışa aktarın.",
+      "markdownDesc": "AI modelleriyle kolayca paylaşmak için düz Markdown metnine dönüştürün.",
+      "privacyNotice": "Halname, CV verinizin hiçbir kısmını toplamayacağına, yüklemeyeceğine veya saklamayacağına söz verir. Gizliliğiniz tam olarak korunur."
+    },
+    "button": {
+      "export": "Dışa Aktar",
+      "exportPdf": "PDF Dışa Aktar (Sunucu)",
+      "exportJson": "JSON Yapılandırması Dışa Aktar",
+      "exportMarkdown": "Markdown Dışa Aktar",
+      "exporting": "Dışa aktarılıyor...",
+      "exportingJson": "Dışa aktarılıyor...",
+      "exportingMarkdown": "Dışa aktarılıyor...",
+      "print": "Tarayıcı Yazdırma"
+    },
+    "toast": {
+      "success": "PDF başarıyla dışa aktarıldı",
+      "error": "PDF dışa aktarımı başarısız",
+      "jsonSuccess": "Yapılandırma başarıyla dışa aktarıldı",
+      "jsonError": "Yapılandırma dışa aktarımı başarısız",
+      "markdownSuccess": "Markdown başarıyla dışa aktarıldı",
+      "markdownError": "Markdown dışa aktarımı başarısız"
+    }
+  },
+  "previewDock": {
+    "switchTemplate": "Şablonu Değiştir",
+    "grammarCheck": {
+      "idle": "AI Dilbilgisi Kontrolü",
+      "checking": "Kontrol ediliyor...",
+      "configurePrompt": "Lütfen AI Modelini yapılandırın",
+      "configureButton": "Yapılandır",
+      "errorToast": "Dilbilgisi kontrolü başarısız, lütfen tekrar deneyin"
+    },
+    "sidePanel": {
+      "expand": "Yan paneli aç",
+      "collapse": "Yan paneli kapat"
+    },
+    "editPanel": {
+      "expand": "Düzenleme panelini aç",
+      "collapse": "Düzenleme panelini kapat"
+    },
+    "previewPanel": {
+      "expand": "Önizleme panelini aç",
+      "collapse": "Önizleme panelini kapat"
+    },
+    "backToDashboard": "Panele Dön",
+    "copyResume": {
+      "tooltip": "CV'yi Kopyala",
+      "success": "CV başarıyla kopyalandı",
+      "error": "CV kopyalanamadı"
+    },
+    "export": {
+      "tooltip": "CV'yi Dışa Aktar",
+      "pdf": "PDF Dışa Aktar",
+      "json": "JSON Dışa Aktar",
+      "markdown": "Markdown Dışa Aktar",
+      "print": "Yazdır"
+    },
+    "autoOnePage": {
+      "tooltip": "Tek Sayfaya Otomatik Sığdır",
+      "enabled": "Tek sayfa modu açıldı",
+      "disabled": "Tek sayfa modu kapatıldı",
+      "cannotFit": "İçerik çok fazla. Olabildiğince optimize edildi ancak tek sayfaya sığdırılamıyor. İçeriği sadeleştirmeyi veya yan panelden kenar boşluğu ve yazı boyutunu ayarlamayı deneyin."
+    },
+    "backup": {
+      "configured": "Yedeklendi",
+      "notConfigured": "Yedeklenmedi",
+      "clickToConfigure": "Yapılandırmak için tıklayın"
+    }
+  },
+  "workbench": {
+    "sidePanel": {
+      "layout": {
+        "title": "Düzen",
+        "addCustomSection": "Modül Ekle",
+        "addCustomSectionOption": "Özel Bölüm Ekle",
+        "standardSections": {
+          "skills": "Beceriler",
+          "experience": "Deneyim",
+          "projects": "Projeler",
+          "education": "Eğitim",
+          "selfEvaluation": "Özet",
+          "certificates": "Sertifikalar"
+        }
+      },
+      "theme": {
+        "title": "Tema Rengi",
+        "custom": "Özel"
+      },
+      "typography": {
+        "title": "Tipografi",
+        "font": {
+          "title": "Yazı Tipi",
+          "alibaba": "Alibaba PuHuiTi",
+          "misans": "MiSans",
+          "notosanssc": "Noto Sans SC",
+          "sourcehanserifsc": "Source Han Serif SC",
+          "note": "MiSans, ücretsiz ticari lisansı altında kullanılmaktadır. Bu projeyi dağıtırken MiSans atfını koruyun."
+        },
+        "lineHeight": {
+          "title": "Satır Yüksekliği",
+          "normal": "Varsayılan",
+          "relaxed": "Rahat",
+          "loose": "Geniş"
+        },
+        "baseFontSize": {
+          "title": "Temel Yazı Boyutu"
+        },
+        "headerSize": {
+          "title": "Bölüm Başlığı Boyutu"
+        },
+        "subheaderSize": {
+          "title": "Alt Başlık Boyutu"
+        }
+      },
+      "spacing": {
+        "title": "Boşluk",
+        "pagePadding": {
+          "title": "Sayfa Kenar Boşluğu"
+        },
+        "sectionSpacing": {
+          "title": "Bölüm Aralığı"
+        },
+        "paragraphSpacing": {
+          "title": "Paragraf Aralığı"
+        }
+      },
+      "mode": {
+        "title": "Mod",
+        "useIconMode": {
+          "title": "Simge Modu"
+        },
+        "centerSubtitle": {
+          "title": "Alt Başlığı Ortala"
+        },
+        "flexibleHeaderLayout": {
+          "title": "Uzun Başlık"
+        }
+      }
+    },
+    "basicPanel": {
+      "title": "Profil",
+      "avatar": "Profil Fotoğrafı",
+      "basicField": "Temel",
+      "customField": "Özel",
+      "layout": "Hizala",
+      "customFields": {
+        "placeholders": {
+          "label": "Etiket",
+          "value": "Değer"
+        },
+        "displayLabel": "Etiketi göster",
+        "addButton": "Özel Alan Ekle"
+      },
+      "basicFields": {
+        "name": "Ad Soyad",
+        "title": "Unvan",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "website": "Web Sitesi",
+        "location": "Konum",
+        "birthDate": "Doğum Tarihi",
+        "employementStatus": "Durum"
+      },
+      "fieldVisibility": {
+        "show": "Göster",
+        "hide": "Gizle"
+      },
+      "githubContributions": "GitHub Katkıları"
+    },
+    "experiencePanel": {
+      "title": "İş Deneyimi",
+      "addButton": "İş Deneyimi Ekle",
+      "defaultProject": {
+        "company": "Teknoloji Şirketi A.Ş.",
+        "position": "Kıdemli Frontend Mühendisi",
+        "date": "2020 - Devam ediyor",
+        "details": "Temel ürün geliştirmeden sorumluyum..."
+      },
+      "placeholders": {
+        "company": "şirket adı",
+        "position": "pozisyon",
+        "date": "çalışma dönemi",
+        "details": "iş sorumlulukları ve başarılar"
+      }
+    },
+    "experienceItem": {
+      "labels": {
+        "company": "Şirket Adı",
+        "position": "Pozisyon",
+        "date": "Çalışma Dönemi",
+        "details": "İş Sorumlulukları"
+      },
+      "placeholders": {
+        "company": "Şirket adını girin",
+        "position": "ör. Frontend Mühendisi",
+        "date": "ör. 2020-Devam ediyor",
+        "details": "Bu roldeki sorumluluklarınızı ve başarılarınızı yazın"
+      },
+      "buttons": {
+        "edit": "Düzenle",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "delete": "Sil"
+      },
+      "visibility": {
+        "show": "Göster",
+        "hide": "Gizle"
+      }
+    },
+    "projectPanel": {
+      "title": "Proje Deneyimi",
+      "addButton": "Proje Ekle",
+      "defaultProject": {
+        "name": "Kişisel Proje",
+        "description": "Proje Açıklaması",
+        "role": "Sorumluluklar",
+        "date": "2023.01 - 2023.06"
+      },
+      "placeholders": {
+        "name": "Proje Adı",
+        "description": "Projenin arka planını ve hedeflerini kısaca yazın",
+        "role": "Projedeki rolünüz ve sorumluluklarınız",
+        "date": "Proje zaman aralığı",
+        "link": "Proje bağlantısı"
+      }
+    },
+    "projectItem": {
+      "labels": {
+        "name": "Proje Adı",
+        "role": "Proje Rolü",
+        "date": "Proje Dönemi",
+        "description": "Proje Açıklaması",
+        "technologies": "Teknolojiler",
+        "link": "Proje Bağlantısı",
+        "linkLabel": "Görünen Metin"
+      },
+      "placeholders": {
+        "name": "Proje adını girin",
+        "role": "Projedeki rolünüz",
+        "date": "Proje zaman aralığı",
+        "description": "Projenin arka planını ve hedeflerini kısaca yazın",
+        "technologies": "Kullanılan teknolojiler ve araçlar",
+        "link": "Proje bağlantısı",
+        "linkLabel": "Görünen metin"
+      },
+      "hints": {
+        "linkLabel": "Görünen metin boşsa alan adı veya tam URL otomatik gösterilir. Yalnızca http:// ve https:// bağlantıları desteklenir."
+      },
+      "buttons": {
+        "edit": "Düzenle",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "delete": "Sil"
+      },
+      "visibility": {
+        "show": "Göster",
+        "hide": "Gizle"
+      }
+    },
+    "educationPanel": {
+      "title": "Eğitim",
+      "addButton": "Eğitim Ekle",
+      "defaultProject": {
+        "school": "Okul Adı",
+        "degree": "Derece",
+        "major": "Bölüm",
+        "date": "2020.09 - 2024.06"
+      },
+      "placeholders": {
+        "school": "Okul adını girin",
+        "degree": "Derece seçin",
+        "major": "Bölüm girin",
+        "date": "Öğrenim dönemini girin"
+      }
+    },
+    "educationItem": {
+      "labels": {
+        "school": "Okul Adı",
+        "degree": "Derece",
+        "major": "Bölüm",
+        "date": "Öğrenim Dönemi",
+        "description": "Açıklama",
+        "gpa": "Not Ortalaması",
+        "location": "Konum",
+        "startDate": "Başlangıç Tarihi",
+        "endDate": "Bitiş Tarihi"
+      },
+      "placeholders": {
+        "school": "Okul adını girin",
+        "degree": "Derece seçin",
+        "major": "Bölüm girin",
+        "date": "Öğrenim zaman aralığını girin",
+        "description": "Okul açıklamasını girin",
+        "gpa": "Not ortalamasını girin",
+        "location": "Konumu girin"
+      },
+      "buttons": {
+        "edit": "Düzenle",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "delete": "Sil"
+      },
+      "visibility": {
+        "show": "Göster",
+        "hide": "Gizle"
+      }
+    },
+    "certificatesPanel": {
+      "title": "Sertifikalar",
+      "addButton": "Sertifika Ekle",
+      "tips": "Görselleri doğrudan yükleyin veya yapıştırın (Cmd/Ctrl + V). Yatay düzen için genişlik oranını ayarlayın.",
+      "width": "Genişlik (%)",
+      "delete": "Sil",
+      "empty": "Henüz görsel yok. Lütfen görsel yükleyin veya yapıştırın."
+    }
+  },
+  "field": {
+    "selectDate": "Tarih Seç",
+    "enterYear": "Yıl Gir",
+    "toPresent": "Devam ediyor"
+  },
+  "richEditor": {
+    "bold": "Kalın",
+    "italic": "İtalik",
+    "underline": "Altı çizili",
+    "link": "Bağlantı",
+    "linkPlaceholder": "Bir URL girin, örn. https://example.com",
+    "linkApply": "Uygula",
+    "linkRemove": "Kaldır",
+    "linkInvalid": "Lütfen geçerli bir URL girin",
+    "textColor": "Metin Rengi",
+    "backgroundColor": "Arkaplan Rengi",
+    "alignLeft": "Sola Hizala",
+    "alignCenter": "Ortala",
+    "alignRight": "Sağa Hizala",
+    "alignJustify": "İki Yana Yasla",
+    "bulletList": "Madde İşaretli Liste",
+    "orderedList": "Numaralı Liste",
+    "undo": "Geri Al",
+    "redo": "Yinele",
+    "aiPolish": "AI İyileştirme",
+    "paragraph": "Paragraf",
+    "heading1": "Başlık 1",
+    "heading2": "Başlık 2",
+    "heading3": "Başlık 3",
+    "colors": {
+      "black": "Siyah",
+      "darkGray": "Koyu Gri",
+      "gray": "Gri",
+      "red": "Kırmızı",
+      "orange": "Turuncu",
+      "orangeYellow": "Turuncu Sarı",
+      "yellow": "Sarı",
+      "yellowGreen": "Sarı Yeşil",
+      "green": "Yeşil",
+      "cyan": "Camgöbeği",
+      "lightBlue": "Açık Mavi",
+      "blue": "Mavi",
+      "purple": "Mor",
+      "magenta": "Macenta",
+      "pink": "Pembe"
+    }
+  },
+  "iconSelector": {
+    "all": "Tümü",
+    "searchPlaceholder": "Simge ara...",
+    "noMatchingIcons": "Eşleşen simge bulunamadı",
+    "tryOtherKeywords": "Lütfen başka bir anahtar kelime deneyin",
+    "selectOtherCategory": "Lütfen başka bir kategori seçin",
+    "categories": {
+      "personal": "Kişisel Bilgi",
+      "education": "Eğitim",
+      "experience": "İş Deneyimi",
+      "skills": "Beceriler",
+      "languages": "Diller",
+      "projects": "Projeler",
+      "achievements": "Başarılar",
+      "hobbies": "İlgi Alanları",
+      "social": "Sosyal Medya",
+      "others": "Diğer"
+    },
+    "icons": {
+      "user": "Kullanıcı",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "address": "Adres",
+      "website": "Web Sitesi",
+      "mobile": "Mobil",
+      "education": "Eğitim",
+      "school": "Okul",
+      "major": "Bölüm",
+      "library": "Kütüphane",
+      "scholarship": "Burs",
+      "work": "İş",
+      "company": "Şirket",
+      "office": "Ofis",
+      "dateRange": "Tarih Aralığı",
+      "workTime": "Çalışma Süresi",
+      "programming": "Programlama",
+      "system": "Sistem",
+      "database": "Veritabanı",
+      "terminal": "Terminal",
+      "techStack": "Teknolojiler",
+      "language": "Dil",
+      "speaking": "Konuşma",
+      "communication": "İletişim",
+      "project": "Proje",
+      "branch": "Dal",
+      "release": "Sürüm",
+      "target": "Hedef",
+      "trophy": "Kupa",
+      "medal": "Madalya",
+      "star": "Yıldız",
+      "interest": "İlgi",
+      "music": "Müzik",
+      "art": "Sanat",
+      "photography": "Fotoğraf",
+      "linkedin": "LinkedIn",
+      "twitter": "Twitter",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "profile": "Profil",
+      "review": "İnceleme",
+      "filter": "Filtre",
+      "link": "Bağlantı",
+      "salary": "Maaş",
+      "idea": "Fikir",
+      "send": "Gönder",
+      "share": "Paylaş",
+      "settings": "Ayarlar",
+      "search": "Ara",
+      "flag": "Bayrak",
+      "bookmark": "Yer İmi",
+      "thumbsUp": "Beğen",
+      "skill": "Beceri"
+    }
+  },
+  "aiPolishDialog": {
+    "title": "AI İyileştirme",
+    "description": {
+      "ready": "İsteğe bağlı talimatları ekleyin, ardından \"İyileştirmeyi başlat\"a tıklayın",
+      "polishing": "İçeriğiniz iyileştiriliyor...",
+      "finished": "İçerik optimize edildi, lütfen sonucu kontrol edin"
+    },
+    "error": {
+      "configRequired": "Lütfen önce AI modelini yapılandırın",
+      "polishFailed": "İyileştirme başarısız",
+      "applied": "İyileştirilen içerik uygulandı"
+    },
+    "content": {
+      "original": "Orijinal İçerik",
+      "polished": "İyileştirilen İçerik"
+    },
+    "customInstructions": "Özel talimatlar",
+    "customInstructionsPlaceholder": "ör. Daha teknik terimler kullan, metrikleri vurgula, tonu resmi tut... (opsiyonel)",
+    "button": {
+      "start": "İyileştirmeyi başlat",
+      "regenerate": "Yeniden oluştur",
+      "generating": "Oluşturuluyor...",
+      "apply": "İçeriği Uygula"
+    }
+  },
+  "photoConfig": {
+    "title": "Fotoğraf Ayarları",
+    "description": "CV fotoğrafınızı özelleştirin",
+    "upload": {
+      "title": "Çevrimiçi Bağlantı",
+      "dragHint": "Görseli yüklemek için sürükleyin veya tıklayın",
+      "sizeLimit": "Görsel boyutu 2MB'ı geçmemelidir",
+      "typeLimit": "Lütfen bir görsel dosyası yükleyin",
+      "urlPlaceholder": "Görsel bağlantısı girin",
+      "invalidUrl": "Geçersiz veya erişilemeyen görsel URL'si, lütfen başka bir bağlantı deneyin",
+      "timeout": "Yükleme zaman aşımı",
+      "loadError": "Görsel yüklenemedi"
+    },
+    "config": {
+      "aspectRatio": "En Boy Oranı",
+      "size": "Boyut",
+      "width": "Genişlik",
+      "height": "Yükseklik",
+      "border-radius": "Kenar Yuvarlama",
+      "widthPlaceholder": "Genişlik",
+      "heightPlaceholder": "Yükseklik",
+      "ratios": {
+        "1:1": "1:1 Kare",
+        "4:3": "4:3 Yatay",
+        "3:4": "3:4 Dikey",
+        "16:9": "16:9 Geniş",
+        "custom": "Özel"
+      },
+      "borderRadius": {
+        "none": "Yok",
+        "medium": "Orta",
+        "full": "Daire",
+        "custom": "Özel",
+        "customPlaceholder": "Özel kenar yarıçapı"
+      }
+    },
+    "actions": {
+      "reset": "Sıfırla",
+      "close": "Kapat",
+      "cancel": "İptal",
+      "removePhoto": "Fotoğrafı Kaldır"
+    }
+  },
+  "templates": {
+    "switchTemplate": "Şablonu Değiştir"
+  },
+  "themeModal": {
+    "delete": {
+      "title": "Silmeyi Onayla",
+      "description": "{title} silinsin mi?",
+      "confirmText": "Sil",
+      "cancelText": "İptal"
+    }
+  },
+  "grammarCheck": {
+    "title": "AI Dilbilgisi Kontrolü",
+    "description": "{count} öneri bulundu",
+    "exit": "Çıkış",
+    "spelling": "Yazım",
+    "punctuation": "Noktalama",
+    "original": "Orijinal",
+    "error_point": "Hata",
+    "suggestion": "Öneri",
+    "reason": "Sebep",
+    "accept": "Uygula",
+    "ignore": "Yoksay",
+    "found_issues": "{count} sorun bulundu",
+    "applied_success": "Değişiklikler uygulandı",
+    "apply_error": "Metin bulunamadı, otomatik uygulanamıyor",
+    "no_errors_title": "Mükemmel!",
+    "no_errors_desc": "Dilbilgisi veya noktalama hatası bulunamadı."
+  },
+  "faqDialog": {
+    "title": "Sıkça Sorulan Sorular (SSS)",
+    "description": "Halname düzenleyici için sık karşılaşılan ipuçları ve çözümler.",
+    "items": {
+      "browser-compatibility": {
+        "question": "Hangi tarayıcı önerilir?",
+        "answer": "En iyi düzen ve dışa aktarma deneyimi için Chrome veya Edge'in güncel sürümünü öneririz. Bazı eski tarayıcılar stil sorunlarına yol açabilir."
+      },
+      "export-failure": {
+        "question": "Dışa aktarma başarısız olursa veya stil bozulursa ne yapmalıyım?",
+        "answer": "1. En iyi uyumluluk için Google Chrome (https://www.google.com/chrome/) öneririz.\n2. Sorun devam ederse, eklenti müdahalesini elemek için 'Gizli Mod'da deneyin.\n3. Alternatif olarak dışa aktarma menüsünden 'PDF (Yedek)' seçeneğini kullanın ve yazdırma diyaloğunda 'PDF olarak kaydet' seçin."
+      },
+      "export-methods": {
+        "question": "İki dışa aktarma yöntemi arasındaki fark nedir?",
+        "answer": "• PDF Dışa Aktar: Arka uç servisi kullanarak yüksek hassasiyetli render, düzeni %100 korur. Resmi başvurular için önerilir.\n\n• Tarayıcı Yazdırma: Tarayıcınızın yerel yazdırma fonksiyonunu kullanır (PDF olarak Kaydet). Arka uç servis meşgulken veya kenar boşluklarını ince ayar yapmak istediğinizde uygundur."
+      },
+      "drag-and-drop": {
+        "question": "Modülleri sürükleyip sıralamayı nasıl değiştirebilirim?",
+        "answer": "Sol düzenleme panelinin 'Düzen' ayarlarında, modül kartının sol tarafındaki 'Sürükleme Tutamağı' (genellikle altı noktalı bir simge) üzerine imleci getirin. Sol fare tuşuna basılı tutarak modülü yukarı veya aşağı sürükleyin."
+      }
+    }
+  },
+  "atsAnalyzer": {
+    "title": "ATS Analizi",
+    "subtitle": "Her bölüm için yapay zeka destekli ATS skoru",
+    "openButton": "AI ile Analiz Et",
+    "runAgain": "Tekrar Analiz Et",
+    "running": "CV'niz analiz ediliyor...",
+    "lastRun": "Son analiz",
+    "overall": {
+      "label": "Genel ATS Skoru",
+      "description": "Tüm bölüm skorlarının ağırlıklı ortalaması",
+      "tiers": {
+        "excellent": "Mükemmel",
+        "good": "Güçlü",
+        "needsWork": "Geliştirilebilir",
+        "poor": "Önemli iyileştirme gerekli"
+      }
+    },
+    "sections": {
+      "title": "Bölüm Dökümü",
+      "scoreSuffix": "/ 100",
+      "noContent": "Henüz içerik yok"
+    },
+    "suggestions": {
+      "title": "Öneriler",
+      "empty": "Öneri yok — bu bölüm çok iyi görünüyor!"
+    },
+    "empty": {
+      "title": "İlk analizinizi çalıştırın",
+      "description": "Halname, yapılandırdığınız AI sağlayıcısını kullanarak CV'nizi bölüm bölüm okur ve ATS en iyi uygulamalarına göre puanlar.",
+      "cta": "Analizi Başlat"
+    },
+    "missingConfig": {
+      "title": "AI Bağlantısı Gerekli",
+      "description": "ATS analizi, yapılandırdığınız AI sağlayıcısı tarafından çalıştırılır. Devam etmek için AI Ayarları'ndan bir sağlayıcı bağlayın.",
+      "cta": "AI Ayarlarını Aç"
+    },
+    "error": {
+      "generic": "ATS analizi başarısız. Lütfen tekrar deneyin.",
+      "parse": "AI yanıtı işlenemedi. Lütfen tekrar deneyin."
+    },
+    "sectionNames": {
+      "basic": "Profil",
+      "selfEvaluation": "Özet",
+      "experience": "Deneyim",
+      "education": "Eğitim",
+      "skills": "Beceriler",
+      "projects": "Projeler",
+      "certificates": "Sertifikalar",
+      "overall": "Genel"
+    },
+    "menuLabel": "ATS Analizi",
+    "menuDescription": "CV'nizi ATS'ye göre puanlayın"
+  }
+}

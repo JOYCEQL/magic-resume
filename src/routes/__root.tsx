@@ -10,7 +10,7 @@ import appFontCss from "../app/font.css?url";
 import tiptapCss from "../styles/tiptap.scss?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect } from "react";
-import zhMessages from "@/i18n/locales/zh.json";
+import trMessages from "@/i18n/locales/tr.json";
 import enMessages from "@/i18n/locales/en.json";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -24,7 +24,7 @@ export const Route = createRootRoute({
         name: "viewport",
         content: "width=device-width, initial-scale=1"
       },
-      { title: "Magic Resume" }
+      { title: "Halname" }
     ],
     links: [
       {
@@ -50,7 +50,7 @@ function RootComponent() {
     select: (location) => location.pathname
   });
   const locale = getPreferredLocale(pathname);
-  const messages = locale === "en" ? enMessages : zhMessages;
+  const messages = locale === "en" ? enMessages : trMessages;
 
   useEffect(() => {
     document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000`;
@@ -67,7 +67,7 @@ function RootComponent() {
         <NextIntlClientProvider
           locale={locale}
           messages={messages}
-          timeZone="Asia/Shanghai"
+          timeZone="Europe/Istanbul"
         >
           <Providers>
             <Outlet />
@@ -83,7 +83,7 @@ function RootComponent() {
 function RootNotFound() {
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <p className="text-muted-foreground">页面不存在</p>
+      <p className="text-muted-foreground">Sayfa bulunamadı / Page not found</p>
     </main>
   );
 }

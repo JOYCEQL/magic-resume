@@ -1,12 +1,12 @@
 import { defaultLocale, Locale } from "@/i18n/config";
-import zhMessages from "@/i18n/locales/zh.json";
+import trMessages from "@/i18n/locales/tr.json";
 import enMessages from "@/i18n/locales/en.json";
 import { createTranslator } from "./utils";
 
 type Messages = Record<string, unknown>;
 
 const MESSAGES: Record<Locale, Messages> = {
-  zh: zhMessages as Messages,
+  tr: trMessages as Messages,
   en: enMessages as Messages
 };
 
@@ -40,4 +40,3 @@ export function getRequestConfig<TArgs, TResult>(
 ) {
   return callback;
 }
-

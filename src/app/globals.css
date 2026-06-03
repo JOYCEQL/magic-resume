@@ -19,39 +19,49 @@
 
 @layer base {
   :root {
-    --background: 48 20% 97%; /* #F9F9F7 */
-    --foreground: 60 5% 10%; /* #1B1B18 */
-    --card: 48 20% 97%;
-    --card-foreground: 60 5% 10%;
-    --popover: 48 20% 97%;
-    --popover-foreground: 60 5% 10%;
-    --primary: 60 5% 10%; /* #1B1B18 - Claude Dark Charcoal */
-    --primary-foreground: 48 20% 97%;
-    --secondary: 48 18% 90%; /* #F2F0E9 */
-    --secondary-foreground: 60 5% 10%;
-    --muted: 60 2% 56%; /* #91918E */
-    --muted-foreground: 60 2% 40%;
-    --accent: 48 10% 92%; /* Neutral/Parchment Accent */
-    --accent-foreground: 60 5% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 48 10% 89%; /* #E6E6E3 */
-    --input: 48 10% 89%;
-    --ring: 60 5% 10%;
+    /* Halname Light — neutral surfaces, Primary Purple #1E104E, Accent Orange #FF653F */
+    --background: 240 33% 99%; /* #FBFBFD */
+    --foreground: 252 65% 12%; /* near #1E104E */
+    --card: 0 0% 100%;
+    --card-foreground: 252 65% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 252 65% 12%;
+    --primary: 252 65% 19%; /* #1E104E */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 252 25% 95%; /* very soft purple-tinted neutral */
+    --secondary-foreground: 252 65% 19%;
+    --muted: 248 18% 94%;
+    --muted-foreground: 248 10% 42%;
+    --accent: 13 100% 62%; /* #FF653F orange */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 78% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 248 18% 90%;
+    --input: 248 18% 90%;
+    --ring: 252 65% 19%;
     --radius: 0.75rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar-background: 48 20% 96%;
-    --sidebar-foreground: 60 5% 25%;
-    --sidebar-primary: 260 45% 52%;
-    --sidebar-primary-foreground: 48 20% 97%;
-    --sidebar-accent: 48 10% 92%;
-    --sidebar-accent-foreground: 260 45% 52%;
-    --sidebar-border: 48 10% 89%;
-    --sidebar-ring: 260 45% 52%;
+    --chart-1: 252 65% 19%;
+    --chart-2: 277 35% 26%;
+    --chart-3: 13 100% 62%;
+    --chart-4: 41 100% 68%; /* #FFC85C secondary orange */
+    --chart-5: 252 50% 50%;
+    --sidebar-background: 240 33% 99%;
+    --sidebar-foreground: 252 30% 25%;
+    --sidebar-primary: 252 65% 19%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 252 25% 95%;
+    --sidebar-accent-foreground: 252 65% 19%;
+    --sidebar-border: 248 18% 90%;
+    --sidebar-ring: 252 65% 19%;
+
+    /* Brand custom tokens */
+    --brand-primary: 252 65% 19%; /* #1E104E */
+    --brand-primary-soft: 252 50% 30%; /* lighter primary */
+    --brand-secondary: 277 33% 27%; /* #452E5A */
+    --brand-accent: 13 100% 62%; /* #FF653F */
+    --brand-accent-soft: 41 100% 68%; /* #FFC85C */
+    --brand-gradient: linear-gradient(135deg, hsl(252 65% 19%) 0%, hsl(277 33% 27%) 100%);
+    --brand-gradient-accent: linear-gradient(135deg, hsl(13 100% 62%) 0%, hsl(41 100% 68%) 100%);
   }
   /* 通用滚动条样式 */
   ::-webkit-scrollbar {
@@ -90,39 +100,46 @@
   }
 
   .dark {
-    --background: 60 5% 10%; /* Dark Charcoal */
-    --foreground: 48 20% 97%; /* Off White text */
-    --card: 60 5% 12%;
-    --card-foreground: 48 20% 97%;
-    --popover: 60 5% 12%;
-    --popover-foreground: 48 20% 97%;
-    --primary: 48 20% 97%; /* Off White for primary buttons in dark mode or a light tint */
-    --primary-foreground: 60 5% 10%;
-    --secondary: 60 5% 15%;
-    --secondary-foreground: 48 20% 97%;
-    --muted: 60 2% 40%;
-    --muted-foreground: 60 2% 60%;
-    --accent: 60 5% 15%; /* Dark accent */
-    --accent-foreground: 48 20% 97%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 60 5% 20%;
-    --input: 60 5% 20%;
-    --ring: 48 20% 97%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Halname Dark — deep purple surfaces, orange accent */
+    --background: 252 50% 7%; /* deep purple-black */
+    --foreground: 248 40% 96%;
+    --card: 252 45% 10%;
+    --card-foreground: 248 40% 96%;
+    --popover: 252 45% 10%;
+    --popover-foreground: 248 40% 96%;
+    --primary: 252 70% 75%; /* light purple in dark mode */
+    --primary-foreground: 252 65% 12%;
+    --secondary: 277 25% 18%;
+    --secondary-foreground: 248 40% 96%;
+    --muted: 252 20% 18%;
+    --muted-foreground: 248 15% 65%;
+    --accent: 13 100% 62%; /* #FF653F orange stays as accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 252 25% 18%;
+    --input: 252 25% 18%;
+    --ring: 252 70% 75%;
+    --chart-1: 252 70% 75%;
+    --chart-2: 277 50% 65%;
+    --chart-3: 13 100% 62%;
+    --chart-4: 41 100% 68%;
+    --chart-5: 252 50% 55%;
 
-    --sidebar-background: 60 5% 8%;
-    --sidebar-foreground: 48 20% 90%;
-    --sidebar-primary: 260 60% 70%;
-    --sidebar-primary-foreground: 60 5% 10%;
-    --sidebar-accent: 60 5% 15%;
-    --sidebar-accent-foreground: 60 5% 90%;
-    --sidebar-border: 60 5% 15%;
-    --sidebar-ring: 260 60% 70%;
+    --sidebar-background: 252 55% 5%;
+    --sidebar-foreground: 248 30% 90%;
+    --sidebar-primary: 252 70% 75%;
+    --sidebar-primary-foreground: 252 65% 12%;
+    --sidebar-accent: 277 25% 18%;
+    --sidebar-accent-foreground: 248 40% 96%;
+    --sidebar-border: 252 25% 18%;
+    --sidebar-ring: 252 70% 75%;
+
+    --brand-primary: 252 65% 19%;
+    --brand-primary-soft: 252 60% 60%;
+    --brand-secondary: 277 33% 27%;
+    --brand-accent: 13 100% 62%;
+    --brand-accent-soft: 41 100% 68%;
   }
 }
 

@@ -4,9 +4,9 @@ export const runtime = "edge";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Magic Resume",
-    short_name: "Magic Resume",
-    description: "A Progressive Web App built with Next.js",
+    name: "Halname",
+    short_name: "Halname",
+    description: "AI-powered resume and ATS optimization",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

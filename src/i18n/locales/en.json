@@ -1,8 +1,9 @@
 {
   "common": {
-    "title": "Magic Resume",
-    "subtitle": "AI Driven Resume Editor",
-    "description": "Magic Resume is an open source resume editor, free, privacy-first. No registration required, all data stored locally, support data backup and export, ensuring your resume data is always available.",
+    "title": "Halname",
+    "subtitle": "AI-powered resume and ATS optimization",
+    "openSettings": "Open Settings",
+    "description": "Halname is the AI-powered resume builder that gets you past ATS filters. Privacy-first, no registration required — all data stays on your device.",
     "dashboard": "Dashboard",
     "edit": "Edit",
     "delete": "Delete",
@@ -17,8 +18,8 @@
   },
   "home": {
     "header": {
-      "title": "Magic Resume",
-      "startButton": "Get Started",
+      "title": "Halname",
+      "startButton": "Open Editor",
       "features": "Features",
       "pricing": "Pricing",
       "about": "About",
@@ -27,83 +28,113 @@
       "dashboard": "Dashboard"
     },
     "hero": {
-      "badge": "Smart Resume Creation",
-      "title": "Make Resume Creation Simple and Smart",
-      "subtitle": "Magic Resume uses AI technology to help you quickly create professional resumes. No registration required, free to use, with secure data storage.",
-      "cta": "Get Started",
+      "badge": "AI-powered ATS optimization",
+      "title": "Build a resume that gets past ATS filters.",
+      "subtitle": "Halname helps you craft a clean, ATS-friendly resume in minutes — with AI-driven improvements and a real-time score that shows you exactly what to fix.",
+      "cta": "Open Resume Builder",
       "secondary": "Browse Templates"
     },
     "features": {
-      "title": "Why Choose Magic Resume?",
-      "subtitle": "We provide an all-in-one resume solution to make your job search journey smoother",
-      "ai": {
-        "badge": "AI Smart Check",
-        "title": "Smart Detection, Professional Advice",
-        "description": "Built-in smart grammar check, automatically identifies inappropriate expressions, provides professional modification suggestions, making your resume more outstanding.",
-        "item1": "Intelligent enhancement",
-        "item1_description": "AI automatically optimizes content expression, making your resume more professional",
-        "item2": "Grammar check",
-        "item2_description": "Automatically detects and corrects grammar and spelling errors"
+      "title": "Why Halname",
+      "subtitle": "Three reasons professionals choose Halname for their next move.",
+      "fast": {
+        "badge": "Fast",
+        "title": "From draft to done in minutes",
+        "description": "Streamlined editor, smart defaults, instant preview — focus on content, not formatting."
       },
-      "storage": {
-        "badge": "Local Storage",
-        "title": "Data Security, Privacy First",
-        "description": "All resume data is fully stored locally, no need to worry about privacy leaks. Support data export backup, ensure your resume data is always available.",
-        "item1": "Local file storage",
-        "item1_description": "Resume data securely stored on your computer's hard drive",
-        "item2": "Multiple export formats",
-        "item2_description": "Support PDF and JSON format export",
-        "item3": "Support data export backup"
+      "easy": {
+        "badge": "Easy",
+        "title": "No learning curve",
+        "description": "Click, type, drag. Halname does the rest — no complicated tools, no templates to wrestle with."
       },
-      "preview": {
-        "badge": "Real-time Preview",
-        "title": "What You See Is What You Get",
-        "item1": "Real-time preview of editing effects",
-        "item2": "Multiple export format support"
+      "ats": {
+        "badge": "ATS Optimized",
+        "title": "Score higher with applicant tracking systems",
+        "description": "Section-by-section ATS analysis powered by AI. See exactly where you lose points and how to improve."
       }
     },
+    "aiFeatures": {
+      "badge": "AI Connector",
+      "title": "Bring your own AI",
+      "subtitle": "Connect OpenAI, Gemini, OpenRouter or any compatible provider with your own API key. Your content, your model, your privacy.",
+      "items": {
+        "polish": {
+          "title": "Polish content",
+          "description": "Rewrite bullet points to be tighter, more impactful and recruiter-ready."
+        },
+        "grammar": {
+          "title": "Grammar & tone",
+          "description": "Catch spelling, punctuation and tone issues before they reach a hiring manager."
+        },
+        "ats": {
+          "title": "ATS analysis",
+          "description": "Score every section, see suggestions and improve before you apply."
+        }
+      },
+      "cta": "Configure AI"
+    },
+    "atsSection": {
+      "badge": "ATS Analyzer",
+      "title": "See your resume the way recruiters do.",
+      "subtitle": "Applicant Tracking Systems filter out the majority of resumes before a human ever reads them. Halname tells you exactly where you stand.",
+      "cards": {
+        "overall": {
+          "label": "Overall score",
+          "description": "A weighted average across every section of your resume."
+        },
+        "sections": {
+          "label": "Section breakdown",
+          "description": "Summary, experience, skills, education, projects — each scored 0–100."
+        },
+        "suggestions": {
+          "label": "Actionable suggestions",
+          "description": "Specific edits ranked by impact, so you fix what matters first."
+        }
+      },
+      "cta": "Try ATS Analyzer"
+    },
     "news": {
-      "label": "News",
-      "content": "New AI Resume Enhancement Feature is Live"
+      "label": "New",
+      "content": "ATS Analyzer is live — score and improve your resume section by section"
     },
     "footer": {
-      "copyright": " 2025 Magic Resume. All rights reserved."
+      "copyright": " 2025 Halname. All rights reserved."
     },
     "changelog": "Changelog",
     "cta": {
-      "title": "Start Your New Career Chapter",
-      "description": "Start using Magic Resume now to create an impressive resume",
-      "button": "Start Using for Free"
+      "title": "Your next role is one resume away.",
+      "description": "Open the editor, drop in your experience, and let Halname show you where you can score higher.",
+      "button": "Open Resume Builder"
     },
     "faq": {
-      "title": "Frequently Asked Questions",
+      "title": "Frequently asked questions",
       "items": [
         {
-          "question": "Is Magic Resume free to use?",
-          "answer": "Magic Resume is currently free, meeting basic resume creation needs. The open-source version's features will remain unchanged"
+          "question": "Is Halname free?",
+          "answer": "Yes. Halname is free to use. You bring your own AI provider API key, so there are no AI usage fees on top."
+        },
+        {
+          "question": "How does the ATS Analyzer work?",
+          "answer": "Halname uses your configured AI provider to evaluate each section of your resume against ATS best practices. You get a score per section, an overall weighted score, and specific suggestions."
         },
         {
           "question": "Is my resume data secure?",
-          "answer": "Yes, very secure. Magic Resume uses local storage, meaning all your data is stored on your own device with no cloud storage, ensuring complete privacy protection."
+          "answer": "Every resume is stored locally in your browser. Halname has no server-side database — your data stays on your device unless you choose to back it up."
         },
         {
-          "question": "What export formats are supported?",
-          "answer": "We currently support PDF export, ensuring your resume maintains consistent formatting on any device. We plan to support more export formats in the future."
+          "question": "Which AI providers are supported?",
+          "answer": "OpenAI-compatible endpoints, Google Gemini, DeepSeek, and Doubao. Add your API key once and it works across polish, grammar check and ATS analysis."
         },
         {
-          "question": "How can I sync across devices?",
-          "answer": "We provide JSON configuration export, allowing you to save your resume settings in JSON format, accessible anytime, anywhere, on any device."
-        },
-        {
-          "question": "How customizable is it?",
-          "answer": "We offer rich customization options, including colors, layouts, and more, allowing you to adjust your resume style according to personal preferences and industry requirements."
+          "question": "Can I export my resume as PDF?",
+          "answer": "Yes — server-side PDF export, browser print, JSON config export and Markdown export are all built in."
         }
       ]
     }
   },
   "dashboard": {
     "sidebar": {
-      "appName": "Magic Resume",
+      "appName": "Halname",
       "resumes": "Resumes",
       "settings": "Settings",
       "templates": "Templates",
@@ -265,7 +296,7 @@
       "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
       "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
       "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models.",
-      "privacyNotice": "Magic Resume promise never to collect, upload, or store any of your resume data. Your privacy is fully protected."
+      "privacyNotice": "Halname promise never to collect, upload, or store any of your resume data. Your privacy is fully protected."
     },
     "button": {
       "export": "Export",
@@ -307,7 +338,6 @@
       "expand": "Expand Preview Panel",
       "collapse": "Collapse Preview Panel"
     },
-    "github": "GitHub",
     "backToDashboard": "Back to Dashboard",
     "copyResume": {
       "tooltip": "Copy Resume",
@@ -800,7 +830,7 @@
   },
   "faqDialog": {
     "title": "Frequently Asked Questions (FAQ)",
-    "description": "Common tips and solutions for the Magic Resume workbench.",
+    "description": "Common tips and solutions for the Halname workbench.",
     "items": {
       "browser-compatibility": {
         "question": "Which browser is recommended?",
@@ -819,5 +849,58 @@
         "answer": "In the 'Layout' settings of the left edit panel, hover your cursor over the 'Drag Handle' (usually represented by a six-dot icon) on the left side of the module card. Click and hold the left mouse button to drag the module up or down to reorder the sections of your entire resume."
       }
     }
+  },
+  "atsAnalyzer": {
+    "title": "ATS Analyzer",
+    "subtitle": "AI-powered ATS score for every section",
+    "openButton": "Analyze with AI",
+    "runAgain": "Run analysis again",
+    "running": "Analyzing your resume...",
+    "lastRun": "Last analyzed",
+    "overall": {
+      "label": "Overall ATS score",
+      "description": "Weighted average of all section scores",
+      "tiers": {
+        "excellent": "Excellent",
+        "good": "Strong",
+        "needsWork": "Needs work",
+        "poor": "Needs major work"
+      }
+    },
+    "sections": {
+      "title": "Section breakdown",
+      "scoreSuffix": "/ 100",
+      "noContent": "No content yet"
+    },
+    "suggestions": {
+      "title": "Suggestions",
+      "empty": "No suggestions — this section looks great!"
+    },
+    "empty": {
+      "title": "Run your first analysis",
+      "description": "Halname will read your resume section by section and score it against ATS best practices using your configured AI provider.",
+      "cta": "Start analysis"
+    },
+    "missingConfig": {
+      "title": "AI Connection Required",
+      "description": "ATS analysis is powered by your configured AI provider. Connect a provider in AI Settings to continue.",
+      "cta": "Open AI Settings"
+    },
+    "error": {
+      "generic": "ATS analysis failed. Please try again.",
+      "parse": "Could not parse AI response. Try once more."
+    },
+    "sectionNames": {
+      "basic": "Profile",
+      "selfEvaluation": "Summary",
+      "experience": "Experience",
+      "education": "Education",
+      "skills": "Skills",
+      "projects": "Projects",
+      "certificates": "Certificates",
+      "overall": "Overall"
+    },
+    "menuLabel": "ATS Analyzer",
+    "menuDescription": "Score your resume against ATS"
   }
 }

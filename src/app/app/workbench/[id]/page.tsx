@@ -8,6 +8,8 @@ import { EditPanel } from "@/components/editor/EditPanel";
 import PreviewPanel from "@/components/preview";
 import PreviewDock from "@/components/preview/PreviewDock";
 import { MobileWorkbench } from "@/components/mobile/MobileWorkbench";
+import { ATSAnalyzerPanel } from "@/components/ats/ATSAnalyzerPanel";
+import { useATSStore } from "@/store/useATSStore";
 import { PanelResizeHandle } from "react-resizable-panels";
 import {
   ResizableHandle,
@@ -166,6 +168,8 @@ export default function Home() {
   const [editPanelCollapsed, setEditPanelCollapsed] = useState(false);
   const [previewPanelCollapsed, setPreviewPanelCollapsed] = useState(false);
   const [panelSizes, setPanelSizes] = useState<number[]>(LAYOUT_CONFIG.DEFAULT);
+  const atsPanelOpen = useATSStore((s) => s.panelOpen);
+  const closeATS = useATSStore((s) => s.closePanel);
 
   // Create a ref for the resume content that PreviewDock can access
   // Currently we can't get the inner ref easily across component boundaries
@@ -301,7 +305,7 @@ export default function Home() {
               "border border-border bg-background"
             )}
           >
-            {/* 侧边栏面板 */}
+            {/* Side panel (settings) — replaced by ATS panel when open */}
             {!sidePanelCollapsed && (
               <>
                 <ResizablePanel
@@ -311,7 +315,11 @@ export default function Home() {
                   className="bg-background"
                 >
                   <div className="h-full overflow-y-auto">
-                    <SidePanel />
+                    {atsPanelOpen ? (
+                      <ATSAnalyzerPanel onClose={closeATS} />
+                    ) : (
+                      <SidePanel />
+                    )}
                   </div>
                 </ResizablePanel>
                 <DragHandle />

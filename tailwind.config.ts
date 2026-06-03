@@ -78,6 +78,18 @@ const config = {
           "3": "hsl(var(--chart-3))",
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))"
+        },
+        brand: {
+          primary: "hsl(var(--brand-primary))",
+          "primary-soft": "hsl(var(--brand-primary-soft))",
+          secondary: "hsl(var(--brand-secondary))",
+          accent: "hsl(var(--brand-accent))",
+          "accent-soft": "hsl(var(--brand-accent-soft))",
+          // Direct palette references for special cases
+          purple: "#1E104E",
+          "purple-soft": "#452E5A",
+          orange: "#FF653F",
+          "orange-soft": "#FFC85C"
         }
       },
       borderRadius: {

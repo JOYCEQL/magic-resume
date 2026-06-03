@@ -17,8 +17,6 @@ export const DEFAULT_FIELD_ORDER: BasicFieldType[] = [
   { id: "7", key: "location", label: "所在地", type: "text", visible: true }
 ];
 
-export const GITHUB_REPO_URL = "https://github.com/JOYCEQL/magic-resume";
-
 export const PDF_EXPORT_CONFIG = {
   SERVER_URL: "https://api.magicv.art/generate-pdf",
   TIMEOUT: 45000,

@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import LandingPage from "@/app/(public)/[locale]/page";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
-import zhMessages from "@/i18n/locales/zh.json";
+import trMessages from "@/i18n/locales/tr.json";
 import enMessages from "@/i18n/locales/en.json";
 
-const SEO_BASE_URL = "https://magicv.art";
+const SEO_BASE_URL = "https://halname.app";
 
 function resolveLocale(rawLocale: string): Locale {
   if (locales.includes(rawLocale as Locale)) {
@@ -14,12 +14,12 @@ function resolveLocale(rawLocale: string): Locale {
 }
 
 function getLocaleSeo(locale: Locale) {
-  const messages = locale === "en" ? enMessages : zhMessages;
+  const messages = locale === "en" ? enMessages : trMessages;
   const title = `${messages.common.title} - ${messages.common.subtitle}`;
   const description = messages.common.description;
-  const localeTag = locale === "en" ? "en_US" : "zh_CN";
+  const localeTag = locale === "en" ? "en_US" : "tr_TR";
   const canonical = `${SEO_BASE_URL}/${locale}`;
-  const alternateLocale = locale === "en" ? "zh" : "en";
+  const alternateLocale = locale === "en" ? "tr" : "en";
 
   return {
     title,
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/$locale")({
         { name: "description", content: seo.description },
         { name: "robots", content: "index,follow" },
         { property: "og:type", content: "website" },
-        { property: "og:site_name", content: "Magic Resume" },
+        { property: "og:site_name", content: "Halname" },
         { property: "og:title", content: seo.title },
         { property: "og:description", content: seo.description },
         { property: "og:locale", content: seo.localeTag },
@@ -60,7 +60,7 @@ export const Route = createFileRoute("/$locale")({
           hrefLang: seo.alternateLocale,
           href: `${SEO_BASE_URL}/${seo.alternateLocale}`
         },
-        { rel: "alternate", hrefLang: "x-default", href: `${SEO_BASE_URL}/zh` }
+        { rel: "alternate", hrefLang: "x-default", href: `${SEO_BASE_URL}/tr` }
       ]
     };
   },

@@ -10,6 +10,7 @@
     "start": "node server.mjs",
     "preview": "vite preview",
     "release": "bumpp",
+    "test": "vitest run",
     "generate:template-snapshots": "tsx scripts/generate-template-snapshots.ts",
     "install:playwright": "playwright install chromium"
   },
@@ -103,6 +104,7 @@
     "typescript": "^5",
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^3.2.4",
     "wrangler": "^4.19.1"
   }
 }

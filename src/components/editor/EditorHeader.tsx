@@ -59,7 +59,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
 
   return (
     <motion.header
-      className={`h-16 border-b sticky top-0 z-10`}
+      className="sticky top-0 z-10 h-16 shrink-0 border-b bg-background"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
     >
@@ -171,4 +171,3 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
     </motion.header>
   );
 }
-

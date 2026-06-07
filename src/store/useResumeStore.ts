@@ -146,6 +146,10 @@ const syncResumeToFile = async (
   resumeData: ResumeData,
   prevResume?: ResumeData
 ) => {
+  if (typeof window === "undefined" || typeof indexedDB === "undefined") {
+    return;
+  }
+
   try {
     const handle = await getFileHandle("syncDirectory");
     if (!handle) {
@@ -340,6 +344,9 @@ export const useResumeStore = create(
       duplicateResume: (resumeId) => {
         const newId = generateUUID();
         const originalResume = get().resumes[resumeId];
+        if (!originalResume) {
+          return "";
+        }
 
         // 获取当前语言环境
         const locale =
@@ -351,7 +358,7 @@ export const useResumeStore = create(
             : "zh";
 
         const duplicatedResume = {
-          ...originalResume,
+          ...structuredClone(originalResume),
           id: newId,
           title: `${originalResume.title} (${
             locale === "en" ? "Copy" : "复制"

@@ -23,6 +23,7 @@ interface LayoutItemProps {
   setActiveSection: (id: string) => void;
   toggleSectionVisibility: (id: string) => void;
   updateMenuSections: (sections: MenuSection[]) => void;
+  removeCustomData: (sectionId: string) => void;
   menuSections: MenuSection[];
 }
 
@@ -33,6 +34,7 @@ const LayoutItem = ({
   setActiveSection,
   toggleSectionVisibility,
   updateMenuSections,
+  removeCustomData,
   menuSections
 }: LayoutItemProps) => {
   const dragControls = useDragControls();
@@ -161,14 +163,22 @@ const LayoutItem = ({
                 <AlertDialogAction
                   onClick={(e) => {
                     e.stopPropagation();
-                    updateMenuSections(
-                      menuSections.filter((section) => section.id !== item.id)
+                    const updatedSections = menuSections.filter(
+                      (section) => section.id !== item.id
                     );
-                    setActiveSection(
-                      menuSections[
-                        menuSections.findIndex((s) => s.id === item.id) - 1
-                      ].id
+                    const currentIndex = menuSections.findIndex(
+                      (section) => section.id === item.id
                     );
+                    const fallbackSection =
+                      menuSections[currentIndex - 1] ?? updatedSections[0];
+
+                    updateMenuSections(updatedSections);
+                    if (item.id.startsWith("custom")) {
+                      removeCustomData(item.id);
+                    }
+                    if (fallbackSection) {
+                      setActiveSection(fallbackSection.id);
+                    }
                   }}
                   className="bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white shadow-sm border-0"
                 >

@@ -8,6 +8,7 @@ interface LayoutPanelProps {
   setActiveSection: (id: string) => void;
   toggleSectionVisibility: (id: string) => void;
   updateMenuSections: (sections: MenuSection[]) => void;
+  removeCustomData: (sectionId: string) => void;
   reorderSections: (sections: MenuSection[]) => void;
 }
 
@@ -17,6 +18,7 @@ const LayoutSetting = ({
   setActiveSection,
   toggleSectionVisibility,
   updateMenuSections,
+  removeCustomData,
   reorderSections,
 }: LayoutPanelProps) => {
   const basicSection = menuSections.find((item) => item.id === "basic");
@@ -32,6 +34,7 @@ const LayoutSetting = ({
           setActiveSection={setActiveSection}
           toggleSectionVisibility={toggleSectionVisibility}
           updateMenuSections={updateMenuSections}
+          removeCustomData={removeCustomData}
           menuSections={menuSections}
         />
       )}
@@ -56,6 +59,7 @@ const LayoutSetting = ({
             setActiveSection={setActiveSection}
             toggleSectionVisibility={toggleSectionVisibility}
             updateMenuSections={updateMenuSections}
+            removeCustomData={removeCustomData}
             menuSections={menuSections}
           />
         ))}

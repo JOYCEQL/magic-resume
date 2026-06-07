@@ -70,7 +70,11 @@ function SettingCard({
   );
 }
 
-export function SidePanel() {
+export function SidePanel({
+  onSectionCreated,
+}: {
+  onSectionCreated?: () => void;
+} = {}) {
   const {
     activeResume,
     setActiveSection,
@@ -156,6 +160,8 @@ export function SidePanel() {
 
     updateMenuSections([...menuSections, newSection]);
     addCustomData(sectionId);
+    setActiveSection(sectionId);
+    onSectionCreated?.();
   };
   return (
     <motion.div
@@ -205,6 +211,8 @@ export function SidePanel() {
                           order: menuSections.length,
                         };
                         updateMenuSections([...menuSections, newSection]);
+                        setActiveSection(section.id);
+                        onSectionCreated?.();
                       }}
                       className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left"
                     >

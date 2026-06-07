@@ -111,7 +111,7 @@ export function MobileWorkbench() {
               transition={{ duration: 0.2 }}
               className="h-full overflow-hidden"
             >
-              <SidePanel />
+              <SidePanel onSectionCreated={() => setActiveTab("content")} />
             </motion.div>
           )}
 

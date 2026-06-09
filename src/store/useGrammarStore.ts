@@ -4,13 +4,13 @@ import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { cn } from "@/lib/utils";
+import { defaultLocale, type Locale } from "@/i18n/config";
 
 export interface GrammarError {
   context: string;
   text: string;
   suggestion: string;
-  reason: string;
-  type: "spelling" | "grammar";
+  type: "spelling" | "punctuation";
 }
 
 interface GrammarStore {
@@ -22,11 +22,34 @@ interface GrammarStore {
   setIsChecking: (isChecking: boolean) => void;
   setSelectedErrorIndex: (index: number | null) => void;
   incrementHighlightKey: () => void;
-  checkGrammar: (text: string) => Promise<void>;
+  checkGrammar: (text: string, locale?: Locale) => Promise<void>;
   clearErrors: () => void;
   selectError: (index: number) => void;
   dismissError: (index: number) => void;
 }
+
+const normalizeGrammarError = (error: {
+  context?: string;
+  text?: string;
+  suggestion?: string;
+  type?: string;
+  reason?: string;
+}): GrammarError | null => {
+  if (!error.text?.trim() || !error.context?.trim()) {
+    return null;
+  }
+
+  const rawType = error.type?.toLowerCase() ?? "";
+  const type: GrammarError["type"] =
+    rawType === "punctuation" || rawType === "grammar" ? "punctuation" : "spelling";
+
+  return {
+    context: error.context,
+    text: error.text,
+    suggestion: error.suggestion ?? "",
+    type,
+  };
+};
 
 const markSingleError = (
   marker: Mark,
@@ -89,7 +112,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
   incrementHighlightKey: () =>
     set((state) => ({ highlightKey: state.highlightKey + 1 })),
 
-  checkGrammar: async (text: string) => {
+  checkGrammar: async (text: string, locale: Locale = defaultLocale) => {
     const {
       selectedModel,
       doubaoApiKey,
@@ -135,6 +158,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
           model: config.requiresModelId ? modelId : config.defaultModel,
           modelType: selectedModel,
           apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
+          locale,
         }),
       });
 
@@ -158,19 +182,22 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
       try {
         const grammarErrors = JSON.parse(aiResponse);
-        if (grammarErrors.errors.length === 0) {
+        const normalizedErrors = (grammarErrors.errors ?? [])
+          .map(normalizeGrammarError)
+          .filter(Boolean) as GrammarError[];
+
+        if (normalizedErrors.length === 0) {
           set({ errors: [] });
           toast.success("无语法错误");
           return;
         }
-        set({ errors: grammarErrors.errors });
+        set({ errors: normalizedErrors });
 
         const preview = document.getElementById("resume-preview");
         if (preview) {
           const marker = new Mark(preview);
           marker.unmark();
-          grammarErrors.errors.forEach((error: GrammarError) => {
-            // 仅标注错误片段，避免整句/全局模糊匹配造成误高亮
+          normalizedErrors.forEach((error: GrammarError) => {
             markSingleError(marker, error);
           });
         }

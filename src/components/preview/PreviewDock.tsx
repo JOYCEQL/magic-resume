@@ -16,7 +16,7 @@ import {
 import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { useTranslations } from "@/i18n/compat/client";
+import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { Button } from "@/components/ui/button";
@@ -91,6 +91,7 @@ const PreviewDock = ({
 }: PreviewDockProps) => {
   const router = useRouter();
   const t = useTranslations("previewDock");
+  const locale = useLocale();
   const { checkGrammar, isChecking } = useGrammarCheck();
 
   const {
@@ -130,11 +131,11 @@ const PreviewDock = ({
         return;
       }
 
-      await checkGrammar(text);
+      await checkGrammar(text, locale);
     } catch (error) {
       toast.error(t("grammarCheck.errorToast"));
     }
-  }, [resumeContentRef, checkConfiguration, checkGrammar, t]);
+  }, [resumeContentRef, checkConfiguration, checkGrammar, locale, t]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");

@@ -3,18 +3,17 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  useLocation
 } from "@tanstack/react-router";
 import appCss from "../app/globals.css?url";
 import appFontCss from "../app/font.css?url";
 import tiptapCss from "../styles/tiptap.scss?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
-import { useEffect } from "react";
-import zhMessages from "@/i18n/locales/zh.json";
-import enMessages from "@/i18n/locales/en.json";
+import { getMessagesForLocale } from "@/i18n/messages";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
-import { getPreferredLocale } from "@/i18n/runtime";
+import { heroUiLocales } from "@/i18n/config";
+import { LocaleProvider, useAppLocale } from "@/i18n/locale-context";
+import { useTranslations } from "@/i18n/compat/client";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -22,42 +21,35 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       {
         name: "viewport",
-        content: "width=device-width, initial-scale=1"
+        content: "width=device-width, initial-scale=1",
       },
-      { title: "Magic Resume" }
+      { title: "Magic Resume" },
     ],
     links: [
       {
         rel: "stylesheet",
-        href: appCss
+        href: appCss,
       },
       {
         rel: "stylesheet",
-        href: appFontCss
+        href: appFontCss,
       },
       {
         rel: "stylesheet",
-        href: tiptapCss
-      }
-    ]
+        href: tiptapCss,
+      },
+    ],
   }),
   component: RootComponent,
-  notFoundComponent: RootNotFound
+  notFoundComponent: RootNotFound,
 });
 
-function RootComponent() {
-  const pathname = useLocation({
-    select: (location) => location.pathname
-  });
-  const locale = getPreferredLocale(pathname);
-  const messages = locale === "en" ? enMessages : zhMessages;
-
-  useEffect(() => {
-    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000`;
-  }, [locale]);
+function AppShell({ children }: { children: React.ReactNode }) {
+  const locale = useAppLocale();
+  const messages = getMessagesForLocale(locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={heroUiLocales[locale]} suppressHydrationWarning>
       <head>
         <HeadContent />
         <link rel="icon" href="/favicon.ico?v=2" />
@@ -70,7 +62,7 @@ function RootComponent() {
           timeZone="Asia/Shanghai"
         >
           <Providers>
-            <Outlet />
+            {children}
             <Toaster position="top-center" richColors />
           </Providers>
         </NextIntlClientProvider>
@@ -80,10 +72,32 @@ function RootComponent() {
   );
 }
 
-function RootNotFound() {
+function RootComponent() {
+  return (
+    <LocaleProvider>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+    </LocaleProvider>
+  );
+}
+
+function NotFoundContent() {
+  const t = useTranslations("common");
+
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <p className="text-muted-foreground">页面不存在</p>
+      <p className="text-muted-foreground">{t("notFound")}</p>
     </main>
+  );
+}
+
+function RootNotFound() {
+  return (
+    <LocaleProvider>
+      <AppShell>
+        <NotFoundContent />
+      </AppShell>
+    </LocaleProvider>
   );
 }

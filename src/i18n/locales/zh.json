@@ -13,7 +13,8 @@
     "deleteSuccess": "删除成功",
     "deleteModuleConfirm": "确定要删除此模块吗？此操作无法撤销。",
     "configured": "已配置",
-    "notConfigured": "未配置"
+    "notConfigured": "未配置",
+    "notFound": "页面不存在"
   },
   "home": {
     "header": {
@@ -355,6 +356,10 @@
         "flexibleHeaderLayout": {
           "title": "长标题模式"
         }
+      },
+      "accessibility": {
+        "increase": "增加",
+        "decrease": "减少"
       }
     },
     "basicPanel": {
@@ -388,6 +393,16 @@
       "fieldVisibility": {
         "show": "显示",
         "hide": "隐藏"
+      },
+      "placeholders": {
+        "field": "请输入{label}",
+        "githubToken": "请输入 GitHub access token",
+        "githubUsername": "请输入 GitHub 用户名"
+      },
+      "align": {
+        "left": "居左",
+        "center": "居中",
+        "right": "居右"
       }
     },
     "experiencePanel": {
@@ -456,7 +471,8 @@
         "date": "项目时间",
         "description": "项目描述",
         "link": "项目链接",
-        "linkLabel": "显示文字"
+        "linkLabel": "显示文字",
+        "technologies": "技术栈"
       },
       "placeholders": {
         "name": "请输入项目名称",
@@ -464,7 +480,8 @@
         "date": "项目时间范围",
         "description": "简要描述项目背景和目标",
         "link": "项目链接",
-        "linkLabel": "显示文字"
+        "linkLabel": "显示文字",
+        "technologies": "使用的技术和工具"
       },
       "hints": {
         "linkLabel": "显示文字留空时，将自动显示域名或完整链接。链接仅支持 http:// 或 https:// 链接。"
@@ -504,6 +521,7 @@
         "date": "就读时间",
         "description": "学校简介",
         "gpa": "GPA",
+        "location": "地址",
         "startDate": "开始时间",
         "endDate": "结束时间"
       },
@@ -513,7 +531,8 @@
         "major": "请输入专业名称",
         "date": "请输入就读时间范围",
         "description": "请输入学校简介",
-        "gpa": "请输入GPA"
+        "gpa": "请输入GPA",
+        "location": "请输入地址"
       },
       "buttons": {
         "edit": "编辑",
@@ -533,6 +552,38 @@
       "width": "宽度 (横向拼接占比)",
       "delete": "删除",
       "empty": "暂无图片，请上传或粘贴图片"
+    },
+    "skillsPanel": {
+      "placeholder": "描述你的技能、专长等..."
+    },
+    "selfEvaluationPanel": {
+      "placeholder": "描述你的自我评价..."
+    },
+    "customPanel": {
+      "add": "添加"
+    },
+    "customItem": {
+      "title": "标题",
+      "titlePlaceholder": "标题",
+      "subtitle": "副标题",
+      "subtitlePlaceholder": "副标题",
+      "dateRange": "时间范围",
+      "dateRangePlaceholder": "例如: 2023.01 - 2024.01",
+      "description": "详细描述",
+      "descriptionPlaceholder": "请输入详细描述...",
+      "unnamedModule": "未命名模块"
+    },
+    "fallbacks": {
+      "unnamedProject": "未命名项目",
+      "unnamedCompany": "家里蹲公司",
+      "emptySchool": "未填写学校",
+      "unnamedResume": "未命名简历"
+    },
+    "editorHeader": {
+      "placeholder": "简历名称"
+    },
+    "editPanel": {
+      "focusHint": "点击文字部分即可聚焦编辑"
     }
   },
   "field": {

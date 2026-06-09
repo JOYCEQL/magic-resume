@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
@@ -8,6 +9,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { CustomItem as CustomItemType } from "@/types/resume";
 
 const CustomPanel = memo(({ sectionId }: { sectionId: string }) => {
+  const t = useTranslations("workbench.customPanel");
   const { addCustomItem, updateCustomData, activeResume } = useResumeStore();
   const { customData } = activeResume || {};
   const items = customData?.[sectionId] || [];
@@ -36,7 +38,7 @@ const CustomPanel = memo(({ sectionId }: { sectionId: string }) => {
 
         <Button onClick={handleCreateItem} className={cn("w-full")}>
           <PlusCircle className="w-4 h-4 mr-2" />
-          添加
+          {t("add")}
         </Button>
       </Reorder.Group>
     </div>

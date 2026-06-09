@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet-no-overlay";
 import { cn } from "@/lib/utils";
+import { getTemplateKey } from "@/lib/templates";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -19,6 +20,7 @@ type TemplateItem = (typeof DEFAULT_TEMPLATES)[number];
 
 interface TemplatePreviewProps {
   template: TemplateItem;
+  templateName: string;
   isActive: boolean;
   snapshotSrc: string | null;
   onSelect: (templateId: string) => void;
@@ -26,6 +28,7 @@ interface TemplatePreviewProps {
 
 const TemplatePreview = ({
   template,
+  templateName,
   isActive,
   snapshotSrc,
   onSelect,
@@ -44,7 +47,7 @@ const TemplatePreview = ({
         {snapshotSrc ? (
           <img
             src={snapshotSrc}
-            alt={template.name}
+            alt={templateName}
             className="h-full w-full object-cover object-top"
             loading="eager"
             draggable={false}
@@ -53,7 +56,7 @@ const TemplatePreview = ({
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-500 dark:from-neutral-900 dark:to-neutral-950 dark:text-neutral-400">
             <ImageIcon className="h-8 w-8" />
             <span className="px-4 text-center text-sm font-medium">
-              {template.name}
+              {templateName}
             </span>
           </div>
         )}
@@ -72,6 +75,7 @@ const TemplatePreview = ({
 
 const TemplateSheet = () => {
   const t = useTranslations("templates");
+  const tTemplates = useTranslations("dashboard.templates");
   const locale = useLocale();
   const { activeResume, setTemplate } = useResumeStore();
   const { snapshotMap } = useTemplateSnapshots(locale);
@@ -98,6 +102,7 @@ const TemplateSheet = () => {
                 <TemplatePreview
                   key={template.id}
                   template={template}
+                  templateName={tTemplates(`${getTemplateKey(template.id)}.name`)}
                   isActive={template.id === currentTemplate.id}
                   snapshotSrc={snapshotMap[template.id]}
                   onSelect={setTemplate}

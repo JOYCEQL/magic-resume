@@ -26,6 +26,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
   onSave,
 }) => {
   const t = useTranslations("workbench.experienceItem");
+  const tFallbacks = useTranslations("workbench.fallbacks");
 
   const handleChange = (field: keyof Experience, value: string) => {
     onSave({
@@ -153,7 +154,7 @@ const ExperienceItem = ({ experience }: { experience: Experience }) => {
                 "text-foreground"
               )}
             >
-              {experience.company || "家里蹲公司"}
+              {experience.company || tFallbacks("unnamedCompany")}
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">

@@ -7,6 +7,7 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="zh" href="https://magicv.art/zh" />
     <xhtml:link rel="alternate" hreflang="en" href="https://magicv.art/en" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://magicv.art/ru" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://magicv.art/zh" />
   </url>
   <url>
@@ -15,6 +16,16 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://magicv.art/en" />
     <xhtml:link rel="alternate" hreflang="zh" href="https://magicv.art/zh" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://magicv.art/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://magicv.art/zh" />
+  </url>
+  <url>
+    <loc>https://magicv.art/ru</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://magicv.art/ru" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://magicv.art/zh" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://magicv.art/en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://magicv.art/zh" />
   </url>
 </urlset>

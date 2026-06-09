@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { useTranslations } from "@/i18n/compat/client";
+import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { Streamdown } from "streamdown";
 import "streamdown/styles.css";
 import { createMarkdownExit } from "markdown-exit";
@@ -49,6 +49,7 @@ export default function AIPolishDialog({
   onApply
 }: AIPolishDialogProps) {
   const t = useTranslations("aiPolishDialog");
+  const locale = useLocale();
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
   const [customInstructions, setCustomInstructions] = useState("");
@@ -152,7 +153,8 @@ export default function AIPolishDialog({
           apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
           model: config.requiresModelId ? modelId : config.defaultModel,
           modelType: selectedModel,
-          customInstructions: customInstructions.trim() || undefined
+          customInstructions: customInstructions.trim() || undefined,
+          locale,
         }),
         signal: abortControllerRef.current.signal
       });

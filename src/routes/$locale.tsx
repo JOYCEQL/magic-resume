@@ -1,8 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import LandingPage from "@/app/(public)/[locale]/page";
-import { defaultLocale, locales, type Locale } from "@/i18n/config";
-import zhMessages from "@/i18n/locales/zh.json";
-import enMessages from "@/i18n/locales/en.json";
+import { defaultLocale, localeTags, locales, type Locale } from "@/i18n/config";
+import { getMessagesForLocale } from "@/i18n/messages";
 
 const SEO_BASE_URL = "https://magicv.art";
 
@@ -14,19 +13,21 @@ function resolveLocale(rawLocale: string): Locale {
 }
 
 function getLocaleSeo(locale: Locale) {
-  const messages = locale === "en" ? enMessages : zhMessages;
+  const messages = getMessagesForLocale(locale) as {
+    common: { title: string; subtitle: string; description: string };
+  };
   const title = `${messages.common.title} - ${messages.common.subtitle}`;
   const description = messages.common.description;
-  const localeTag = locale === "en" ? "en_US" : "zh_CN";
+  const localeTag = localeTags[locale];
   const canonical = `${SEO_BASE_URL}/${locale}`;
-  const alternateLocale = locale === "en" ? "zh" : "en";
+  const alternateLocales = locales.filter((loc) => loc !== locale);
 
   return {
     title,
     description,
     localeTag,
     canonical,
-    alternateLocale
+    alternateLocales
   };
 }
 
@@ -45,6 +46,10 @@ export const Route = createFileRoute("/$locale")({
         { property: "og:title", content: seo.title },
         { property: "og:description", content: seo.description },
         { property: "og:locale", content: seo.localeTag },
+        ...seo.alternateLocales.map((loc) => ({
+          property: "og:locale:alternate",
+          content: localeTags[loc],
+        })),
         { property: "og:url", content: seo.canonical },
         { property: "og:image", content: `${SEO_BASE_URL}/web-shot.png` },
         { name: "twitter:card", content: "summary_large_image" },
@@ -54,12 +59,11 @@ export const Route = createFileRoute("/$locale")({
       ],
       links: [
         { rel: "canonical", href: seo.canonical },
-        { rel: "alternate", hrefLang: locale, href: seo.canonical },
-        {
-          rel: "alternate",
-          hrefLang: seo.alternateLocale,
-          href: `${SEO_BASE_URL}/${seo.alternateLocale}`
-        },
+        ...locales.map((loc) => ({
+          rel: "alternate" as const,
+          hrefLang: loc,
+          href: `${SEO_BASE_URL}/${loc}`
+        })),
         { rel: "alternate", hrefLang: "x-default", href: `${SEO_BASE_URL}/zh` }
       ]
     };

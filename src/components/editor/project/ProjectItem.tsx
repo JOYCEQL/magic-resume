@@ -24,6 +24,7 @@ interface ProjectEditorProps {
 
 const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
   const t = useTranslations("workbench.projectItem");
+  const tFallbacks = useTranslations("workbench.fallbacks");
   const handleChange = (field: keyof Project, value: string) => {
     onSave({
       ...project,
@@ -195,7 +196,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
                 "text-gray-700 dark:text-neutral-200"
               )}
             >
-              {project.name || "未命名项目"}
+              {project.name || tFallbacks("unnamedProject")}
             </h3>
           </div>
           <div className="flex items-center gap-2 ml-4 shrink-0">

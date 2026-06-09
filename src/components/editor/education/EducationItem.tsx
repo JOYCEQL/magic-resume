@@ -26,6 +26,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
   onSave,
 }) => {
   const t = useTranslations("workbench.educationItem");
+  const tFallbacks = useTranslations("workbench.fallbacks");
   const handleChange = (field: keyof Education, value: string) => {
     onSave({
       ...education,
@@ -182,7 +183,7 @@ const EducationItem = ({ education }: { education: Education }) => {
                     "text-foreground"
                   )}
                 >
-                  {education.school || "未填写学校"}
+                  {education.school || tFallbacks("emptySchool")}
                 </h3>
                 {(education.major || education.degree) && (
                   <p

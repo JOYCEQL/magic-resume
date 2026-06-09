@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ResumeTemplateComponent from "@/components/templates";
-import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
+import { getInitialResumeStateForLocale } from "@/config/localeResumeData";
+import { getTemplateKey } from "@/lib/templates";
 import type { ResumeTemplate } from "@/types/template";
 import { normalizeFontFamily } from "@/utils/fonts";
 
@@ -28,12 +29,7 @@ const PRESET_COLORS = [
   { name: "black", value: "#000000" },
 ];
 
-const getTemplateKey = (templateId: string) =>
-  templateId === "left-right" ? "leftRight" : templateId;
-
-type TemplatePreviewBaseData =
-  | typeof initialResumeState
-  | typeof initialResumeStateEn;
+type TemplatePreviewBaseData = ReturnType<typeof getInitialResumeStateForLocale>;
 
 const buildTemplatePreviewData = (
   baseData: TemplatePreviewBaseData,
@@ -235,7 +231,7 @@ const TemplatesPage = () => {
     }
   };
 
-  const baseData = locale === "en" ? initialResumeStateEn : initialResumeState;
+  const baseData = getInitialResumeStateForLocale(locale);
   const activePreviewTemplate =
     DEFAULT_TEMPLATES.find((template) => template.id === previewTemplate) ??
     null;

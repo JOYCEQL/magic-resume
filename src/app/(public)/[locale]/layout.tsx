@@ -8,7 +8,7 @@ import {
   setRequestLocale
 } from "@/i18n/compat/server";
 import Document from "@/components/Document";
-import { locales } from "@/i18n/config";
+import { localeTags, locales, type Locale } from "@/i18n/config";
 import { Providers } from "@/app/providers";
 
 type Props = {
@@ -35,8 +35,8 @@ export async function generateMetadata({
     openGraph: {
       title: t("title"),
       description: t("description"),
-      locale: locale,
-      alternateLocale: locale === "en" ? ["zh"] : ["en"]
+      locale: localeTags[locale as Locale],
+      alternateLocale: locales.filter((loc) => loc !== locale).map((loc) => localeTags[loc])
     }
   };
 }

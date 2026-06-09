@@ -12,6 +12,7 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import { initialResumeState } from "@/config/initialResumeData";
 import ResumeTemplateComponent from "@/components/templates";
 import { useTemplateSnapshots } from "@/hooks/useTemplateSnapshots";
+import { getTemplateKey } from "@/lib/templates";
 import type { Translator } from "@/i18n/compat/utils";
 import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
@@ -36,14 +37,11 @@ type BlankTemplate = {
 type NormalTemplate = ResumeTemplate & { isBlank: false; nameKey: string };
 type TemplateOption = NormalTemplate | BlankTemplate;
 
-const toTemplateNameKey = (templateId: string) =>
-    templateId === "left-right" ? "leftRight" : templateId;
-
 const BLANK_TEMPLATE: BlankTemplate = { id: null, isBlank: true, nameKey: "blankTitle" };
 const NORMAL_TEMPLATES: NormalTemplate[] = DEFAULT_TEMPLATES.map((template) => ({
     ...template,
     isBlank: false,
-    nameKey: toTemplateNameKey(template.id),
+    nameKey: getTemplateKey(template.id),
 }));
 
 const BlankTemplateThumbnail = ({ t }: { t: Translator }) => (

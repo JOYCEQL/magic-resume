@@ -6,6 +6,7 @@ import { useRouter } from "@/lib/navigation";
 import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
+import LanguageSwitch from "../shared/LanguageSwitch";
 import { useResumeStore } from "@/store/useResumeStore";
 import { getThemeConfig } from "@/theme/themeConfig";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
@@ -36,6 +37,8 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
   const { errors, selectError } = useGrammarCheck();
   const router = useRouter();
   const t = useTranslations();
+  const tHeader = useTranslations("workbench.editorHeader");
+  const tFallbacks = useTranslations("workbench.fallbacks");
   const visibleSections = menuSections
     ?.filter((section) => section.enabled)
     .sort((a, b) => a.order - b.order);
@@ -83,10 +86,10 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
               key={activeResume?.id || "resume-title"}
               defaultValue={activeResume?.title || ""}
               onBlur={(e) => {
-                updateResumeTitle(e.target.value || "未命名简历");
+                updateResumeTitle(e.target.value || tFallbacks("unnamedResume"));
               }}
               className="w-56 text-sm h-8 bg-muted/30 border-transparent hover:bg-muted/60 focus:bg-background transition-colors px-2.5 py-1 pr-8 shadow-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:border-border rounded-md font-medium text-foreground/90 hover:text-foreground"
-              placeholder="简历名称"
+              placeholder={tHeader("placeholder")}
             />
             <Edit2 className="w-3.5 h-3.5 absolute right-2.5 text-muted-foreground/40 pointer-events-none transition-colors group-hover:text-muted-foreground/80" />
           </div>
@@ -162,6 +165,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
              </div>
           )}
 
+          <LanguageSwitch />
           <ThemeToggle></ThemeToggle>
           <div className="md:flex items-center ">
             <PdfExport />

@@ -1,14 +1,8 @@
 import { defaultLocale, Locale } from "@/i18n/config";
-import zhMessages from "@/i18n/locales/zh.json";
-import enMessages from "@/i18n/locales/en.json";
+import { getMessagesForLocale } from "@/i18n/messages";
 import { createTranslator } from "./utils";
 
 type Messages = Record<string, unknown>;
-
-const MESSAGES: Record<Locale, Messages> = {
-  zh: zhMessages as Messages,
-  en: enMessages as Messages
-};
 
 let requestLocale: Locale = defaultLocale;
 
@@ -21,7 +15,7 @@ export async function getLocale() {
 }
 
 export async function getMessages({ locale }: { locale?: Locale } = {}) {
-  return MESSAGES[locale ?? requestLocale] ?? MESSAGES[defaultLocale];
+  return getMessagesForLocale(locale ?? requestLocale);
 }
 
 export async function getTranslations({

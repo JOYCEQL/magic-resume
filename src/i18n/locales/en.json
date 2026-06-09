@@ -13,7 +13,8 @@
     "deleteSuccess": "Deleted successfully",
     "deleteModuleConfirm": "Are you sure you want to delete this module? This action cannot be undone.",
     "configured": "Configured",
-    "notConfigured": "Not configured"
+    "notConfigured": "Not configured",
+    "notFound": "Page not found"
   },
   "home": {
     "header": {
@@ -58,6 +59,7 @@
       "preview": {
         "badge": "Real-time Preview",
         "title": "What You See Is What You Get",
+        "description": "Edit and preview in real time with professional templates. Export to PDF anytime and apply with confidence.",
         "item1": "Real-time preview of editing effects",
         "item2": "Multiple export format support"
       }
@@ -401,6 +403,10 @@
         "flexibleHeaderLayout": {
           "title": "Long Title"
         }
+      },
+      "accessibility": {
+        "increase": "Increase",
+        "decrease": "Decrease"
       }
     },
     "basicPanel": {
@@ -409,6 +415,9 @@
       "basicField": "Basic",
       "customField": "Custom",
       "layout": "Align",
+      "layoutLeft": "Align left",
+      "layoutCenter": "Align center",
+      "layoutRight": "Align right",
       "customFields": {
         "placeholders": {
           "label": "Label",
@@ -431,7 +440,17 @@
         "show": "Show",
         "hide": "Hide"
       },
-      "githubContributions": "GitHub Contributions"
+      "githubContributions": "GitHub Contributions",
+      "placeholders": {
+        "field": "Enter {label}",
+        "githubToken": "Enter GitHub access token",
+        "githubUsername": "Enter GitHub username"
+      },
+      "align": {
+        "left": "Align left",
+        "center": "Center",
+        "right": "Align right"
+      }
     },
     "experiencePanel": {
       "title": "Work Experience",
@@ -480,12 +499,14 @@
         "name": "Personal Project",
         "description": "Project Description",
         "role": "Responsibilities",
+        "technologies": "Tech Stack",
         "date": "2023.01 - 2023.06"
       },
       "placeholders": {
         "name": "Project Name",
         "description": "Briefly describe project background and goals",
         "role": "Your role and responsibilities in the project",
+        "technologies": "Technologies and tools used",
         "date": "Project time range",
         "link": "Project link "
       }
@@ -578,6 +599,38 @@
       "width": "Width (%)",
       "delete": "Delete",
       "empty": "No images yet. Please upload or paste images."
+    },
+    "skillsPanel": {
+      "placeholder": "Describe your skills, expertise, etc..."
+    },
+    "selfEvaluationPanel": {
+      "placeholder": "Describe your self-evaluation..."
+    },
+    "customPanel": {
+      "add": "Add"
+    },
+    "customItem": {
+      "title": "Title",
+      "titlePlaceholder": "Title",
+      "subtitle": "Subtitle",
+      "subtitlePlaceholder": "Subtitle",
+      "dateRange": "Date Range",
+      "dateRangePlaceholder": "e.g. 2023.01 - 2024.01",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter detailed description...",
+      "unnamedModule": "Unnamed Module"
+    },
+    "fallbacks": {
+      "unnamedProject": "Unnamed Project",
+      "unnamedCompany": "Company Name",
+      "emptySchool": "School not filled",
+      "unnamedResume": "Untitled Resume"
+    },
+    "editorHeader": {
+      "placeholder": "Resume name"
+    },
+    "editPanel": {
+      "focusHint": "Click the text to start editing"
     }
   },
   "field": {

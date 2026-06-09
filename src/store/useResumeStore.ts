@@ -14,11 +14,12 @@ import {
 } from "../types/resume";
 import { DEFAULT_TEMPLATES } from "@/config";
 import {
-  initialResumeState,
-  initialResumeStateEn,
-  blankResumeState,
-  blankResumeStateEn,
-} from "@/config/initialResumeData";
+  getBlankResumeStateForLocale,
+  getCookieLocale,
+  getInitialResumeStateForLocale,
+  getLocalizedCommonLabel,
+} from "@/config/localeResumeData";
+import type { Locale } from "@/i18n/config";
 import { generateUUID } from "@/utils/uuid";
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
@@ -208,22 +209,11 @@ export const useResumeStore = create(
       activeResume: null,
 
       createResume: (templateId = null, isBlank = false) => {
-        const locale =
-          typeof document !== "undefined"
-            ? document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("NEXT_LOCALE="))
-                ?.split("=")[1] || "zh"
-            : "zh";
+        const locale = getCookieLocale();
 
-        let initialResumeData: any;
-        if (isBlank) {
-          initialResumeData =
-            locale === "en" ? blankResumeStateEn : blankResumeState;
-        } else {
-          initialResumeData =
-            locale === "en" ? initialResumeStateEn : initialResumeState;
-        }
+        const initialResumeData = isBlank
+          ? getBlankResumeStateForLocale(locale)
+          : getInitialResumeStateForLocale(locale);
 
         const id = generateUUID();
         const template = templateId
@@ -236,7 +226,7 @@ export const useResumeStore = create(
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           templateId: template?.id,
-          title: `${locale === "en" ? "New Resume" : "新建简历"} ${id.slice(
+          title: `${getLocalizedCommonLabel(locale, "newResume")} ${id.slice(
             0,
             6
           )}`,
@@ -348,21 +338,15 @@ export const useResumeStore = create(
           return "";
         }
 
-        // 获取当前语言环境
-        const locale =
-          typeof document !== "undefined"
-            ? document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("NEXT_LOCALE="))
-                ?.split("=")[1] || "zh"
-            : "zh";
+        const locale = getCookieLocale();
 
         const duplicatedResume = {
           ...structuredClone(originalResume),
           id: newId,
-          title: `${originalResume.title} (${
-            locale === "en" ? "Copy" : "复制"
-          })`,
+          title: `${originalResume.title} (${getLocalizedCommonLabel(
+            locale as Locale,
+            "copy"
+          )})`,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

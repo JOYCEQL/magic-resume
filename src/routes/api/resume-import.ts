@@ -1,5 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { Locale } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/config";
 import { formatGeminiErrorMessage, getGeminiModelInstance } from "@/lib/server/gemini";
+import {
+  buildResumeImportPrompt,
+  buildResumeImportUserPrompt,
+  resolveApiLocale,
+} from "@/lib/server/ai-prompts";
 
 const parseJsonPayload = (content: string) => {
   const text = content.trim();
@@ -60,7 +67,7 @@ export const Route = createFileRoute("/api/resume-import")({
             );
           }
 
-          const language = locale === "en" ? "English" : "Chinese";
+          const resolvedLocale = resolveApiLocale(locale);
           const geminiModel = model || "gemini-flash-latest";
           const imageParts = Array.isArray(images)
             ? images.map((image) => {
@@ -76,68 +83,20 @@ export const Route = createFileRoute("/api/resume-import")({
           const modelInstance = getGeminiModelInstance({
             apiKey,
             model: geminiModel,
-            systemInstruction: `你是一个专业的简历结构化助手。根据用户提供的简历内容，提取信息并只输出一个合法 JSON 对象。
-
-输出约束：
-1. 只允许输出 JSON，不要输出 Markdown，不要输出解释。
-2. 如果某个字段不确定，使用空字符串或空数组。
-3. 请使用 ${language} 输出内容文本。
-4. description/details 字段输出字符串数组，每一项为一句可读内容。
-
-JSON 结构：
-{
-  "title": "简历标题",
-  "basic": {
-    "name": "",
-    "title": "",
-    "email": "",
-    "phone": "",
-    "location": "",
-    "employementStatus": "",
-    "birthDate": ""
-  },
-  "education": [
-    {
-      "school": "",
-      "major": "",
-      "degree": "",
-      "startDate": "",
-      "endDate": "",
-      "gpa": "",
-      "description": ["", ""]
-    }
-  ],
-  "experience": [
-    {
-      "company": "",
-      "position": "",
-      "date": "",
-      "details": ["", ""]
-    }
-  ],
-  "projects": [
-    {
-      "name": "",
-      "role": "",
-      "date": "",
-      "description": ["", ""],
-      "link": "",
-      "linkLabel": ""
-    }
-  ],
-  "skills": ["", ""]
-}`,
+            systemInstruction: buildResumeImportPrompt(resolvedLocale),
             generationConfig: {
               temperature: 0.2,
               responseMimeType: "application/json",
             },
           });
 
+          const userPrompt =
+            content ||
+            buildResumeImportUserPrompt(resolvedLocale, Boolean(content));
+
           const inputParts = [
             {
-              text:
-                content ||
-                "请识别以下简历页面图片中的信息，并严格按 JSON 结构输出。",
+              text: userPrompt,
             },
             ...imageParts,
           ];

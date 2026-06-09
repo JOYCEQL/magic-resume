@@ -174,12 +174,6 @@ export function GrammarCheckDrawer() {
                         >
                             {error.type === "spelling" ? t("spelling") : t("punctuation")}
                         </Badge>
-                        {/* 只有当 reason 与 Badge 内容不同时才显示 */}
-                        {error.reason && error.reason !== "错别字" && error.reason !== "标点符号" && (
-                            <span className="text-[10px] text-muted-foreground/70 italic max-w-[180px] truncate">
-                                {error.reason}
-                            </span>
-                        )}
                     </div>
 
                     <div className="p-5 space-y-5">

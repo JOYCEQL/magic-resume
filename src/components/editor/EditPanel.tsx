@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "@/i18n/compat/client";
 import { Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -19,6 +20,7 @@ import {
 } from "../ui/tooltip";
 
 export function EditPanel() {
+  const t = useTranslations("workbench.editPanel");
   const { activeResume, updateMenuSections } = useResumeStore();
   if (!activeResume) return;
   const { activeSection = "", menuSections = [] } = activeResume || {};
@@ -104,7 +106,7 @@ export function EditPanel() {
                       <Pencil size={16} className="text-primary" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>点击文字部分即可聚焦编辑</p>
+                      <p>{t("focusHint")}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

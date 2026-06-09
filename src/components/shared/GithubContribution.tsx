@@ -1,5 +1,7 @@
 
 import React, { useEffect, useState } from "react";
+import { useLocale } from "@/i18n/compat/client";
+import { heroUiLocales } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
 interface ContributionDay {
@@ -30,9 +32,9 @@ const getColorLevel = (count: number): string => {
   return colorLevels[4];
 };
 
-const formatDate = (dateString: string): string => {
+const formatDate = (dateString: string, locale: string): string => {
   const date = new Date(dateString);
-  return date.toLocaleDateString("zh-CN", {
+  return date.toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -125,6 +127,8 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
   className,
   year = new Date().getFullYear(),
 }) => {
+  const appLocale = useLocale();
+  const dateLocale = heroUiLocales[appLocale];
   const [weeks, setWeeks] = useState<ContributionDay[][]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -223,7 +227,7 @@ const GithubContributions: React.FC<GithubContributionsProps> = ({
                       transitionDuration: "150ms",
                     }}
                   >
-                    {formatDate(day.date)}: {day.count} contributions
+                    {formatDate(day.date, dateLocale)}: {day.count} contributions
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
                   </div>
                 )}

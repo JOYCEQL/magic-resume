@@ -1,5 +1,7 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { defaultLocale, heroUiLocales, type Locale } from "@/i18n/config";
+import { isSupportedLocale } from "@/i18n/runtime";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -35,7 +37,7 @@ function parseToDate(dateStr: string): Date | null {
   return null;
 }
 
-export function formatDateString(dateStr: string | undefined, locale: string = "zh"): string {
+export function formatDateString(dateStr: string | undefined, locale: string = defaultLocale): string {
   if (!dateStr) return "";
 
   if (dateStr.includes(DATE_RANGE_SEPARATOR)) {
@@ -50,7 +52,13 @@ export function formatDateString(dateStr: string | undefined, locale: string = "
       if (locale === "zh" || locale === "zh-CN") {
           return `${date.getUTCFullYear()}/${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
       }
-      const formatter = new Intl.DateTimeFormat(locale, { 
+      const intlLocale =
+        locale in heroUiLocales
+          ? heroUiLocales[locale as Locale]
+          : isSupportedLocale(locale)
+            ? heroUiLocales[locale]
+            : locale;
+      const formatter = new Intl.DateTimeFormat(intlLocale, { 
           year: 'numeric', 
           month: '2-digit',
           timeZone: 'UTC' 
@@ -64,7 +72,7 @@ export function formatDateString(dateStr: string | undefined, locale: string = "
 export function formatDateRange(
   startDate: string | undefined,
   endDate: string | undefined,
-  locale: string = "zh"
+  locale: string = defaultLocale
 ): string {
   const start = formatDateString(startDate, locale).trim();
   const end = formatDateString(endDate, locale).trim();

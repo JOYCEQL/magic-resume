@@ -5,6 +5,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { useLocale } from "@/i18n/compat/client";
 import { hasMeaningfulRichTextContent, normalizeRichTextContent } from "@/lib/richText";
 import { formatDateRange, cn } from "@/lib/utils";
+import SectionLogo from "../../shared/SectionLogo";
 
 interface EducationSectionProps {
     education?: Education[];
@@ -33,8 +34,9 @@ const EducationSection = ({ education, globalSettings, showTitle = true, variant
                 {visibleEducation?.map((edu) => (
                     <motion.div key={edu.id} layout="position" style={{ marginTop: isSidebar ? "12px" : `${globalSettings?.paragraphSpacing}px` }}>
                         <div className={cn("flex gap-4 items-center justify-between", isSidebar && "flex-col items-start gap-1")}>
-                            <div className={cn("font-bold truncate", !flexLayout && !isSidebar && "flex-1")}
+                            <div className={cn("font-bold truncate flex items-center gap-2", !flexLayout && !isSidebar && "flex-1")}
                                 style={{ fontSize: `${isSidebar ? (globalSettings?.baseFontSize || 14) + 2 : (globalSettings?.subheaderSize || 16)}px`, color: isSidebar ? "#fff" : "inherit" }}>
+                                <SectionLogo src={edu.logo} config={edu.logoConfig} size={isSidebar ? (globalSettings?.baseFontSize || 14) + 2 : (globalSettings?.subheaderSize || 16)} />
                                 {edu.school}
                             </div>
                             {centerSubtitle && !isSidebar && (

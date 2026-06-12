@@ -578,6 +578,35 @@
       "width": "Width (%)",
       "delete": "Delete",
       "empty": "No images yet. Please upload or paste images."
+    },
+    "logoUploader": {
+      "label": "Logo",
+      "drawerTitle": "Logo Settings",
+      "dragHint": "Drag and drop image here to upload",
+      "sizeLimit": "Image size should not exceed 2MB",
+      "uploadTitle": "Image URL",
+      "urlPlaceholder": "Enter image URL",
+      "invalidUrl": "Invalid or inaccessible image URL",
+      "typeLimit": "Only image files are supported",
+      "uploadError": "Image upload failed",
+      "close": "Close",
+      "config": {
+        "size": "Size",
+        "widthPlaceholder": "Width",
+        "heightPlaceholder": "Height",
+        "aspectRatio": "Aspect Ratio",
+        "ratios": {
+          "custom": "Custom"
+        },
+        "borderRadius": "Border Radius",
+        "borderRadiusOptions": {
+          "none": "None",
+          "medium": "Medium",
+          "full": "Full",
+          "custom": "Custom",
+          "customPlaceholder": "Enter border radius"
+        }
+      }
     }
   },
   "field": {

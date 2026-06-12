@@ -13,6 +13,7 @@ import { useState, useCallback } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
+import LogoSelector from "@/components/shared/LogoSelector";
 
 interface EducationEditorProps {
   education: Education;
@@ -51,6 +52,24 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
           />
         </div>
 
+        <LogoSelector
+          logo={education.logo}
+          config={education.logoConfig}
+          onLogoChange={(logo, config) => {
+            onSave({
+              ...education,
+              logo: logo || "",
+              logoConfig: config,
+            });
+          }}
+          onConfigChange={(config) => {
+            onSave({
+              ...education,
+              logoConfig: config,
+            });
+          }}
+        />
+
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.degree")}
@@ -87,7 +106,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
         <Field
           label={t("labels.description")}
-          value={education.description}
+          value={education.description || ""}
           onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder={t("placeholders.description")}

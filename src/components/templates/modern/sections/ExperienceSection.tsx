@@ -6,6 +6,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString, cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import SectionLogo from "../../shared/SectionLogo";
 
 interface ExperienceSectionProps {
     experiences?: Experience[];
@@ -26,7 +27,8 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                 {visibleExperiences?.map((exp) => (
                     <motion.div key={exp.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                         <motion.div className="flex items-center justify-between gap-4">
-                            <div className={cn("font-bold truncate", flexLayout ? "" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                            <div className={cn("font-bold truncate flex items-center gap-2", flexLayout ? "" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                <SectionLogo src={exp.logo} config={exp.logoConfig} size={globalSettings?.subheaderSize || 16} />
                                 {exp.company}
                             </div>
                             {centerSubtitle && (

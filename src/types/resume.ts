@@ -16,6 +16,24 @@ export const DEFAULT_CONFIG: PhotoConfig = {
   visible: true,
 };
 
+export interface LogoConfig {
+  width: number;
+  height: number;
+  aspectRatio: "1:1" | "4:3" | "3:4" | "16:9" | "custom";
+  borderRadius: "none" | "medium" | "full" | "custom";
+  customBorderRadius: number;
+  visible?: boolean;
+}
+
+export const DEFAULT_LOGO_CONFIG: LogoConfig = {
+  width: 20,
+  height: 20,
+  aspectRatio: "1:1",
+  borderRadius: "none",
+  customBorderRadius: 0,
+  visible: true,
+};
+
 export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
   switch (ratio) {
     case "4:3":
@@ -29,7 +47,7 @@ export const getRatioMultiplier = (ratio: PhotoConfig["aspectRatio"]) => {
   }
 };
 
-export const getBorderRadiusValue = (config?: PhotoConfig) => {
+export const getBorderRadiusValue = (config?: PhotoConfig | LogoConfig) => {
   if (!config) return "0";
 
   switch (config.borderRadius) {
@@ -91,6 +109,8 @@ export interface Education {
   gpa?: string;
   description?: string;
   visible?: boolean;
+  logo?: string;
+  logoConfig?: LogoConfig;
 }
 
 export interface Experience {
@@ -100,6 +120,8 @@ export interface Experience {
   date: string;
   details: string;
   visible?: boolean;
+  logo?: string;
+  logoConfig?: LogoConfig;
 }
 
 export interface Skill {
@@ -211,13 +233,13 @@ export interface ResumeStore {
   addEducation: (education: Omit<ResumeData["education"][0], "id">) => void;
   updateEducation: (
     educationId: string,
-    data: Partial<ResumeData["education"][0]>
+    data: Partial<ResumeData["education"][0]>,
   ) => void;
   removeEducation: (educationId: string) => void;
   addExperience: (experience: Omit<ResumeData["experience"][0], "id">) => void;
   updateExperience: (
     experienceId: string,
-    data: Partial<ResumeData["experience"][0]>
+    data: Partial<ResumeData["experience"][0]>,
   ) => void;
   removeExperience: (experienceId: string) => void;
   updateSkillContent: (skillContent: string) => void;

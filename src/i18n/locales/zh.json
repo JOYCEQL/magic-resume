@@ -533,6 +533,35 @@
       "width": "宽度 (横向拼接占比)",
       "delete": "删除",
       "empty": "暂无图片，请上传或粘贴图片"
+    },
+    "logoUploader": {
+      "label": "Logo",
+      "drawerTitle": "Logo 设置",
+      "dragHint": "拖拽图片到此处上传",
+      "sizeLimit": "图片不超过 2MB",
+      "uploadTitle": "图片链接",
+      "urlPlaceholder": "输入图片 URL 地址",
+      "invalidUrl": "图片链接无效或无法访问",
+      "typeLimit": "仅支持图片文件",
+      "uploadError": "图片上传失败",
+      "close": "关闭",
+      "config": {
+        "size": "尺寸",
+        "widthPlaceholder": "宽度",
+        "heightPlaceholder": "高度",
+        "aspectRatio": "宽高比",
+        "ratios": {
+          "custom": "自定义"
+        },
+        "borderRadius": "圆角",
+        "borderRadiusOptions": {
+          "none": "无",
+          "medium": "中等",
+          "full": "圆形",
+          "custom": "自定义",
+          "customPlaceholder": "输入圆角值"
+        }
+      }
     }
   },
   "field": {

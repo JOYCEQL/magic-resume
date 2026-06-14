@@ -15,6 +15,7 @@ import enMessages from "@/i18n/locales/en.json";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getPreferredLocale } from "@/i18n/runtime";
+import { ReactGrab } from "@/components/dev/ReactGrab";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -70,6 +71,7 @@ function RootComponent() {
           timeZone="Asia/Shanghai"
         >
           <Providers>
+            <ReactGrab />
             <Outlet />
             <Toaster position="top-center" richColors />
           </Providers>

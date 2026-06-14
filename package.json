@@ -97,6 +97,7 @@
     "playwright": "^1.58.2",
     "postcss": "^8",
     "postcss-normalize": "^13.0.1",
+    "react-grab": "^0.1.37",
     "sass": "^1.77.4",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.21.0",

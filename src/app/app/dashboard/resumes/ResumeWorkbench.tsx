@@ -100,7 +100,7 @@ export const ResumeWorkbench = () => {
 
         setIsCreateModalOpen(false);
         setActiveResume(newId);
-        router.push(`/app/workbench/${newId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: newId } });
     };
 
     const duplicateResume = async (resume: any) => {
@@ -138,7 +138,7 @@ export const ResumeWorkbench = () => {
         setActiveResume(resumeId);
         setIsImportDialogOpen(false);
         toast.success(t("dashboard.resumes.importSuccess"));
-        router.push(`/app/workbench/${resumeId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
     const extractImagesFromPdf = async (file: File) => {
@@ -234,7 +234,7 @@ export const ResumeWorkbench = () => {
         setActiveResume(resumeId);
         setIsImportDialogOpen(false);
         toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
-        router.push(`/app/workbench/${resumeId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
     const handleJsonFileChange = async (

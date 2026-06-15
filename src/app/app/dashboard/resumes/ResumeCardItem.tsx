@@ -93,7 +93,7 @@ export const ResumeCardItem = ({
                     onClick={(e) => {
                         e.stopPropagation();
                         setActiveResume(id);
-                        router.push(`/app/workbench/${id}`);
+                        router.push({ to: "/app/workbench/$id", params: { id } });
                     }}
                 >
                     <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
@@ -139,7 +139,7 @@ export const ResumeCardItem = ({
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setActiveResume(id);
-                                router.push(`/app/workbench/${id}`);
+                                router.push({ to: "/app/workbench/$id", params: { id } });
                             }}
                             className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-primary font-medium text-sm group"
                         >

@@ -264,7 +264,7 @@ const TemplatesPage = () => {
       });
     }
 
-    router.push(`/app/workbench/${resumeId}`);
+    router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
   };
 
   return (

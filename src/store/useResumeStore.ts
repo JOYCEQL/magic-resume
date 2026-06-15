@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import type { StateStorage } from "zustand/middleware";
 import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import {
   BasicInfo,
@@ -74,6 +75,32 @@ interface ResumeStore {
 }
 
 type PersistedResumeStore = Pick<ResumeStore, "resumes" | "activeResumeId">;
+
+const warnedPersistFailures = new Set<string>();
+
+const warnPersistFailure = (name: string, error: unknown) => {
+  if (warnedPersistFailures.has(name)) {
+    return;
+  }
+
+  warnedPersistFailures.add(name);
+  console.warn(
+    `[resume-store] Failed to persist "${name}" to localStorage. Changes remain available in memory for this session.`,
+    error
+  );
+};
+
+const createSafeLocalStorage = (): StateStorage => ({
+  getItem: (name) => localStorage.getItem(name),
+  setItem: (name, value) => {
+    try {
+      localStorage.setItem(name, value);
+    } catch (error) {
+      warnPersistFailure(name, error);
+    }
+  },
+  removeItem: (name) => localStorage.removeItem(name),
+});
 
 const parseTimestamp = (value?: string): number | null => {
   if (!value) {
@@ -201,7 +228,7 @@ const debouncedSyncToFile = (
 };
 
 export const useResumeStore = create(
-  persist<ResumeStore>(
+  persist<ResumeStore, [], [], PersistedResumeStore>(
     (set, get) => ({
       resumes: {},
       activeResumeId: null,
@@ -380,8 +407,14 @@ export const useResumeStore = create(
       },
 
       setActiveResume: (resumeId) => {
-        const resume = get().resumes[resumeId];
-        set({ activeResume: resume ?? null, activeResumeId: resumeId });
+        const { resumes, activeResume, activeResumeId } = get();
+        const nextResume = resumes[resumeId] ?? null;
+
+        if (activeResumeId === resumeId && activeResume === nextResume) {
+          return;
+        }
+
+        set({ activeResume: nextResume, activeResumeId: resumeId });
       },
 
       updateBasicInfo: (data) => {
@@ -795,6 +828,9 @@ export const useResumeStore = create(
     }),
     {
       name: "resume-storage",
+      storage: createJSONStorage<PersistedResumeStore>(() =>
+        createSafeLocalStorage()
+      ),
       partialize: (state): PersistedResumeStore => ({
         resumes: state.resumes,
         activeResumeId: state.activeResumeId,

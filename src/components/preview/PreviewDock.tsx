@@ -147,7 +147,7 @@ const PreviewDock = ({
       const targetPath = `/app/workbench/${newId}`;
       setActiveResume(newId);
       toast.success(t("copyResume.success"));
-      router.push(targetPath);
+      router.push({ to: "/app/workbench/$id", params: { id: newId } });
 
       requestAnimationFrame(() => {
         if (window.location.pathname !== targetPath) {

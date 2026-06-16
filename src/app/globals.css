@@ -201,6 +201,20 @@
   }
 }
 
+@keyframes thread-travel {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--thread-travel, 40px));
+    opacity: 0;
+  }
+}
+
 @keyframes gradient-xy {
   0% {
     background-position: 0% 50%;

@@ -117,14 +117,10 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
                       </>
                     ) : (
                       <>
-                        <motion.div
-                          animate={{ scale: [1, 1.15, 1] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                          className="relative"
-                        >
+                        <div className="relative animate-pulse">
                           <ShieldAlert className="w-4 h-4" />
                           <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        </motion.div>
+                        </div>
                         <span>{t("previewDock.backup.notConfigured")}</span>
                       </>
                     )}

@@ -26,18 +26,17 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
       {...props}
       className={cn(
         "relative group flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary/40 rounded-full",
-        // Floating bounce animation to attract attention
-        "animate-[bounce_5s_ease-in-out_infinite]",
         props.className
       )}
     >
       {/* Ambient Glow - Uses theme primary color */}
-      <div className="absolute inset-0 rounded-full bg-primary/10 blur-xl group-hover:bg-primary/30 transition-all duration-700 animate-[pulse_4s_ease-in-out_infinite]" />
+      <div className="absolute inset-0 rounded-full bg-primary/10 blur-xl group-hover:bg-primary/30 transition-all duration-700" />
       
       {/* Glass Container */}
       <div className="absolute inset-0 rounded-full bg-background/40 dark:bg-zinc-900/40 backdrop-blur-md border border-primary/20 group-hover:border-primary/50 transition-colors duration-500 shadow-lg" />
 
       <svg
+        aria-hidden="true"
         viewBox="0 0 100 100"
         className="relative w-10 h-10 md:w-11 md:h-11 origin-center transition-transform duration-500 group-hover:scale-110 overflow-visible"
       >
@@ -56,7 +55,7 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
           fill="none"
           stroke="currentColor"
           strokeWidth="0.5"
-          className="text-primary/20 origin-center animate-[spin_20s_linear_infinite]"
+          className="text-primary/20 origin-center group-hover:animate-[spin_20s_linear_infinite]"
         />
         <circle
           cx="50"
@@ -66,14 +65,14 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
           stroke="currentColor"
           strokeWidth="1"
           strokeDasharray="2 10"
-          className="text-primary/40 origin-center animate-[spin_15s_linear_infinite_reverse]"
+          className="text-primary/40 origin-center group-hover:animate-[spin_15s_linear_infinite_reverse]"
         />
 
         {/* Orbiting dots */}
-        <g className="origin-center animate-[spin_8s_linear_infinite]">
+        <g className="origin-center group-hover:animate-[spin_8s_linear_infinite]">
           <circle cx="50" cy="5" r="2" className="fill-primary drop-shadow-[0_0_5px_var(--primary)]" />
         </g>
-        <g className="origin-center animate-[spin_12s_linear_infinite_reverse]">
+        <g className="origin-center group-hover:animate-[spin_12s_linear_infinite_reverse]">
           <circle cx="95" cy="50" r="1.5" className="fill-primary/60" />
         </g>
 
@@ -83,7 +82,7 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
           cy="50"
           r="28"
           fill="url(#magicGlow)"
-          className="animate-[pulse_3s_ease-in-out_infinite]"
+          className="group-hover:animate-[pulse_3s_ease-in-out_infinite]"
         />
         <circle
           cx="50"
@@ -109,15 +108,9 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
 
         {/* Subtle Sparkles */}
         <g className="text-primary">
-          <circle cx="20" cy="20" r="1" className="animate-pulse">
-            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="80" cy="30" r="0.8" className="animate-pulse">
-            <animate attributeName="opacity" values="0;1;0" dur="3s" begin="1s" repeatCount="indefinite" />
-          </circle>
-          <circle cx="30" cy="80" r="1.2" className="animate-pulse">
-            <animate attributeName="opacity" values="0;1;0" dur="2.5s" begin="0.5s" repeatCount="indefinite" />
-          </circle>
+          <circle cx="20" cy="20" r="1" className="opacity-60 group-hover:animate-pulse" />
+          <circle cx="80" cy="30" r="0.8" className="opacity-40 group-hover:animate-pulse" />
+          <circle cx="30" cy="80" r="1.2" className="opacity-50 group-hover:animate-pulse" />
         </g>
       </svg>
     </button>

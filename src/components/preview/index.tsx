@@ -134,6 +134,8 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
 
     const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
     const autoOnePageEnabled = activeResume?.globalSettings?.autoOnePage || false;
+    const pageBreakLinesVisible =
+      activeResume?.globalSettings?.pageBreakLinesVisible !== false;
 
     const { scaleFactor, isScaled, cannotFit } = useAutoOnePage({
       contentHeight,
@@ -271,7 +273,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               }
             `}</style>
               <ResumeTemplateComponent data={activeResume} template={template} />
-              {contentHeight > 0 && (
+              {pageBreakLinesVisible && contentHeight > 0 && (
                 <>
                   <div key={`page-breaks-container-${contentHeight}`}>
                     {Array.from(

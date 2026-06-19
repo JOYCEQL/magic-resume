@@ -263,6 +263,8 @@
       "title": "导出简历",
       "subtitle": "选择您希望导出简历的格式",
       "pdfDesc": "通过高精度渲染生成，100% 还原格式，简历投递首选。",
+      "longPagePdfDesc": "通过浏览器渲染生成一页简历，适合不需要分页的简历。",
+      "longPageImageDesc": "通过浏览器渲染生成单张 PNG 长图，适合移动端预览、作品集展示或要求图片上传的场景。",
       "printDesc": "调用系统打印工具另存为 PDF，当主渲染拥堵或需手动干预边距时的备用方案。",
       "jsonDesc": "保存您的配置档案副本。日后更换设备或清理缓存后，可使用此文件一键无损导入恢复进度。",
       "markdownDesc": "转换为极简的文本标记语言文件，方便快速粘贴给各种 AI 模型或是其他文本编辑器。",
@@ -271,6 +273,8 @@
     "button": {
       "export": "导出",
       "exportPdf": "PDF",
+      "exportLongPagePdf": "PDF(长页)",
+      "exportLongPageImage": "PNG(长图)",
       "exportJson": "JSON配置",
       "exportMarkdown": "Markdown",
       "exporting": "导出中...",
@@ -281,6 +285,8 @@
     "toast": {
       "success": "PDF导出成功",
       "error": "PDF导出失败",
+      "imageSuccess": "PNG长图导出成功",
+      "imageError": "PNG长图导出失败",
       "jsonSuccess": "配置导出成功",
       "jsonError": "配置导出失败",
       "markdownSuccess": "Markdown 导出成功",
@@ -740,6 +746,11 @@
       "disabled": "已关闭一页纸模式",
       "cannotFit": "内容较多，已尽量压缩但无法完美一页，建议精简内容, 也可在此基础上调节页边距、字体大小等左侧设置栏选项"
     },
+    "pageBreakLine": {
+      "tooltip": "分页线",
+      "visible": "已显示分页线",
+      "hidden": "已隐藏分页线"
+    },
     "backup": {
       "configured": "已备份",
       "notConfigured": "未备份",
@@ -809,8 +820,8 @@
         "answer": "推荐使用最新版的 Chrome (谷歌浏览器) 或 Edge 浏览器以获得最佳排版和导出体验。部分不兼容的旧版浏览器可能会导致样式错乱。"
       },
       "export-methods": {
-        "question": "两种导出方式有什么不同？",
-        "answer": "• PDF 导出：使用后端服务进行高精度渲染，100% 还原排版，推荐用于正式发送给 HR。\n\n• 浏览器打印：调用您当前浏览器的自带打印功能（另存为 PDF）。适合在后端导出服务繁忙或您需要通过浏览器微调打印边距时使用。"
+        "question": "有哪些导出方式？",
+        "answer": "• PDF 导出：使用后端服务进行高精度渲染，100% 还原排版，推荐用于正式投递和归档。\n\n• PNG 长图：使用浏览器渲染生成单张长图，适合移动端预览、作品集展示或要求图片上传的场景。\n\n• 浏览器打印：调用您当前浏览器的自带打印功能（另存为 PDF）。适合在后端导出服务繁忙或您需要通过浏览器微调打印边距时使用。\n\n• JSON 配置：导出简历数据副本，方便备份和迁移。\n\n• Markdown：导出为纯文本格式，方便粘贴到其他工具中。"
       },
       "export-failure": {
         "question": "导出失败或样式错乱怎么办？",

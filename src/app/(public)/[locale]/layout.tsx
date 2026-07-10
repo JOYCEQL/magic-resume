@@ -36,7 +36,7 @@ export async function generateMetadata({
       title: t("title"),
       description: t("description"),
       locale: locale,
-      alternateLocale: locale === "en" ? ["zh"] : ["en"]
+      alternateLocale: locales.filter((entry) => entry !== locale),
     }
   };
 }

@@ -12,13 +12,12 @@ import landingCss from "@/components/home/landing.css?url";
 import sonnerCss from "sonner/dist/styles.css?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect, useState } from "react";
-import zhMessages from "@/i18n/locales/zh.json";
-import enMessages from "@/i18n/locales/en.json";
+import { getMessagesForLocale } from "@/i18n/messages";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocaleFromPathname, getPreferredLocale } from "@/i18n/runtime";
 import { LOCALE_CHANGE_EVENT } from "@/hooks/useLocaleSwitch";
-import type { Locale } from "@/i18n/config";
+import { locales, type Locale } from "@/i18n/config";
 import { ReactGrab } from "@/components/dev/ReactGrab";
 
 export const Route = createRootRoute({
@@ -81,7 +80,7 @@ function RootComponent() {
   useEffect(() => {
     const handleLocaleChange = (e: Event) => {
       const customEvent = e as CustomEvent<Locale>;
-      if (customEvent.detail && (customEvent.detail === "zh" || customEvent.detail === "en")) {
+      if (customEvent.detail && locales.includes(customEvent.detail)) {
         setLocale(customEvent.detail);
       }
     };
@@ -91,7 +90,7 @@ function RootComponent() {
     };
   }, []);
 
-  const messages = locale === "en" ? enMessages : zhMessages;
+  const messages = getMessagesForLocale(locale);
 
   useEffect(() => {
     document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;

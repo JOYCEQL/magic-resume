@@ -1,0 +1,822 @@
+{
+  "common": {
+    "title": "Magic Resume",
+    "subtitle": "AI na Resume Editor",
+    "description": "Ang Magic Resume ay isang open source na resume editor, libre at privacy-first. Walang kailangang rehistro, lahat ng data ay naka-imbak nang lokal, may suporta sa backup at export, para laging available ang iyong resume data.",
+    "dashboard": "Dashboard",
+    "edit": "I-edit",
+    "delete": "Tanggalin",
+    "newResume": "Bagong Resume",
+    "copy": "Kopyahin",
+    "cancel": "Kanselahin",
+    "confirm": "Kumpirmahin",
+    "deleteSuccess": "Matagumpay na natanggal",
+    "deleteModuleConfirm": "Sigurado ka bang gusto mong tanggalin ang module na ito? Hindi na ito maaaring ibalik.",
+    "configured": "Naka-configure",
+    "notConfigured": "Hindi naka-configure"
+  },
+  "home": {
+    "header": {
+      "title": "Magic Resume",
+      "startButton": "Magsimula",
+      "features": "Mga Feature",
+      "pricing": "Presyo",
+      "about": "Tungkol",
+      "login": "Mag-login",
+      "register": "Magrehistro",
+      "dashboard": "Dashboard"
+    },
+    "hero": {
+      "badge": "Matalinong Paglikha ng Resume",
+      "title": "Gawing Simple at Matalino ang Paglikha ng Resume",
+      "subtitle": "Ginagamit ng Magic Resume ang AI technology para mabilis kang makagawa ng propesyonal na resume. Walang rehistro, libre, at ligtas ang iyong data.",
+      "cta": "Magsimula",
+      "secondary": "Tingnan ang mga Template"
+    },
+    "features": {
+      "title": "Bakit Piliin ang Magic Resume?",
+      "subtitle": "Nagbibigay kami ng all-in-one na solusyon sa resume para mas maging maayos ang iyong paghahanap ng trabaho",
+      "ai": {
+        "badge": "AI Smart Check",
+        "title": "Matalinong Deteksyon, Propesyonal na Payo",
+        "description": "May built-in na smart grammar check, awtomatikong nakikilala ang hindi angkop na pahayag, nagbibigay ng propesyonal na mungkahi sa pagbabago, para mas maging kapansin-pansin ang iyong resume.",
+        "item1": "Matalinong pagpapahusay",
+        "item1_description": "Awtomatikong ino-optimize ng AI ang pagpapahayag ng content, para mas maging propesyonal ang iyong resume",
+        "item2": "Grammar check",
+        "item2_description": "Awtomatikong nakikita at itinatama ang mga error sa grammar at spelling"
+      },
+      "storage": {
+        "badge": "Lokal na Imbakan",
+        "title": "Seguridad ng Data, Privacy Muna",
+        "description": "Lahat ng resume data ay ganap na naka-imbak nang lokal, hindi mo kailangang mag-alala sa privacy leak. May suporta sa data export backup, para laging available ang iyong resume data.",
+        "item1": "Lokal na file storage",
+        "item1_description": "Ligtas na naka-imbak ang resume data sa hard drive ng iyong computer",
+        "item2": "Maraming export format",
+        "item2_description": "May suporta sa PDF at JSON format export",
+        "item3": "May suporta sa data export backup"
+      },
+      "preview": {
+        "badge": "Real-time Preview",
+        "title": "Ano ang Nakikita Mo, Iyon ang Makukuha Mo",
+        "item1": "Real-time preview ng editing effects",
+        "item2": "Maraming export format na suportado"
+      }
+    },
+    "news": {
+      "label": "Balita",
+      "content": "Live na ang Bagong AI Resume Enhancement Feature"
+    },
+    "footer": {
+      "copyright": " 2025 Magic Resume. Lahat ng karapatan ay nakalaan."
+    },
+    "changelog": "Changelog",
+    "cta": {
+      "title": "Simulan ang Iyong Bagong Kabanata sa Karera",
+      "description": "Simulan nang gamitin ang Magic Resume para gumawa ng kapansin-pansing resume",
+      "button": "Simulang Gamitin nang Libre"
+    },
+    "faq": {
+      "title": "Mga Madalas Itanong",
+      "items": [
+        {
+          "question": "Libre bang gamitin ang Magic Resume?",
+          "answer": "Kasalukuyang libre ang Magic Resume, na tumutugon sa pangunahing pangangailangan sa paglikha ng resume. Hindi magbabago ang mga feature ng open-source na bersyon"
+        },
+        {
+          "question": "Ligtas ba ang aking resume data?",
+          "answer": "Oo, napakaligtas. Gumagamit ang Magic Resume ng lokal na imbakan, ibig sabihin lahat ng iyong data ay naka-imbak sa sarili mong device na walang cloud storage, na tinitiyak ang kumpletong proteksyon ng privacy."
+        },
+        {
+          "question": "Anong mga export format ang suportado?",
+          "answer": "Kasalukuyan naming sinusuportahan ang PDF export, na tinitiyak na pare-pareho ang format ng iyong resume sa anumang device. Plano naming suportahan ang mas maraming export format sa hinaharap."
+        },
+        {
+          "question": "Paano ako makakapag-sync sa iba't ibang device?",
+          "answer": "Nagbibigay kami ng JSON configuration export, na nagpapahintulot sa iyo na i-save ang iyong resume settings sa JSON format, na maa-access anumang oras, saanman, sa anumang device."
+        },
+        {
+          "question": "Gaano ito ka-customizable?",
+          "answer": "Nag-aalok kami ng maraming customization option, kabilang ang mga kulay, layout, at iba pa, na nagpapahintulot sa iyo na i-adjust ang istilo ng iyong resume ayon sa personal na kagustuhan at pangangailangan ng industriya."
+        }
+      ]
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "appName": "Magic Resume",
+      "resumes": "Mga Resume",
+      "settings": "Mga Setting",
+      "templates": "Mga Template",
+      "ai": "AI Config"
+    },
+    "resumes": {
+      "created": "Ginawa Noong",
+      "synced": "Mga Na-sync na File",
+      "view": "Tingnan",
+      "myResume": "Aking mga Resume",
+      "create": "Gumawa ng Resume",
+      "newResume": "Bagong Resume",
+      "newResumeDescription": "Gumawa ng bagong resume para magsimula.",
+      "import": "Mag-import ng Resume",
+      "untitled": "Walang Pamagat na Resume",
+      "importSuccess": "Matagumpay na na-import ang configuration",
+      "importError": "Nabigo ang import, pakisuri ang format ng file",
+      "importDialog": {
+        "title": "Mag-import ng Resume",
+        "jsonTitle": "Mag-import ng JSON",
+        "jsonDescription": "Mag-import ng na-export na resume config file (.json)",
+        "pdfTitle": "Mag-import ng PDF",
+        "pdfDescription": "Gamitin ang Gemini para gawing structured resume data",
+        "importing": "Nag-i-import, maghintay...",
+        "geminiConfigRequired": "Paki-configure muna ang Gemini API Key at Model ID sa AI settings",
+        "pdfSuccess": "Matagumpay na na-import ang PDF",
+        "pdfError": "Nabigo ang PDF import. Pakisuri ang PDF content o Gemini configuration"
+      },
+      "notice": {
+        "title": "Pansin",
+        "description": "Inirerekomenda na mag-configure ng resume backup folder sa settings para hindi mawala ang iyong data kapag na-clear ang browser cache",
+        "goToSettings": "Pumunta sa Settings"
+      },
+      "deleteConfirmTitle": "Kumpirmahin ang Pagtanggal ng Resume?",
+      "deleteConfirmDescription": "Hindi na ito maaaring ibalik. Permanenteng tatanggalin nito ang resume na ito at aalisin ang data mula sa iyong device.",
+      "createDialog": {
+        "title": "Gumawa ng Bagong Resume",
+        "description": "Magsimula ng bagong resume mula sa blank template",
+        "tabs": {
+          "fromTemplate": "Mula sa Template",
+          "uploadFile": "Mag-upload ng File"
+        },
+        "namePlaceholder": "Pangalan",
+        "switchTemplate": "Palitan ang Template",
+        "cancel": "Kanselahin",
+        "create": "Gumawa",
+        "blankTitle": "Blank Resume",
+        "startFromBlank": "Magsimula sa Blank",
+        "startFromTemplate": "Magsimula sa Template",
+        "blankCardDescription": "Gumamit ng default built-in layout at magsimula mula sa simula.",
+        "blankThumbnailDescription": "Magsimula sa malinis na pahina at hubugin ang code-driven resume na may kumpletong creative control.",
+        "createNow": "Gumawa Ngayon",
+        "backToGrid": "Bumalik sa template grid",
+        "blankPreviewDescription": "Pumili ng blank page at buuin ang lahat mula sa zero, walang preset constraints.",
+        "useThisTemplate": "Gamitin ang Template na Ito",
+        "sample": {
+          "company": "Google",
+          "position": "Senior Software Engineer",
+          "present": "Kasalukuyan",
+          "workDescription": "Nanguna sa frontend team at pinabuti ang page performance ng 40%."
+        }
+      }
+    },
+    "settings": {
+      "title": "Mga Setting",
+      "syncDirectory": {
+        "title": "Sync Directory",
+        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume.",
+        "currentSyncFolder": "Kasalukuyang Sync Folder",
+        "noFolderConfigured": "Walang naka-configure na folder",
+        "changeFolder": "Palitan ang Folder",
+        "selectFolder": "Pumili ng Folder"
+      },
+      "sync": {
+        "title": "Sync Directory",
+        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume.",
+        "select": "Pumili ng Folder"
+      },
+      "ai": {
+        "title": "AI Configuration",
+        "currentModel": "Kasalukuyang Model",
+        "selectModel": "Pumili ng Model",
+        "getApiKey": "Kumuha ng API Key",
+        "doubao": {
+          "title": "Doubao",
+          "description": "Kumuha ng API key mula sa Volcengine",
+          "apiKey": "Doubao API Key",
+          "modelId": "Model ID"
+        },
+        "deepseek": {
+          "title": "DeepSeek",
+          "description": "Kumuha ng API key mula sa DeepSeek Platform",
+          "apiKey": "DeepSeek API Key"
+        },
+        "openai": {
+          "title": "OpenAI",
+          "description": "Kunin ang API key sa OpenAI o open platform na compatible sa OpenAI format",
+          "apiKey": "OpenAI API Key",
+          "modelId": "Model ID",
+          "apiEndpoint": "API Endpoint, halimbawa: https://openai.example.org/v1"
+        },
+        "gemini": {
+          "title": "Gemini",
+          "description": "May suporta sa polish, grammar check, at PDF image resume import. Inirerekomendang model: gemini-flash-latest",
+          "apiKey": "Gemini API Key",
+          "modelId": "Gemini Model ID"
+        }
+      }
+    },
+    "templates": {
+      "title": "Mga Template",
+      "useTemplate": "Gamitin ang Template",
+      "preview": "Preview",
+      "switchTemplate": "Palitan ang Template",
+      "classic": {
+        "name": "Classic",
+        "description": "Tradisyonal at minimalist na layout, angkop sa karamihan ng job applications"
+      },
+      "modern": {
+        "name": "Dalawang Column",
+        "description": "Classic two-column layout, nagha-highlight ng personal na katangian"
+      },
+      "leftRight": {
+        "name": "Section Title Background",
+        "description": "Kapansin-pansing section titles na may background color"
+      },
+      "timeline": {
+        "name": "Timeline Layout",
+        "description": "Timeline style, binibigyang-diin ang chronological order ng mga karanasan"
+      },
+      "minimalist": {
+        "name": "Minimalist",
+        "description": "Maraming whitespace, malinis at purong layout style"
+      },
+      "elegant": {
+        "name": "Elegant",
+        "description": "Centered title single-column design, may kaunting elegansya"
+      },
+      "creative": {
+        "name": "Creative",
+        "description": "Visual contrast design, masigla at personalized"
+      },
+      "editorial": {
+        "name": "Editorial",
+        "description": "Marangyang pinagsamang bold serif at refined sans-serif typography"
+      },
+      "swiss": {
+        "name": "Swiss Aesthetic",
+        "description": "Artistic Bauhaus layout na may malakas na typographic hierarchy at geometric accents, nagpapakita ng modern minimalism"
+      }
+    }
+  },
+  "pdfExport": {
+    "modal": {
+      "title": "I-export ang Resume",
+      "subtitle": "Piliin ang format na gusto mong i-export ang iyong resume",
+      "pdfDesc": "Mataas na precision rendering na may 100% format accuracy. Inirerekomenda para sa job applications.",
+      "printDesc": "I-save sa pamamagitan ng system print dialog. Gamitin bilang fallback o para sa custom margins.",
+      "jsonDesc": "I-export ang iyong resume data bilang JSON para sa backup o paglipat sa ibang device.",
+      "markdownDesc": "I-convert sa plain Markdown text para madaling ibahagi sa AI models.",
+      "privacyNotice": "Ipinapangako ng Magic Resume na hindi kailanman kokolektahin, i-u-upload, o iiimbak ang anumang resume data mo. Ganap na protektado ang iyong privacy."
+    },
+    "button": {
+      "export": "I-export",
+      "exportPdf": "I-export ang PDF (Server)",
+      "exportJson": "I-export ang JSON Config",
+      "exportMarkdown": "I-export ang Markdown",
+      "exporting": "Nag-e-export...",
+      "exportingJson": "Nag-e-export...",
+      "exportingMarkdown": "Nag-e-export...",
+      "print": "Browser Print"
+    },
+    "toast": {
+      "success": "Matagumpay na na-export ang PDF",
+      "error": "Nabigo ang PDF export",
+      "jsonSuccess": "Matagumpay na na-export ang configuration",
+      "jsonError": "Nabigo ang configuration export",
+      "markdownSuccess": "Matagumpay na na-export ang Markdown",
+      "markdownError": "Nabigo ang Markdown export"
+    }
+  },
+  "previewDock": {
+    "switchTemplate": "Palitan ang Template",
+    "grammarCheck": {
+      "idle": "AI Grammar Check",
+      "checking": "Sinusuri...",
+      "configurePrompt": "Paki-configure ang AI Model",
+      "configureButton": "I-configure",
+      "errorToast": "Nabigo ang grammar check, subukan muli"
+    },
+    "sidePanel": {
+      "expand": "I-expand ang Side Panel",
+      "collapse": "I-collapse ang Side Panel"
+    },
+    "editPanel": {
+      "expand": "I-expand ang Edit Panel",
+      "collapse": "I-collapse ang Edit Panel"
+    },
+    "previewPanel": {
+      "expand": "I-expand ang Preview Panel",
+      "collapse": "I-collapse ang Preview Panel"
+    },
+    "github": "GitHub",
+    "backToDashboard": "Bumalik sa Dashboard",
+    "copyResume": {
+      "tooltip": "Kopyahin ang Resume",
+      "success": "Matagumpay na nakopya ang resume",
+      "error": "Nabigo ang pagkopya ng resume"
+    },
+    "export": {
+      "tooltip": "I-export ang Resume",
+      "pdf": "I-export ang PDF",
+      "json": "I-export ang JSON",
+      "markdown": "I-export ang Markdown",
+      "print": "I-print"
+    },
+    "autoOnePage": {
+      "tooltip": "Auto Fit One Page",
+      "enabled": "Naka-enable ang one page mode",
+      "disabled": "Naka-disable ang one page mode",
+      "cannotFit": "Masyadong maraming content. Na-optimize hangga't maaari ngunit hindi magkasya sa isang pahina. Subukang gawing simple ang content o i-adjust ang margins at font size sa sidebar."
+    },
+    "backup": {
+      "configured": "Na-back up",
+      "notConfigured": "Hindi pa na-back up",
+      "clickToConfigure": "I-click para i-configure"
+    }
+  },
+  "workbench": {
+    "sidePanel": {
+      "layout": {
+        "title": "Layout",
+        "addCustomSection": "Magdagdag ng Module",
+        "addCustomSectionOption": "Magdagdag ng Custom Section",
+        "standardSections": {
+          "skills": "Mga Kasanayan",
+          "experience": "Karanasan",
+          "projects": "Mga Proyekto",
+          "education": "Edukasyon",
+          "selfEvaluation": "Sariling Pagsusuri",
+          "certificates": "Mga Sertipiko"
+        }
+      },
+      "theme": {
+        "title": "Kulay ng Tema",
+        "custom": "Custom"
+      },
+      "typography": {
+        "title": "Typography",
+        "font": {
+          "title": "Font",
+          "alibaba": "Alibaba PuHuiTi",
+          "misans": "MiSans",
+          "notosanssc": "Noto Sans SC",
+          "sourcehanserifsc": "Source Han Serif SC",
+          "note": "Ginagamit ang MiSans sa ilalim ng libreng commercial license nito. Panatilihin ang MiSans attribution kapag ipinamamahagi ang proyektong ito."
+        },
+        "lineHeight": {
+          "title": "Line Height",
+          "normal": "Default",
+          "relaxed": "Relaxed",
+          "loose": "Loose"
+        },
+        "baseFontSize": {
+          "title": "Base Font Size"
+        },
+        "headerSize": {
+          "title": "Section Header Size"
+        },
+        "subheaderSize": {
+          "title": "Subsection Header Size"
+        }
+      },
+      "spacing": {
+        "title": "Spacing",
+        "pagePadding": {
+          "title": "Page Padding"
+        },
+        "sectionSpacing": {
+          "title": "Section Spacing"
+        },
+        "paragraphSpacing": {
+          "title": "Paragraph Spacing"
+        }
+      },
+      "mode": {
+        "title": "Mode",
+        "useIconMode": {
+          "title": "Icon Mode"
+        },
+        "centerSubtitle": {
+          "title": "I-center ang Subtitle"
+        },
+        "flexibleHeaderLayout": {
+          "title": "Mahabang Pamagat"
+        }
+      }
+    },
+    "basicPanel": {
+      "title": "Profile",
+      "avatar": "Avatar",
+      "basicField": "Basic",
+      "customField": "Custom",
+      "layout": "Align",
+      "customFields": {
+        "placeholders": {
+          "label": "Label",
+          "value": "Halaga"
+        },
+        "displayLabel": "Ipakita ang label",
+        "addButton": "Magdagdag ng Custom Field"
+      },
+      "basicFields": {
+        "name": "Pangalan",
+        "title": "Pamagat",
+        "email": "Email",
+        "phone": "Telepono",
+        "website": "Website",
+        "location": "Lokasyon",
+        "birthDate": "Petsa ng Kapanganakan",
+        "employementStatus": "Trabaho"
+      },
+      "fieldVisibility": {
+        "show": "Ipakita",
+        "hide": "Itago"
+      },
+      "githubContributions": "GitHub Contributions"
+    },
+    "experiencePanel": {
+      "title": "Karanasan sa Trabaho",
+      "addButton": "Magdagdag ng Karanasan sa Trabaho",
+      "defaultProject": {
+        "company": "Tech Company Ltd.",
+        "position": "Senior Frontend Engineer",
+        "date": "2020 - Kasalukuyan",
+        "details": "Responsable sa core product development..."
+      },
+      "placeholders": {
+        "company": "pangalan ng kumpanya",
+        "position": "job title",
+        "date": "panahon ng trabaho",
+        "details": "mga responsibilidad at tagumpay sa trabaho"
+      }
+    },
+    "experienceItem": {
+      "labels": {
+        "company": "Pangalan ng Kumpanya",
+        "position": "Posisyon",
+        "date": "Panahon ng Trabaho",
+        "details": "Mga Responsibilidad sa Trabaho"
+      },
+      "placeholders": {
+        "company": "Ilagay ang pangalan ng kumpanya",
+        "position": "hal., Frontend Engineer",
+        "date": "hal., 2020-Kasalukuyan",
+        "details": "Ilarawan ang iyong mga responsibilidad at tagumpay sa role na ito"
+      },
+      "buttons": {
+        "edit": "I-edit",
+        "save": "I-save",
+        "cancel": "Kanselahin",
+        "delete": "Tanggalin"
+      },
+      "visibility": {
+        "show": "Ipakita",
+        "hide": "Itago"
+      }
+    },
+    "projectPanel": {
+      "title": "Karanasan sa Proyekto",
+      "addButton": "Magdagdag ng Proyekto",
+      "defaultProject": {
+        "name": "Personal na Proyekto",
+        "description": "Paglalarawan ng Proyekto",
+        "role": "Mga Responsibilidad",
+        "date": "2023.01 - 2023.06"
+      },
+      "placeholders": {
+        "name": "Pangalan ng Proyekto",
+        "description": "Maikling ilarawan ang background at layunin ng proyekto",
+        "role": "Ang iyong role at responsibilidad sa proyekto",
+        "date": "Saklaw ng oras ng proyekto",
+        "link": "Link ng proyekto "
+      }
+    },
+    "projectItem": {
+      "labels": {
+        "name": "Pangalan ng Proyekto",
+        "role": "Role sa Proyekto",
+        "date": "Panahon ng Proyekto",
+        "description": "Paglalarawan ng Proyekto",
+        "technologies": "Tech Stack",
+        "link": "Link ng Proyekto",
+        "linkLabel": "Display Text"
+      },
+      "placeholders": {
+        "name": "Ilagay ang pangalan ng proyekto",
+        "role": "Ang iyong role sa proyekto",
+        "date": "Saklaw ng oras ng proyekto",
+        "description": "Maikling ilarawan ang background at layunin ng proyekto",
+        "technologies": "Mga teknolohiya at tool na ginamit",
+        "link": "Link ng proyekto",
+        "linkLabel": "Display text"
+      },
+      "hints": {
+        "linkLabel": "Kung walang display text, awtomatikong ipapakita ang domain o buong URL. Tanging http:// at https:// links ang suportado."
+      },
+      "buttons": {
+        "edit": "I-edit",
+        "save": "I-save",
+        "cancel": "Kanselahin",
+        "delete": "Tanggalin"
+      },
+      "visibility": {
+        "show": "Ipakita",
+        "hide": "Itago"
+      }
+    },
+    "educationPanel": {
+      "title": "Edukasyon",
+      "addButton": "Magdagdag ng Edukasyon",
+      "defaultProject": {
+        "school": "Pangalan ng Paaralan",
+        "degree": "Degree",
+        "major": "Major",
+        "date": "2020.09 - 2024.06"
+      },
+      "placeholders": {
+        "school": "Ilagay ang pangalan ng paaralan",
+        "degree": "Pumili ng degree",
+        "major": "Ilagay ang major",
+        "date": "Ilagay ang panahon ng pag-aaral"
+      }
+    },
+    "educationItem": {
+      "labels": {
+        "school": "Pangalan ng Paaralan",
+        "degree": "Degree",
+        "major": "Major",
+        "date": "Panahon ng Pag-aaral",
+        "description": "Paglalarawan",
+        "gpa": "GPA",
+        "location": "Lokasyon",
+        "startDate": "Petsa ng Simula",
+        "endDate": "Petsa ng Pagtatapos"
+      },
+      "placeholders": {
+        "school": "Ilagay ang pangalan ng paaralan",
+        "degree": "Pumili ng degree",
+        "major": "Ilagay ang major",
+        "date": "Ilagay ang saklaw ng oras ng pag-aaral",
+        "description": "Ilagay ang paglalarawan ng paaralan",
+        "gpa": "Ilagay ang GPA",
+        "location": "Ilagay ang lokasyon"
+      },
+      "buttons": {
+        "edit": "I-edit",
+        "save": "I-save",
+        "cancel": "Kanselahin",
+        "delete": "Tanggalin"
+      },
+      "visibility": {
+        "show": "Ipakita",
+        "hide": "Itago"
+      }
+    },
+    "certificatesPanel": {
+      "title": "Mga Sertipiko",
+      "addButton": "Magdagdag ng Sertipiko",
+      "tips": "Mag-upload o mag-paste (Cmd/Ctrl + V) ng mga larawan nang direkta. I-adjust ang width ratio para sa horizontal layout.",
+      "width": "Lapad (%)",
+      "delete": "Tanggalin",
+      "empty": "Wala pang larawan. Mag-upload o mag-paste ng mga larawan."
+    }
+  },
+  "field": {
+    "selectDate": "Pumili ng Petsa",
+    "enterYear": "Ilagay ang Taon",
+    "toPresent": "Hanggang Kasalukuyan"
+  },
+  "richEditor": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "link": "Link",
+    "linkPlaceholder": "Maglagay ng URL, halimbawa https://example.com",
+    "linkApply": "Ilapat",
+    "linkRemove": "Alisin",
+    "linkInvalid": "Maglagay ng wastong URL",
+    "textColor": "Kulay ng Text",
+    "backgroundColor": "Kulay ng Background",
+    "alignLeft": "I-align sa Kaliwa",
+    "alignCenter": "I-align sa Gitna",
+    "alignRight": "I-align sa Kanan",
+    "alignJustify": "I-justify",
+    "bulletList": "Bullet List",
+    "orderedList": "Ordered List",
+    "undo": "I-undo",
+    "redo": "I-redo",
+    "aiPolish": "AI Polish",
+    "paragraph": "Paragraph",
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "colors": {
+      "black": "Itim",
+      "darkGray": "Madilim na Gray",
+      "gray": "Gray",
+      "red": "Pula",
+      "orange": "Orange",
+      "orangeYellow": "Orange Yellow",
+      "yellow": "Dilaw",
+      "yellowGreen": "Yellow Green",
+      "green": "Berde",
+      "cyan": "Cyan",
+      "lightBlue": "Light Blue",
+      "blue": "Asul",
+      "purple": "Purple",
+      "magenta": "Magenta",
+      "pink": "Pink"
+    }
+  },
+  "iconSelector": {
+    "all": "Lahat",
+    "searchPlaceholder": "Maghanap ng mga icon...",
+    "noMatchingIcons": "Walang nahanap na katugmang icon",
+    "tryOtherKeywords": "Subukan ang ibang search keyword",
+    "selectOtherCategory": "Pumili ng ibang kategorya",
+    "categories": {
+      "personal": "Personal na Impormasyon",
+      "education": "Edukasyon",
+      "experience": "Karanasan sa Trabaho",
+      "skills": "Mga Kasanayan",
+      "languages": "Mga Wika",
+      "projects": "Mga Proyekto",
+      "achievements": "Mga Tagumpay",
+      "hobbies": "Mga Libangan",
+      "social": "Social Media",
+      "others": "Iba pa"
+    },
+    "icons": {
+      "user": "User",
+      "email": "Email",
+      "phone": "Telepono",
+      "address": "Address",
+      "website": "Website",
+      "mobile": "Mobile",
+      "education": "Edukasyon",
+      "school": "Paaralan",
+      "major": "Major",
+      "library": "Library",
+      "scholarship": "Scholarship",
+      "work": "Trabaho",
+      "company": "Kumpanya",
+      "office": "Opisina",
+      "dateRange": "Saklaw ng Petsa",
+      "workTime": "Oras ng Trabaho",
+      "programming": "Programming",
+      "system": "System",
+      "database": "Database",
+      "terminal": "Terminal",
+      "techStack": "Tech Stack",
+      "language": "Wika",
+      "speaking": "Pagsasalita",
+      "communication": "Komunikasyon",
+      "project": "Proyekto",
+      "branch": "Branch",
+      "release": "Release",
+      "target": "Target",
+      "trophy": "Trophy",
+      "medal": "Medal",
+      "star": "Star",
+      "interest": "Interes",
+      "music": "Musika",
+      "art": "Sining",
+      "photography": "Photography",
+      "linkedin": "LinkedIn",
+      "twitter": "Twitter",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "profile": "Profile",
+      "review": "Review",
+      "filter": "Filter",
+      "link": "Link",
+      "salary": "Sahod",
+      "idea": "Ideya",
+      "send": "Ipadala",
+      "share": "Ibahagi",
+      "settings": "Mga Setting",
+      "search": "Maghanap",
+      "flag": "Flag",
+      "bookmark": "Bookmark",
+      "thumbsUp": "Thumbs Up",
+      "skill": "Kasanayan"
+    }
+  },
+  "aiPolishDialog": {
+    "title": "AI Polish",
+    "description": {
+      "ready": "Magdagdag ng opsyonal na tagubilin, pagkatapos i-click ang \"Simulan ang polish\"",
+      "polishing": "Pinapapaganda ang iyong content...",
+      "finished": "Na-optimize na ang content, pakisuri ang resulta"
+    },
+    "error": {
+      "configRequired": "Paki-configure muna ang AI model",
+      "polishFailed": "Nabigo ang polish",
+      "applied": "Na-apply ang polished content"
+    },
+    "content": {
+      "original": "Orihinal na Content",
+      "polished": "Polished na Content"
+    },
+    "customInstructions": "Custom na tagubilin",
+    "customInstructionsPlaceholder": "hal. Gumamit ng mas teknikal na termino, i-highlight ang metrics, panatilihing pormal ang tono… (opsyonal)",
+    "button": {
+      "start": "Simulan ang polish",
+      "regenerate": "I-regenerate",
+      "generating": "Gumagawa...",
+      "apply": "Ilapat ang Content"
+    }
+  },
+  "photoConfig": {
+    "title": "Mga Setting ng Larawan",
+    "description": "I-customize ang larawan ng iyong resume",
+    "upload": {
+      "title": "Online Link",
+      "dragHint": "I-drag and drop o i-click para mag-upload ng larawan",
+      "sizeLimit": "Hindi dapat lumampas sa 2MB ang laki ng larawan",
+      "typeLimit": "Mag-upload ng image file",
+      "urlPlaceholder": "Ilagay ang link ng larawan",
+      "invalidUrl": "Hindi wasto ang image URL o hindi ma-access, subukan ang ibang link ng larawan",
+      "timeout": "Nag-timeout ang paglo-load",
+      "loadError": "Nabigo ang paglo-load ng larawan"
+    },
+    "config": {
+      "aspectRatio": "Aspect Ratio",
+      "size": "Laki",
+      "width": "Lapad",
+      "height": "Taas",
+      "border-radius": "Border Radius",
+      "widthPlaceholder": "Lapad",
+      "heightPlaceholder": "Taas",
+      "ratios": {
+        "1:1": "1:1 Square",
+        "4:3": "4:3 Landscape",
+        "3:4": "3:4 Portrait",
+        "16:9": "16:9 Widescreen",
+        "custom": "Custom"
+      },
+      "borderRadius": {
+        "none": "Wala",
+        "medium": "Medium",
+        "full": "Bilog",
+        "custom": "Custom",
+        "customPlaceholder": "Custom border radius"
+      }
+    },
+    "actions": {
+      "reset": "I-reset",
+      "close": "Isara",
+      "cancel": "Kanselahin",
+      "removePhoto": "Alisin ang Larawan"
+    }
+  },
+  "templates": {
+    "switchTemplate": "Palitan ang Template"
+  },
+  "themeModal": {
+    "delete": {
+      "title": "Kumpirmahin ang Pagtanggal",
+      "description": "Sigurado ka bang gusto mong tanggalin ang {title}?",
+      "confirmText": "Tanggalin",
+      "cancelText": "Kanselahin"
+    }
+  },
+  "grammarCheck": {
+    "title": "AI Grammar Check",
+    "description": "Nakahanap ng {count} mungkahi",
+    "exit": "Lumabas",
+    "spelling": "Spelling",
+    "punctuation": "Bantas",
+    "original": "Orihinal",
+    "error_point": "Error",
+    "suggestion": "Mungkahi",
+    "reason": "Dahilan",
+    "accept": "Ilapat",
+    "ignore": "Balewalain",
+    "found_issues": "Nakahanap ng {count} isyu",
+    "applied_success": "Na-apply ang mga pagbabago",
+    "apply_error": "Hindi nahanap ang text, hindi awtomatikong maia-apply",
+    "no_errors_title": "Perpekto!",
+    "no_errors_desc": "Walang nahanap na grammar o punctuation error."
+  },
+  "faqDialog": {
+    "title": "Mga Madalas Itanong (FAQ)",
+    "description": "Mga karaniwang tip at solusyon para sa Magic Resume workbench.",
+    "items": {
+      "browser-compatibility": {
+        "question": "Anong browser ang inirerekomenda?",
+        "answer": "Inirerekomenda naming gamitin ang pinakabagong bersyon ng Chrome o Edge para sa pinakamahusay na layout at export experience. Maaaring magdulot ng styling issues ang ilang lumang browser."
+      },
+      "export-failure": {
+        "question": "Paano kung nabigo ang export o sira ang style?",
+        "answer": "1. Inirerekomenda naming gamitin ang Google Chrome (https://www.google.cn/intl/zh-CN/chrome/) para sa pinakamahusay na compatibility.\n2. Kung nabigo pa rin, subukan sa 'Incognito Mode' para maiwasan ang interference ng extension.\n3. Bilang alternatibo, i-click ang 'PDF (Backup)' sa export menu at piliin ang 'Save as PDF' sa print dialog."
+      },
+      "export-methods": {
+        "question": "Ano ang pagkakaiba ng dalawang export method?",
+        "answer": "• Export PDF: Gumagamit ng backend service para sa high-precision rendering, 100% na nire-restore ang layout. Inirerekomenda para sa pormal na pagsusumite sa HR.\n\n• Browser Print: Tinatawag ang native print function ng iyong browser (Save as PDF). Angkop kapag abala ang backend export service o kailangan mong i-fine-tune ang print margins sa browser."
+      },
+      "drag-and-drop": {
+        "question": "Paano i-drag and drop para i-reorder ang mga module?",
+        "answer": "Sa 'Layout' settings ng left edit panel, i-hover ang cursor sa 'Drag Handle' (karaniwang six-dot icon) sa kaliwang bahagi ng module card. I-click at hawakan ang left mouse button para i-drag ang module pataas o pababa para i-reorder ang mga section ng iyong resume."
+      }
+    }
+  }
+}

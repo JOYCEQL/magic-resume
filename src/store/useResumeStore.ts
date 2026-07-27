@@ -21,20 +21,46 @@ import {
   blankResumeStateEn,
 } from "@/config/initialResumeData";
 import { generateUUID } from "@/utils/uuid";
+import {
+  HISTORY_LIMIT,
+  type UpdateResumeOptions,
+  cloneResume,
+  getHistoryKey,
+  shouldPushHistoryEntry,
+  pushHistory,
+  restoreResumeSnapshot,
+  clearHistoryGroup,
+} from "./resumeHistory";
+
+interface PendingSync {
+  timer: ReturnType<typeof setTimeout>;
+  prevResume?: ResumeData;
+}
+
 interface ResumeStore {
   resumes: Record<string, ResumeData>;
   activeResumeId: string | null;
   activeResume: ResumeData | null;
+  history: Record<string, ResumeData[]>;
+  future: Record<string, ResumeData[]>;
 
   createResume: (templateId: string | null, isBlank?: boolean) => string;
   deleteResume: (resume: ResumeData) => void;
   duplicateResume: (resumeId: string) => string;
-  updateResume: (resumeId: string, data: Partial<ResumeData>) => void;
+  updateResume: (
+    resumeId: string,
+    data: Partial<ResumeData>,
+    options?: UpdateResumeOptions
+  ) => void;
   setActiveResume: (resumeId: string) => void;
   updateResumeFromFile: (
     resume: ResumeData,
     sourceModifiedAt?: number
   ) => boolean;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 
   updateResumeTitle: (title: string) => void;
   updateBasicInfo: (data: Partial<BasicInfo>) => void;
@@ -54,7 +80,7 @@ interface ResumeStore {
   toggleSectionVisibility: (sectionId: string) => void;
   setActiveSection: (sectionId: string) => void;
   updateMenuSections: (sections: ResumeData["menuSections"]) => void;
-  addCustomData: (sectionId: string) => void;
+  createCustomSection: (section: MenuSection) => void;
   updateCustomData: (sectionId: string, items: CustomItem[]) => void;
   removeCustomData: (sectionId: string) => void;
   addCustomItem: (sectionId: string) => void;
@@ -75,6 +101,15 @@ interface ResumeStore {
 }
 
 type PersistedResumeStore = Pick<ResumeStore, "resumes" | "activeResumeId">;
+
+const createDefaultCustomItem = (): CustomItem => ({
+  id: generateUUID(),
+  title: "未命名模块",
+  subtitle: "",
+  dateRange: "",
+  description: "",
+  visible: true,
+});
 
 const warnedPersistFailures = new Set<string>();
 
@@ -214,17 +249,38 @@ const syncResumeToFile = async (
   }
 };
 
-// 防抖同步：合并高频写入，1.5秒内多次编辑只触发一次文件写入
-let syncTimer: ReturnType<typeof setTimeout> | null = null;
+// 防抖同步：按简历合并高频写入，避免不同简历之间互相取消文件同步
+const pendingSyncs = new Map<string, PendingSync>();
+
+const clearPendingSync = (resumeId: string) => {
+  const pendingSync = pendingSyncs.get(resumeId);
+  if (!pendingSync) {
+    return;
+  }
+
+  clearTimeout(pendingSync.timer);
+  pendingSyncs.delete(resumeId);
+};
+
 const debouncedSyncToFile = (
   resumeData: ResumeData,
   prevResume?: ResumeData
 ) => {
-  if (syncTimer) clearTimeout(syncTimer);
-  syncTimer = setTimeout(() => {
-    syncResumeToFile(resumeData, prevResume);
-    syncTimer = null;
+  const pendingSync = pendingSyncs.get(resumeData.id);
+  if (pendingSync) {
+    clearTimeout(pendingSync.timer);
+  }
+
+  const prevResumeForSync = pendingSync?.prevResume ?? prevResume;
+  const timer = setTimeout(() => {
+    syncResumeToFile(resumeData, prevResumeForSync);
+    pendingSyncs.delete(resumeData.id);
   }, 1500);
+
+  pendingSyncs.set(resumeData.id, {
+    timer,
+    prevResume: prevResumeForSync,
+  });
 };
 
 export const useResumeStore = create(
@@ -233,6 +289,8 @@ export const useResumeStore = create(
       resumes: {},
       activeResumeId: null,
       activeResume: null,
+      history: {},
+      future: {},
 
       createResume: (templateId = null, isBlank = false) => {
         const locale =
@@ -276,6 +334,14 @@ export const useResumeStore = create(
           },
           activeResumeId: id,
           activeResume: newResume,
+          history: {
+            ...state.history,
+            [id]: [],
+          },
+          future: {
+            ...state.future,
+            [id]: [],
+          },
         }));
 
         syncResumeToFile(newResume);
@@ -283,11 +349,15 @@ export const useResumeStore = create(
         return id;
       },
 
-      updateResume: (resumeId, data) => {
+      updateResume: (resumeId, data, options) => {
         set((state) => {
           const resume = state.resumes[resumeId];
           if (!resume) return state;
 
+          const historyKey = getHistoryKey(data, options);
+          const shouldPushHistory =
+            !!historyKey && shouldPushHistoryEntry(resumeId, historyKey);
+          const shouldClearFuture = !!historyKey;
           const updatedResume = {
             ...resume,
             ...data,
@@ -305,6 +375,15 @@ export const useResumeStore = create(
               state.activeResumeId === resumeId
                 ? updatedResume
                 : state.activeResume,
+            history: shouldPushHistory
+              ? pushHistory(state.history, resumeId, resume)
+              : state.history,
+            future: shouldClearFuture
+              ? {
+                  ...state.future,
+                  [resumeId]: [],
+                }
+              : state.future,
           };
         });
       },
@@ -317,6 +396,8 @@ export const useResumeStore = create(
         }
 
         const importedResume = normalizeImportedResume(resume, sourceModifiedAt);
+        clearHistoryGroup(importedResume.id);
+        clearPendingSync(importedResume.id);
 
         set((state) => ({
           resumes: {
@@ -327,9 +408,99 @@ export const useResumeStore = create(
             state.activeResumeId === importedResume.id
               ? importedResume
               : state.activeResume,
+          history: {
+            ...state.history,
+            [importedResume.id]: [],
+          },
+          future: {
+            ...state.future,
+            [importedResume.id]: [],
+          },
         }));
 
         return true;
+      },
+
+      undo: () => {
+        const { activeResumeId } = get();
+        if (!activeResumeId) return;
+
+        set((state) => {
+          const currentResume = state.resumes[activeResumeId];
+          const resumeHistory = state.history[activeResumeId] ?? [];
+          const previousResume = resumeHistory[resumeHistory.length - 1];
+          if (!currentResume || !previousResume) return state;
+
+          const restoredResume = restoreResumeSnapshot(
+            previousResume,
+            currentResume
+          );
+          clearHistoryGroup(activeResumeId);
+
+          debouncedSyncToFile(restoredResume, currentResume);
+
+          return {
+            resumes: {
+              ...state.resumes,
+              [activeResumeId]: restoredResume,
+            },
+            activeResume: restoredResume,
+            history: {
+              ...state.history,
+              [activeResumeId]: resumeHistory.slice(0, -1),
+            },
+            future: {
+              ...state.future,
+              [activeResumeId]: [
+                cloneResume(currentResume),
+                ...(state.future[activeResumeId] ?? []),
+              ].slice(0, HISTORY_LIMIT),
+            },
+          };
+        });
+      },
+
+      redo: () => {
+        const { activeResumeId } = get();
+        if (!activeResumeId) return;
+
+        set((state) => {
+          const currentResume = state.resumes[activeResumeId];
+          const resumeFuture = state.future[activeResumeId] ?? [];
+          const nextResume = resumeFuture[0];
+          if (!currentResume || !nextResume) return state;
+
+          const restoredResume = restoreResumeSnapshot(
+            nextResume,
+            currentResume
+          );
+          clearHistoryGroup(activeResumeId);
+
+          debouncedSyncToFile(restoredResume, currentResume);
+
+          return {
+            resumes: {
+              ...state.resumes,
+              [activeResumeId]: restoredResume,
+            },
+            activeResume: restoredResume,
+            history: pushHistory(state.history, activeResumeId, currentResume),
+            future: {
+              ...state.future,
+              [activeResumeId]: resumeFuture.slice(1),
+            },
+          };
+        });
+      },
+
+      canUndo: () => {
+        const { activeResumeId, history } = get();
+        return !!activeResumeId && (history[activeResumeId]?.length ?? 0) > 0;
+      },
+
+      canRedo: () => {
+        const { activeResumeId, future } = get();
+        return !!activeResumeId && (future[activeResumeId]?.length ?? 0) > 0;
       },
 
       updateResumeTitle: (title) => {
@@ -341,12 +512,18 @@ export const useResumeStore = create(
 
       deleteResume: (resume) => {
         const resumeId = resume.id;
+        clearHistoryGroup(resumeId);
+        clearPendingSync(resumeId);
         set((state) => {
           const { [resumeId]: _, activeResume, ...rest } = state.resumes;
+          const { [resumeId]: __, ...historyRest } = state.history;
+          const { [resumeId]: ___, ...futureRest } = state.future;
           return {
             resumes: rest,
             activeResumeId: null,
             activeResume: null,
+            history: historyRest,
+            future: futureRest,
           };
         });
 
@@ -401,6 +578,14 @@ export const useResumeStore = create(
           },
           activeResumeId: newId,
           activeResume: duplicatedResume,
+          history: {
+            ...state.history,
+            [newId]: [],
+          },
+          future: {
+            ...state.future,
+            [newId]: [],
+          },
         }));
 
         return newId;
@@ -418,32 +603,14 @@ export const useResumeStore = create(
       },
 
       updateBasicInfo: (data) => {
-        const prevResume = get().activeResume;
-        set((state) => {
-          if (!state.activeResume) return state;
-
-          const updatedResume = {
-            ...state.activeResume,
-            updatedAt: new Date().toISOString(),
+        const { activeResumeId, activeResume } = get();
+        if (activeResumeId && activeResume) {
+          get().updateResume(activeResumeId, {
             basic: {
-              ...state.activeResume.basic,
+              ...activeResume.basic,
               ...data,
             },
-          };
-
-          return {
-            resumes: {
-              ...state.resumes,
-              [state.activeResume.id]: updatedResume,
-            },
-            activeResume: updatedResume,
-          };
-        });
-
-        // 在 set() 外部处理副作用
-        const updatedResume = get().activeResume;
-        if (updatedResume) {
-          debouncedSyncToFile(updatedResume, prevResume || undefined);
+          });
         }
       },
 
@@ -550,7 +717,11 @@ export const useResumeStore = create(
       setDraggingProjectId: (id: string | null) => {
         const { activeResumeId } = get();
         if (activeResumeId) {
-          get().updateResume(activeResumeId, { draggingProjectId: id });
+          get().updateResume(
+            activeResumeId,
+            { draggingProjectId: id },
+            { recordHistory: false }
+          );
         }
       },
 
@@ -604,7 +775,11 @@ export const useResumeStore = create(
       setActiveSection: (sectionId) => {
         const { activeResumeId } = get();
         if (activeResumeId) {
-          get().updateResume(activeResumeId, { activeSection: sectionId });
+          get().updateResume(
+            activeResumeId,
+            { activeSection: sectionId },
+            { recordHistory: false }
+          );
         }
       },
 
@@ -615,25 +790,19 @@ export const useResumeStore = create(
         }
       },
 
-      addCustomData: (sectionId) => {
+      createCustomSection: (section) => {
         const { activeResumeId } = get();
-        if (activeResumeId) {
-          const currentResume = get().resumes[activeResumeId];
-          const updatedCustomData = {
+        if (!activeResumeId) return;
+
+        const currentResume = get().resumes[activeResumeId];
+        get().updateResume(activeResumeId, {
+          menuSections: [...currentResume.menuSections, section],
+          customData: {
             ...currentResume.customData,
-            [sectionId]: [
-              {
-                id: generateUUID(),
-                title: "未命名模块",
-                subtitle: "",
-                dateRange: "",
-                description: "",
-                visible: true,
-              },
-            ],
-          };
-          get().updateResume(activeResumeId, { customData: updatedCustomData });
-        }
+            [section.id]: [createDefaultCustomItem()],
+          },
+          activeSection: section.id,
+        });
       },
 
       updateCustomData: (sectionId, items) => {
@@ -665,14 +834,7 @@ export const useResumeStore = create(
             ...currentResume.customData,
             [sectionId]: [
               ...(currentResume.customData[sectionId] || []),
-              {
-                id: generateUUID(),
-                title: "未命名模块",
-                subtitle: "",
-                dateRange: "",
-                description: "",
-                visible: true,
-              },
+              createDefaultCustomItem(),
             ],
           };
           get().updateResume(activeResumeId, { customData: updatedCustomData });
@@ -785,9 +947,7 @@ export const useResumeStore = create(
         const template = DEFAULT_TEMPLATES.find((t) => t.id === templateId);
         if (!template) return;
 
-        const updatedResume = {
-          ...resumes[activeResumeId],
-          updatedAt: new Date().toISOString(),
+        get().updateResume(activeResumeId, {
           templateId,
           globalSettings: {
             ...resumes[activeResumeId].globalSettings,
@@ -800,17 +960,7 @@ export const useResumeStore = create(
             ...resumes[activeResumeId].basic,
             layout: template.basic.layout,
           },
-        };
-
-        set({
-          resumes: {
-            ...resumes,
-            [activeResumeId]: updatedResume,
-          },
-          activeResume: updatedResume,
         });
-
-        debouncedSyncToFile(updatedResume);
       },
       addResume: (resume: ResumeData) => {
         set((state) => ({
@@ -820,6 +970,14 @@ export const useResumeStore = create(
           },
           activeResumeId: resume.id,
           activeResume: resume,
+          history: {
+            ...state.history,
+            [resume.id]: [],
+          },
+          future: {
+            ...state.future,
+            [resume.id]: [],
+          },
         }));
 
         syncResumeToFile(resume);

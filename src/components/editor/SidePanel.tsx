@@ -83,7 +83,7 @@ export function SidePanel({
     updateMenuSections,
     setThemeColor,
     reorderSections,
-    addCustomData,
+    createCustomSection,
     removeCustomData,
   } = useResumeStore();
   const {
@@ -98,7 +98,7 @@ export function SidePanel({
 
   const currentTemplate = DEFAULT_TEMPLATES.find(
     (t) => t.id === activeResume?.templateId
-  );
+  ) ?? DEFAULT_TEMPLATES[0];
 
   const availableModules = useMemo(() => {
     return (
@@ -158,9 +158,7 @@ export function SidePanel({
       order: menuSections.length,
     };
 
-    updateMenuSections([...menuSections, newSection]);
-    addCustomData(sectionId);
-    setActiveSection(sectionId);
+    createCustomSection(newSection);
     onSectionCreated?.();
   };
   return (

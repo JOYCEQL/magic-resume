@@ -105,6 +105,7 @@ export const Route = createFileRoute("/api/polish")({
             headers: modelConfig.headers(apiKey),
             body: JSON.stringify({
               model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
+              ...(modelType === "deepseek" ? { thinking: { type: "disabled" } } : {}),
               messages: [
                 {
                   role: "system",

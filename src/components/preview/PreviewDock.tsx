@@ -11,7 +11,8 @@ import {
   FileJson,
   Loader2,
   Eye,
-  FileText
+  FileText,
+  EyeOff
 } from "lucide-react";
 import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
@@ -106,6 +107,7 @@ const PreviewDock = ({
 
   const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
   const { globalSettings = {} } = activeResume || {};
+  const pageBreakLinesVisible = globalSettings?.pageBreakLinesVisible !== false;
 
   const { checkConfiguration } = useAIConfiguration();
 
@@ -236,6 +238,39 @@ const PreviewDock = ({
                   </TooltipTrigger>
                   <TooltipContent side="left" sideOffset={10}>
                     <p>{t("autoOnePage.tooltip")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+              <DockIcon>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={cn(
+                        "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                        "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
+                        "transition-all duration-200",
+                        !pageBreakLinesVisible && [
+                          "bg-primary text-primary-foreground",
+                          "hover:bg-primary/90 dark:hover:bg-primary/90",
+                          "shadow-sm"
+                        ]
+                      )}
+                      onClick={() => {
+                        updateGlobalSettings({
+                          pageBreakLinesVisible: !pageBreakLinesVisible
+                        });
+                        toast.success(
+                          pageBreakLinesVisible
+                            ? t("pageBreakLine.hidden")
+                            : t("pageBreakLine.visible")
+                        );
+                      }}
+                    >
+                      <EyeOff className="h-4 w-4" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="left" sideOffset={10}>
+                    <p>{t("pageBreakLine.tooltip")}</p>
                   </TooltipContent>
                 </Tooltip>
               </DockIcon>

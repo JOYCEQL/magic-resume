@@ -199,8 +199,8 @@
           "apiKey": "DeepSeek API Key"
         },
         "openai": {
-          "title": "OpenAI",
-          "description": "Obtain the API key at OpenAI or an open platform compatible with the OpenAI format",
+          "title": "OpenAI / Compatible",
+          "description": "Official OpenAI or any OpenAI Chat Completions-compatible gateway (custom endpoint supported)",
           "apiKey": "OpenAI API Key",
           "modelId": "Model ID",
           "apiEndpoint": "API Endpoint, example: https://openai.example.org/v1"
@@ -210,6 +210,20 @@
           "description": "Supports polish, grammar check, and PDF image resume import. Recommended model: gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini Model ID"
+        },
+        "claude": {
+          "title": "Claude",
+          "description": "Anthropic Claude. Official API or any Anthropic Messages-compatible custom endpoint",
+          "apiKey": "Claude API Key",
+          "modelId": "Model ID, e.g. claude-sonnet-5",
+          "apiEndpoint": "API Endpoint, default: https://api.anthropic.com"
+        },
+        "grok": {
+          "title": "Grok",
+          "description": "xAI Grok via OpenAI-compatible API; custom endpoint supported for proxies",
+          "apiKey": "Grok API Key",
+          "modelId": "Model ID, e.g. grok-4.5",
+          "apiEndpoint": "API Endpoint, default: https://api.x.ai/v1"
         }
       }
     },

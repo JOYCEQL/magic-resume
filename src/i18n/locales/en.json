@@ -215,14 +215,14 @@
           "title": "Claude",
           "description": "Anthropic Claude. Official API or any Anthropic Messages-compatible custom endpoint",
           "apiKey": "Claude API Key",
-          "modelId": "Model ID, e.g. claude-sonnet-4-20250514",
+          "modelId": "Model ID, e.g. claude-sonnet-5",
           "apiEndpoint": "API Endpoint, default: https://api.anthropic.com"
         },
         "grok": {
           "title": "Grok",
           "description": "xAI Grok via OpenAI-compatible API; custom endpoint supported for proxies",
           "apiKey": "Grok API Key",
-          "modelId": "Model ID, e.g. grok-3",
+          "modelId": "Model ID, e.g. grok-4.5",
           "apiEndpoint": "API Endpoint, default: https://api.x.ai/v1"
         }
       }

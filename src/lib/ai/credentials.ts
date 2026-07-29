@@ -48,7 +48,7 @@ export const resolveActiveProviderCredentials = (
       return {
         modelType,
         apiKey: state.deepseekApiKey,
-        model: state.deepseekModelId || config.defaultModel || "deepseek-chat",
+        model: state.deepseekModelId || config.defaultModel || "deepseek-v4-flash",
       };
     case "openai":
       return {
@@ -67,7 +67,7 @@ export const resolveActiveProviderCredentials = (
       return {
         modelType,
         apiKey: state.claudeApiKey,
-        model: state.claudeModelId || config.defaultModel || "claude-sonnet-4-20250514",
+        model: state.claudeModelId || config.defaultModel || "claude-sonnet-5",
         apiEndpoint:
           state.claudeApiEndpoint?.trim() || config.defaultEndpoint,
       };
@@ -75,7 +75,7 @@ export const resolveActiveProviderCredentials = (
       return {
         modelType,
         apiKey: state.grokApiKey,
-        model: state.grokModelId || config.defaultModel || "grok-3",
+        model: state.grokModelId || config.defaultModel || "grok-4.5",
         apiEndpoint: state.grokApiEndpoint?.trim() || config.defaultEndpoint,
       };
     default: {

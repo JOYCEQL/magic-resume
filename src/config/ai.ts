@@ -76,7 +76,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
     url: () => "https://api.deepseek.com/v1/chat/completions",
     requiresModelId: false,
     allowsCustomEndpoint: false,
-    defaultModel: "deepseek-chat",
+    defaultModel: "deepseek-v4-flash",
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
@@ -119,7 +119,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
     requiresModelId: true,
     allowsCustomEndpoint: true,
     defaultEndpoint: "https://api.anthropic.com",
-    defaultModel: "claude-sonnet-4-20250514",
+    defaultModel: "claude-sonnet-5",
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",
       "x-api-key": apiKey,
@@ -135,7 +135,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
     requiresModelId: true,
     allowsCustomEndpoint: true,
     defaultEndpoint: "https://api.x.ai/v1",
-    defaultModel: "grok-3",
+    defaultModel: "grok-4.5",
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,

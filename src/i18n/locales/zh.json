@@ -216,14 +216,14 @@
           "title": "Claude",
           "description": "Anthropic Claude，支持官方 API 或兼容 Anthropic Messages 协议的自定义 Endpoint",
           "apiKey": "Claude API Key",
-          "modelId": "模型 ID，如：claude-sonnet-4-20250514",
+          "modelId": "模型 ID，如：claude-sonnet-5",
           "apiEndpoint": "API 端点，默认：https://api.anthropic.com"
         },
         "grok": {
           "title": "Grok",
           "description": "xAI Grok，OpenAI 兼容接口；也可自定义 Endpoint 接入代理",
           "apiKey": "Grok API Key",
-          "modelId": "模型 ID，如：grok-3",
+          "modelId": "模型 ID，如：grok-4.5",
           "apiEndpoint": "API 端点，默认：https://api.x.ai/v1"
         }
       }

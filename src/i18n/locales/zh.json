@@ -211,6 +211,13 @@
           "description": "支持润色、语法检查和 PDF 图片识别导入。推荐模型 ID：gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini 模型 ID"
+        },
+        "opencode": {
+          "title": "OpenCode Zen",
+          "description": "通过 OpenCode Zen 使用精选模型，支持 AI 润色和语法检查",
+          "apiKey": "OpenCode Zen API Key",
+          "modelId": "OpenCode Zen 模型 ID",
+          "modelHint": "请填写支持 OpenAI Chat Completions 协议的 Zen 模型 ID。"
         }
       }
     },

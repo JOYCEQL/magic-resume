@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ElementType } from "react";
 import { Check, ExternalLink, Sparkles } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import IconDoubao from "@/components/ai/icon/IconDoubao";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import IconOpenAi from "@/components/ai/icon/IconOpenAi";
+import IconOpenCode from "@/components/ai/icon/IconOpenCode";
+import type { AIModelType } from "@/config/ai";
 
 const AISettingsPage = () => {
   const {
@@ -19,6 +21,8 @@ const AISettingsPage = () => {
     openaiApiEndpoint,
     geminiApiKey,
     geminiModelId,
+    opencodeApiKey,
+    opencodeModelId,
     setDoubaoApiKey,
     setDoubaoModelId,
     setDeepseekApiKey,
@@ -27,6 +31,8 @@ const AISettingsPage = () => {
     setOpenaiApiEndpoint,
     setGeminiApiKey,
     setGeminiModelId,
+    setOpencodeApiKey,
+    setOpencodeModelId,
     selectedModel,
     setSelectedModel,
   } = useAIConfigStore();
@@ -40,7 +46,7 @@ const AISettingsPage = () => {
 
   const handleApiKeyChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: AIModelType
   ) => {
     const newApiKey = e.target.value;
     if (type === "doubao") {
@@ -49,6 +55,8 @@ const AISettingsPage = () => {
       setDeepseekApiKey(newApiKey);
     } else if (type === "gemini") {
       setGeminiApiKey(newApiKey);
+    } else if (type === "opencode") {
+      setOpencodeApiKey(newApiKey);
     } else {
       setOpenaiApiKey(newApiKey);
     }
@@ -56,7 +64,7 @@ const AISettingsPage = () => {
 
   const handleModelIdChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: "doubao" | "deepseek" | "openai" | "gemini"
+    type: AIModelType
   ) => {
     const newModelId = e.target.value;
     if (type === "doubao") {
@@ -65,6 +73,8 @@ const AISettingsPage = () => {
       setOpenaiModelId(newModelId);
     } else if (type === "gemini") {
       setGeminiModelId(newModelId);
+    } else if (type === "opencode") {
+      setOpencodeModelId(newModelId);
     }
   };
 
@@ -119,7 +129,17 @@ const AISettingsPage = () => {
       bgColor: "bg-amber-50 dark:bg-amber-950/50",
       isConfigured: !!(geminiApiKey && geminiModelId),
     },
-  ];
+    {
+      id: "opencode",
+      name: t("dashboard.settings.ai.opencode.title"),
+      description: t("dashboard.settings.ai.opencode.description"),
+      icon: IconOpenCode,
+      link: "https://opencode.ai/zen",
+      color: "text-foreground",
+      bgColor: "bg-muted",
+      isConfigured: !!(opencodeApiKey && opencodeModelId),
+    },
+  ] satisfies Array<{ id: AIModelType; name: string; description: string; icon: ElementType; link: string; color: string; bgColor: string; isConfigured: boolean }>;
 
   return (
     <div className="mx-auto py-4 px-4">
@@ -172,12 +192,8 @@ const AISettingsPage = () => {
                     type="button"
                     aria-label={`Select ${model.name}`}
                     onClick={() => {
-                      setSelectedModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
-                      );
-                      setCurrentModel(
-                        model.id as "doubao" | "deepseek" | "openai" | "gemini"
-                      );
+                      setSelectedModel(model.id);
+                      setCurrentModel(model.id);
                     }}
                     className={cn(
                       "h-6 w-6 rounded-md flex items-center justify-center border transition-all",
@@ -236,13 +252,12 @@ const AISettingsPage = () => {
                             ? openaiApiKey
                             : model.id === "gemini"
                             ? geminiApiKey
+                            : model.id === "opencode"
+                            ? opencodeApiKey
                             : deepseekApiKey
                         }
                         onChange={(e) =>
-                          handleApiKeyChange(
-                            e,
-                            model.id as "doubao" | "deepseek" | "openai" | "gemini"
-                          )
+                          handleApiKeyChange(e, model.id)
                         }
                         type="password"
                         placeholder={t(
@@ -315,6 +330,28 @@ const AISettingsPage = () => {
                             "focus:ring-2 focus:ring-primary/20"
                           )}
                         />
+                      </div>
+                    )}
+
+                    {model.id === "opencode" && (
+                      <div className="space-y-4">
+                        <Label className="text-base font-medium">
+                          {t("dashboard.settings.ai.opencode.modelId")}
+                        </Label>
+                        <Input
+                          value={opencodeModelId}
+                          onChange={(e) => handleModelIdChange(e, "opencode")}
+                          placeholder={t("dashboard.settings.ai.opencode.modelId")}
+                          className={cn(
+                            "h-11",
+                            "bg-white dark:bg-gray-900",
+                            "border-gray-200 dark:border-gray-800",
+                            "focus:ring-2 focus:ring-primary/20"
+                          )}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          {t("dashboard.settings.ai.opencode.modelHint")}
+                        </p>
                       </div>
                     )}
 

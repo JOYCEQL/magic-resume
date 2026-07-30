@@ -34,9 +34,13 @@ export async function POST(req: NextRequest) {
 
       body: JSON.stringify({
         model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-        response_format: {
-          type: "json_object",
-        },
+        ...(modelType === "opencode"
+          ? {}
+          : {
+              response_format: {
+                type: "json_object",
+              },
+            }),
         messages: [
           {
             role: "system",

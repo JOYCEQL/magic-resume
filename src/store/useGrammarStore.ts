@@ -100,7 +100,9 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       openaiModelId,
       openaiApiEndpoint,
       geminiApiKey,
-      geminiModelId
+      geminiModelId,
+      opencodeApiKey,
+      opencodeModelId
     } = useAIConfigStore.getState();
 
     const config = AI_MODEL_CONFIGS[selectedModel];
@@ -111,7 +113,9 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
           ? openaiApiKey
           : selectedModel === "gemini"
             ? geminiApiKey
-            : deepseekApiKey;
+            : selectedModel === "opencode"
+              ? opencodeApiKey
+              : deepseekApiKey;
     const modelId =
       selectedModel === "doubao"
         ? doubaoModelId
@@ -119,7 +123,9 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
           ? openaiModelId
           : selectedModel === "gemini"
             ? geminiModelId
-            : deepseekModelId;
+            : selectedModel === "opencode"
+              ? opencodeModelId
+              : deepseekModelId;
 
     set({ isChecking: true });
 

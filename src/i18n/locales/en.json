@@ -210,6 +210,13 @@
           "description": "Supports polish, grammar check, and PDF image resume import. Recommended model: gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini Model ID"
+        },
+        "opencode": {
+          "title": "OpenCode Zen",
+          "description": "Use curated models through OpenCode Zen for AI polishing and grammar checks",
+          "apiKey": "OpenCode Zen API Key",
+          "modelId": "OpenCode Zen Model ID",
+          "modelHint": "Enter a Zen model ID that supports the OpenAI Chat Completions protocol."
         }
       }
     },

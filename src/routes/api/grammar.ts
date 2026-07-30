@@ -98,9 +98,13 @@ export const Route = createFileRoute("/api/grammar")({
             headers: modelConfig.headers(apiKey),
             body: JSON.stringify({
               model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-              response_format: {
-                type: "json_object"
-              },
+              ...(modelType === "opencode"
+                ? {}
+                : {
+                    response_format: {
+                      type: "json_object"
+                    }
+                  }),
               messages: [
                 {
                   role: "system",

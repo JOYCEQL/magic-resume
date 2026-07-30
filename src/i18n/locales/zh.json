@@ -108,6 +108,7 @@
       "resumes": "我的简历",
       "settings": "通用设置",
       "templates": "简历模板",
+      "resumeAgent": "简历 Agent",
       "ai": "AI服务商"
     },
     "resumes": {
@@ -116,6 +117,7 @@
       "view": "去查看",
       "myResume": "我的简历",
       "create": "新建简历",
+      "createWithAI": "AI 创建简历",
       "newResume": "新建简历",
       "newResumeDescription": "创建一个新简历以开始。",
       "import": "导入简历",
@@ -166,6 +168,49 @@
           "present": "至今",
           "workDescription": "主导前端团队，页面性能提升 40%。"
         }
+      }
+    },
+    "resumeAgent": {
+      "title": "简历 Agent",
+      "subtitle": "通过一句话或多轮对话生成真实、可核验且可继续编辑的简历草稿",
+      "conversation": "对话",
+      "reset": "重新开始",
+      "thinking": "正在整理事实并更新草稿…",
+      "send": "发送",
+      "inputPlaceholder": "介绍你的个人信息、目标岗位、经历和项目；也可以粘贴 JD。按 Enter 发送，Shift + Enter 换行。",
+      "providerNotReady": "当前服务商尚未配置完整，点击前往 AI 服务商设置",
+      "approve": "确认并选择模板",
+      "saved": "简历已保存到我的简历",
+      "empty": {
+        "title": "从真实经历开始",
+        "description": "例如：我叫张三，想应聘前端工程师，毕业于某大学，做过两个 React 项目。Agent 会逐步追问关键缺失项，不会虚构经历或成果。"
+      },
+      "draft": {
+        "title": "结构化简历草稿",
+        "profile": "个人资料",
+        "summary": "职业概述",
+        "skills": "专业技能",
+        "experience": "工作经历",
+        "projects": "项目经历",
+        "empty": "等待对话补充此部分"
+      },
+      "validation": {
+        "title": "事实与完整性检查",
+        "errors": "{count} 个阻塞问题",
+        "warnings": "{count} 个待确认项",
+        "ready": "可以保存",
+        "noIssues": "没有发现阻塞问题，可以进入模板选择。"
+      },
+      "template": {
+        "title": "选择 Magic Resume 模板",
+        "description": "Agent 只负责内容。最终排版使用 Magic Resume 现有 React 模板，避免与 Career Ops HTML/PDF 模板冲突。",
+        "cancel": "返回检查",
+        "save": "保存并进入工作台"
+      },
+      "errors": {
+        "configureProvider": "请先完整配置所选 AI 服务商",
+        "generateFailed": "生成草稿失败，请检查服务商配置后重试",
+        "resolveErrors": "请先解决事实冲突和必要字段缺失"
       }
     },
     "settings": {

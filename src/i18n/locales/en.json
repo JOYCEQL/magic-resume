@@ -107,6 +107,7 @@
       "resumes": "Resumes",
       "settings": "Settings",
       "templates": "Templates",
+      "resumeAgent": "Resume Agent",
       "ai": "AI Config"
     },
     "resumes": {
@@ -115,6 +116,7 @@
       "view": "View",
       "myResume": "My Resumes",
       "create": "Create Resume",
+      "createWithAI": "Create with AI",
       "newResume": "New Resume",
       "newResumeDescription": "Create a new resume to get started.",
       "import": "Import Resume",
@@ -165,6 +167,49 @@
           "present": "Present",
           "workDescription": "Led the frontend team and improved page performance by 40%."
         }
+      }
+    },
+    "resumeAgent": {
+      "title": "Resume Agent",
+      "subtitle": "Turn a short prompt or a multi-turn conversation into a factual, editable resume draft",
+      "conversation": "Conversation",
+      "reset": "Start over",
+      "thinking": "Organizing facts and updating the draft…",
+      "send": "Send",
+      "inputPlaceholder": "Share your profile, target role, experience and projects, or paste a job description. Enter to send; Shift + Enter for a new line.",
+      "providerNotReady": "This provider is not fully configured. Open AI settings",
+      "approve": "Approve and choose template",
+      "saved": "Resume saved to My Resumes",
+      "empty": {
+        "title": "Start with real experience",
+        "description": "For example: I am Alex, applying for a frontend engineer role, graduated from a university, and built two React projects. The Agent asks only for key missing details and never invents experience or results."
+      },
+      "draft": {
+        "title": "Structured resume draft",
+        "profile": "Profile",
+        "summary": "Professional summary",
+        "skills": "Skills",
+        "experience": "Experience",
+        "projects": "Projects",
+        "empty": "Continue the conversation to add this section"
+      },
+      "validation": {
+        "title": "Fact and completeness check",
+        "errors": "{count} blocking issues",
+        "warnings": "{count} items to confirm",
+        "ready": "Ready to save",
+        "noIssues": "No blocking issues found. You can choose a template."
+      },
+      "template": {
+        "title": "Choose a Magic Resume template",
+        "description": "The Agent owns content only. Final layout uses the existing Magic Resume React templates, avoiding conflicts with Career Ops HTML/PDF templates.",
+        "cancel": "Back to review",
+        "save": "Save and open workbench"
+      },
+      "errors": {
+        "configureProvider": "Configure the selected AI provider first",
+        "generateFailed": "Failed to generate the draft. Check the provider configuration and try again",
+        "resolveErrors": "Resolve factual conflicts and required fields before saving"
       }
     },
     "settings": {

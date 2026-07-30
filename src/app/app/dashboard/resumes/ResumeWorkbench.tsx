@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
-import { Plus, Settings, AlertCircle } from "lucide-react";
+import { Plus, Settings, AlertCircle, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -348,6 +348,14 @@ export const ResumeWorkbench = () => {
                         {t("dashboard.resumes.myResume")}
                     </h1>
                     <div className="flex items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => router.push("/app/dashboard/resume-agent")}
+                            className="border-primary/30 text-primary hover:bg-primary/10"
+                        >
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            {t("dashboard.resumes.createWithAI")}
+                        </Button>
                         <AnimatedImportButton onClick={() => setIsImportDialogOpen(true)} t={t} />
                         <motion.div
                             whileHover={{ scale: 1.05 }}

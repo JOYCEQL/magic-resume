@@ -69,6 +69,17 @@ export const IconSettings: React.FC<IconProps> = ({ size = 24, className, active
   </svg>
 );
 
+// Resume Agent: Conversational document builder
+export const IconResumeAgent: React.FC<IconProps> = ({ size = 24, className, active }) => (
+  <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <rect x="4" y="6" width="32" height="26" rx="8" fill="#0F766E" />
+    <path d="M12 15H28M12 21H23" stroke="white" strokeWidth="3" strokeLinecap="round" />
+    <path d="M13 32L10 37L20 32" fill="#0F766E" />
+    <path d="M30 5L31.5 9L35.5 10.5L31.5 12L30 16L28.5 12L24.5 10.5L28.5 9L30 5Z" fill="#FBBF24" />
+    {active && <circle cx="32" cy="31" r="4" fill="#F97316" stroke="white" strokeWidth="2" />}
+  </svg>
+);
+
 // AI: Magic Sparkle (Flat Vibrant Purple)
 export const IconAI: React.FC<IconProps> = ({ size = 24, className, active }) => (
   <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>

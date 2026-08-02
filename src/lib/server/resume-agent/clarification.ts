@@ -42,6 +42,7 @@ const OPTIONS = {
     no: optionOf("no", "不需要"),
     unknown: optionOf("unknown", "暂时不确定", "暂时不确定，先留空"),
     noMetric: optionOf("no-metric", "没有可核验的数据", "没有可核验的数据，请不要编造"),
+    noContent: optionOf("no-content", "没有相关内容", "没有相关内容，此板块留空"),
     current: optionOf("current", "至今在职"),
   },
   en: {
@@ -49,6 +50,7 @@ const OPTIONS = {
     no: optionOf("no", "No"),
     unknown: optionOf("unknown", "Not sure yet", "Not sure yet, leave it blank"),
     noMetric: optionOf("no-metric", "No verifiable data", "No verifiable data; do not invent any"),
+    noContent: optionOf("no-content", "No relevant content", "No relevant content; leave this section blank"),
     current: optionOf("current", "Still employed"),
   },
 } as const;
@@ -78,10 +80,63 @@ const classify = (
   return { kind: "text", options: [], allowFreeText: true };
 };
 
+/** 7 个板块中除基本信息外的空板块确认项；有内容则跳过，已作答（section-* id）则不重复追问 */
+const SECTION_COVERAGE: Array<{
+  section: string;
+  field: string;
+  hasContent: (draft: ResumeDraft) => boolean;
+  zh: string;
+  en: string;
+}> = [
+  {
+    section: "summary",
+    field: "summary",
+    hasContent: (draft) => Boolean(draft.summary.trim()),
+    zh: "职业概述：请用 2-3 句话概括你的职业定位与核心优势，没有可跳过。",
+    en: "Professional summary: describe your career positioning and core strengths in 2-3 sentences, or skip if none.",
+  },
+  {
+    section: "skills",
+    field: "skills",
+    hasContent: (draft) => draft.skills.length > 0,
+    zh: "专业技能：请列出你掌握的技术、工具与语言，有则填写，没有可跳过。",
+    en: "Skills: list the technologies, tools and languages you know, or skip if none.",
+  },
+  {
+    section: "experience",
+    field: "experience",
+    hasContent: (draft) => draft.experience.length > 0,
+    zh: "工作经验：请提供公司、职位、起止时间与主要成果，没有可跳过。",
+    en: "Work experience: share your companies, roles, dates and key achievements, or skip if none.",
+  },
+  {
+    section: "projects",
+    field: "projects",
+    hasContent: (draft) => draft.projects.length > 0,
+    zh: "项目经历：请提供项目名称、你的角色与核心成果，没有可跳过。",
+    en: "Projects: share project names, your role and key outcomes, or skip if none.",
+  },
+  {
+    section: "education",
+    field: "education",
+    hasContent: (draft) => draft.education.length > 0,
+    zh: "教育经历：请提供学校、专业、学历与时间，没有可跳过。",
+    en: "Education: share your school, major, degree and dates, or skip if none.",
+  },
+  {
+    section: "certifications",
+    field: "certifications",
+    hasContent: (draft) => draft.certifications.length > 0,
+    zh: "证书与作品：如有证书、获奖或作品集链接请提供，没有可跳过。",
+    en: "Certifications & portfolio: share any certificates, awards or portfolio links, or skip if none.",
+  },
+];
+
 export const buildPendingQuestions = (
   draft: ResumeDraft,
   factIssues: string[],
-  language: ResumeAgentLocale
+  language: ResumeAgentLocale,
+  answeredQuestions?: ResumeAgentQuestionAnswer[]
 ): ResumeAgentPendingQuestion[] => {
   const zh = language === "zh";
   const seen = new Set<string>();
@@ -151,7 +206,30 @@ export const buildPendingQuestions = (
   for (const question of draft.followUpQuestions) push(question, "draft.followUp", "warning");
   for (const issue of factIssues) push(issue, "fact.gate", "warning");
 
-  return questions.slice(0, 12);
+  // 板块覆盖确认：除基本信息（由上方必填项覆盖）外的每个空板块都逐一询问，
+  // 确保用户对所有板块都有机会补充或显式跳过（"有就写，没有就不写"）。
+  // 稳定 id（section-*）让已作答（含跳过）的板块不再重复追问。
+  const answeredSections = new Set(
+    (answeredQuestions || [])
+      .filter((answer) => answer.questionId.startsWith("section-"))
+      .map((answer) => answer.questionId.slice("section-".length))
+  );
+  for (const entry of SECTION_COVERAGE) {
+    if (answeredSections.has(entry.section)) continue;
+    if (entry.hasContent(draft)) continue;
+    const text = zh ? entry.zh : entry.en;
+    const base = classify(text, language);
+    questions.push({
+      id: `section-${entry.section}`,
+      field: entry.field,
+      question: text,
+      severity: "warning",
+      ...base,
+      options: [...base.options, OPTIONS[language].noContent],
+    });
+  }
+
+  return questions.slice(0, 16);
 };
 
 /** 把选择与补充文本拼成一条可回灌进对话的用户消息 */

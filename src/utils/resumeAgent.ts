@@ -252,12 +252,37 @@ export const validateResumeDraft = (draft: ResumeDraft): ResumeAgentValidationRe
   return { issues, errorCount, warningCount, canSave: errorCount === 0 };
 };
 
+const escapeHtml = (value: string) =>
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 const listHtml = (items: string[]) =>
-  items.length
-    ? `<ul>${items
-        .map((item) => `<li>${item.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</li>`)
-        .join("")}</ul>`
-    : "";
+  items.length ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : "";
+
+/**
+ * 技能列表的 HTML。draft.skills 支持模型输出的「类别名: 技能、技能」分组格式
+ * （如 "前端开发: React、TypeScript、Tailwind CSS"）：冒号前渲染为加粗的类别名，
+ * 冒号后的技能串保持原分隔符；不含冒号的普通条目渲染为单行 <li>。
+ * education/experience/projects 的 details 不走此函数，保持普通列表。
+ */
+const skillListHtml = (items: string[]) => {
+  if (!items.length) return "";
+  const lines = items
+    .map((item) => {
+      const raw = item.trim();
+      if (!raw) return "";
+      const sep = raw.search(/[:：]/);
+      if (sep > 0) {
+        const category = raw.slice(0, sep).trim();
+        const skills = raw.slice(sep + 1).trim();
+        if (category && skills) {
+          return `<li><strong>${escapeHtml(category)}</strong>：${escapeHtml(skills)}</li>`;
+        }
+      }
+      return `<li>${escapeHtml(raw)}</li>`;
+    })
+    .filter(Boolean);
+  return lines.length ? `<ul>${lines.join("")}</ul>` : "";
+};
 
 const customFieldsFromDraft = (draft: ResumeDraft) => {
   const values = [
@@ -327,7 +352,7 @@ export const createResumeFromAgentDraft = (
     projects: draft.projects.map((item) => ({ id: generateUUID(), name: item.name, role: item.role, date: item.date, description: listHtml(item.details), link: item.link, visible: true })),
     certificates: [],
     customData,
-    skillContent: listHtml(draft.skills),
+    skillContent: skillListHtml(draft.skills),
     selfEvaluationContent: draft.summary ? `<p>${draft.summary.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>` : "",
     menuSections,
     activeSection: "basic",

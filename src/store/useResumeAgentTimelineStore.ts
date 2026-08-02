@@ -21,7 +21,7 @@ const IGNORED_EVENT_TYPES = new Set<ResumeAgentJobEvent["type"]>([
 
 const RUNTIME_STAGES = new Set(["native-runtime", "runtime", "fallback"]);
 /** 非工具类 trace stage：直接作为顶层里程碑，不去找同名工具步骤 */
-const STANDALONE_STAGES = new Set(["research-loop", "model-output"]);
+const STANDALONE_STAGES = new Set(["research-loop", "model-output", "continue-runtime"]);
 const TERMINAL_STATUSES = new Set<AgentStepStatus>([
   "completed",
   "warning",

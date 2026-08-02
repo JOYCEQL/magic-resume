@@ -366,6 +366,9 @@ export default function ResumeAgentPage() {
       return;
     }
     const isRetry = Boolean(retryContent);
+    // 续聊：第一轮已结束（waiting_user / completed），用户直接在输入框发新消息。
+    // 复用同一个 Job 与事件流、不重置时间线；服务端保留岗位调研，只重跑定制步骤。
+    const isContinuation = !isRetry && Boolean(activeJobId);
     const nextMessages = isRetry
       ? messages
       : [
@@ -375,9 +378,12 @@ export default function ResumeAgentPage() {
     if (!isRetry) setMessages(nextMessages);
     setLastSubmittedContent(content);
     setInput("");
-    resetTimeline();
-    // 新一轮（或 /resume 重跑）从头读事件；作答走 submitAnswers，不重置
-    sequenceRef.current = 0;
+    if (!isContinuation) {
+      resetTimeline();
+      // 新一轮（或 /resume 重跑）从头读事件；续聊从上次序列续读
+      sequenceRef.current = 0;
+    }
+    // 上一轮的澄清/方向卡片属于旧交互，本轮重新运行后由事件流重建
     setPendingQuestions([]);
     setDiscoveredDirections([]);
     // 新一轮会产出新的缺口清单，提醒条要重新出现
@@ -392,10 +398,11 @@ export default function ResumeAgentPage() {
     const timeoutId = window.setTimeout(() => controller.abort("timeout"), RESUME_AGENT_TIMEOUT_MS);
     let jobId: string | undefined;
     try {
-      const resumeExistingJob = isRetry && Boolean(activeJobId);
+      // retry 走 /resume；续聊走 /continue；两者都复用当前 Job
+      const resumeExistingJob = Boolean(activeJobId);
       const jobResponse = await fetch(
         resumeExistingJob
-          ? `/api/resume-agent/jobs/${encodeURIComponent(activeJobId!)}/resume`
+          ? `/api/resume-agent/jobs/${encodeURIComponent(activeJobId!)}/${isRetry ? "resume" : "continue"}`
           : "/api/resume-agent/jobs",
         {
           method: "POST",

@@ -623,17 +623,30 @@ const executeJob = async (
     : controller.signal;
   try {
     job.status = "running";
+    const isFirstRun = !job.startedAt;
     job.startedAt ||= now();
     job.updatedAt = now();
     job.error = undefined;
     await saveJob(job);
     await appendJobEvent(job.id, "job.started", { runtime: "native", budgetMs: JOB_BUDGET_MS });
-    await emitTrace(job, {
-      stage: "native-runtime",
-      title: "已启动 Magic Resume 原生简历 Agent",
-      detail: "由显式工作流控制工具、事实门禁、预算和停止，不依赖 OpenCode sidecar",
-      status: "completed",
-    });
+    if (isFirstRun) {
+      await emitTrace(job, {
+        stage: "native-runtime",
+        title: "已启动 Magic Resume 原生简历 Agent",
+        detail: "由显式工作流控制工具、事实门禁、预算和停止，不依赖 OpenCode sidecar",
+        status: "completed",
+      });
+    } else {
+      // 续聊 / 恢复 / 作答：Job 已跑过一轮，时间线沿用旧步骤，不再重复「已启动」欢迎语，
+      // 改为一条信息性的「继续定制」里程碑。standalone milestone 没有后续 completed
+      // 事件（store 只结算 phase 步骤），所以直接以 completed 状态发出，避免永远转圈。
+      await emitTrace(job, {
+        stage: "continue-runtime",
+        title: "继续本轮对话定制简历",
+        detail: "沿用已提取的候选人事实与岗位调研，仅根据你的新消息更新草稿；如目标变化会自动重新调研",
+        status: "completed",
+      });
+    }
 
     normalizeCheckpoint(job);
     if (!hasCompletedStep(job, "candidate_facts")) {
@@ -679,6 +692,49 @@ const executeJob = async (
       }));
       job.assistantMessage = initial.assistantMessage;
       await completeStep(job, "candidate_facts");
+    }
+
+    // 续聊目标一致性检测：candidate_facts 重跑后，若目标（公司/职位/JD 链接）与
+    // 上一轮调研不一致，则回退调研相关步骤重新调研；一致则保持 job_research
+    // completed，跳过重复调研与重复计费。
+    if (
+      hasCompletedStep(job, "job_research") &&
+      job.checkpoint.research &&
+      job.checkpoint.draft
+    ) {
+      const draft = job.checkpoint.draft;
+      const research = job.checkpoint.research;
+      const latestInput = latestUserText(job.input.messages);
+      const companyChanged =
+        draft.targetJob.company.trim() &&
+        draft.targetJob.company.trim().toLowerCase() !== research.targetCompany.trim().toLowerCase();
+      const titleChanged =
+        draft.targetJob.title.trim() &&
+        draft.targetJob.title.trim().toLowerCase() !== research.targetRole.trim().toLowerCase();
+      // 只把「本轮新消息里出现的、上一轮调研没处理过的 URL」当作目标变化信号；
+      // 旧草稿 jobDescription 里的 URL 上一轮已处理过，不重复触发重新调研。
+      const hasNewUrls = findPublicUrls(latestInput).some(
+        (url) => !(research.sources || []).some((source) => source.url === url)
+      );
+      if (companyChanged || titleChanged || hasNewUrls) {
+        job.checkpoint.completedSteps = job.checkpoint.completedSteps.filter(
+          (step) =>
+            step !== "job_research" &&
+            step !== "jd_analysis" &&
+            step !== "career_ops_evaluation" &&
+            step !== "resume_tailoring" &&
+            step !== "fact_gate"
+        );
+        job.checkpoint.research = null;
+        job.checkpoint.evaluation = null;
+        await saveCheckpoint(job);
+        await appendJobEvent(job.id, "checkpoint.saved", {
+          phase: job.phase,
+          step: job.checkpoint.step,
+          status: job.status,
+          targetChanged: true,
+        });
+      }
     }
 
     if (!job.checkpoint.draft) throw new Error("候选人事实检查点缺少简历草稿");
@@ -811,7 +867,12 @@ const executeJob = async (
     }
     const factIssues = job.checkpoint.factIssues;
     const language = job.input.locale.toLowerCase().startsWith("en") ? "en" : "zh";
-    const pendingQuestions = buildPendingQuestions(job.checkpoint.draft, factIssues, language);
+    const pendingQuestions = buildPendingQuestions(
+      job.checkpoint.draft,
+      factIssues,
+      language,
+      job.checkpoint.answeredQuestions
+    );
     const requiresAnswer = pendingQuestions.length > 0 || !job.checkpoint.draft.targetJob.title;
 
     await changePhase(job, "user_confirmation");
@@ -971,6 +1032,51 @@ export const resumeResumeAgentJob = async (
   job.checkpoint.pendingQuestions = [];
   job.updatedAt = now();
   await saveJob(job);
+  void executeJob(job.id, provider);
+  return job;
+};
+
+/**
+ * 多轮续聊：第一轮结束后用户直接在输入框发新消息。
+ * 追加消息并回退 candidate_facts / resume_tailoring / fact_gate，让模型基于
+ * 新消息重新提取事实并定制；job_research 保持 completed —— 目标未变时跳过
+ * 重复调研与重复计费（executeJob 里的目标一致性检测会在目标变化时回退它）。
+ * 已作答（含跳过）的澄清项保留在 checkpoint，板块覆盖确认不会重复追问。
+ */
+export const continueResumeAgentJob = async (
+  jobId: string,
+  provider: ResumeAgentProviderPayload,
+  messages?: CreateResumeAgentJobRequest["messages"],
+  options?: { exposeReasoning?: boolean }
+) => {
+  const job = await getJob(jobId);
+  if (!job) return null;
+  if (controllers.has(jobId) || ["queued", "running"].includes(job.status)) {
+    throw new Error("当前 Job 正在执行，无法继续对话");
+  }
+  normalizeCheckpoint(job);
+  if (messages?.length) job.input.messages = messages.slice(-30);
+  if (typeof options?.exposeReasoning === "boolean") {
+    job.input.exposeReasoning = options.exposeReasoning;
+  }
+  job.checkpoint.completedSteps = job.checkpoint.completedSteps.filter(
+    (step) => step !== "candidate_facts" && step !== "resume_tailoring" && step !== "fact_gate"
+  );
+  job.checkpoint.pendingQuestion = undefined;
+  job.checkpoint.pendingQuestions = [];
+  job.checkpoint.factIssues = [];
+  job.checkpoint.discoveredDirections = undefined;
+  job.status = "queued";
+  job.error = undefined;
+  job.completedAt = undefined;
+  job.updatedAt = now();
+  await saveJob(job);
+  await appendJobEvent(job.id, "checkpoint.saved", {
+    phase: job.phase,
+    step: job.checkpoint.step,
+    status: job.status,
+    continued: true,
+  });
   void executeJob(job.id, provider);
   return job;
 };

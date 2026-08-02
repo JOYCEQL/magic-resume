@@ -4,6 +4,7 @@ import type {
   DiscoveredDirection,
   JobResearchBundle,
   ResearchSource,
+  ResumeAgentIntent,
   ResumeAgentJob,
   ResumeAgentModelCall,
   ResumeAgentProviderPayload,
@@ -14,7 +15,7 @@ import { createEmptyResumeDraft, normalizeResumeDraft } from "@/utils/resumeAgen
 import { runDiscoveryLoop, runResearchAgentLoop, supportsAgentLoop } from "./agent-loop";
 import { buildPendingQuestions } from "./clarification";
 import { appendJobEvent, createJob, getJob, saveJob } from "./job-repository";
-import { generateResumeDraft } from "./model-adapter";
+import { classifyUserIntent, generateResumeDraft } from "./model-adapter";
 import { executeNativeTool } from "./tool-registry";
 import type { WebSearchOutcome } from "./web-search";
 
@@ -76,6 +77,7 @@ const normalizeCheckpoint = (job: ResumeAgentJob) => {
   job.checkpoint.factIssues ||= [];
   job.checkpoint.pendingQuestions ||= [];
   job.checkpoint.answeredQuestions ||= [];
+  job.checkpoint.intentSkipped ||= false;
   job.modelCalls ||= [];
 };
 
@@ -649,6 +651,78 @@ const executeJob = async (
     }
 
     normalizeCheckpoint(job);
+
+    // ── 意图分流层（intake）────────────────────────────────────────────
+    // 输入框消息（新建 / 续聊）每轮先由模型判断意图。纯聊天（问候/闲聊/道谢/
+    // 问能力）直接返回一条带引导的回复并进入 waiting_user，不启动工作流、不调
+    // 任何工具；识别到简历素材或制作/修改请求才继续。闲聊轮次不标记任何步骤，
+    // 所以下一条消息会再次分流，直到真正进入简历流程。作答与方向选择是明确的
+    // 简历操作，调用方已设置 intentSkipped 跳过本层。
+    const skipIntent = job.checkpoint.intentSkipped === true;
+    job.checkpoint.intentSkipped = false;
+    if (!skipIntent) {
+      await emitTrace(job, {
+        stage: "intake",
+        title: "正在判断你的意图",
+        detail: "闲聊会直接回复；检测到简历素材或制作请求后开始整理",
+        status: "running",
+      });
+      let intent: ResumeAgentIntent = "resume";
+      let chatReply = "";
+      try {
+        const classified = await classifyUserIntent(
+          provider,
+          job.input.locale,
+          job.input.messages,
+          signal
+        );
+        intent = classified.intent;
+        chatReply = classified.reply || "";
+      } catch (error) {
+        // 分类失败保守按 resume 处理：宁可多跑工作流，也不丢用户可能给的素材
+        await emitTrace(job, {
+          stage: "intake",
+          title: "意图判断失败，按简历制作继续",
+          detail: error instanceof Error ? error.message : String(error),
+          status: "warning",
+        });
+      }
+      if (intent === "chat") {
+        await emitTrace(job, {
+          stage: "intake",
+          title: "闲聊：直接回复，不启动工作流",
+          detail: "未检测到简历素材，等待你提供基本信息或目标岗位",
+          status: "completed",
+        });
+        const en = job.input.locale.toLowerCase().startsWith("en");
+        const reply =
+          chatReply ||
+          (en
+            ? "Hi! I can turn our conversation into a professional resume. Share your basic info and target job (or paste a JD link) and I will start tailoring it for you."
+            : "你好！我可以把聊天内容整理成一份专业简历。告诉我你的基本信息和目标岗位（或粘贴 JD 链接），我就开始为你定制。");
+        job.assistantMessage = reply;
+        job.checkpoint.pendingQuestion = undefined;
+        job.checkpoint.pendingQuestions = [];
+        job.checkpoint.factIssues = [];
+        job.status = "waiting_user";
+        await saveCheckpoint(job);
+        await appendJobEvent(job.id, "user.required", {
+          question: reply,
+          factIssues: [],
+          questions: [],
+          readyToConfirm: false,
+          mode: "chat",
+        });
+        return;
+      }
+      await emitTrace(job, {
+        stage: "intake",
+        title: "识别到简历意图，开始整理",
+        detail: "检测到简历素材或制作/修改请求，进入候选人事实提取",
+        status: "completed",
+      });
+    }
+
     if (!hasCompletedStep(job, "candidate_facts")) {
       await changePhase(job, "candidate_facts");
       const startedAt = now();
@@ -1128,6 +1202,8 @@ export const answerResumeAgentQuestions = async (
   // 时会用新一轮的结果整体覆盖，不会残留。
   job.checkpoint.pendingQuestion = undefined;
   job.checkpoint.factIssues = [];
+  // 作答是明确的简历操作，跳过 executeJob 的意图分流层
+  job.checkpoint.intentSkipped = true;
   if (typeof options?.exposeReasoning === "boolean") {
     job.input.exposeReasoning = options.exposeReasoning;
   }
@@ -1203,6 +1279,8 @@ export const selectResumeAgentDirection = async (
   job.checkpoint.evaluation = null;
   job.checkpoint.discoveredDirections = undefined;
   job.checkpoint.pendingQuestion = undefined;
+  // 方向选择是明确的简历操作，跳过 executeJob 的意图分流层
+  job.checkpoint.intentSkipped = true;
   if (typeof options?.exposeReasoning === "boolean") {
     job.input.exposeReasoning = options.exposeReasoning;
   }

@@ -82,6 +82,8 @@ export default function ResumeAgentPage() {
   const [gapNoticeDismissed, setGapNoticeDismissed] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  /** 本轮终态是否为闲聊轮次（user.required mode=chat）；applyFinalJob 用它区分展示 */
+  const chatModeRef = useRef(false);
   /** 卸载标记：路由跳走时 abort 触发的 catch 不应再弹 toast / 写 store */
   const mountedRef = useRef(true);
   /** 当前 Job id 的 ref 副本：卸载清理在 effect 之外也需要它 */
@@ -263,6 +265,9 @@ export default function ResumeAgentPage() {
       // 阶段一的方向事件在同一个 user.required 上携带 directions 载荷
       const directions = event.payload.directions as DiscoveredDirection[] | undefined;
       setDiscoveredDirections(Array.isArray(directions) ? directions : []);
+      // 闲聊轮次（mode=chat）：assistant 只回了聊天内容，用 idle 呈现而非澄清等待
+      const mode = event.payload.mode as "chat" | "clarify" | undefined;
+      chatModeRef.current = mode === "chat";
     }
   };
 
@@ -320,6 +325,14 @@ export default function ResumeAgentPage() {
       { id: generateUUID(), role: "assistant", content: assistantMessage, createdAt: new Date().toISOString() },
     ]);
     if (finalJob.status === "waiting_user") {
+      // 闲聊轮次：Job 只回了聊天内容，等用户继续输入。不展开轨迹、不弹澄清卡片，
+      // 呈现为普通对话（对话区已有 assistant 回复气泡）。
+      if (chatModeRef.current) {
+        chatModeRef.current = false;
+        setRunState("idle");
+        setTraceBlockCollapsed(true);
+        return;
+      }
       // 不是完成：Job 在等用户补充信息。轨迹保持展开，让用户知道还有一张表单要填。
       setRunState("waiting_user");
       setTraceBlockCollapsed(false);
@@ -545,6 +558,7 @@ export default function ResumeAgentPage() {
     setActiveJobId(undefined);
     resetTimeline();
     sequenceRef.current = 0;
+    chatModeRef.current = false;
     setPendingQuestions([]);
     setDiscoveredDirections([]);
     setGapNoticeDismissed(false);

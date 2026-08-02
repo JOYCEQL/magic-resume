@@ -1,6 +1,7 @@
 import { AI_MODEL_CONFIGS, type AIModelType } from "@/config/ai";
 import { getGeminiModelInstance } from "@/lib/server/gemini";
 import type {
+  ResumeAgentIntent,
   ResumeAgentProviderPayload,
   ResumeDraft,
 } from "@/types/resume-agent";
@@ -242,3 +243,91 @@ export const generateResumeDraft = async (
       : draft.followUpQuestions[0] || (language === "en" ? "Draft updated." : "草稿已更新，请核对事实。");
   return { assistantMessage, draft, reasoning };
 }, input.signal);
+
+const INTENT_SYSTEM_PROMPT = `You are the front desk of Magic Resume's native Resume Agent.
+Decide whether the user is working on their resume or just chatting.
+Rules:
+1. Return ONLY a JSON object (no markdown fence, no prose): either {"intent":"chat","reply":"..."} or {"intent":"resume"}.
+2. "resume" when the user: explicitly asks to create or update a resume, OR provides any resume material (name, contact, skills, work experience, education, projects, certifications, target company, job description, a JD link, a portfolio link, quantified achievements).
+3. "chat" when the user: greets, asks about capabilities, chit-chats, thanks, or says anything unrelated to resume work.
+4. For "chat": write a friendly 2-4 sentence reply in the same language as the user's input. Briefly introduce what you can do (turn chatting into a professional resume, research the target job's latest JD, tailor to ATS keywords, ask about missing details, export to PDF) and guide them to send their basic info plus target job / JD link to get started.
+5. For "resume": do NOT include a reply field.
+6. Never invent facts about the user.`;
+
+export interface ClassifyIntentResult {
+  intent: ResumeAgentIntent;
+  /** intent 为 chat 时模型生成的带引导回复 */
+  reply?: string;
+}
+
+/**
+ * 输入框消息的轻量意图分类：判断最新消息是闲聊还是简历制作/修改。
+ * 一次调用同时产出意图与（闲聊时的）回复，聊一轮只花一次短模型调用。
+ * 解析失败会抛错，由调用方保守回退为 resume。
+ */
+export const classifyUserIntent = async (
+  provider: ResumeAgentProviderPayload,
+  locale: string,
+  messages: Array<{ role: "user" | "assistant"; content: string }>,
+  signal?: AbortSignal
+): Promise<ClassifyIntentResult> => withModelRetry(async () => {
+  const modelType = provider.modelType as AIModelType;
+  const modelConfig = AI_MODEL_CONFIGS[modelType];
+  if (!modelConfig) throw new Error("不支持的 AI 服务商");
+  const context = JSON.stringify({
+    locale,
+    recentMessages: messages.slice(-6),
+    instruction:
+      "Decide whether the user is providing resume material or just chatting, then return the JSON object.",
+  });
+  let content = "";
+  if (modelType === "gemini") {
+    const model = getGeminiModelInstance({
+      apiKey: provider.apiKey,
+      model: provider.model || "gemini-flash-latest",
+      systemInstruction: INTENT_SYSTEM_PROMPT,
+      generationConfig: { temperature: 0.2, responseMimeType: "application/json" },
+    });
+    const result = await model.generateContent(context);
+    content = result.response.text() || "";
+  } else {
+    const response = await fetch(modelConfig.url(provider.apiEndpoint), {
+      method: "POST",
+      headers: modelConfig.headers(provider.apiKey),
+      body: JSON.stringify({
+        model: modelConfig.requiresModelId ? provider.model : modelConfig.defaultModel,
+        temperature: 0.2,
+        ...(modelType === "opencode" ? {} : { response_format: { type: "json_object" } }),
+        messages: [
+          { role: "system", content: INTENT_SYSTEM_PROMPT },
+          { role: "user", content: context },
+        ],
+      }),
+      signal: signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(45000)])
+        : AbortSignal.timeout(45000),
+    });
+    const raw = await response.text();
+    if (!response.ok) throw new Error(parseUpstreamError(raw, `模型接口错误：${response.status}`));
+    let upstream: { choices?: Array<{ message?: { content?: string } }> };
+    try {
+      upstream = raw ? JSON.parse(raw) : {};
+    } catch {
+      throw new Error("模型接口返回了无效 JSON");
+    }
+    content = upstream.choices?.[0]?.message?.content || "";
+  }
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = parseJsonPayload(content);
+  } catch (error) {
+    // 解析失败时把原始片段带回去，便于诊断意图判断为何失败
+    const failure = error instanceof Error ? error : new Error(String(error));
+    (failure as Error & { rawExcerpt?: string }).rawExcerpt =
+      stripReasoningBlocks(content).slice(0, RAW_EXCERPT_LIMIT) || content.slice(0, RAW_EXCERPT_LIMIT);
+    throw failure;
+  }
+  const intent: ResumeAgentIntent = parsed.intent === "chat" ? "chat" : "resume";
+  const reply = typeof parsed.reply === "string" ? parsed.reply.trim() : "";
+  return { intent, reply };
+}, signal);

@@ -143,6 +143,8 @@ export interface ResumeAgentRequest extends ResumeAgentProviderPayload {
 }
 
 export type ResumeAgentRuntime = "native" | "opencode" | "direct";
+/** 输入框消息的意图：纯聊天 vs 简历制作/修改 */
+export type ResumeAgentIntent = "chat" | "resume";
 export type ResumeAgentJobStatus =
   | "queued"
   | "running"
@@ -318,6 +320,11 @@ export interface ResumeAgentWorkflowCheckpoint {
   pendingQuestions?: ResumeAgentPendingQuestion[];
   /** v3：已作答的澄清项，会回灌进下一轮对话 */
   answeredQuestions?: ResumeAgentQuestionAnswer[];
+  /**
+   * 明确跳过意图分流的轮次（作答 / 方向选择）。输入框消息（新建 / 续聊）
+   * 默认每轮都做意图判断，消费后即重置。
+   */
+  intentSkipped?: boolean;
   /**
    * 阶段一发现的候选方向。用户未提供目标公司时产出，Job 随即进入 waiting_user
    * 等其选择；选定后清空并进入阶段二精确调研。

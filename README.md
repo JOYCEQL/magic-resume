@@ -137,6 +137,9 @@ You can follow the latest updates via:
 
 If you find this project helpful, please give it a star ⭐️
 
+<img src="images/support-1.jpg" width="320" alt="Support project image 1">
+<img src="images/support-2.jpg" width="320" alt="Support project image 2">
+
 ## ❤️ Sponsors
 
 <div align="center">

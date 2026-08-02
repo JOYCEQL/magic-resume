@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { useTranslations } from "@/i18n/compat/client";
 import { useRouter } from "@/lib/navigation";
 import { Dock, DockIcon } from "@/components/magicui/dock";
@@ -66,17 +65,9 @@ const MagicThread = ({ height = 40 }: { height?: number }) => (
     <div className="absolute inset-y-0 w-[1px] border-l border-dashed border-primary/30" />
     
     {/* Traveling pulse */}
-    <motion.div
-      className="absolute top-0 w-[1px] h-4 bg-gradient-to-b from-transparent via-primary to-transparent"
-      animate={{
-        top: ["0%", "100%"],
-        opacity: [0, 1, 0],
-      }}
-      transition={{
-        duration: 2.5,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
+    <div
+      className="absolute top-0 w-[1px] h-4 bg-gradient-to-b from-transparent via-primary to-transparent animate-[thread-travel_2.5s_ease-in-out_infinite]"
+      style={{ "--thread-travel": `${height}px` } as React.CSSProperties}
     />
   </div>
 );

@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AI_MODEL_CONFIGS, type AIModelType } from "@/config/ai";
 import { formatGeminiErrorMessage, getGeminiModelInstance } from "@/lib/server/gemini";
-import type { ResumeAgentRequest } from "@/types/resume-agent";
+import {
+  isOpenCodeRuntimeHealthy,
+  runOpenCodeResumeAgent,
+} from "@/lib/server/resumeAgentRuntime";
+import type {
+  ResumeAgentRequest,
+  ResumeAgentResponse,
+  ResumeAgentTraceEvent,
+} from "@/types/resume-agent";
 import { normalizeResumeDraft } from "@/utils/resumeAgent";
 
 const SYSTEM_PROMPT = `You are the Resume Agent inside Magic Resume. Follow these rules strictly:
@@ -68,12 +76,173 @@ const buildUserContext = (body: ResumeAgentRequest) =>
       locale: body.locale,
       currentDraft: body.currentDraft ?? null,
       conversation: body.messages.slice(-30),
-      instruction:
-        "Update the complete draft using the full conversation. Return all retained fields, not a patch.",
+      instruction: "Update the complete draft using the full conversation. Return all retained fields, not a patch.",
     },
     null,
     2
   );
+
+const validateRequest = (body: ResumeAgentRequest) => {
+  const modelType = body.modelType as AIModelType;
+  const modelConfig = AI_MODEL_CONFIGS[modelType];
+  return Boolean(
+    modelConfig &&
+      body.apiKey &&
+      Array.isArray(body.messages) &&
+      (!modelConfig.requiresModelId || body.model) &&
+      (modelType !== "openai" || body.apiEndpoint)
+  );
+};
+
+const runDirectAgent = async (
+  body: ResumeAgentRequest,
+  requestSignal?: AbortSignal
+): Promise<ResumeAgentResponse> => {
+  const modelType = body.modelType as AIModelType;
+  const modelConfig = AI_MODEL_CONFIGS[modelType];
+  let content = "";
+  const userContext = buildUserContext(body);
+  if (modelType === "gemini") {
+    const modelInstance = getGeminiModelInstance({
+      apiKey: body.apiKey,
+      model: body.model || "gemini-flash-latest",
+      systemInstruction: SYSTEM_PROMPT,
+      generationConfig: { temperature: 0.2, responseMimeType: "application/json" },
+    });
+    const result = await modelInstance.generateContent(userContext);
+    content = result.response.text() || "";
+  } else {
+    const response = await fetch(modelConfig.url(body.apiEndpoint), {
+      method: "POST",
+      headers: modelConfig.headers(body.apiKey),
+      body: JSON.stringify({
+        model: modelConfig.requiresModelId ? body.model : modelConfig.defaultModel,
+        temperature: 0.2,
+        ...(modelType === "opencode" ? {} : { response_format: { type: "json_object" } }),
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: userContext },
+        ],
+      }),
+      signal: requestSignal
+        ? AbortSignal.any([requestSignal, AbortSignal.timeout(120000)])
+        : AbortSignal.timeout(120000),
+    });
+    const raw = await response.text();
+    if (!response.ok) throw new Error(parseUpstreamError(raw, `Upstream API error: ${response.status}`));
+    let upstream: any;
+    try {
+      upstream = raw ? JSON.parse(raw) : {};
+    } catch {
+      throw new Error("Invalid upstream response: expected JSON payload");
+    }
+    content = upstream?.choices?.[0]?.message?.content || "";
+  }
+
+  const parsed = parseJsonPayload(content);
+  const language = body.locale?.toLowerCase().startsWith("en") ? "en" : "zh";
+  const draft = normalizeResumeDraft(parsed.draft, language);
+  const assistantMessage =
+    typeof parsed.assistantMessage === "string" && parsed.assistantMessage.trim()
+      ? parsed.assistantMessage.trim()
+      : draft.followUpQuestions[0] || (language === "en" ? "Draft updated." : "草稿已更新，请检查右侧内容。");
+  return { assistantMessage, draft, runtime: "direct", trace: [] };
+};
+
+const isThinkingToolChoiceError = (error: unknown) =>
+  /thinking mode does not support this tool_choice/i.test(
+    error instanceof Error ? error.message : String(error)
+  );
+
+const isRuntimeStopError = (error: unknown) =>
+  /工具调用已停止|agent 在 85 秒内未完成/i.test(
+    error instanceof Error ? error.message : String(error)
+  );
+
+const streamResponse = (body: ResumeAgentRequest, requestSignal: AbortSignal) => {
+  const encoder = new TextEncoder();
+  const trace: ResumeAgentTraceEvent[] = [];
+  let controller: ReadableStreamDefaultController<Uint8Array>;
+  let closed = false;
+  const send = (type: "trace" | "result" | "error", payload: unknown) => {
+    if (closed) return;
+    try {
+      controller.enqueue(encoder.encode(`${JSON.stringify({ type, payload })}\n`));
+    } catch {
+      closed = true;
+    }
+  };
+  const stream = new ReadableStream<Uint8Array>({
+    start(value) {
+      controller = value;
+      void (async () => {
+        try {
+          const runtimeHealthy = body.preferRuntime !== false && (await isOpenCodeRuntimeHealthy());
+          let result: ResumeAgentResponse;
+          if (runtimeHealthy) {
+            try {
+              result = await runOpenCodeResumeAgent(body, (event) => {
+                trace.push(event);
+                send("trace", event);
+              }, requestSignal);
+            } catch (runtimeError) {
+              if (requestSignal.aborted || isRuntimeStopError(runtimeError)) throw runtimeError;
+              const modelCompatibilityError = isThinkingToolChoiceError(runtimeError);
+              const fallback: ResumeAgentTraceEvent = {
+                id: `${Date.now()}-fallback`,
+                stage: "fallback",
+                title: modelCompatibilityError
+                  ? "当前模型的思考模式与工具调用不兼容，已切换为直接生成"
+                  : "OpenCode Agent 调用失败，已切换为直接生成",
+                detail: modelCompatibilityError
+                  ? "请关闭该模型的思考模式，或选择支持 OpenCode 工具调用的模型。直接生成不会执行岗位调研工具。"
+                  : runtimeError instanceof Error
+                    ? runtimeError.message.slice(0, 240)
+                    : "未知 Agent 调用错误",
+                status: "warning",
+              };
+              trace.push(fallback);
+              send("trace", fallback);
+              result = await runDirectAgent(body, requestSignal);
+            }
+          } else {
+            const fallback: ResumeAgentTraceEvent = {
+              id: `${Date.now()}-direct`,
+              stage: "fallback",
+              title: "当前使用兼容生成模式",
+              detail: "未检测到 OpenCode sidecar；结果不会被标记为多工具岗位调研",
+              status: "warning",
+            };
+            trace.push(fallback);
+            send("trace", fallback);
+            result = await runDirectAgent(body, requestSignal);
+          }
+          send("result", { ...result, trace });
+        } catch (error) {
+          send("error", {
+            message: error instanceof Error ? error.message : formatGeminiErrorMessage(error),
+          });
+        } finally {
+          if (!closed) {
+            closed = true;
+            try {
+              controller.close();
+            } catch {
+              // The browser may have cancelled the response stream already.
+            }
+          }
+        }
+      })();
+    },
+  });
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "application/x-ndjson; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+};
 
 export const Route = createFileRoute("/api/resume-agent")({
   server: {
@@ -81,70 +250,10 @@ export const Route = createFileRoute("/api/resume-agent")({
       POST: async ({ request }) => {
         try {
           const body = (await request.json()) as ResumeAgentRequest;
-          const modelType = body.modelType as AIModelType;
-          const modelConfig = AI_MODEL_CONFIGS[modelType];
-          if (
-            !modelConfig ||
-            !body.apiKey ||
-            !Array.isArray(body.messages) ||
-            (modelConfig.requiresModelId && !body.model) ||
-            (modelType === "openai" && !body.apiEndpoint)
-          ) {
+          if (!validateRequest(body)) {
             return Response.json({ error: "AI provider configuration is incomplete" }, { status: 400 });
           }
-
-          let content = "";
-          const userContext = buildUserContext(body);
-          if (modelType === "gemini") {
-            const modelInstance = getGeminiModelInstance({
-              apiKey: body.apiKey,
-              model: body.model || "gemini-flash-latest",
-              systemInstruction: SYSTEM_PROMPT,
-              generationConfig: { temperature: 0.2, responseMimeType: "application/json" },
-            });
-            const result = await modelInstance.generateContent(userContext);
-            content = result.response.text() || "";
-          } else {
-            const response = await fetch(modelConfig.url(body.apiEndpoint), {
-              method: "POST",
-              headers: modelConfig.headers(body.apiKey),
-              body: JSON.stringify({
-                model: modelConfig.requiresModelId ? body.model : modelConfig.defaultModel,
-                temperature: 0.2,
-                ...(modelType === "opencode" ? {} : { response_format: { type: "json_object" } }),
-                messages: [
-                  { role: "system", content: SYSTEM_PROMPT },
-                  { role: "user", content: userContext },
-                ],
-              }),
-            });
-            const raw = await response.text();
-            if (!response.ok) {
-              return Response.json(
-                { error: parseUpstreamError(raw, `Upstream API error: ${response.status}`) },
-                { status: response.status }
-              );
-            }
-            let upstream: any;
-            try {
-              upstream = raw ? JSON.parse(raw) : {};
-            } catch {
-              return Response.json(
-                { error: "Invalid upstream response: expected JSON payload" },
-                { status: 502 }
-              );
-            }
-            content = upstream?.choices?.[0]?.message?.content || "";
-          }
-
-          const parsed = parseJsonPayload(content);
-          const language = body.locale?.toLowerCase().startsWith("en") ? "en" : "zh";
-          const draft = normalizeResumeDraft(parsed.draft, language);
-          const assistantMessage =
-            typeof parsed.assistantMessage === "string" && parsed.assistantMessage.trim()
-              ? parsed.assistantMessage.trim()
-              : draft.followUpQuestions[0] || (language === "en" ? "Draft updated." : "草稿已更新。请检查右侧内容。 ");
-          return Response.json({ assistantMessage, draft });
+          return streamResponse(body, request.signal);
         } catch (error) {
           console.error("Resume agent error:", error);
           return Response.json({ error: formatGeminiErrorMessage(error) }, { status: 500 });

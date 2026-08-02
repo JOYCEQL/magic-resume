@@ -1,0 +1,88 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "share": "disabled",
+  "snapshot": false,
+  "default_agent": "resume-orchestrator",
+  "subagent_depth": 0,
+  "permission": {
+    "*": "deny",
+    "read": "deny",
+    "edit": "deny",
+    "glob": "deny",
+    "grep": "deny",
+    "list": "deny",
+    "bash": "deny",
+    "task": "deny",
+    "external_directory": "deny",
+    "todowrite": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "lsp": "deny",
+    "skill": "deny",
+    "question": "deny",
+    "doom_loop": "deny",
+    "resume_fetch_job_posting": "allow",
+    "resume_extract_job_posting": "allow",
+    "resume_extract_ats_keywords": "allow",
+    "resume_analyze_skill_gap": "allow",
+    "resume_rank_evidence": "allow",
+    "resume_build_recruiter_risk_map": "allow",
+    "resume_validate_draft_facts": "allow"
+  },
+  "agent": {
+    "resume-orchestrator": {
+      "description": "Builds factual, job-targeted resume drafts using only restricted resume-domain tools",
+      "mode": "primary",
+      "temperature": 0.2,
+      "steps": 10,
+      "prompt": "{file:./.opencode/agents/resume-orchestrator.txt}",
+      "permission": {
+        "*": "deny",
+        "read": "deny",
+        "edit": "deny",
+        "glob": "deny",
+        "grep": "deny",
+        "list": "deny",
+        "bash": "deny",
+        "task": "deny",
+        "external_directory": "deny",
+        "todowrite": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "lsp": "deny",
+        "skill": "deny",
+        "question": "deny",
+        "doom_loop": "deny",
+        "resume_fetch_job_posting": "allow",
+    "resume_extract_job_posting": "allow",
+        "resume_extract_ats_keywords": "allow",
+        "resume_analyze_skill_gap": "allow",
+        "resume_rank_evidence": "allow",
+        "resume_build_recruiter_risk_map": "allow",
+        "resume_validate_draft_facts": "allow"
+      }
+    },
+    "build": {
+      "disable": true
+    },
+    "plan": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    },
+    "explore": {
+      "disable": true
+    },
+    "scout": {
+      "disable": true
+    }
+  },
+  "mcp": {},
+  "formatter": false,
+  "lsp": false,
+  "watcher": {
+    "ignore": ["**/*"]
+  }
+}

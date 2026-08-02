@@ -71,7 +71,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             {basic.name && nameField.visible !== false && (
               <motion.h1
                 layout="position"
-                className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:normal] text-black"
+                className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:anywhere] text-black"
                 style={{ fontSize: `${(globalSettings?.headerSize || 20) * 2}px`, lineHeight: "1.1", marginBottom: "8px" }}
               >
                 {basic.name}
@@ -101,7 +101,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             <div className="flex-1 min-w-[100px] shrink-0">
               <motion.h2
                 layout="position"
-                className="font-normal tracking-wide text-gray-700 whitespace-normal break-normal [overflow-wrap:normal]"
+                className="font-normal tracking-wide text-gray-700 whitespace-normal break-normal [overflow-wrap:anywhere]"
                 style={{ fontSize: `${globalSettings?.subheaderSize || 16}px`, lineHeight: "1.3" }}
               >
                 {basic.title}

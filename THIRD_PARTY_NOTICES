@@ -1,0 +1,23 @@
+Magic Resume Resume Agent - Third-Party Notices
+
+Career Ops
+Copyright (c) Career Ops contributors
+License: MIT
+Source: https://github.com/santifer/career-ops
+
+The native Resume Agent independently reimplements selected workflow ideas and deterministic patterns from Career Ops, including job liveness classification, role matching, job-description skill gap analysis, evidence ranking, recruiter-risk review, and fact gates. Career Ops source files are not executed at runtime and are not used as a second resume data store.
+
+OpenCode
+Copyright (c) OpenCode contributors
+License: MIT
+Source: https://github.com/anomalyco/opencode
+
+OpenCode was used as an architectural reference and remains available only as an optional migration-time legacy sidecar. The default Resume Agent path is implemented inside Magic Resume and does not require OpenCode at runtime.
+
+Resume-Matcher
+License: Apache License 2.0
+Source: https://github.com/srbhr/Resume-Matcher
+
+The three-way skill-gap categorization used by Career Ops (existing / supported by resume / gap) was described as inspired by Resume-Matcher. Magic Resume contains an independent TypeScript implementation and includes this notice to preserve the provenance of that design idea.
+
+These notices do not alter Magic Resume's own license or its additional commercial restrictions. See LICENSE for the terms governing Magic Resume.

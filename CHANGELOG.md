@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v2.1.0
+
+### 🚀 Enhancements
+
+- Conversational resume agent: two-stage career-direction discovery, precise JD research, and a tailored draft ([b82c327](https://github.com/Jiandao303/magic-resume/commit/b82c327))
+- OpenCode Zen provider with a native, tool-gated resume agent runtime ([69823d5](https://github.com/Jiandao303/magic-resume/commit/69823d5))
+- Agent preview with A4 CSS-zoom fidelity and a collapsible template rail
+- Clarification question wizard: explicit step cursor with previous/next navigation and re-editable answers
+- Skills output grouped by category instead of one skill per line
+- Field-path questions humanized and de-duplicated; all seven resume sections get confirmation coverage
+- Migrate from Next.js app router to TanStack Start file routing
+
+### 🩹 Fixes
+
+- SSRF-safe redirects no longer fail the whole job; a redirecting source degrades to a recoverable outcome and the agent moves on
+- Preview now renders through the workbench template chain (page padding, template fonts)
+
 ## v2.0.7
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.6...main)

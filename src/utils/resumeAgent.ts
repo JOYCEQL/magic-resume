@@ -147,6 +147,59 @@ const issue = (
   message: string
 ): ResumeAgentValidationIssue => ({ id: generateUUID(), type, severity, field, message });
 
+const FIELD_LABELS_ZH: Record<string, string> = {
+  "basic.name": "姓名",
+  "basic.contact": "联系方式",
+  "basic.email": "邮箱",
+  "basic.phone": "电话",
+  "basic.title": "目标职位",
+  "basic.location": "所在地",
+  summary: "职业概述",
+  education: "教育经历",
+  school: "学校名称",
+  major: "专业",
+  degree: "学历",
+  startDate: "开始时间",
+  endDate: "结束时间",
+  experience: "工作经历",
+  company: "公司名称",
+  position: "职位名称",
+  date: "任职时间",
+  projects: "项目经历",
+  name: "项目名称",
+  role: "项目角色",
+  skills: "专业技能",
+  certifications: "证书与荣誉",
+  "targetJob.title": "目标岗位",
+  "targetJob.company": "目标公司",
+  "targetJob.jobDescription": "岗位描述",
+};
+
+const humanizeFieldPath = (value: string) => {
+  const raw = value.trim();
+  if (!raw) return "待补充信息";
+  if (/[^\x00-\x7F]/.test(raw) && !/^[\w.[\]-]+$/.test(raw)) return raw;
+  const normalized = raw.replace(/\[(\d+)\]/g, ".$1").replace(/\.(\d+)\./g, ".$1.");
+  const segments = normalized.split(".").filter(Boolean);
+  const index = segments.find((segment) => /^\d+$/.test(segment));
+  const withoutIndex = segments.filter((segment) => !/^\d+$/.test(segment));
+  const fullKey = withoutIndex.join(".");
+  const leaf = withoutIndex[withoutIndex.length - 1] || raw;
+  const section = withoutIndex[0];
+  const sectionLabel = FIELD_LABELS_ZH[section] || "简历信息";
+  const fieldLabel = FIELD_LABELS_ZH[fullKey] || FIELD_LABELS_ZH[leaf] || leaf;
+  if (index && section === "education") return `第 ${Number(index) + 1} 段教育经历的${fieldLabel}`;
+  if (index && section === "experience") return `第 ${Number(index) + 1} 段工作经历的${fieldLabel}`;
+  if (index && section === "projects") return `第 ${Number(index) + 1} 个项目的${fieldLabel}`;
+  return fieldLabel === sectionLabel ? fieldLabel : `${sectionLabel}中的${fieldLabel}`;
+};
+
+const missingFieldMessage = (value: string, zh: boolean) => {
+  if (!zh) return value;
+  const label = humanizeFieldPath(value);
+  return label === value ? value : `建议补充：${label}`;
+};
+
 export const validateResumeDraft = (draft: ResumeDraft): ResumeAgentValidationResult => {
   const zh = draft.language !== "en";
   const issues: ResumeAgentValidationIssue[] = [];
@@ -163,9 +216,15 @@ export const validateResumeDraft = (draft: ResumeDraft): ResumeAgentValidationRe
   if (draft.experience.length === 0 && draft.projects.length === 0) {
     issues.push(issue("missing", "warning", "experience", zh ? "至少补充一段工作或项目经历" : "Add at least one work or project experience"));
   }
-  draft.missingFields.forEach((message) => issues.push(issue("missing", "warning", "draft", message)));
-  draft.conflicts.forEach((message) => issues.push(issue("conflict", "error", "draft", message)));
-  draft.assumptions.forEach((message) => issues.push(issue("assumption", "warning", "draft", message)));
+  draft.missingFields.forEach((message) =>
+    issues.push(issue("missing", "warning", message, missingFieldMessage(message, zh)))
+  );
+  draft.conflicts.forEach((message) =>
+    issues.push(issue("conflict", "error", "draft", zh ? `事实冲突：${message}` : message))
+  );
+  draft.assumptions.forEach((message) =>
+    issues.push(issue("assumption", "warning", "draft", zh ? `待本人确认：${message}` : message))
+  );
   draft.evidence
     .filter((item) => item.confidence === "low")
     .forEach((item) =>

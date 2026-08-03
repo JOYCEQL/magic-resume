@@ -25,6 +25,81 @@ export interface ResumeAgentTraceEvent {
   status: ResumeAgentTraceStatus;
   tool?: string;
   sourceCount?: number;
+  /**
+   * 结构化思维链节点。带此字段的 trace 是决策节点而非叙述文本，
+   * 前端按节点渲染（判断依据 / 执行动作 / 产出 / 校验结论）。
+   * 可选：旧事件与运行时兼容路径不带该字段，前端回退到 detail 文本渲染。
+   */
+  chain?: ReasoningNode;
+}
+
+/** 思维链的五个阶段，严格按顺序推进 */
+export type ReasoningStage =
+  | "requirement" // 阶段一：需求拆解与对齐
+  | "planning" // 阶段二：任务路径与工具规划
+  | "execution" // 阶段三：工具调度与执行
+  | "validation" // 阶段四：结果整合与合规校验
+  | "delivery"; // 阶段五：最终交付
+
+/** 节点自校验结论；每个节点收尾时必须给出 */
+export type ReasoningVerdict =
+  | "pass" // 产出符合预期
+  | "degraded" // 走了降级方案，产出可用但不完整
+  | "blocked" // 卡点，需要外部输入才能继续
+  | "skipped" // 依赖不满足或已完成，主动跳过
+  | "pending"; // 节点仍在执行，尚未校验
+
+/** 工具调用四要素：调用前写入 reason/inputLogic/expected，调用后补校验结论 */
+export interface ReasoningToolCall {
+  tool: string;
+  /** 调用原因：为什么这一步必须用该工具 */
+  reason: string;
+  /** 入参构造逻辑：参数来源与合法性依据 */
+  inputLogic: string;
+  /** 预期返回结果 */
+  expected: string;
+  /** 入参校验未通过项；为空表示通过 */
+  inputIssues?: string[];
+  /** 结果可用性校验未通过项；为空表示通过 */
+  outputIssues?: string[];
+  /** 实际尝试次数（含重试） */
+  attempts?: number;
+  /** 是否走了降级方案 */
+  degraded?: boolean;
+}
+
+/** 卡点声明：原因与补全/降级方案缺一不可 */
+export interface ReasoningBlocker {
+  kind: "missing_info" | "tool_failure" | "ambiguous_requirement" | "budget";
+  reason: string;
+  /** 补全 / 降级方案 */
+  recovery: string;
+}
+
+/**
+ * 思维链的一个决策节点。basis / action 是硬性要求——
+ * 没有判断依据的节点等于流水账，不允许出现。
+ */
+export interface ReasoningNode {
+  id: string;
+  stage: ReasoningStage;
+  /** 阶段内编号，如 "3.2"，供前端排序与展示 */
+  ordinal: string;
+  title: string;
+  /** 判断依据 */
+  basis: string;
+  /** 执行动作 */
+  action: string;
+  /** 预期产出 */
+  expectation?: string;
+  /** 实际产出 */
+  outcome?: string;
+  verdict: ReasoningVerdict;
+  toolCall?: ReasoningToolCall;
+  blocker?: ReasoningBlocker;
+  status: ResumeAgentTraceStatus;
+  startedAt: string;
+  completedAt?: string;
 }
 
 export interface ResumeAgentMessage {

@@ -266,6 +266,46 @@ const applyEvent = (state: TimelineSlice, event: ResumeAgentJobEvent): TimelineS
     case "trace.updated": {
       const trace = event.payload.trace as ResumeAgentTraceEvent | undefined;
       if (!trace) break;
+      // 结构化思维链节点：同一个 node.id 的 running → 终态两次事件合并成一条，
+      // 挂在当前阶段下与工具调用同级。节点内容整体替换，不做字段级合并。
+      if (trace.stage === "chain" && trace.chain) {
+        const chainNode = trace.chain;
+        const existing = steps.find(
+          (step) => step.kind === "chain" && step.key === `chain:${chainNode.id}`
+        );
+        if (existing) {
+          const endedAt = chainNode.completedAt ? timestamp : undefined;
+          steps = steps.map((step) =>
+            step.id === existing.id
+              ? {
+                  ...step,
+                  title: chainNode.title,
+                  detail: trace.detail ?? step.detail,
+                  status: trace.status,
+                  chain: chainNode,
+                  endedAt,
+                  durationMs: endedAt ? Math.max(0, endedAt - step.startedAt) : step.durationMs,
+                  sequence,
+                }
+              : step
+          );
+          break;
+        }
+        pushStep({
+          id: nextId(),
+          parentId: activePhaseId,
+          kind: "chain",
+          key: `chain:${chainNode.id}`,
+          title: chainNode.title,
+          detail: trace.detail,
+          status: trace.status,
+          chain: chainNode,
+          startedAt: timestamp,
+          sequence,
+          childIds: [],
+        });
+        break;
+      }
       if (RUNTIME_STAGES.has(trace.stage)) {
         if (steps.some((step) => step.kind === "runtime" && step.key === `runtime:${trace.stage}`)) break;
         pushStep({
@@ -496,6 +536,7 @@ export const useResumeAgentTimelineStore = create<ResumeAgentTimelineState>()((s
 /**
  * 默认展开规则（无用户覆盖时）：
  * - reasoning 始终折叠：内容长，展开会把轨迹淹没
+ * - 思维链节点：pass / skipped 折叠（结论已在标题徽标里），其余展开
  * - running / pending 展开：最新步骤始终可见
  * - error / warning 展开：问题不会被折叠隐藏
  * - 其余已完成步骤折叠，但保留最后一条顶层步骤展开
@@ -509,6 +550,9 @@ export const isStepExpanded = (
   const step = state.steps.find((item) => item.id === id);
   if (!step) return false;
   if (step.kind === "reasoning") return false;
+  if (step.kind === "chain" && step.chain) {
+    return step.chain.verdict !== "pass" && step.chain.verdict !== "skipped";
+  }
   if (step.status === "running" || step.status === "pending") return true;
   if (step.status === "error" || step.status === "warning") return true;
   return [...state.steps].reverse().find((item) => !item.parentId)?.id === id;

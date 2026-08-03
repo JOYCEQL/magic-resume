@@ -219,6 +219,34 @@
       "steps": {
         "sources": "{count} 个来源",
         "reasoning": "模型思考过程",
+        "chain": {
+          "stage": {
+            "requirement": "需求拆解",
+            "planning": "路径规划",
+            "execution": "工具执行",
+            "validation": "结果校验",
+            "delivery": "最终交付"
+          },
+          "verdict": {
+            "pass": "校验通过",
+            "degraded": "已降级处理",
+            "blocked": "卡点待补充",
+            "skipped": "已跳过",
+            "pending": "执行中"
+          },
+          "basis": "判断依据",
+          "action": "执行动作",
+          "expectation": "预期产出",
+          "outcome": "实际产出",
+          "toolReason": "调用原因",
+          "toolInput": "入参逻辑",
+          "toolExpected": "预期结果",
+          "inputIssues": "入参校验未通过",
+          "outputIssues": "结果校验未通过",
+          "attempts": "尝试 {count} 次",
+          "blockerReason": "卡点原因",
+          "blockerRecovery": "处理方案"
+        },
         "phase": {
           "intake": "接收输入",
           "candidate_facts": "提取候选人事实",

@@ -14,9 +14,26 @@ import type {
 import { createEmptyResumeDraft, normalizeResumeDraft } from "@/utils/resumeAgent";
 import { runDiscoveryLoop, runResearchAgentLoop, supportsAgentLoop } from "./agent-loop";
 import { buildPendingQuestions } from "./clarification";
+import { describePlan, planExecution } from "./execution-planner";
 import { appendJobEvent, createJob, getJob, saveJob } from "./job-repository";
 import { classifyUserIntent, generateResumeDraft } from "./model-adapter";
-import { executeNativeTool } from "./tool-registry";
+import { ReasoningChain } from "./reasoning-chain";
+import {
+  ATS_KEYWORDS_SPEC,
+  DISCOVER_POSTINGS_SPEC,
+  EXTRACT_POSTING_SPEC,
+  FACT_GATE_SPEC,
+  FETCH_POSTING_SPEC,
+  RANK_EVIDENCE_SPEC,
+  RECRUITER_RISK_SPEC,
+  SKILL_GAP_SPEC,
+  WEB_SEARCH_SPEC,
+  runToolStep,
+  toolTitle,
+  type FetchedPosting,
+  type OrchestratorHooks,
+  type ToolResultBag,
+} from "./tool-orchestrator";
 import type { WebSearchOutcome } from "./web-search";
 
 const controllers = new Map<string, AbortController>();
@@ -130,18 +147,7 @@ const completeStep = async (job: ResumeAgentJob, step: string) => {
   await saveCheckpoint(job);
 };
 
-/** 工具执行中的标题；完成时把「正在」替换为「已完成」 */
-const TOOL_TITLES: Record<string, string> = {
-  resume_web_search: "正在检索公开招聘线索",
-  resume_discover_job_postings: "正在搜索目标公司的公开招聘源",
-  resume_fetch_job_posting: "正在读取并验证岗位页面",
-  resume_extract_job_posting: "正在提取岗位职责与要求",
-  resume_extract_ats_keywords: "正在提取 ATS 关键词",
-  resume_analyze_skill_gap: "正在分析岗位能力缺口",
-  resume_rank_evidence: "正在匹配候选人证据",
-  resume_build_recruiter_risk_map: "正在进行招聘者视角检查",
-  resume_validate_draft_facts: "正在执行事实门禁",
-};
+/** 工具标题与调度契约集中在 tool-orchestrator，runner 只复用不再自己维护一份 */
 
 const LOOP_STOP_REASONS: Record<string, string> = {
   model_finished: "模型判断证据已足够",
@@ -152,44 +158,38 @@ const LOOP_STOP_REASONS: Record<string, string> = {
   error: "调研规划失败",
 };
 
-const runTool = async <Input, Output>(
+/**
+ * 每个 Job 一条思维链。emitTrace 是它唯一的输出通道，所以节点事件与旧 trace
+ * 事件走同一条时间线，前端不需要两套接收逻辑。
+ */
+const createChain = (job: ResumeAgentJob) =>
+  new ReasoningChain((event) => emitTrace(job, event));
+
+/** 工具调度层需要的回调：事件记录与检查点保存仍归 runner */
+const orchestratorHooks = (
   job: ResumeAgentJob,
-  tool: string,
-  input: Input,
+  chain: ReasoningChain,
   signal: AbortSignal
-): Promise<Output> => {
-  await emitTrace(job, {
-    stage: tool,
-    title: TOOL_TITLES[tool] || `正在执行 ${tool}`,
-    status: "running",
-    tool,
-  });
-  await appendJobEvent(job.id, "tool.started", { tool, phase: job.phase });
-  try {
-    const result = await executeNativeTool<Input, Output>(tool, input, {
-      jobId: job.id,
-      phase: job.phase,
-      signal,
-    });
-    job.invocations.push(result.invocation);
-    await appendJobEvent(job.id, "tool.completed", { invocation: result.invocation });
-    await emitTrace(job, {
-      stage: tool,
-      title: (TOOL_TITLES[tool] || tool).replace("正在", "已完成"),
-      detail: result.invocation.outputSummary,
-      status: "completed",
-      tool,
-    });
-    await saveCheckpoint(job);
-    return result.output;
-  } catch (error) {
-    const invocation = (error as Error & { invocation?: ResumeAgentJob["invocations"][number] }).invocation;
+): OrchestratorHooks => ({
+  jobId: job.id,
+  signal,
+  chain,
+  onToolStart: async (tool, phase) => {
+    await appendJobEvent(job.id, "tool.started", { tool, phase });
+  },
+  onToolSettled: async (tool, invocation, error) => {
     if (invocation) job.invocations.push(invocation);
-    await appendJobEvent(job.id, "tool.failed", { tool, error: error instanceof Error ? error.message : String(error) });
+    if (error) {
+      await appendJobEvent(job.id, "tool.failed", {
+        tool,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    } else if (invocation) {
+      await appendJobEvent(job.id, "tool.completed", { invocation });
+    }
     await saveCheckpoint(job);
-    throw error;
-  }
-};
+  },
+});
 
 const mergeBundles = (
   bundles: JobResearchBundle[],
@@ -275,7 +275,7 @@ const researchTargetJobWithLoop = async (
     onToolStart: async (tool, input) => {
       await emitTrace(job, {
         stage: tool,
-        title: TOOL_TITLES[tool] || `正在执行 ${tool}`,
+        title: toolTitle(tool),
         status: "running",
         tool,
       });
@@ -292,7 +292,7 @@ const researchTargetJobWithLoop = async (
         await appendJobEvent(job.id, "tool.completed", { invocation });
         await emitTrace(job, {
           stage: tool,
-          title: (TOOL_TITLES[tool] || tool).replace("正在", "已完成"),
+          title: toolTitle(tool).replace("正在", "已完成"),
           detail: invocation.outputSummary,
           status: "completed",
           tool,
@@ -331,143 +331,108 @@ const researchTargetJobWithLoop = async (
   );
 };
 
-/** 确定性调研路径：用户给了 URL、或按公司+职位查 ATS、或直接采用用户粘贴的 JD */
+/**
+ * 确定性调研路径，三条子路径共用一个参数袋，按声明式闭环逐步执行：
+ * A 用户给了 JD 链接 → 抓取 + 抽取；B 有公司 → 查 ATS，未命中转通用搜索并抓取
+ * 搜索结果；C 用户粘贴了 JD 正文 → 直接抽取。
+ * 每一步的入参校验、失败重试、降级与跳过原因都由 runToolStep 写进思维链。
+ */
 const researchTargetJobDeterministic = async (
   job: ResumeAgentJob,
   draft: ResumeDraft,
   latestInput: string,
+  chain: ReasoningChain,
   signal: AbortSignal
 ): Promise<JobResearchBundle | null> => {
   const target = draft.targetJob;
-  const urls = findPublicUrls(`${latestInput}\n${target.jobDescription}`);
-  if (urls.length) {
-    await changePhase(job, "job_discovery");
-    const bundles: JobResearchBundle[] = [];
-    for (const url of urls) {
-      // 单个 URL 失败（重定向/SSRF/网络抖动）不应中断整个调研：跳过继续下一个来源
-      try {
-        const fetched = await runTool<
-          { url: string },
-          { source: ResearchSource; text: string; status: "active" | "expired" | "uncertain" }
-        >(job, "resume_fetch_job_posting", { url }, signal);
-        // 页面不可用（fetch 工具已把重定向/SSRF 标记为 uncertain 空正文）：跳过
-        if (!fetched.text.trim() || fetched.status === "uncertain") continue;
-        if (job.phase !== "job_research") await changePhase(job, "job_research");
-        const bundle = await runTool<
-          {
-            description: string;
-            company: string;
-            title: string;
-            source: ResearchSource;
-            status: "active" | "expired" | "uncertain";
-          },
-          JobResearchBundle
-        >(job, "resume_extract_job_posting", {
-          description: fetched.text,
-          company: target.company,
-          title: target.title,
-          source: fetched.source,
-          status: fetched.status,
-        }, signal);
-        bundles.push(bundle);
-      } catch {
-        // 网络类异常（DNS/超时等）：同样只跳过这一个来源
-      }
+  const hooks = orchestratorHooks(job, chain, signal);
+  const bag: ToolResultBag = {
+    company: target.company.trim(),
+    targetRole: target.title.trim(),
+    jobDescription: "",
+    pendingUrls: findPublicUrls(`${latestInput}\n${target.jobDescription}`),
+    sources: [],
+    keywords: [],
+    draft,
+    research: job.checkpoint.research || undefined,
+  };
+  const bundles: JobResearchBundle[] = [];
+
+  /**
+   * 抓取队列直到清空。成功与降级都会消费队首，故循环必然收敛；
+   * failed（取消 / 预算耗尽）不消费队首，必须显式跳出，否则会空转。
+   */
+  const drainUrlQueue = async () => {
+    while (bag.pendingUrls.length) {
+      if (signal.aborted) break;
+      const fetched = await runToolStep(FETCH_POSTING_SPEC, bag, hooks);
+      if (fetched.state === "failed") break;
+      if (fetched.state !== "completed") continue;
+      if (job.phase !== "job_research") await changePhase(job, "job_research");
+      const extracted = await runToolStep(EXTRACT_POSTING_SPEC, bag, hooks);
+      if (extracted.state === "completed") bundles.push(extracted.output as JobResearchBundle);
+      else if (extracted.state === "failed") break;
     }
-    // 全部来源都不可用时返回 null：后续步骤干净跳过，不报错
-    return bundles.length ? mergeBundles(bundles, target.company, target.title) : null;
-  }
-  if (target.company.trim() && target.title.trim()) {
+  };
+
+  // A：用户直接给了岗位链接，优先按链接调研
+  if (bag.pendingUrls.length) {
     await changePhase(job, "job_discovery");
-    const discovered = await runTool<
-      { company: string; targetRole: string },
-      JobResearchBundle
-    >(job, "resume_discover_job_postings", {
-      company: target.company.trim(),
-      targetRole: target.title.trim(),
-    }, signal);
-    if (discovered.postings.length) return discovered;
-    // ATS 没命中时用通用搜索兜底：把线索页读成正式岗位证据
-    const searched = await runTool<
-      { company: string; targetRole: string },
-      WebSearchOutcome
-    >(job, "resume_web_search", {
-      company: target.company.trim(),
-      targetRole: target.title.trim(),
-    }, signal);
-    const candidateUrls = searched.results.slice(0, 2).map((item) => item.url);
-    if (candidateUrls.length) {
-      const bundles: JobResearchBundle[] = [];
-      for (const url of candidateUrls) {
-        try {
-          const fetched = await runTool<
-            { url: string },
-            { source: ResearchSource; text: string; status: "active" | "expired" | "uncertain" }
-          >(job, "resume_fetch_job_posting", { url }, signal);
-          if (job.phase !== "job_research") await changePhase(job, "job_research");
-          bundles.push(
-            await runTool<
-              {
-                description: string;
-                company: string;
-                title: string;
-                source: ResearchSource;
-                status: "active" | "expired" | "uncertain";
-              },
-              JobResearchBundle
-            >(job, "resume_extract_job_posting", {
-              description: fetched.text,
-              company: target.company,
-              title: target.title,
-              source: fetched.source,
-              status: fetched.status,
-            }, signal)
-          );
-        } catch {
-          // 单个搜索结果不可读不应中断调研；limitations 里已有搜索说明
-        }
-      }
-      if (bundles.some((bundle) => bundle.postings.length)) {
-        return mergeBundles(bundles, target.company, target.title, searched.sources);
-      }
+    await drainUrlQueue();
+    if (bundles.length) {
+      return mergeBundles(bundles, target.company, target.title, bag.sources);
     }
-    job.checkpoint.research = {
-      ...discovered,
-      sources: [...discovered.sources, ...searched.sources],
-      limitations: [
-        ...discovered.limitations,
-        ...(searched.limitation ? [searched.limitation] : []),
-      ],
-    };
-    await saveCheckpoint(job);
   }
+
+  // B：有公司与职位，先查公共 ATS，未命中转通用搜索
+  if (bag.company && bag.targetRole) {
+    await changePhase(job, "job_discovery");
+    const discovered = await runToolStep(DISCOVER_POSTINGS_SPEC, bag, hooks);
+    if (discovered.state === "completed") return discovered.output as JobResearchBundle;
+    // ATS 已尝试但无结果的 bundle 仍要保留：它带着「查过哪些源」的说明
+    const attempted =
+      discovered.state === "degraded" ? (discovered.output as JobResearchBundle | undefined) : undefined;
+    const searched = await runToolStep(WEB_SEARCH_SPEC, bag, hooks);
+    const searchOutcome =
+      searched.state === "completed" ? (searched.output as WebSearchOutcome) : undefined;
+    // 参数自动传递：搜索结果 URL 已由 spec.collect 写进 pendingUrls
+    await drainUrlQueue();
+    if (bundles.some((bundle) => bundle.postings.length)) {
+      return mergeBundles(bundles, target.company, target.title, bag.sources);
+    }
+    if (attempted) {
+      // 没拿到岗位证据时也要落下「为什么没有」，否则用户只看到一个空结果
+      job.checkpoint.research = {
+        ...attempted,
+        sources: [...attempted.sources, ...bag.sources],
+        limitations: [
+          ...attempted.limitations,
+          ...(searchOutcome?.limitation ? [searchOutcome.limitation] : []),
+        ],
+      };
+      await saveCheckpoint(job);
+    }
+  }
+
+  // C：用户粘贴了足够长的 JD 正文，构造 user 来源走同一条抽取闭环
   const suppliedDescription = target.jobDescription.trim();
   if (suppliedDescription.length >= 120) {
     if (job.phase !== "job_research") await changePhase(job, "job_research");
-    const source: ResearchSource = {
-      id: crypto.randomUUID(),
-      type: "user",
-      title: "用户提供的岗位描述",
-      retrievedAt: now(),
-      trustScore: 70,
-      excerpt: suppliedDescription.slice(0, 500),
-    };
-    return runTool<
-      {
-        description: string;
-        company: string;
-        title: string;
-        source: ResearchSource;
-        status: "active" | "expired" | "uncertain";
+    bag.jobDescription = suppliedDescription;
+    bag.fetched = {
+      source: {
+        id: crypto.randomUUID(),
+        type: "user",
+        title: "用户提供的岗位描述",
+        retrievedAt: now(),
+        trustScore: 70,
+        excerpt: suppliedDescription.slice(0, 500),
       },
-      JobResearchBundle
-    >(job, "resume_extract_job_posting", {
-      description: suppliedDescription,
-      company: target.company,
-      title: target.title,
-      source,
+      text: suppliedDescription,
       status: "uncertain",
-    }, signal);
+    } satisfies FetchedPosting;
+    const extracted = await runToolStep(EXTRACT_POSTING_SPEC, bag, hooks);
+    if (extracted.state === "completed") return extracted.output as JobResearchBundle;
   }
   return null;
 };
@@ -523,7 +488,7 @@ const discoverDirections = async (
     onToolStart: async (tool, input) => {
       await emitTrace(job, {
         stage: tool,
-        title: TOOL_TITLES[tool] || `正在执行 ${tool}`,
+        title: toolTitle(tool),
         status: "running",
         tool,
       });
@@ -540,7 +505,7 @@ const discoverDirections = async (
         await appendJobEvent(job.id, "tool.completed", { invocation });
         await emitTrace(job, {
           stage: tool,
-          title: (TOOL_TITLES[tool] || tool).replace("正在", "已完成"),
+          title: toolTitle(tool).replace("正在", "已完成"),
           detail: invocation.outputSummary,
           status: "completed",
           tool,
@@ -589,16 +554,39 @@ const researchTargetJob = async (
   draft: ResumeDraft,
   provider: ResumeAgentProviderPayload,
   latestInput: string,
+  chain: ReasoningChain,
   signal: AbortSignal
 ): Promise<JobResearchBundle | null> => {
   // 用户直接给了 JD URL 时无需规划，确定性路径更快且更可控
   const hasExplicitUrls = findPublicUrls(`${latestInput}\n${draft.targetJob.jobDescription}`).length > 0;
   if (!hasExplicitUrls && supportsAgentLoop(provider.modelType)) {
+    const node = await chain.node({
+      stage: "execution",
+      title: "模型自主规划岗位调研",
+      basis: "已有目标公司且模型支持工具调用，让模型自主选择调研路径比固定顺序更省调用",
+      action: "在迭代/调用次数/时间三重预算内运行调研循环",
+      expectation: "产出含真实岗位条目的调研证据；无产出则回退固定流程",
+    });
     try {
       const looped = await researchTargetJobWithLoop(job, draft, provider, latestInput, signal);
-      if (looped) return looped;
+      if (looped) {
+        await node.pass(
+          `自主调研产出 ${looped.postings.length} 个岗位、${looped.sources.length} 个来源`
+        );
+        return looped;
+      }
+      await node.degrade("自主调研未取得可用岗位证据", {
+        kind: "tool_failure",
+        reason: "循环结束时没有任何岗位条目，其结论不可采信",
+        recovery: "回退到确定性调研路径：按 ATS / 通用搜索 / 用户 JD 依次尝试",
+      });
     } catch (error) {
       if (signal.aborted) throw error;
+      await node.degrade(`自主调研中断：${error instanceof Error ? error.message : String(error)}`, {
+        kind: "tool_failure",
+        reason: error instanceof Error ? error.message : String(error),
+        recovery: "回退到确定性调研路径，已获取的来源仍会保留",
+      });
       await emitTrace(job, {
         stage: "research-loop",
         title: "模型自主调研未完成，已回退到固定调研流程",
@@ -607,7 +595,7 @@ const researchTargetJob = async (
       });
     }
   }
-  return researchTargetJobDeterministic(job, draft, latestInput, signal);
+  return researchTargetJobDeterministic(job, draft, latestInput, chain, signal);
 };
 
 const executeJob = async (
@@ -623,6 +611,8 @@ const executeJob = async (
   const signal = externalSignal
     ? AbortSignal.any([externalSignal, controller.signal])
     : controller.signal;
+  // 本轮的思维链。所有阶段共用一条，节点编号连续，便于前端按阶段分组
+  const chain = createChain(job);
   try {
     job.status = "running";
     const isFirstRun = !job.startedAt;
@@ -652,20 +642,21 @@ const executeJob = async (
 
     normalizeCheckpoint(job);
 
-    // ── 意图分流层（intake）────────────────────────────────────────────
+    // ── 阶段一：需求拆解与对齐 ──────────────────────────────────────────
     // 输入框消息（新建 / 续聊）每轮先由模型判断意图。纯聊天（问候/闲聊/道谢/
     // 问能力）直接返回一条带引导的回复并进入 waiting_user，不启动工作流、不调
     // 任何工具；识别到简历素材或制作/修改请求才继续。闲聊轮次不标记任何步骤，
     // 所以下一条消息会再次分流，直到真正进入简历流程。作答与方向选择是明确的
     // 简历操作，调用方已设置 intentSkipped 跳过本层。
+    chain.enter("requirement");
     const skipIntent = job.checkpoint.intentSkipped === true;
     job.checkpoint.intentSkipped = false;
     if (!skipIntent) {
-      await emitTrace(job, {
-        stage: "intake",
-        title: "正在判断你的意图",
-        detail: "闲聊会直接回复；检测到简历素材或制作请求后开始整理",
-        status: "running",
+      const intentNode = await chain.node({
+        title: "判断本轮意图",
+        basis: "输入框消息可能是闲聊也可能带简历素材；无差别启动工作流会浪费上游 token",
+        action: "对最近 6 条消息做一次轻量意图分类",
+        expectation: "得到 chat（附带引导回复）或 resume 两种结论之一",
       });
       let intent: ResumeAgentIntent = "resume";
       let chatReply = "";
@@ -680,26 +671,26 @@ const executeJob = async (
         chatReply = classified.reply || "";
       } catch (error) {
         // 分类失败保守按 resume 处理：宁可多跑工作流，也不丢用户可能给的素材
-        await emitTrace(job, {
-          stage: "intake",
-          title: "意图判断失败，按简历制作继续",
-          detail: error instanceof Error ? error.message : String(error),
-          status: "warning",
+        await intentNode.degrade("意图分类调用失败，保守按简历意图继续", {
+          kind: "tool_failure",
+          reason: error instanceof Error ? error.message : String(error),
+          recovery: "按 resume 处理：宁可多跑一轮工作流，也不丢弃用户可能提供的素材",
         });
       }
       if (intent === "chat") {
-        await emitTrace(job, {
-          stage: "intake",
-          title: "闲聊：直接回复，不启动工作流",
-          detail: "未检测到简历素材，等待你提供基本信息或目标岗位",
-          status: "completed",
-        });
         const en = job.input.locale.toLowerCase().startsWith("en");
         const reply =
           chatReply ||
           (en
             ? "Hi! I can turn our conversation into a professional resume. Share your basic info and target job (or paste a JD link) and I will start tailoring it for you."
             : "你好！我可以把聊天内容整理成一份专业简历。告诉我你的基本信息和目标岗位（或粘贴 JD 链接），我就开始为你定制。");
+        if (chain.active === intentNode) {
+          await intentNode.block({
+            kind: "missing_info",
+            reason: "本轮消息只有闲聊，没有任何可用于简历的事实",
+            recovery: "直接回复并给出填写引导，不启动工作流、不调用任何工具，等用户提供素材",
+          });
+        }
         job.assistantMessage = reply;
         job.checkpoint.pendingQuestion = undefined;
         job.checkpoint.pendingQuestions = [];
@@ -715,29 +706,70 @@ const executeJob = async (
         });
         return;
       }
-      await emitTrace(job, {
-        stage: "intake",
-        title: "识别到简历意图，开始整理",
-        detail: "检测到简历素材或制作/修改请求，进入候选人事实提取",
-        status: "completed",
-      });
+      if (chain.active === intentNode) {
+        await intentNode.pass("识别到简历素材或制作/修改请求，进入候选人事实提取");
+      }
     }
 
+    // ── 阶段二：任务路径与工具规划 ──────────────────────────────────────
+    // 执行任何工具之前先推导本轮完整步骤、依赖与工具清单，让「打算做什么」
+    // 可核对，也让跳步原因（已完成 / 依赖不满足）成为可展示的结论。
+    chain.enter("planning");
+    const planLatestInput = latestUserText(job.input.messages);
+    const planDraft = job.checkpoint.draft;
+    const plan = planExecution({
+      needsIntentRouting: !skipIntent,
+      completedSteps: job.checkpoint.completedSteps,
+      draft: planDraft,
+      hasResearch: Boolean(job.checkpoint.research),
+      hasCompany: Boolean(planDraft?.targetJob.company.trim()),
+      hasJdUrls:
+        findPublicUrls(`${planLatestInput}\n${planDraft?.targetJob.jobDescription || ""}`).length > 0,
+      hasSuppliedJd: (planDraft?.targetJob.jobDescription.trim().length || 0) >= 120,
+      hasEnoughProfile: planDraft ? hasEnoughProfile(planDraft) : false,
+    });
+    const planNode = await chain.node({
+      title: "规划本轮执行路径",
+      basis: "检查点已完成的步骤不重跑（避免重复调研与重复计费），依赖不满足的步骤标注原因而非静默跳过",
+      action: "按当前草稿与检查点状态推导步骤序列、工具清单与依赖关系",
+      expectation: describePlan(plan),
+    });
+    await planNode.pass(plan.summary);
+
+    // ── 阶段三：工具调度与执行 ──────────────────────────────────────────
+    chain.enter("execution");
     if (!hasCompletedStep(job, "candidate_facts")) {
       await changePhase(job, "candidate_facts");
-      const startedAt = now();
-      const initial = await generateResumeDraft({
-        provider,
-        locale: job.input.locale,
-        conversation: job.input.messages,
-        currentDraft: job.checkpoint.draft,
-        workflowContext: {
-          phase: "candidate_facts",
-          instruction: "Extract and preserve candidate facts. Do not claim external job research.",
-        },
-        signal,
-        captureReasoning: job.input.exposeReasoning,
+      const factsNode = await chain.node({
+        title: "提取候选人事实",
+        basis: "检查点还没有本轮的候选人事实；定制与门禁都依赖一份结构化草稿",
+        action: "把对话内容交给受约束的生成节点，只抽取用户实际提供的事实",
+        expectation: "得到结构化草稿与证据清单，缺失项进入 missingFields 而非编造",
       });
+      const startedAt = now();
+      let initial: Awaited<ReturnType<typeof generateResumeDraft>>;
+      try {
+        initial = await generateResumeDraft({
+          provider,
+          locale: job.input.locale,
+          conversation: job.input.messages,
+          currentDraft: job.checkpoint.draft,
+          workflowContext: {
+            phase: "candidate_facts",
+            instruction: "Extract and preserve candidate facts. Do not claim external job research.",
+          },
+          signal,
+          captureReasoning: job.input.exposeReasoning,
+        });
+      } catch (error) {
+        // 没有降级方案：拿不到草稿，后面每一步都无从下手
+        await factsNode.fail({
+          kind: "tool_failure",
+          reason: error instanceof Error ? error.message : String(error),
+          recovery: "无可用降级方案（后续步骤全部依赖草稿），中止本轮并保留检查点供重试",
+        });
+        throw error;
+      }
       await recordModelCall(job, {
         phase: "candidate_facts",
         model: provider.model,
@@ -766,6 +798,10 @@ const executeJob = async (
       }));
       job.assistantMessage = initial.assistantMessage;
       await completeStep(job, "candidate_facts");
+      const extracted = job.checkpoint.draft;
+      await factsNode.pass(
+        `确认 ${job.checkpoint.candidateFacts.length} 条证据；${extracted.experience.length} 段经历、${extracted.projects.length} 个项目、${extracted.skills.length} 条技能；待补充 ${extracted.missingFields.length} 项`
+      );
     }
 
     // 续聊目标一致性检测：candidate_facts 重跑后，若目标（公司/职位/JD 链接）与
@@ -790,6 +826,12 @@ const executeJob = async (
       const hasNewUrls = findPublicUrls(latestInput).some(
         (url) => !(research.sources || []).some((source) => source.url === url)
       );
+      const consistencyNode = await chain.node({
+        title: "校验续聊目标一致性",
+        basis: "上一轮已有岗位调研；目标未变时重复调研会重复计费，目标已变时沿用旧证据会张冠李戴",
+        action: "比对草稿 targetJob 与调研结果的公司、职位，并检查本轮新出现的 JD 链接",
+        expectation: "一致则保留调研结果；不一致则回退调研及其下游步骤",
+      });
       if (companyChanged || titleChanged || hasNewUrls) {
         job.checkpoint.completedSteps = job.checkpoint.completedSteps.filter(
           (step) =>
@@ -808,6 +850,11 @@ const executeJob = async (
           status: job.status,
           targetChanged: true,
         });
+        await consistencyNode.pass(
+          `目标已变化（${[companyChanged && "公司", titleChanged && "职位", hasNewUrls && "新增 JD 链接"].filter(Boolean).join("、")}），已回退调研及下游步骤重新执行`
+        );
+      } else {
+        await consistencyNode.skip("目标未变化，保留上一轮岗位调研与评估结果，跳过重复调研");
       }
     }
 
@@ -824,6 +871,12 @@ const executeJob = async (
       // 阶段一：没有目标公司也没有 JD 链接时，先自主发现方向让用户选，
       // 而不是静默跳过调研（旧行为）或让模型瞎猜公司。
       if (!hasCompany && !hasExplicitJdUrls && hasEnoughProfile(job.checkpoint.draft)) {
+        const discoveryNode = await chain.node({
+          title: "发现候选岗位方向",
+          basis: "用户没给目标公司也没给 JD 链接，但画像足够；直接猜公司会产出与候选人无关的岗位",
+          action: "基于技能与经历做广域搜索，产出真实可点击的方向供用户选择",
+          expectation: "3-5 个方向，公司与链接均来自搜索结果",
+        });
         const directions = await discoverDirections(
           job,
           job.checkpoint.draft,
@@ -842,9 +895,19 @@ const executeJob = async (
             question: job.checkpoint.pendingQuestion,
             directions,
           });
+          await discoveryNode.block({
+            kind: "missing_info",
+            reason: `已找到 ${directions.length} 个方向，但选哪个只能由用户决定`,
+            recovery: "暂停在此，等用户选定方向后进入精确调研",
+          });
           return;
         }
         // 发现失败：如实继续后续流程，limitations 里已有说明
+        await discoveryNode.degrade("广域搜索未产出可用方向", {
+          kind: "tool_failure",
+          reason: "搜索没有返回可用结果，或模型未产出结构化方向",
+          recovery: "不编造推荐，继续后续流程并在澄清阶段直接询问目标岗位",
+        });
       }
 
       const researched = await researchTargetJob(
@@ -852,6 +915,7 @@ const executeJob = async (
         job.checkpoint.draft,
         provider,
         latestInput,
+        chain,
         signal
       );
       // researchTargetJobDeterministic 在 ATS 未命中时会把「已尝试但无结果」的
@@ -862,85 +926,109 @@ const executeJob = async (
     }
 
     const research = job.checkpoint.research;
+    // 后续确定性步骤共用一个参数袋，工具间参数由 spec.collect / spec.adapt 传递。
+    // sources / keywords 必须复制而非引用 checkpoint 的数组：spec.collect 会 push，
+    // 直接引用会把中间结果悄悄写进已保存的调研结果里。
+    const bag: ToolResultBag = {
+      company: job.checkpoint.draft.targetJob.company.trim(),
+      targetRole: job.checkpoint.draft.targetJob.title.trim(),
+      jobDescription: "",
+      pendingUrls: [],
+      sources: [...(research?.sources || [])],
+      keywords: [...(research?.requiredKeywords || [])],
+      draft: job.checkpoint.draft,
+      research: research || undefined,
+      evaluation: job.checkpoint.evaluation || undefined,
+    };
+    const hooks = orchestratorHooks(job, chain, signal);
+
     if (research && !hasCompletedStep(job, "jd_analysis")) {
       await changePhase(job, "jd_analysis");
-      await runTool<{ description: string }, string[]>(
-        job,
-        "resume_extract_ats_keywords",
-        { description: research.postings.map((posting) => posting.description).join("\n") },
-        signal
-      );
+      await runToolStep(ATS_KEYWORDS_SPEC, bag, hooks);
       await completeStep(job, "jd_analysis");
     }
 
     let evaluation = job.checkpoint.evaluation;
     if (research && !hasCompletedStep(job, "career_ops_evaluation")) {
       await changePhase(job, "career_ops_evaluation");
-      evaluation = await runTool<
-        { draft: ResumeDraft; research: JobResearchBundle },
-        CareerOpsEvaluation
-      >(job, "resume_analyze_skill_gap", {
-        draft: job.checkpoint.draft,
-        research,
-      }, signal);
-      job.checkpoint.evaluation = evaluation;
-      await runTool<{ draft: ResumeDraft; research: JobResearchBundle }, string[]>(
-        job,
-        "resume_rank_evidence",
-        { draft: job.checkpoint.draft, research },
-        signal
-      );
-      await runTool<{ evaluation: CareerOpsEvaluation }, string[]>(
-        job,
-        "resume_build_recruiter_risk_map",
-        { evaluation },
-        signal
-      );
-      await completeStep(job, "career_ops_evaluation");
+      const evaluated = await runToolStep(SKILL_GAP_SPEC, bag, hooks);
+      if (evaluated.state === "completed") {
+        evaluation = evaluated.output as CareerOpsEvaluation;
+        job.checkpoint.evaluation = evaluation;
+        // 证据排序与风险图都依赖评估结果，参数由 bag 自动传递
+        await runToolStep(RANK_EVIDENCE_SPEC, bag, hooks);
+        await runToolStep(RECRUITER_RISK_SPEC, bag, hooks);
+        await completeStep(job, "career_ops_evaluation");
+      }
     }
 
     if (research && evaluation && !hasCompletedStep(job, "resume_tailoring")) {
       await changePhase(job, "resume_tailoring");
+      const tailorNode = await chain.node({
+        title: "按岗位要求定制草稿",
+        basis: `已有岗位调研（${research.requiredKeywords.length} 个关键词）与匹配度评估（${evaluation.matchScore} 分），可以做有依据的改写`,
+        action: "把评估结论与调研结果一起交给生成节点，只改写有证据支撑的内容",
+        expectation: "改写后的草稿；未被证据支撑的岗位要求保留在 missingSkills",
+      });
       const tailoringStartedAt = now();
-      const tailored = await generateResumeDraft({
-        provider,
-        locale: job.input.locale,
-        conversation: job.input.messages,
-        currentDraft: job.checkpoint.draft,
-        workflowContext: {
+      try {
+        const tailored = await generateResumeDraft({
+          provider,
+          locale: job.input.locale,
+          conversation: job.input.messages,
+          currentDraft: job.checkpoint.draft,
+          workflowContext: {
+            phase: "resume_tailoring",
+            research,
+            evaluation,
+            instruction: "Tailor only with supported candidate evidence. Preserve skill gaps as missing skills.",
+          },
+          signal,
+          captureReasoning: job.input.exposeReasoning,
+        });
+        await recordModelCall(job, {
           phase: "resume_tailoring",
-          research,
-          evaluation,
-          instruction: "Tailor only with supported candidate evidence. Preserve skill gaps as missing skills.",
-        },
-        signal,
-        captureReasoning: job.input.exposeReasoning,
-      });
-      await recordModelCall(job, {
-        phase: "resume_tailoring",
-        model: provider.model,
-        status: "completed",
-        reasoning: tailored.reasoning,
-        startedAt: tailoringStartedAt,
-        completedAt: now(),
-      });
-      job.checkpoint.draft = tailored.draft;
-      job.assistantMessage = tailored.assistantMessage;
-      await completeStep(job, "resume_tailoring");
+          model: provider.model,
+          status: "completed",
+          reasoning: tailored.reasoning,
+          startedAt: tailoringStartedAt,
+          completedAt: now(),
+        });
+        job.checkpoint.draft = tailored.draft;
+        bag.draft = tailored.draft;
+        job.assistantMessage = tailored.assistantMessage;
+        await completeStep(job, "resume_tailoring");
+        await tailorNode.pass(
+          `草稿已定制：${tailored.draft.skills.length} 条技能、${tailored.draft.experience.length} 段经历；保留 ${tailored.draft.targetJob.missingSkills.length} 项能力缺口`
+        );
+      } catch (error) {
+        if (signal.aborted) throw error;
+        // 定制失败可降级：候选人事实草稿仍然可用，门禁会照常校验
+        await tailorNode.degrade(`定制调用失败：${error instanceof Error ? error.message : String(error)}`, {
+          kind: "tool_failure",
+          reason: error instanceof Error ? error.message : String(error),
+          recovery: "保留候选人事实草稿进入事实门禁，用户可在澄清后重试定制",
+        });
+      }
     }
 
+    // ── 阶段四：结果整合与合规校验 ──────────────────────────────────────
+    chain.enter("validation");
     if (!hasCompletedStep(job, "fact_gate")) {
       await changePhase(job, "fact_gate");
-      job.checkpoint.factIssues = await runTool<{ draft: ResumeDraft }, string[]>(
-        job,
-        "resume_validate_draft_facts",
-        { draft: job.checkpoint.draft },
-        signal
-      );
+      const gate = await runToolStep(FACT_GATE_SPEC, bag, hooks);
+      if (gate.state === "failed") throw gate.error;
+      job.checkpoint.factIssues = gate.state === "completed" ? (gate.output as string[]) : [];
       await completeStep(job, "fact_gate");
     }
     const factIssues = job.checkpoint.factIssues;
     const language = job.input.locale.toLowerCase().startsWith("en") ? "en" : "zh";
+    const clarifyNode = await chain.node({
+      title: "整合结果并生成澄清计划",
+      basis: "交付前必须逐条核对：门禁问题、七个板块覆盖情况、目标岗位是否明确",
+      action: "汇总门禁结论与草稿缺口，去重后生成结构化澄清问题",
+      expectation: "澄清清单为空则可确认入库；非空则停在等待用户补充",
+    });
     const pendingQuestions = buildPendingQuestions(
       job.checkpoint.draft,
       factIssues,
@@ -959,6 +1047,28 @@ const executeJob = async (
     job.assistantMessage = requiresAnswer
       ? job.assistantMessage || job.checkpoint.pendingQuestion
       : "岗位分析、简历定制和事实门禁已完成。请核对右侧草稿，确认后选择模板保存。";
+    if (requiresAnswer) {
+      await clarifyNode.block({
+        kind: "missing_info",
+        reason: `仍有 ${pendingQuestions.length} 项待澄清${factIssues.length ? `，其中门禁问题 ${factIssues.length} 项` : ""}`,
+        recovery: "以结构化选项形式呈现问题，用户作答后只重跑定制与门禁，不重复调研",
+      });
+    } else {
+      await clarifyNode.pass(
+        `门禁通过、七个板块均已覆盖，草稿可确认入库（来源 ${(research?.sources || []).length} 个）`
+      );
+    }
+
+    // ── 阶段五：最终交付 ────────────────────────────────────────────────
+    chain.enter("delivery");
+    const deliveryNode = await chain.node({
+      title: requiresAnswer ? "交付澄清清单，等待补充" : "交付可确认的简历草稿",
+      basis: requiresAnswer
+        ? "草稿仍有缺口，直接入库会产出不可核验的简历"
+        : "所有校验通过，可以交付用户确认",
+      action: "写入检查点并下发 user.required 事件，前端据此渲染草稿与澄清卡片",
+      expectation: requiresAnswer ? "澄清卡片与缺口提醒" : "可确认的草稿与模板选择入口",
+    });
     await saveCheckpoint(job);
     await appendJobEvent(job.id, "user.required", {
       question: job.checkpoint.pendingQuestion,
@@ -966,6 +1076,11 @@ const executeJob = async (
       questions: pendingQuestions,
       readyToConfirm: !requiresAnswer,
     });
+    await deliveryNode.pass(
+      requiresAnswer
+        ? `已交付 ${pendingQuestions.length} 个澄清项，等待用户作答`
+        : "已交付可确认草稿，等待用户选择模板保存"
+    );
   } catch (error) {
     const aborted = signal.aborted;
     const budgetExpired = controller.signal.aborted && controller.signal.reason === "job-budget";
@@ -977,6 +1092,18 @@ const executeJob = async (
         : error instanceof Error
           ? error.message
           : String(error);
+    // 仍打开的思维链节点必须结算，否则前端留一个永远转圈的节点
+    await chain
+      .settleOpen({
+        kind: budgetExpired ? "budget" : "tool_failure",
+        reason: job.error,
+        recovery: budgetExpired
+          ? "检查点已保存，可恢复任务或缩小调研范围后重试"
+          : aborted
+            ? "本轮已按用户要求停止，检查点保留"
+            : "检查点已保存，修正配置或重试即可从断点继续",
+      })
+      .catch(() => undefined);
     // 解析失败时把原始响应片段一起记录，否则用户只能看到「没有返回有效的简历 JSON」
     const rawExcerpt = (error as Error & { rawExcerpt?: string })?.rawExcerpt;
     const failureReasoning = (error as Error & { reasoning?: string })?.reasoning;

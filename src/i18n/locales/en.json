@@ -218,6 +218,34 @@
       "steps": {
         "sources": "{count} sources",
         "reasoning": "Model reasoning",
+        "chain": {
+          "stage": {
+            "requirement": "Requirements",
+            "planning": "Planning",
+            "execution": "Tool execution",
+            "validation": "Validation",
+            "delivery": "Delivery"
+          },
+          "verdict": {
+            "pass": "Verified",
+            "degraded": "Degraded",
+            "blocked": "Blocked",
+            "skipped": "Skipped",
+            "pending": "Running"
+          },
+          "basis": "Basis",
+          "action": "Action",
+          "expectation": "Expected",
+          "outcome": "Result",
+          "toolReason": "Why this tool",
+          "toolInput": "Input logic",
+          "toolExpected": "Expected output",
+          "inputIssues": "Input validation failed",
+          "outputIssues": "Output validation failed",
+          "attempts": "{count} attempts",
+          "blockerReason": "Blocker",
+          "blockerRecovery": "Recovery"
+        },
         "phase": {
           "intake": "Receiving input",
           "candidate_facts": "Extracting candidate facts",

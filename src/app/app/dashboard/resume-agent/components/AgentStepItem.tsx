@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Brain, ChevronRight } from "lucide-react";
+import { Brain, ChevronRight, ListChecks } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Translator } from "@/i18n/compat/utils";
 import type { AgentTimelineStep } from "@/types/resume-agent-ui";
@@ -12,6 +12,7 @@ import {
   resolveStepLabel,
   STEP_STATUS_TEXT_CLASS,
 } from "../agentStepLabels";
+import { AgentChainBadges, AgentChainNode } from "./AgentChainNode";
 import { AgentStepIcon } from "./AgentStepIcon";
 
 interface AgentStepItemProps {
@@ -39,7 +40,9 @@ const AgentStepItemBase = ({
 }: AgentStepItemProps) => {
   const detail = resolveStepDetail(step);
   const childSteps = getChildren(step.id);
-  const collapsible = childSteps.length > 0 || Boolean(detail);
+  const chain = step.kind === "chain" ? step.chain : undefined;
+  // 思维链节点自身就是可展开内容，即使没有 detail / 子步骤也要能展开
+  const collapsible = childSteps.length > 0 || Boolean(detail) || Boolean(chain);
   const expanded = isExpanded(step.id);
   const duration = formatDuration(durationOf(step, now));
   const reasoning = isReasoningStep(step);
@@ -82,6 +85,10 @@ const AgentStepItemBase = ({
         />
         {reasoning ? (
           <Brain aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        ) : chain && chain.verdict === "pending" ? (
+          <AgentStepIcon status={step.status} className="mt-0.5" />
+        ) : chain ? (
+          <ListChecks aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         ) : (
           <AgentStepIcon status={step.status} className="mt-0.5" />
         )}
@@ -92,6 +99,7 @@ const AgentStepItemBase = ({
           )}
         >
           {reasoning ? `${t("steps.reasoning")} · ${reasoningExcerpt}` : resolveStepLabel(step, t)}
+          {chain ? <AgentChainBadges node={chain} t={t} /> : null}
           {step.sourceCount ? (
             <span className="ml-1.5 text-[10px] text-muted-foreground">
               {t("steps.sources", { count: step.sourceCount })}
@@ -116,6 +124,7 @@ const AgentStepItemBase = ({
             className="overflow-hidden"
           >
             <div className="pl-[1.375rem]">
+              {chain && <AgentChainNode node={chain} t={t} />}
               {detail && (
                 <p
                   className={cn(

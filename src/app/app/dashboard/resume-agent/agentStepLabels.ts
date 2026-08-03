@@ -39,6 +39,10 @@ const MILESTONE_KEYS: Record<string, string> = {
 /** 标题优先本地化，未覆盖的键回退服务端 title */
 export const resolveStepLabel = (step: AgentTimelineStep, t: Translator) => {
   if (step.kind === "reasoning") return t("steps.reasoning");
+  // 思维链节点：阶段名 + 服务端下发的节点标题，阶段名本地化、标题保持原文
+  if (step.kind === "chain" && step.chain) {
+    return `${t(`steps.chain.stage.${step.chain.stage}`)} · ${step.chain.title}`;
+  }
   if (step.kind === "phase" && step.phase && PHASE_KEYS.has(step.phase)) {
     return t(`steps.phase.${step.phase}`);
   }
@@ -55,11 +59,14 @@ export const resolveStepLabel = (step: AgentTimelineStep, t: Translator) => {
 /**
  * user.required 的 title 是给用户看的问题原文，本地化标题会盖掉它，
  * 因此把原文降级为 detail 展示。
+ * 思维链节点由 AgentChainNode 按字段渲染，不再返回纯文本 detail（否则内容重复两遍）。
  */
-export const resolveStepDetail = (step: AgentTimelineStep) =>
-  step.kind === "milestone" && step.key === "milestone:user_required"
+export const resolveStepDetail = (step: AgentTimelineStep) => {
+  if (step.kind === "chain" && step.chain) return undefined;
+  return step.kind === "milestone" && step.key === "milestone:user_required"
     ? [step.title, step.detail].filter(Boolean).join("\n")
     : step.detail;
+};
 
 export const formatDuration = (durationMs?: number) => {
   if (durationMs === undefined || durationMs < 0) return "";

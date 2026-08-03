@@ -1,4 +1,5 @@
 import type {
+  ReasoningNode,
   ResumeAgentTraceStatus,
   ResumeAgentWorkflowPhase,
 } from "@/types/resume-agent";
@@ -12,8 +13,15 @@ export type AgentStepStatus = ResumeAgentTraceStatus;
  * tool：阶段内的具体工具调用（子步骤）
  * reasoning：模型思考过程，仅在用户显式开启后才会出现
  * milestone：等待用户、任务终止等单点事件
+ * chain：结构化思维链决策节点（判断依据 / 执行动作 / 产出 / 校验结论）
  */
-export type AgentStepKind = "runtime" | "phase" | "tool" | "reasoning" | "milestone";
+export type AgentStepKind =
+  | "runtime"
+  | "phase"
+  | "tool"
+  | "reasoning"
+  | "milestone"
+  | "chain";
 
 export interface AgentTimelineStep {
   id: string;
@@ -29,6 +37,8 @@ export interface AgentTimelineStep {
   tool?: string;
   phase?: ResumeAgentWorkflowPhase;
   sourceCount?: number;
+  /** kind==="chain" 时的结构化节点内容，供按节点渲染 */
+  chain?: ReasoningNode;
   /** epoch ms，取自 Job 事件的 createdAt */
   startedAt: number;
   endedAt?: number;

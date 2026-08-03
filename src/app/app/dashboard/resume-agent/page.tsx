@@ -84,6 +84,11 @@ export default function ResumeAgentPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   /** 本轮终态是否为闲聊轮次（user.required mode=chat）；applyFinalJob 用它区分展示 */
   const chatModeRef = useRef(false);
+  /**
+   * 本轮失败是否为上游账户类问题（余额/鉴权/限流）。这类失败重试无用——
+   * 重试只会撞同一个错误，所以隐藏「重试」按钮，改为引导去 AI 设置。
+   */
+  const failureKindRef = useRef<"billing" | "auth" | "quota" | undefined>(undefined);
   /** 卸载标记：路由跳走时 abort 触发的 catch 不应再弹 toast / 写 store */
   const mountedRef = useRef(true);
   /** 当前 Job id 的 ref 副本：卸载清理在 effect 之外也需要它 */
@@ -248,6 +253,15 @@ export default function ResumeAgentPage() {
   /** runtime 徽章仍由 trace stage 决定；步骤本身交给 timeline store */
   const trackRuntime = (events: ResumeAgentJobEvent[]) => {
     for (const event of events) {
+      // job.failed 携带上游失败归类：余额/鉴权/限流不该显示成「可重试」
+      if (event.type === "job.failed") {
+        failureKindRef.current = event.payload.failureKind as
+          | "billing"
+          | "auth"
+          | "quota"
+          | undefined;
+        continue;
+      }
       if (event.type !== "trace.updated") continue;
       const stage = (event.payload.trace as { stage?: string } | undefined)?.stage;
       if (stage === "native-runtime") setRuntime("native");
@@ -368,6 +382,11 @@ export default function ResumeAgentPage() {
       message
     );
     setTraceBlockCollapsed(false);
+    // 账户类失败下草稿通常仍完整：提示可直接入库，比让用户干瞪眼一条英文原文有用
+    if (failureKindRef.current && validateResumeDraft(draft).canSave) {
+      toast.error(message, { description: t("errors.draftStillSavable"), duration: 10000 });
+      return;
+    }
     toast.error(message);
   };
 
@@ -382,6 +401,8 @@ export default function ResumeAgentPage() {
     // 续聊：第一轮已结束（waiting_user / completed），用户直接在输入框发新消息。
     // 复用同一个 Job 与事件流、不重置时间线；服务端保留岗位调研，只重跑定制步骤。
     const isContinuation = !isRetry && Boolean(activeJobId);
+    // 新一轮请求：清掉上一轮的失败归类，否则重试按钮会一直被隐藏
+    failureKindRef.current = undefined;
     const nextMessages = isRetry
       ? messages
       : [
@@ -705,6 +726,8 @@ export default function ResumeAgentPage() {
               isRunning={isSending}
               canRetry={
                 (runState === "error" || runState === "timeout" || runState === "cancelled") &&
+                // 余额/鉴权/限流类失败重试必然撞同一个错误，不给重试入口
+                !failureKindRef.current &&
                 !input.trim() &&
                 Boolean(lastSubmittedContent)
               }

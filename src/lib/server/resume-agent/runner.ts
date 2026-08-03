@@ -13,10 +13,18 @@ import type {
 } from "@/types/resume-agent";
 import { createEmptyResumeDraft, normalizeResumeDraft } from "@/utils/resumeAgent";
 import { runDiscoveryLoop, runResearchAgentLoop, supportsAgentLoop } from "./agent-loop";
-import { buildPendingQuestions } from "./clarification";
+import {
+  applyClarificationRoundLimit,
+  buildPendingQuestions,
+  CLARIFICATION_ROUND_SOFT_LIMIT,
+} from "./clarification";
 import { describePlan, planExecution } from "./execution-planner";
 import { appendJobEvent, createJob, getJob, saveJob } from "./job-repository";
-import { classifyUserIntent, generateResumeDraft } from "./model-adapter";
+import {
+  classifyUserIntent,
+  generateResumeDraft,
+  type UpstreamFailure,
+} from "./model-adapter";
 import { ReasoningChain } from "./reasoning-chain";
 import {
   ATS_KEYWORDS_SPEC,
@@ -39,6 +47,14 @@ import type { WebSearchOutcome } from "./web-search";
 const controllers = new Map<string, AbortController>();
 const JOB_BUDGET_MS = Number(process.env.RESUME_AGENT_JOB_BUDGET_MS || 180000);
 const MODEL_CALL_HISTORY_LIMIT = 12;
+/**
+ * 单个 Job 累计的大模型调用上限。
+ *
+ * JOB_BUDGET_MS 只约束单轮执行时长，对「用户答题多轮、每轮都不超时、但累计
+ * 十几次调用」无能为力——实测一个失控 Job 追问 6 轮共 13 次调用，把上游余额
+ * 烧光才停下。8 次足够覆盖正常流程（首轮提取+定制、两轮补充、一轮兜底）。
+ */
+const MODEL_CALL_LIMIT = Number(process.env.RESUME_AGENT_MODEL_CALL_LIMIT || 8);
 
 const now = () => new Date().toISOString();
 const latestUserText = (messages: CreateResumeAgentJobRequest["messages"]) =>
@@ -95,7 +111,25 @@ const normalizeCheckpoint = (job: ResumeAgentJob) => {
   job.checkpoint.pendingQuestions ||= [];
   job.checkpoint.answeredQuestions ||= [];
   job.checkpoint.intentSkipped ||= false;
+  job.checkpoint.clarificationRounds ||= 0;
+  job.checkpoint.modelCallCount ||= 0;
   job.modelCalls ||= [];
+};
+
+/**
+ * 大模型调用计数与硬上限。
+ *
+ * 每次调用前必须过这一关：超限直接抛错，由 executeJob 的 catch 统一收尾并保留
+ * 检查点。计数写在 checkpoint 里，跨轮累计——这正是本护栏要防的失控形态。
+ */
+const assertModelBudget = (job: ResumeAgentJob) => {
+  const used = job.checkpoint.modelCallCount || 0;
+  if (used >= MODEL_CALL_LIMIT) {
+    throw new Error(
+      `本轮简历任务已达到 ${MODEL_CALL_LIMIT} 次模型调用上限，已停止以避免继续消耗额度。草稿已保存，可直接确认入库；如需继续优化，请在输入框发送新消息（会重新计数）。`
+    );
+  }
+  job.checkpoint.modelCallCount = used + 1;
 };
 
 /** 记录一次模型调用；reasoning 仅在用户显式开启时才带内容 */
@@ -661,6 +695,7 @@ const executeJob = async (
       let intent: ResumeAgentIntent = "resume";
       let chatReply = "";
       try {
+        assertModelBudget(job);
         const classified = await classifyUserIntent(
           provider,
           job.input.locale,
@@ -670,7 +705,11 @@ const executeJob = async (
         intent = classified.intent;
         chatReply = classified.reply || "";
       } catch (error) {
-        // 分类失败保守按 resume 处理：宁可多跑工作流，也不丢用户可能给的素材
+        // 账户级失败（余额/鉴权）下后续每次调用都会撞同一个错误，继续跑只是白费
+        // 两次往返、再抛同一条错误。直接上抛由 catch 统一收尾。
+        const upstream = (error as Error & { upstreamFailure?: UpstreamFailure })?.upstreamFailure;
+        if (upstream?.kind === "billing" || upstream?.kind === "auth") throw error;
+        // 其余分类失败保守按 resume 处理：宁可多跑工作流，也不丢用户可能给的素材
         await intentNode.degrade("意图分类调用失败，保守按简历意图继续", {
           kind: "tool_failure",
           reason: error instanceof Error ? error.message : String(error),
@@ -749,6 +788,7 @@ const executeJob = async (
       const startedAt = now();
       let initial: Awaited<ReturnType<typeof generateResumeDraft>>;
       try {
+        assertModelBudget(job);
         initial = await generateResumeDraft({
           provider,
           locale: job.input.locale,
@@ -972,6 +1012,7 @@ const executeJob = async (
       });
       const tailoringStartedAt = now();
       try {
+        assertModelBudget(job);
         const tailored = await generateResumeDraft({
           provider,
           locale: job.input.locale,
@@ -1023,18 +1064,29 @@ const executeJob = async (
     }
     const factIssues = job.checkpoint.factIssues;
     const language = job.input.locale.toLowerCase().startsWith("en") ? "en" : "zh";
+    // 澄清轮次先自增再判定：本轮就是第 N 轮，超过软上限后只保留阻塞项
+    job.checkpoint.clarificationRounds = (job.checkpoint.clarificationRounds || 0) + 1;
+    const clarificationRound = job.checkpoint.clarificationRounds;
     const clarifyNode = await chain.node({
       title: "整合结果并生成澄清计划",
-      basis: "交付前必须逐条核对：门禁问题、七个板块覆盖情况、目标岗位是否明确",
+      basis: `交付前逐条核对门禁问题、七个板块覆盖情况与目标岗位；已作答项永久豁免，本轮为第 ${clarificationRound} 轮澄清（软上限 ${CLARIFICATION_ROUND_SOFT_LIMIT} 轮）`,
       action: "汇总门禁结论与草稿缺口，去重后生成结构化澄清问题",
       expectation: "澄清清单为空则可确认入库；非空则停在等待用户补充",
     });
-    const pendingQuestions = buildPendingQuestions(
+    const allQuestions = buildPendingQuestions(
       job.checkpoint.draft,
       factIssues,
       language,
       job.checkpoint.answeredQuestions
     );
+    // 断路器：模型每轮换个措辞就能绕过内容哈希，靠轮次兜底才能真正收敛
+    const gated = applyClarificationRoundLimit(allQuestions, clarificationRound);
+    const pendingQuestions = gated.questions;
+    // 与上一轮的重合度：循环失控时这个数会居高不下，一眼可见。
+    // 必须在覆盖 checkpoint.pendingQuestions 之前算。
+    const previousIds = new Set((job.checkpoint.pendingQuestions || []).map((item) => item.id));
+    const repeatedCount = pendingQuestions.filter((item) => previousIds.has(item.id)).length;
+    const newCount = pendingQuestions.length - repeatedCount;
     const requiresAnswer = pendingQuestions.length > 0 || !job.checkpoint.draft.targetJob.title;
 
     await changePhase(job, "user_confirmation");
@@ -1043,16 +1095,29 @@ const executeJob = async (
     job.checkpoint.pendingQuestion = requiresAnswer
       ? pendingQuestions[0]?.question ||
         "请确认右侧草稿中的事实、推断和岗位能力缺口。"
-      : "岗位分析、简历定制和事实门禁已完成，请确认事实并选择模板。";
+      : gated.limited
+        ? `已多次询问补充项，剩余 ${gated.droppedCount} 项保留为待补充，不再重复追问。请核对右侧草稿并确认入库。`
+        : "岗位分析、简历定制和事实门禁已完成，请确认事实并选择模板。";
     job.assistantMessage = requiresAnswer
       ? job.assistantMessage || job.checkpoint.pendingQuestion
-      : "岗位分析、简历定制和事实门禁已完成。请核对右侧草稿，确认后选择模板保存。";
+      : gated.limited
+        ? job.checkpoint.pendingQuestion
+        : "岗位分析、简历定制和事实门禁已完成。请核对右侧草稿，确认后选择模板保存。";
     if (requiresAnswer) {
       await clarifyNode.block({
         kind: "missing_info",
-        reason: `仍有 ${pendingQuestions.length} 项待澄清${factIssues.length ? `，其中门禁问题 ${factIssues.length} 项` : ""}`,
+        reason: `仍有 ${pendingQuestions.length} 项待澄清（新增 ${newCount} 项、与上轮重复 ${repeatedCount} 项）${factIssues.length ? `，其中门禁问题 ${factIssues.length} 项` : ""}`,
         recovery: "以结构化选项形式呈现问题，用户作答后只重跑定制与门禁，不重复调研",
       });
+    } else if (gated.limited) {
+      await clarifyNode.degrade(
+        `已达第 ${clarificationRound} 轮澄清，${gated.droppedCount} 项非阻塞问题不再追问`,
+        {
+          kind: "missing_info",
+          reason: `澄清轮次超过软上限 ${CLARIFICATION_ROUND_SOFT_LIMIT}，继续追问只会重复消耗额度`,
+          recovery: "只保留阻塞入库的必填项；其余如实标记为待补充，草稿可直接确认",
+        }
+      );
     } else {
       await clarifyNode.pass(
         `门禁通过、七个板块均已覆盖，草稿可确认入库（来源 ${(research?.sources || []).length} 个）`
@@ -1075,33 +1140,47 @@ const executeJob = async (
       factIssues,
       questions: pendingQuestions,
       readyToConfirm: !requiresAnswer,
+      clarificationRound,
+      // 前端据此如实提示「已多次询问，剩余项保留为待补充」
+      droppedCount: gated.droppedCount,
+      repeatedCount,
+      newCount,
     });
     await deliveryNode.pass(
       requiresAnswer
         ? `已交付 ${pendingQuestions.length} 个澄清项，等待用户作答`
-        : "已交付可确认草稿，等待用户选择模板保存"
+        : gated.limited
+          ? `已交付可确认草稿；${gated.droppedCount} 项非阻塞问题保留为待补充`
+          : "已交付可确认草稿，等待用户选择模板保存"
     );
   } catch (error) {
     const aborted = signal.aborted;
     const budgetExpired = controller.signal.aborted && controller.signal.reason === "job-budget";
+    // 上游计费 / 鉴权 / 限流类错误已在 model-adapter 归类，直接用它的中文提示，
+    // 否则用户只看到服务商透传的英文原文，分不清是账户问题还是应用 bug
+    const upstream = (error as Error & { upstreamFailure?: UpstreamFailure })?.upstreamFailure;
     job.status = budgetExpired ? "failed" : aborted ? "cancelled" : "failed";
     job.error = budgetExpired
       ? `原生简历 Agent 超过 ${Math.round(JOB_BUDGET_MS / 1000)} 秒任务预算，已保存检查点；请恢复任务或缩小本轮调研范围`
       : aborted
         ? "本次简历 Agent 任务已停止"
-        : error instanceof Error
-          ? error.message
-          : String(error);
+        : upstream
+          ? upstream.message
+          : error instanceof Error
+            ? error.message
+            : String(error);
     // 仍打开的思维链节点必须结算，否则前端留一个永远转圈的节点
     await chain
       .settleOpen({
-        kind: budgetExpired ? "budget" : "tool_failure",
+        kind: budgetExpired || upstream ? "budget" : "tool_failure",
         reason: job.error,
         recovery: budgetExpired
           ? "检查点已保存，可恢复任务或缩小调研范围后重试"
           : aborted
             ? "本轮已按用户要求停止，检查点保留"
-            : "检查点已保存，修正配置或重试即可从断点继续",
+            : upstream
+              ? "草稿已保存可直接确认入库；到「AI 设置」处理服务商账户后再继续对话"
+              : "检查点已保存，修正配置或重试即可从断点继续",
       })
       .catch(() => undefined);
     // 解析失败时把原始响应片段一起记录，否则用户只能看到「没有返回有效的简历 JSON」
@@ -1131,7 +1210,13 @@ const executeJob = async (
     job.updatedAt = now();
     job.completedAt = now();
     await saveJob(job);
-    await appendJobEvent(job.id, job.status === "cancelled" ? "job.cancelled" : "job.failed", { error: job.error });
+    await appendJobEvent(job.id, job.status === "cancelled" ? "job.cancelled" : "job.failed", {
+      error: job.error,
+      // 计费/鉴权/限流类失败重试无用，前端据此隐藏「重试」按钮并引导去 AI 设置
+      failureKind: upstream?.kind,
+      // 草稿仍完整时告知前端可以直接入库，不必重跑
+      draftUsable: Boolean(job.checkpoint.draft?.basic.name),
+    });
   } finally {
     clearTimeout(timeout);
     controllers.delete(jobId);
@@ -1267,6 +1352,10 @@ export const continueResumeAgentJob = async (
   job.checkpoint.pendingQuestions = [];
   job.checkpoint.factIssues = [];
   job.checkpoint.discoveredDirections = undefined;
+  // 用户在输入框主动发新消息 = 新的一轮请求，重置两个护栏计数。
+  // 作答路径（answerResumeAgentQuestions）刻意不重置——那正是要收敛的循环。
+  job.checkpoint.modelCallCount = 0;
+  job.checkpoint.clarificationRounds = 0;
   job.status = "queued";
   job.error = undefined;
   job.completedAt = undefined;

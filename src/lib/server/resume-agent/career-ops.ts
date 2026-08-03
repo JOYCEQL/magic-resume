@@ -137,6 +137,29 @@ export const assessSourceTrust = (source: Pick<ResearchSource, "type" | "url" | 
   return { score: Math.max(0, Math.min(100, score)), flags };
 };
 
+/**
+ * 已闭环的过程记录，不是待核验的推断。
+ *
+ * 模型常把「我对用户答复做了什么」写进 assumptions（如"用户已确认目标职位为 X"、
+ * "起始年月已由用户补充为 2021 年 9 月"）。这类文本本身就是用户答复的结果，
+ * 再反问一次会形成死循环：门禁问 → 用户答 → 模型写一条新的"用户已确认…" → 门禁再问。
+ * 实测一个 Job 因此追问 6 轮、用户重复作答 45 次，直到上游余额耗尽。
+ *
+ * prompt 侧已约束 assumptions 的语义，但模型不可靠，门禁必须独立防御。
+ * 两类模式分别对应两种写法（实测那 7 条各占一半，合起来全部命中，
+ * 而"根据经历推断…""假设候选人愿意…"这类真推断不会被误杀）：
+ */
+/** 一、明确引用用户答复作为来源 */
+const USER_SETTLED_PATTERN =
+  /(用户(已|最新)?(确认|提供|补充|明确表示|指出|说明)|已由用户|按用户(提供|所述|说明)|经用户确认|user (has )?(confirmed|provided|supplied|clarified)|per the user|as (the )?user (confirmed|stated|provided))/i;
+/** 二、描述对草稿结构做的增删，含内部字段名或处置动词 */
+const DRAFT_MUTATION_PATTERN =
+  /(missingSkills|missingFields|assumptions|followUpQuestions|故(从|已|保留|移除)|已(移除|纳入|保留为空)|removed from|kept (it )?(empty|blank))/i;
+
+/** 命中任一模式即视为已闭环，不再作为待确认项反问 */
+const isSettledAssumption = (assumption: string) =>
+  USER_SETTLED_PATTERN.test(assumption) || DRAFT_MUTATION_PATTERN.test(assumption);
+
 export const validateDraftFacts = (draft: ResumeDraft) => {
   const issues: string[] = [];
   const evidenceFields = new Set(draft.evidence.map((item) => item.field));
@@ -149,7 +172,11 @@ export const validateDraftFacts = (draft: ResumeDraft) => {
       issues.push(`量化成果缺少事实证据：${metric.detail.slice(0, 80)}`);
     }
   }
-  for (const assumption of draft.assumptions) issues.push(`待本人确认：${assumption}`);
+  for (const assumption of draft.assumptions) {
+    // 已闭环的过程记录不再反问：它记录的正是用户的答复本身
+    if (isSettledAssumption(assumption)) continue;
+    issues.push(`待本人确认：${assumption}`);
+  }
   for (const conflict of draft.conflicts) issues.push(`事实冲突：${conflict}`);
   return unique(issues);
 };

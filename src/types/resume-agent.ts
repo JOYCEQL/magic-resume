@@ -401,6 +401,16 @@ export interface ResumeAgentWorkflowCheckpoint {
    */
   intentSkipped?: boolean;
   /**
+   * 进入 user_confirmation 的累计轮次。超过软上限后澄清只保留阻塞项，
+   * 避免模型每轮换个措辞把同一批问题无限追问下去。
+   */
+  clarificationRounds?: number;
+  /**
+   * 本 Job 累计的大模型调用次数。JOB_BUDGET_MS 只管单轮时长，管不住
+   * 「多轮各自不超时但总量失控」——实测一次失控烧了 13 次调用直到余额耗尽。
+   */
+  modelCallCount?: number;
+  /**
    * 阶段一发现的候选方向。用户未提供目标公司时产出，Job 随即进入 waiting_user
    * 等其选择；选定后清空并进入阶段二精确调研。
    */

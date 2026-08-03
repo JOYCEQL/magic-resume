@@ -409,6 +409,7 @@
         "generateFailed": "Failed to generate the draft. Check the provider configuration and try again",
         "timeout": "The model did not finish within 120 seconds, so the request was stopped. Retry or choose a model that supports tool calling.",
         "cancelled": "Generation stopped. You can revise the input and retry.",
+        "draftStillSavable": "Your draft is saved and complete — you can confirm it and pick a template right away, or sort out the provider account in AI settings and continue the conversation.",
         "resolveErrors": "Resolve factual conflicts and required fields before saving"
       }
     },

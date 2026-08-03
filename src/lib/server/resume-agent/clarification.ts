@@ -22,8 +22,28 @@ const DATE_PATTERN = /(日期|起止|时间|入职|离职|毕业年份|date|dura
 const COMPANY_PATTERN = /(公司名称|雇主|employer|company name)/i;
 const METRIC_PATTERN = /(量化|成果数据|指标|数字|metric|quantif)/i;
 
-const questionIdFor = (field: string, index: number) =>
-  `q-${index}-${field.replace(/[^a-zA-Z0-9]+/g, "-").slice(0, 40).toLowerCase()}`;
+/**
+ * 问题 ID 必须由问题文本内容决定，不能用位置编号。
+ *
+ * 旧实现是 `q-${index}-${field}`：问题列表一变，同一个问题的编号就漂移，
+ * 于是「已作答」无法判定，同一个问题被反复追问。实测一个 Job 里 45 条作答
+ * 只对应 18 个唯一 ID，其中两题各答了 6 次。
+ *
+ * 用内容哈希后，同一句问题在任何轮次都是同一个 ID，answeredQuestions 的
+ * 豁免才真正生效。哈希只用于本地去重，不涉及安全，故用 FNV-1a 而非 crypto。
+ */
+const normalizeQuestionText = (text: string) =>
+  text.replace(/\s+/g, "").replace(/[「」“”"'：:，,。.；;！!？?（）()]/g, "").toLowerCase();
+
+const questionIdFor = (text: string) => {
+  let hash = 0x811c9dc5;
+  const normalized = normalizeQuestionText(text);
+  for (let index = 0; index < normalized.length; index += 1) {
+    hash ^= normalized.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return `q-${hash.toString(36)}`;
+};
 
 /**
  * 语义主题从共享文件导入（前端渲染层兜底去重用同一份定义，避免两处漂移）。
@@ -142,6 +162,9 @@ export const buildPendingQuestions = (
   const seen = new Set<string>();
   const byTopic = new Map<string, number>();
   const questions: ResumeAgentPendingQuestion[] = [];
+  // 已作答（含显式跳过）的问题永不重复追问。旧实现只豁免 section-*，
+  // 其余问题因位置编号漂移而无法判定，导致同一问题被反复追问。
+  const answeredIds = new Set((answeredQuestions || []).map((answer) => answer.questionId));
 
   const push = (text: string, field: string, severity: ResumeAgentPendingQuestion["severity"]) => {
     const raw = text.trim();
@@ -152,6 +175,12 @@ export const buildPendingQuestions = (
     // 逐字去重：处理完全相同的两条
     const key = normalized.replace(/\s+/g, "").toLowerCase();
     if (seen.has(key)) return;
+    // 内容哈希 ID：本轮之前已作答过同一句问题，直接跳过
+    const id = questionIdFor(normalized);
+    if (answeredIds.has(id)) {
+      seen.add(key);
+      return;
+    }
 
     // 主题去重：处理"两段经历的公司名称"与"请提供两段工作经历的公司名称和起止日期"
     // 这类同义重复。一句话可能同时命中多个主题（模型写的汇总句常把三件事塞一起），
@@ -172,7 +201,7 @@ export const buildPendingQuestions = (
     seen.add(key);
     for (const topic of topics) byTopic.set(topic, questions.length);
     questions.push({
-      id: questionIdFor(field, questions.length),
+      id,
       field,
       question: normalized,
       severity,
@@ -230,6 +259,41 @@ export const buildPendingQuestions = (
   }
 
   return questions.slice(0, 16);
+};
+
+/**
+ * 澄清轮次断路器。
+ *
+ * 单靠「已作答豁免」还不够：模型每轮都可能换一种措辞产出语义相同的新问题，
+ * 内容哈希抓不到改写，追问就会以新 ID 无限继续。这里按轮次收紧：
+ * 超过软上限后只保留阻塞入库的 error 项，warning 项一律转为"待补充"，
+ * 让 Job 能进入可确认状态而不是永远等用户答题。
+ *
+ * 阈值取 3：正常流程一轮提取 + 一轮补充 + 一轮兜底已足够；实测失控的那个
+ * Job 到第 6 轮仍在问同样的 7 题。
+ */
+export const CLARIFICATION_ROUND_SOFT_LIMIT = 3;
+
+export interface ClarificationGateResult {
+  questions: ResumeAgentPendingQuestion[];
+  /** 因达到轮次上限而被丢弃的 warning 题数，供思维链与对话如实说明 */
+  droppedCount: number;
+  limited: boolean;
+}
+
+export const applyClarificationRoundLimit = (
+  questions: ResumeAgentPendingQuestion[],
+  round: number
+): ClarificationGateResult => {
+  if (round <= CLARIFICATION_ROUND_SOFT_LIMIT) {
+    return { questions, droppedCount: 0, limited: false };
+  }
+  const blocking = questions.filter((question) => question.severity === "error");
+  return {
+    questions: blocking,
+    droppedCount: questions.length - blocking.length,
+    limited: true,
+  };
 };
 
 /** 把选择与补充文本拼成一条可回灌进对话的用户消息 */

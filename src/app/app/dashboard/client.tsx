@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IconResumes, IconTemplates, IconSettings, IconAI } from "@/components/shared/icons/SidebarIcons";
+import { IconResumes, IconTemplates, IconSettings, IconAI, IconResumeAgent } from "@/components/shared/icons/SidebarIcons";
 import { usePathname, useRouter } from "@/lib/navigation";
 import {
   Sidebar,
@@ -43,6 +43,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       title: t("sidebar.templates"),
       url: "/app/dashboard/templates",
       icon: IconTemplates,
+    },
+    {
+      title: t("sidebar.resumeAgent"),
+      url: "/app/dashboard/resume-agent",
+      icon: IconResumeAgent,
     },
     {
       title: t("sidebar.ai"),

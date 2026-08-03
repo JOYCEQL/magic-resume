@@ -7,30 +7,36 @@ interface DockProps
   className?: string;
 }
 
+/**
+ * 取元素的组件名。原实现读 `type.name`，但 type 可能是 string（原生标签），
+ * 且 @types/react 18 下 isValidElement 收窄出的 props 是 unknown，直接读会报错。
+ * 优先 displayName：函数名在生产构建里会被压缩失真。
+ */
+const elementTypeName = (element: React.ReactElement): string | undefined => {
+  const type = element.type;
+  if (typeof type === "string") return type;
+  const component = type as { displayName?: string; name?: string };
+  return component.displayName || component.name;
+};
+
 export function Dock({ children, className, ...props }: DockProps) {
   // Convert children to array to handle them
   const childrenArray = React.Children.toArray(children);
 
   // Find the index of TemplateSheet for splitting
   const templateSheetIndex = childrenArray.findIndex((child) => {
-    if (React.isValidElement(child)) {
-      const tooltip = child.props.children;
-      if (React.isValidElement(tooltip)) {
-        const trigger = tooltip.props.children.find(
-          (child: any) => child?.type?.name === "TooltipTrigger"
-        );
-        if (trigger) {
-          const content = trigger.props.children;
-          if (React.isValidElement(content)) {
-            const icon = content.props.children;
-            return (
-              React.isValidElement(icon) && icon.type?.name === "TemplateSheet"
-            );
-          }
-        }
-      }
-    }
-    return false;
+    if (!React.isValidElement<{ children?: React.ReactNode }>(child)) return false;
+    const tooltip = child.props.children;
+    if (!React.isValidElement<{ children?: React.ReactNode }>(tooltip)) return false;
+    const trigger = React.Children.toArray(tooltip.props.children).find(
+      (candidate) =>
+        React.isValidElement(candidate) && elementTypeName(candidate) === "TooltipTrigger"
+    );
+    if (!React.isValidElement<{ children?: React.ReactNode }>(trigger)) return false;
+    const content = trigger.props.children;
+    if (!React.isValidElement<{ children?: React.ReactNode }>(content)) return false;
+    const icon = content.props.children;
+    return React.isValidElement(icon) && elementTypeName(icon) === "TemplateSheet";
   });
 
   // If TemplateSheet is not found, render all children in a single group

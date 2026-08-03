@@ -108,6 +108,7 @@
       "resumes": "我的简历",
       "settings": "通用设置",
       "templates": "简历模板",
+      "resumeAgent": "简历 Agent",
       "ai": "AI服务商"
     },
     "resumes": {
@@ -116,6 +117,7 @@
       "view": "去查看",
       "myResume": "我的简历",
       "create": "新建简历",
+      "createWithAI": "AI 创建简历",
       "newResume": "新建简历",
       "newResumeDescription": "创建一个新简历以开始。",
       "import": "导入简历",
@@ -168,6 +170,250 @@
         }
       }
     },
+    "resumeAgent": {
+      "title": "简历 Agent",
+      "subtitle": "通过一句话或多轮对话生成真实、可核验且可继续编辑的简历草稿",
+      "conversation": "对话",
+      "reset": "重新开始",
+      "thinking": "正在整理事实并更新草稿…",
+      "trace": {
+        "title": "查看执行过程",
+        "running": "正在处理（{seconds} 秒）",
+        "completed": "已完成 · {count} 个执行步骤",
+        "failed": "执行遇到问题，已停止",
+        "timeout": "等待超时，已自动停止",
+        "cancelled": "已停止本次生成",
+        "waiting": "等待你补充信息",
+        "stoppedStep": "执行已停止",
+        "cancelledStep": "步骤已取消",
+        "privacyNote": "这里仅展示可验证的步骤、工具调用和结果摘要，不展示模型私有思维链。",
+        "native": "原生 Agent",
+        "opencode": "OpenCode 多工具",
+        "compatible": "兼容生成模式",
+        "stepCount": "{count} 个步骤",
+        "failedCount": "{count} 个失败",
+        "expandAll": "全部展开",
+        "collapseAll": "全部折叠",
+        "openFull": "完整轨迹",
+        "reasoningOn": "已开启思考过程",
+        "reasoningOff": "显示思考过程",
+        "reasoningHint": "开启后下一次运行会采集并展示模型思考过程（仅支持返回 reasoning 的模型）",
+        "reasoningNote": "已开启思考过程展示。思考内容由模型直接返回，可能包含未经核验的推测，请只以草稿中的事实为准。",
+        "emptyHint": "本次会话还没有执行步骤。发送一条消息后，这里会实时显示阶段、工具调用与耗时。"
+      },
+      "clarify": {
+        "title": "待补充信息",
+        "step": "第 {current}/{total} 题",
+        "hint": "选择或填写你能确认的内容；留空的项会保留为待补充，不会被编造。",
+        "progress": "{answered}/{total} 已填",
+        "blocking": "{count} 项必填",
+        "previous": "上一题",
+        "next": "下一题",
+        "edit": "点击回到该题修改",
+        "inputPlaceholder": "补充具体内容（可选）",
+        "skip": "暂不提供",
+        "skipped": "已标记暂不提供",
+        "submit": "提交并继续",
+        "submitHint": "提交后会基于新事实重新定制简历，不会重复调研岗位。"
+      },
+      "steps": {
+        "sources": "{count} 个来源",
+        "reasoning": "模型思考过程",
+        "chain": {
+          "stage": {
+            "requirement": "需求拆解",
+            "planning": "路径规划",
+            "execution": "工具执行",
+            "validation": "结果校验",
+            "delivery": "最终交付"
+          },
+          "verdict": {
+            "pass": "校验通过",
+            "degraded": "已降级处理",
+            "blocked": "卡点待补充",
+            "skipped": "已跳过",
+            "pending": "执行中"
+          },
+          "basis": "判断依据",
+          "action": "执行动作",
+          "expectation": "预期产出",
+          "outcome": "实际产出",
+          "toolReason": "调用原因",
+          "toolInput": "入参逻辑",
+          "toolExpected": "预期结果",
+          "inputIssues": "入参校验未通过",
+          "outputIssues": "结果校验未通过",
+          "attempts": "尝试 {count} 次",
+          "blockerReason": "卡点原因",
+          "blockerRecovery": "处理方案"
+        },
+        "phase": {
+          "intake": "接收输入",
+          "candidate_facts": "提取候选人事实",
+          "target_definition": "定义目标岗位",
+          "job_discovery": "发现公开岗位",
+          "job_research": "调研岗位描述",
+          "jd_analysis": "分析 JD 关键词",
+          "career_ops_evaluation": "评估匹配度与风险",
+          "resume_tailoring": "定制简历草稿",
+          "fact_gate": "执行事实门禁",
+          "user_confirmation": "等待用户确认",
+          "completed": "任务完成"
+        },
+        "tool": {
+          "resume_web_search": "检索公开招聘线索",
+          "resume_discover_job_postings": "搜索目标公司的公开招聘源",
+          "resume_fetch_job_posting": "读取并验证岗位页面",
+          "resume_extract_job_posting": "提取岗位职责与要求",
+          "resume_extract_ats_keywords": "提取 ATS 关键词",
+          "resume_analyze_skill_gap": "分析岗位能力缺口",
+          "resume_rank_evidence": "匹配候选人证据",
+          "resume_build_recruiter_risk_map": "招聘者视角风险检查",
+          "resume_validate_draft_facts": "校验草稿事实"
+        },
+        "milestone": {
+          "userRequired": "等待你确认事实",
+          "jobFailed": "任务失败",
+          "jobCancelled": "任务已取消",
+          "executionStop": "执行已停止"
+        }
+      },
+      "panel": {
+        "expand": "展开侧边栏",
+        "collapse": "收起侧边栏",
+        "resizeHandle": "拖拽调整侧边栏宽度",
+        "gapBadge": "{count} 项待补充",
+        "tab": {
+          "draft": "草稿",
+          "preview": "实时预览",
+          "gaps": "待办与缺口",
+          "trace": "执行日志"
+        }
+      },
+      "welcome": {
+        "eyebrow": "Magic Resume · 简历 Agent",
+        "title": "让简历只讲你真正做过的事",
+        "subtitle": "依据你提供的经历、目标岗位与项目，生成逐条可核验的定制草稿；不确定的信息会先问你，绝不编造。",
+        "card": {
+          "restructure": {
+            "title": "探索结构化改写",
+            "description": "梳理经历顺序与表达逻辑",
+            "prompt": "请在不改变事实的前提下，重新组织我的经历顺序与表述方式，让最相关的内容更靠前。"
+          },
+          "matchSkills": {
+            "title": "匹配 JD 关键技能",
+            "description": "精准对齐岗位要求",
+            "prompt": "请对照目标岗位要求，指出我已具备哪些能力、缺少哪些能力，并列出仍未覆盖的关键词。"
+          },
+          "diagnose": {
+            "title": "诊断简历缺失项",
+            "description": "识别薄弱点与缺失字段",
+            "prompt": "请诊断当前简历还缺少哪些关键信息，按对录用决策的影响排序。"
+          }
+        }
+      },
+      "gapNotice": {
+        "summary": "还有 {count} 题待你补充，点击展开",
+        "dismiss": "关闭提醒"
+      },
+      "discovery": {
+        "title": "为你找到了几个匹配方向",
+        "count": "{count} 个方向",
+        "hint": "这些方向来自对你的技能与经历的公开搜索。点一家公司，我会调研它的最新 JD 并定制简历。",
+        "sources": "{count} 条来源",
+        "viewJd": "查看 JD {index}",
+        "pickCompany": "选择公司（点选进入定制）",
+        "manualHint": "也可以直接在输入框里输入你心仪的公司，直接开始定制。"
+      },
+      "composer": {
+        "attachUnavailable": "附件上传功能尚未开放",
+        "mentionUnavailable": "引用简历字段功能尚未开放",
+        "inputLabel": "输入消息",
+        "modelSelect": "选择模型"
+      },
+      "preview": {
+        "breadcrumb": "简历预览",
+        "emptyName": "你的名字",
+        "empty": "草稿还没有内容。发送一条消息后，这里会渲染 A4 简历。",
+        "generating": "简历生成中，完成后即可预览",
+        "paperSize": "A4 纸张",
+        "synced": "已同步",
+        "syncing": "同步中",
+        "zoomIn": "放大",
+        "zoomOut": "缩小",
+        "fitWidth": "适应宽度",
+        "templates": "模板",
+        "showTemplates": "展开模板栏",
+        "hideTemplates": "收起模板栏"
+      },
+      "tools": {
+        "prompts": "快捷提示词",
+        "missing": "待补充信息",
+        "missingHint": "这些项由事实门禁产出；留空不会被编造，可在左侧澄清面板逐项作答。",
+        "keywords": "岗位关键词与缺口",
+        "copyKeywords": "复制关键词",
+        "copied": "已复制到剪贴板",
+        "copyFailed": "复制失败，请手动选择文本",
+        "resetHint": "重新开始会清空对话、草稿和执行轨迹；已保存到「我的简历」的内容不受影响。",
+        "promptLabel": {
+          "addMetrics": "补充可核验的量化成果",
+          "tightenSummary": "精简职业概述",
+          "alignKeywords": "对齐 JD 关键词",
+          "askMissing": "列出还缺哪些关键信息"
+        },
+        "prompt": {
+          "addMetrics": "请针对我已确认的经历补充可核验的量化成果；没有真实数据的地方保持原样，不要编造数字。",
+          "tightenSummary": "请把职业概述压缩到三行以内，只保留与目标岗位最相关的事实。",
+          "alignKeywords": "请在不虚构经历的前提下，让措辞更贴近目标 JD 的关键词，并列出仍未覆盖的关键词。",
+          "askMissing": "请列出当前草稿还缺少哪些关键信息，按对录用决策的影响排序。"
+        }
+      },
+      "send": "发送",
+      "stop": "停止",
+      "retry": "重试",
+      "timeoutHint": "最长等待 {seconds} 秒；可随时手动停止。",
+      "inputPlaceholder": "介绍你的个人信息、目标岗位、经历和项目；也可以粘贴 JD。按 Enter 发送，Shift + Enter 换行。",
+      "providerNotReady": "当前服务商尚未配置完整，点击前往 AI 服务商设置",
+      "approve": "确认并选择模板",
+      "saved": "简历已保存到我的简历",
+      "empty": {
+        "title": "从真实经历开始",
+        "description": "例如：我叫张三，想应聘前端工程师，毕业于某大学，做过两个 React 项目。Agent 会逐步追问关键缺失项，不会虚构经历或成果。"
+      },
+      "draft": {
+        "title": "结构化简历草稿",
+        "profile": "个人资料",
+        "summary": "职业概述",
+        "skills": "专业技能",
+        "experience": "工作经历",
+        "projects": "项目经历",
+        "empty": "等待对话补充此部分"
+      },
+      "validation": {
+        "title": "事实与完整性检查",
+        "errors": "{count} 个阻塞问题",
+        "errorsHint": "这些是硬性问题，不解决将无法保存进入工作台",
+        "warnings": "{count} 个待确认项",
+        "ready": "可以保存",
+        "noIssues": "没有发现阻塞问题，可以进入模板选择。"
+      },
+      "template": {
+        "title": "选择 Magic Resume 模板",
+        "description": "Agent 只负责内容。最终排版使用 Magic Resume 现有 React 模板，避免与 Career Ops HTML/PDF 模板冲突。",
+        "previewAlt": "模板预览",
+        "previewUnavailable": "暂无预览",
+        "cancel": "返回检查",
+        "save": "保存并进入工作台"
+      },
+      "errors": {
+        "configureProvider": "请先完整配置所选 AI 服务商",
+        "generateFailed": "生成草稿失败，请检查服务商配置后重试",
+        "timeout": "模型在 120 秒内没有完成，已自动停止。你可以重试或更换支持工具调用的模型。",
+        "cancelled": "已停止本次生成，可修改输入后重试。",
+        "draftStillSavable": "右侧草稿已完整保存，可直接点「确认并选择模板」入库；或到「AI 设置」处理服务商账户后继续对话。",
+        "resolveErrors": "请先解决事实冲突和必要字段缺失"
+      }
+    },
     "settings": {
       "title": "设置",
       "syncDirectory": {
@@ -211,6 +457,13 @@
           "description": "支持润色、语法检查和 PDF 图片识别导入。推荐模型 ID：gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini 模型 ID"
+        },
+        "opencode": {
+          "title": "OpenCode Zen",
+          "description": "通过 OpenCode Zen 使用精选模型，支持 AI 润色和语法检查",
+          "apiKey": "OpenCode Zen API Key",
+          "modelId": "OpenCode Zen 模型 ID",
+          "modelHint": "请填写支持 OpenAI Chat Completions 协议的 Zen 模型 ID。"
         }
       }
     },

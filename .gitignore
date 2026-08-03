@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/.pnpm-store/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -17,6 +18,13 @@
 # production
 /build
 /dist/
+/dist-final/
+/node_modules_incomplete/
+
+# local runtime artifacts
+/.learnings/
+/.data/
+/Dockerfile.local
 
 # misc
 .DS_Store
@@ -39,6 +47,10 @@ src/routeTree.gen.ts
 
 # idea
 .idea
+
+# local tooling / runtime state
+/.omc/
+/cache/
 
 .history
 .agent

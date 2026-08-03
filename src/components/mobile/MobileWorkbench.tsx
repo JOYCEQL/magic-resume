@@ -131,6 +131,8 @@ export function MobileWorkbench() {
                 previewPanelCollapsed={false}
                 toggleSidePanel={() => {}}
                 toggleEditPanel={() => {}}
+                // 移动端只有预览一个 Tab，没有可折叠的面板布局
+                togglePreviewPanel={() => {}}
               />
             </motion.div>
           )}

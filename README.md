@@ -102,6 +102,7 @@ Please see the [LICENSE](LICENSE) file for detailed terms.
 ## 🗺️ Roadmap
 
 - [x] AI-assisted writing
+- [x] Conversational resume agent (career-direction discovery, JD research, tailored draft, agent preview)
 - [x] Multi-language support
 - [ ] Support for more resume templates
 - [ ] Support for more export formats
@@ -135,6 +136,9 @@ You can follow the latest updates via:
 ## 🌟 Support
 
 If you find this project helpful, please give it a star ⭐️
+
+<img src="images/support-1.jpg" width="320" alt="Support project image 1">
+<img src="images/support-2.jpg" width="320" alt="Support project image 2">
 
 ## ❤️ Sponsors
 

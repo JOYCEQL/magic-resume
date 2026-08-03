@@ -231,7 +231,13 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               }}
               className="relative"
             >
-              <style jsx global>{`
+              {/*
+                原为 Next.js 的 styled-jsx 写法 <style jsx global>。项目已迁移到
+                TanStack Start，styled-jsx 既非直接依赖也未配 babel 插件，jsx/global
+                两个属性从未生效（React 视为未知 DOM 属性）。普通 <style> 本身即全局
+                作用域，去掉属性后渲染行为一致。
+              */}
+              <style>{`
               .grammar-error {
                 cursor: help;
                 border-bottom: 2px dashed;

@@ -102,6 +102,7 @@ docker compose up -d
 ## 🗺️ 路线图
 
 - [x] AI 辅助编写
+- [x] 对话式简历 Agent（职业方向探索、JD 调研、定制草稿、Agent 预览）
 - [x] 多语言支持
 - [ ] 支持更多简历模板
 - [ ] 更多格式导出
@@ -134,7 +135,8 @@ docker compose up -d
 
 ## 🌟 支持项目
 
-<img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" width="320"  alt="图片描述">
+<img src="images/support-1.jpg" width="320" alt="支持项目图 1">
+<img src="images/support-2.jpg" width="320" alt="支持项目图 2">
 
 ## ❤️ 赞助名单
 

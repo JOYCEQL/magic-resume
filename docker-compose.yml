@@ -1,11 +1,76 @@
-
 services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
+    image: magic-resume:local-agent
+    container_name: magic-resume
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      - NODE_ENV=production
-    restart: always
+      NODE_ENV: production
+      HOSTNAME: 0.0.0.0
+      PORT: 3000
+      OPENCODE_SERVER_URL: http://opencode:4096
+      OPENCODE_SERVER_USERNAME: opencode
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-magic-resume-local-runtime}
+      OPENCODE_RESUME_DIRECTORY: /runtime
+      OPENCODE_RESUME_CONFIG_PATH: /runtime/opencode.json
+      RESUME_AGENT_STORE_DIRECTORY: /app-data/resume-agent
+      # 180s 对慢模型不够：单次生成实测可达 104s，一轮里有 2 次生成调用。
+      # 预算是 per-run 的（每次 executeJob 重新计时），不跨轮累积。
+      RESUME_AGENT_JOB_BUDGET_MS: ${RESUME_AGENT_JOB_BUDGET_MS:-420000}
+      # 通用 Web 搜索；留空则跳过搜索并在 limitations 中说明，不伪装成搜过。
+      # 自托管 SearXNG 示例：RESUME_AGENT_SEARXNG_URL=http://host.docker.internal:8888
+      RESUME_AGENT_SEARXNG_URL: ${RESUME_AGENT_SEARXNG_URL:-}
+      # 模型驱动调研循环的三重预算；任一触顶即停止并回退确定性流程
+      RESUME_AGENT_LOOP_MAX_ITERATIONS: ${RESUME_AGENT_LOOP_MAX_ITERATIONS:-6}
+      RESUME_AGENT_LOOP_MAX_TOOL_CALLS: ${RESUME_AGENT_LOOP_MAX_TOOL_CALLS:-8}
+      RESUME_AGENT_LOOP_BUDGET_MS: ${RESUME_AGENT_LOOP_BUDGET_MS:-90000}
+    volumes:
+      - opencode-runtime:/runtime
+      - resume-agent-data:/app-data
+    restart: unless-stopped
+
+  opencode:
+    profiles: ["legacy-opencode"]
+    build:
+      context: ./resume-agent-runtime
+      dockerfile: Dockerfile
+    image: magic-resume-opencode:1.18.9
+    container_name: magic-resume-opencode
+    command: ["serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    working_dir: /runtime
+    environment:
+      OPENCODE_SERVER_USERNAME: opencode
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:-magic-resume-local-runtime}
+    volumes:
+      - opencode-runtime:/runtime
+      - opencode-cache:/root/.cache/opencode
+    expose:
+      - "4096"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          AUTH=$$(printf '%s' "$$OPENCODE_SERVER_USERNAME:$$OPENCODE_SERVER_PASSWORD" | base64) &&
+          wget -qO- --header="Authorization: Basic $$AUTH"
+          "http://127.0.0.1:4096/global/health?directory=%2Fruntime" >/dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+    tmpfs:
+      - /tmp
+      - /root/.config/opencode
+      - /root/.local/share/opencode
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+volumes:
+  resume-agent-data:
+  opencode-runtime:
+  opencode-cache:

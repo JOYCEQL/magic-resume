@@ -124,6 +124,52 @@
     --sidebar-border: 60 5% 15%;
     --sidebar-ring: 260 60% 70%;
   }
+
+  /*
+   * 简历 Agent 页专属大地棕主题，scope 到 .theme-agent-earth。
+   * 只覆写变量而非散落硬编码色值：components/ui/ 下的 Shadcn 组件、暗色模式、
+   * focus ring 全部自动跟随，其余 dashboard 页面不受影响。
+   * 取色：背景 #FAF8F5 / 边框 #E8E4D9 / 主色 #593118（已换算为 HSL）。
+   */
+  .theme-agent-earth {
+    --background: 36 33% 97%;
+    --foreground: 23 20% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 23 20% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 23 20% 14%;
+    --primary: 23 58% 22%;
+    --primary-foreground: 36 33% 97%;
+    --secondary: 40 30% 94%;
+    --secondary-foreground: 23 30% 20%;
+    --muted: 38 12% 62%;
+    --muted-foreground: 30 10% 42%;
+    --accent: 40 28% 93%;
+    --accent-foreground: 23 40% 22%;
+    --border: 44 25% 88%;
+    --input: 44 25% 88%;
+    --ring: 23 58% 22%;
+  }
+
+  .dark .theme-agent-earth {
+    --background: 26 12% 11%;
+    --foreground: 36 20% 92%;
+    --card: 26 10% 14%;
+    --card-foreground: 36 20% 92%;
+    --popover: 26 10% 14%;
+    --popover-foreground: 36 20% 92%;
+    --primary: 26 45% 62%;
+    --primary-foreground: 26 20% 12%;
+    --secondary: 26 8% 18%;
+    --secondary-foreground: 36 20% 92%;
+    --muted: 30 6% 40%;
+    --muted-foreground: 34 10% 62%;
+    --accent: 26 8% 19%;
+    --accent-foreground: 36 20% 92%;
+    --border: 26 8% 22%;
+    --input: 26 8% 22%;
+    --ring: 26 45% 62%;
+  }
 }
 
 @layer base {
@@ -159,6 +205,17 @@
   .resume-preview h5,
   .resume-preview h6 {
     font-family: inherit;
+  }
+
+  /* 简历 Agent 预览（AgentResumePreview 挂 resume-agent-preview）：
+     模板根节点用 min-h-screen（真实浏览器视口高度），在缩放的 A4 预览里
+     会变成一张浏览器高度的怪纸，且姓名/职位标题 break-normal 会横向溢出纸张。
+     作用域类把纸高压回 A4，并兜底允许标题断行。 */
+  .resume-agent-preview [class*="min-h-screen"] {
+    min-height: 1123px; /* A4 @96dpi */
+  }
+  .resume-agent-preview [class*="break-normal"] {
+    overflow-wrap: anywhere;
   }
 
   ::-moz-selection {

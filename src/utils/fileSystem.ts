@@ -38,10 +38,12 @@ export const storeFileHandle = async (
   handle: FileSystemHandle
 ): Promise<void> => {
   await initDB();
-  if (!db) throw new Error("Database not initialized");
+  // 捕获成局部常量：db 是模块级可变量，TS 无法保证闭包执行时它仍非 null
+  const database = db;
+  if (!database) throw new Error("Database not initialized");
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(HANDLE_STORE, "readwrite");
+    const transaction = database.transaction(HANDLE_STORE, "readwrite");
     const store = transaction.objectStore(HANDLE_STORE);
     const request = store.put(handle, key);
 
@@ -54,10 +56,11 @@ export const getFileHandle = async (
   key: string
 ): Promise<FileSystemHandle | null> => {
   await initDB();
-  if (!db) throw new Error("Database not initialized");
+  const database = db;
+  if (!database) throw new Error("Database not initialized");
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(HANDLE_STORE, "readonly");
+    const transaction = database.transaction(HANDLE_STORE, "readonly");
     const store = transaction.objectStore(HANDLE_STORE);
     const request = store.get(key);
 
@@ -68,10 +71,11 @@ export const getFileHandle = async (
 
 export const storeConfig = async (key: string, value: any): Promise<void> => {
   await initDB();
-  if (!db) throw new Error("Database not initialized");
+  const database = db;
+  if (!database) throw new Error("Database not initialized");
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(CONFIG_STORE, "readwrite");
+    const transaction = database.transaction(CONFIG_STORE, "readwrite");
     const store = transaction.objectStore(CONFIG_STORE);
     const request = store.put(value, key);
 
@@ -82,10 +86,11 @@ export const storeConfig = async (key: string, value: any): Promise<void> => {
 
 export const getConfig = async (key: string): Promise<any> => {
   await initDB();
-  if (!db) throw new Error("Database not initialized");
+  const database = db;
+  if (!database) throw new Error("Database not initialized");
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction(CONFIG_STORE, "readonly");
+    const transaction = database.transaction(CONFIG_STORE, "readonly");
     const store = transaction.objectStore(CONFIG_STORE);
     const request = store.get(key);
 

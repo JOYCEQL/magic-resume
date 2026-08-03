@@ -111,7 +111,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         {nameField.visible !== false && basic[nameField.key] && (
                             <motion.h1 
                                 layout="position" 
-                                className="font-black tracking-tight whitespace-normal break-normal [overflow-wrap:normal] leading-none text-slate-800" 
+                                className="font-black tracking-tight whitespace-normal break-normal [overflow-wrap:anywhere] leading-none text-slate-800" 
                                 style={{ fontSize: "38px" }}
                             >
                                 {basic[nameField.key] as string}
@@ -120,7 +120,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         {titleField.visible !== false && basic[titleField.key] && (
                             <motion.h2 
                                 layout="position" 
-                                className="whitespace-normal break-normal [overflow-wrap:normal] font-bold tracking-widest mt-2.5 text-slate-400 uppercase text-[12px]"
+                                className="whitespace-normal break-normal [overflow-wrap:anywhere] font-bold tracking-widest mt-2.5 text-slate-400 uppercase text-[12px]"
                             >
                                 {basic[titleField.key] as string}
                             </motion.h2>

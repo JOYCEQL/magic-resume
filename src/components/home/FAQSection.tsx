@@ -9,9 +9,15 @@ import {
 } from "@/components/ui/accordion";
 import AnimatedFeature from "./client/AnimatedFeature";
 
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export default function FAQSection() {
   const t = useTranslations("home.faq");
-  const faqItems = t.raw("items");
+  // t.raw 返回 unknown（见 i18n/compat/utils.ts）；locale JSON 中 items 为对象数组
+  const faqItems = (t.raw("items") as FaqItem[] | undefined) ?? [];
 
   return (
     <section className="py-24 md:py-40 bg-background relative overflow-hidden">

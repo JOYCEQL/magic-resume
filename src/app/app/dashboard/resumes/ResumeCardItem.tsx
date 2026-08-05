@@ -29,7 +29,6 @@ interface ResumeCardItemProps {
     resume: any;
     t: any;
     locale: string;
-    setActiveResume: (id: string) => void;
     router: any;
     deleteResume: (resume: any) => void;
     duplicateResume: (resume: any) => void;
@@ -41,7 +40,6 @@ export const ResumeCardItem = ({
     resume,
     t,
     locale,
-    setActiveResume,
     router,
     deleteResume,
     duplicateResume,
@@ -92,7 +90,6 @@ export const ResumeCardItem = ({
                     className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer"
                     onClick={(e) => {
                         e.stopPropagation();
-                        setActiveResume(id);
                         router.push({ to: "/app/workbench/$id", params: { id } });
                     }}
                 >
@@ -138,7 +135,6 @@ export const ResumeCardItem = ({
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setActiveResume(id);
                                 router.push({ to: "/app/workbench/$id", params: { id } });
                             }}
                             className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-primary font-medium text-sm group"

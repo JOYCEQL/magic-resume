@@ -11,6 +11,11 @@ export const escapeHtml = (value: string) =>
 export const toString = (value: unknown) =>
   typeof value === "string" ? value.trim() : "";
 
+// Strips a leading list marker (bullet "- * •" or ordered "1." / "2)") followed
+// by whitespace. Bare leading numbers are intentionally preserved so content like
+// "3.5 GPA" or "5 years of experience" is not corrupted on import.
+const LIST_MARKER_PREFIX_REGEX = /^\s*(?:[-*•]+\s*|\d+[.)]\s+)/;
+
 export const toStringArray = (value: unknown) => {
   if (Array.isArray(value)) {
     return value
@@ -21,7 +26,7 @@ export const toStringArray = (value: unknown) => {
   if (typeof value === "string") {
     return value
       .split(/\r?\n/)
-      .map((line) => line.replace(/^[-*•\d.)\s]+/, "").trim())
+      .map((line) => line.replace(LIST_MARKER_PREFIX_REGEX, "").trim())
       .filter(Boolean);
   }
 

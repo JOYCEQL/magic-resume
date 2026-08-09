@@ -52,23 +52,25 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
           />
         </div>
 
-        <LogoSelector
-          logo={education.logo}
-          config={education.logoConfig}
-          onLogoChange={(logo, config) => {
-            onSave({
-              ...education,
-              logo: logo || "",
-              logoConfig: config,
-            });
-          }}
-          onConfigChange={(config) => {
-            onSave({
-              ...education,
-              logoConfig: config,
-            });
-          }}
-        />
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={education.logo}
+            config={education.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...education,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...education,
+                logoConfig: config,
+              });
+            }}
+          />
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <Field

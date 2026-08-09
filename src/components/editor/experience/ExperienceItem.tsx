@@ -52,23 +52,25 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
             placeholder={t("placeholders.position")}
           />
         </div>
-        <LogoSelector
-          logo={experience.logo}
-          config={experience.logoConfig}
-          onLogoChange={(logo, config) => {
-            onSave({
-              ...experience,
-              logo: logo || "",
-              logoConfig: config,
-            });
-          }}
-          onConfigChange={(config) => {
-            onSave({
-              ...experience,
-              logoConfig: config,
-            });
-          }}
-        />
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={experience.logo}
+            config={experience.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...experience,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...experience,
+                logoConfig: config,
+              });
+            }}
+          />
+        </div>
         <Field
           label={t("labels.date")}
           value={experience.date}

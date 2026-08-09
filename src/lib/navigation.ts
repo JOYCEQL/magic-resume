@@ -1,13 +1,23 @@
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
-type NavigateTarget = string;
+type NavigateTarget =
+  | string
+  | {
+      to: string;
+      params?: Record<string, string>;
+      search?: Record<string, unknown>;
+      hash?: string;
+    };
 
 export function useRouter() {
   const navigate = useNavigate();
+  const toNavigateOptions = (target: NavigateTarget) =>
+    typeof target === "string" ? { to: target } : target;
 
   return {
-    push: (to: NavigateTarget) => navigate({ to }),
-    replace: (to: NavigateTarget) => navigate({ to, replace: true }),
+    push: (target: NavigateTarget) => navigate(toNavigateOptions(target) as any),
+    replace: (target: NavigateTarget) =>
+      navigate({ ...toNavigateOptions(target), replace: true } as any),
     back: () => window.history.back(),
     forward: () => window.history.forward(),
     refresh: () => window.location.reload()

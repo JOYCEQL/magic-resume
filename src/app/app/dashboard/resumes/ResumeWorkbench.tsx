@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { getConfig, getFileHandle } from "@/utils/fileSystem";
+import { preloadFontFamily } from "@/utils/fonts";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { DEFAULT_TEMPLATES } from "@/config";
@@ -71,6 +72,48 @@ export const ResumeWorkbench = () => {
         loadSavedConfig();
     }, []);
 
+    useEffect(() => {
+        const fontFamilies = Array.from(
+            new Set(
+                Object.values(resumes)
+                    .map((resume) => resume.globalSettings?.fontFamily)
+                    .filter(Boolean)
+            )
+        );
+
+        if (fontFamilies.length === 0) return;
+
+        let cancelled = false;
+        const warmFonts = () => {
+            if (cancelled) return;
+            fontFamilies.forEach((fontFamily) => {
+                preloadFontFamily(fontFamily).catch((error) => {
+                    console.warn("Failed to preload resume font:", error);
+                });
+            });
+        };
+
+        const supportsIdleCallback =
+            typeof window !== "undefined" &&
+            typeof window.requestIdleCallback === "function";
+        const idleCallback = supportsIdleCallback
+            ? window.requestIdleCallback(warmFonts, { timeout: 2500 })
+            : globalThis.setTimeout(warmFonts, 1000);
+
+        return () => {
+            cancelled = true;
+            if (
+                supportsIdleCallback &&
+                typeof window !== "undefined" &&
+                typeof window.cancelIdleCallback === "function"
+            ) {
+                window.cancelIdleCallback(idleCallback as number);
+            } else {
+                globalThis.clearTimeout(idleCallback);
+            }
+        };
+    }, [resumes]);
+
     const handleCreateFromModal = (templateId: string | null) => {
         const isBlank = !templateId;
         const newId = createResume(templateId, isBlank);
@@ -100,7 +143,7 @@ export const ResumeWorkbench = () => {
 
         setIsCreateModalOpen(false);
         setActiveResume(newId);
-        router.push(`/app/workbench/${newId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: newId } });
     };
 
     const duplicateResume = async (resume: any) => {
@@ -138,7 +181,7 @@ export const ResumeWorkbench = () => {
         setActiveResume(resumeId);
         setIsImportDialogOpen(false);
         toast.success(t("dashboard.resumes.importSuccess"));
-        router.push(`/app/workbench/${resumeId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
     const extractImagesFromPdf = async (file: File) => {
@@ -234,7 +277,7 @@ export const ResumeWorkbench = () => {
         setActiveResume(resumeId);
         setIsImportDialogOpen(false);
         toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
-        router.push(`/app/workbench/${resumeId}`);
+        router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
     const handleJsonFileChange = async (
@@ -418,7 +461,6 @@ export const ResumeWorkbench = () => {
                                         resume={resume}
                                         t={t}
                                         locale={locale}
-                                        setActiveResume={setActiveResume}
                                         router={router}
                                         deleteResume={deleteResume}
                                         duplicateResume={duplicateResume}

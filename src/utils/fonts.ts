@@ -135,6 +135,7 @@ const FONT_DEFINITIONS: FontDefinition[] = [
 ];
 
 const fontDataUrlCache = new Map<string, Promise<string>>();
+const loadedFontFamilies = new Set<string>();
 
 const toDataUrl = async (url: string) => {
   if (!fontDataUrlCache.has(url)) {
@@ -190,6 +191,25 @@ const buildFontFaceRule = (source: FontSource, resolvedUrl: string) => `@font-fa
 
 export const normalizeFontFamily = (fontFamily?: string) =>
   findFontDefinition(fontFamily).value;
+
+export const preloadFontFamily = async (fontFamily?: string) => {
+  if (typeof document === "undefined" || !document.fonts?.load) {
+    return;
+  }
+
+  const definition = findFontDefinition(fontFamily);
+  if (loadedFontFamilies.has(definition.value)) {
+    return;
+  }
+
+  loadedFontFamilies.add(definition.value);
+
+  await Promise.allSettled(
+    definition.sources.map((source) =>
+      document.fonts.load(`${source.weight} 14px "${source.family}"`)
+    )
+  );
+};
 
 export const getFontOptions = (t: (key: string) => string) =>
   FONT_DEFINITIONS.map((definition) => ({

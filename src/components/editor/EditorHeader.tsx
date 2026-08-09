@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "@/i18n/compat/client";
-import { AlertCircle, ShieldCheck, ShieldAlert, Edit2 } from "lucide-react";
+import {
+  AlertCircle,
+  ShieldCheck,
+  ShieldAlert,
+  Edit2,
+  Undo2,
+  Redo2,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "@/lib/navigation";
 import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
 import ThemeToggle from "../shared/ThemeToggle";
 import { useResumeStore } from "@/store/useResumeStore";
-import { getThemeConfig } from "@/theme/themeConfig";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent
-} from "@/components/ui/hover-card";
 import {
   Tooltip,
   TooltipContent,
@@ -29,16 +30,19 @@ interface EditorHeaderProps {
 }
 
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
-  const { activeResume, setActiveSection, updateResumeTitle } =
-    useResumeStore();
-  const { menuSections = [], activeSection } = activeResume || {};
-  const themeConfig = getThemeConfig();
-  const { errors, selectError } = useGrammarCheck();
+  const {
+    activeResume,
+    updateResumeTitle,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useResumeStore();
+  const { errors } = useGrammarCheck();
   const router = useRouter();
   const t = useTranslations();
-  const visibleSections = menuSections
-    ?.filter((section) => section.enabled)
-    .sort((a, b) => a.order - b.order);
+  const undoLabel = t("richEditor.undo");
+  const redoLabel = t("richEditor.redo");
 
   const [backupConfigured, setBackupConfigured] = useState<boolean | null>(null);
   const [backupPath, setBackupPath] = useState<string>("");
@@ -56,6 +60,44 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
     };
     checkBackup();
   }, []);
+
+  useEffect(() => {
+    const isEditableTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) {
+        return false;
+      }
+
+      return (
+        target.isContentEditable ||
+        target.closest("[contenteditable='true']") ||
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement
+      );
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isModifierPressed = event.metaKey || event.ctrlKey;
+      if (!isModifierPressed || isEditableTarget(event.target)) {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+      if (key === "z" && !event.shiftKey) {
+        event.preventDefault();
+        undo();
+        return;
+      }
+
+      if (key === "y" || (key === "z" && event.shiftKey)) {
+        event.preventDefault();
+        redo();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [undo, redo]);
 
   return (
     <motion.header
@@ -149,6 +191,42 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
         </div>
 
         <div className="flex items-center space-x-3">
+          <div className="hidden md:flex items-center gap-1">
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={undo}
+                    disabled={!canUndo()}
+                    aria-label={undoLabel}
+                  >
+                    <Undo2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">{undoLabel}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={redo}
+                    disabled={!canRedo()}
+                    aria-label={redoLabel}
+                  >
+                    <Redo2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">{redoLabel}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <GrammarCheckDrawer />
           {errors.length > 0 && (
              <div 
@@ -171,4 +249,3 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
     </motion.header>
   );
 }
-

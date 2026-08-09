@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useTemplateContext } from "../../TemplateContext";
-import { useResumeStore } from "@/store/useResumeStore";
 
 interface SectionTitleProps {
   type: string;
@@ -11,9 +10,8 @@ interface SectionTitleProps {
 }
 
 const SectionTitle = ({ type, title, globalSettings, showTitle = true }: SectionTitleProps) => {
-  const { activeResume } = useResumeStore();
   const templateContext = useTemplateContext();
-  const menuSections = templateContext?.menuSections ?? activeResume?.menuSections ?? [];
+  const menuSections = templateContext?.menuSections ?? [];
 
   const renderTitle = useMemo(() => {
     if (type === "custom") return title;

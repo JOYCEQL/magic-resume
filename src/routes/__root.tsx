@@ -15,6 +15,24 @@ import enMessages from "@/i18n/locales/en.json";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getPreferredLocale } from "@/i18n/runtime";
+import { ReactGrab } from "@/components/dev/ReactGrab";
+
+const defaultFontPreloadLinks = [
+  {
+    rel: "preload",
+    href: "/fonts/AlibabaPuHuiTi-3-55-Regular.ttf",
+    as: "font",
+    type: "font/ttf",
+    crossOrigin: "anonymous" as const
+  },
+  {
+    rel: "preload",
+    href: "/fonts/AlibabaPuHuiTi-3-85-Bold.ttf",
+    as: "font",
+    type: "font/ttf",
+    crossOrigin: "anonymous" as const
+  }
+];
 
 export const Route = createRootRoute({
   head: () => ({
@@ -38,7 +56,8 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: tiptapCss
-      }
+      },
+      ...defaultFontPreloadLinks
     ]
   }),
   component: RootComponent,
@@ -70,6 +89,7 @@ function RootComponent() {
           timeZone="Asia/Shanghai"
         >
           <Providers>
+            <ReactGrab />
             <Outlet />
             <Toaster position="top-center" richColors />
           </Providers>

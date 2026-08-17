@@ -15,6 +15,10 @@ export function getLocaleFromPathname(pathname: string): Locale | null {
 }
 
 export function getPreferredLocale(pathname: string): Locale {
+  if (pathname === "/app" || pathname.startsWith("/app/")) {
+    return "en";
+  }
+
   const localeFromPath = getLocaleFromPathname(pathname);
   if (localeFromPath) {
     return localeFromPath;

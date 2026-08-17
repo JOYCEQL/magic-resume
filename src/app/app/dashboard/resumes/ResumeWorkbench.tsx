@@ -22,6 +22,8 @@ import { CreateResumeModal } from "./CreateResumeModal";
 import { ImportResumeDialog } from "./ImportResumeDialog";
 import { ResumeCardItem } from "./ResumeCardItem";
 import { AnimatedImportButton } from "./AnimatedImportButton";
+import { ResumeStudioPanel } from "./ResumeStudioPanel";
+import { isResumeStudioEnabled } from "@/config/resumeStudioGate";
 import {
     extractJsonContent,
     createResumeFromAIResult,
@@ -34,6 +36,10 @@ const PDF_IMAGE_QUALITY = 0.82;
 const PDF_MAX_IMAGE_WIDTH = 1600;
 
 export const ResumeWorkbench = () => {
+    const resumeStudioEnabled = isResumeStudioEnabled(
+        import.meta.env.DEV,
+        import.meta.env.VITE_RESUME_STUDIO_ENABLED,
+    );
     const t = useTranslations();
     const locale = useLocale();
     const {
@@ -337,6 +343,8 @@ export const ResumeWorkbench = () => {
                         </Alert>
                     )}
                 </motion.div>
+
+                {resumeStudioEnabled && <ResumeStudioPanel />}
 
                 <motion.div
                     className="px-4 sm:px-6 flex items-center justify-between"

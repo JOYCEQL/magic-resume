@@ -5,7 +5,15 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   server: {
-    port: 3000
+    cors: {
+      origin: "http://127.0.0.1:8765",
+      credentials: true,
+      allowedHeaders: ["Authorization", "Content-Type"],
+      methods: ["GET", "POST", "OPTIONS"],
+    },
+    host: "127.0.0.1",
+    port: 3001,
+    strictPort: true
   },
   optimizeDeps: {
     exclude: ["pdfjs-dist"]

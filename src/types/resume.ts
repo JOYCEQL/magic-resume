@@ -191,6 +191,7 @@ export interface ResumeData {
   projects: Project[];
   certificates: Certificate[];
   customData: Record<string, CustomItem[]>;
+  metadata?: Record<string, unknown>;
   skillContent: string;
   selfEvaluationContent: string;
   activeSection: string;

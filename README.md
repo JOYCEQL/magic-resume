@@ -14,6 +14,10 @@
 
 Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview and custom themes.
 
+## Job Seeker integration contract
+
+For vacancy-specific CVs, Magic Resume is a document builder only. Career Twin inside Job Seeker owns vacancy analysis, fit, evidence selection, section selection, and the exact final wording in the vacancy language. Magic Resume accepts that finalized structured payload through a one-time loopback handoff and only materializes it as a native editable resume, applies templates, previews it, and exports it. It must not analyze the vacancy, select evidence, or semantically rewrite the supplied content.
+
 ## 📸 Screenshots
 
 <img width="1920" height="1440" alt="336_1x_shots_so" src="https://github.com/user-attachments/assets/18969a17-06f8-4a4b-94eb-284ba8442620" />

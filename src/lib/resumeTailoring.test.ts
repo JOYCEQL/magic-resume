@@ -1,26 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  applyTrustedVacancyIdentity,
   assertTailoredResume,
-  buildAllowedCareerFacts,
   isAggregateYearsClaim,
-  isVacancySourceCompatible,
-  normalizeRequirementMap,
   parseVacancyLaunch,
-  semanticVerdictsPass,
-  vacancySourceIdCandidates,
 } from "./resumeTailoring";
-
-test("normalizes structured requirement provenance into the runtime claim map", () => {
-  assert.deepEqual(normalizeRequirementMap([
-    { claim: "Led an AI portfolio", requirementIds: ["R001", "R002", "R001"] },
-    { claim: "Led an AI portfolio", requirementIds: ["R003"] },
-    { claim: "", requirementIds: ["R004"] },
-  ]), {
-    "Led an AI portfolio": ["R001", "R002", "R003"],
-  });
-});
 
 const validResume = {
   title: "Head of AI CV",
@@ -64,88 +48,6 @@ test("rejects incomplete vacancy launches", () => {
   assert.equal(parseVacancyLaunch("?id=RU-HH-1&role=Lead"), null);
 });
 
-test("maps tracker IDs to source-specific lookup IDs", () => {
-  assert.deepEqual(vacancySourceIdCandidates("RU-HH-135539415"), [
-    "RU-HH-135539415",
-    "135539415",
-  ]);
-  assert.deepEqual(vacancySourceIdCandidates("AUTO-HH-131995174"), [
-    "AUTO-HH-131995174",
-    "131995174",
-  ]);
-  assert.deepEqual(vacancySourceIdCandidates("EU-IN-52e89d5959e952a9"), [
-    "EU-IN-52e89d5959e952a9",
-    "52e89d5959e952a9",
-    "in-52e89d5959e952a9",
-  ]);
-  assert.deepEqual(vacancySourceIdCandidates("AUTO-INDEED-in-40eeee6ec923fdfa"), [
-    "AUTO-INDEED-in-40eeee6ec923fdfa",
-    "in-40eeee6ec923fdfa",
-    "40eeee6ec923fdfa",
-  ]);
-  assert.deepEqual(vacancySourceIdCandidates("AUTO-LINKEDIN-4448786779"), [
-    "AUTO-LINKEDIN-4448786779",
-    "4448786779",
-  ]);
-  assert.deepEqual(vacancySourceIdCandidates("AUTO-HIRIFY-676216"), [
-    "AUTO-HIRIFY-676216",
-    "676216",
-  ]);
-});
-
-test("requires the tracker source to match the canonical ID family", () => {
-  assert.equal(isVacancySourceCompatible("RU-HH-1", "hh.ru"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-HH-1", "hh"), true);
-  assert.equal(isVacancySourceCompatible("RU-HH-1", "linkedin.com"), false);
-  assert.equal(isVacancySourceCompatible("EU-IN-abc", "indeed.com"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-INDEED-in-abc", "indeed"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-LINKEDIN-123", "linkedin"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-HIRIFY-676216", "hirify"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-HIRIFY-676216", "hirify.me"), true);
-  assert.equal(isVacancySourceCompatible("AUTO-HIRIFY-676216", "hh.ru"), false);
-  assert.equal(isVacancySourceCompatible("EU-LI-123", "evil-linkedin.com"), false);
-});
-
-test("semantic evidence verification rejects missing or negative verdicts", () => {
-  assert.equal(semanticVerdictsPass(["C0001"], {
-    verdicts: [{ id: "C0001", supported: true }],
-  }), true);
-  assert.equal(semanticVerdictsPass(["C0001"], {
-    verdicts: [{ id: "C0001", supported: false }],
-  }), false);
-  assert.equal(semanticVerdictsPass(["C0001", "C0002"], {
-    verdicts: [{ id: "C0001", supported: true }],
-  }), false);
-});
-
-test("trusted vacancy identity overrides generated role and file title", () => {
-  const draft = {
-    targetRole: "Chief Machine Learning Engineer",
-    title: "Invented promotion",
-    basic: { title: "Chief Machine Learning Engineer" },
-  };
-  applyTrustedVacancyIdentity(
-    draft,
-    { title: "Head of AI Transformation", company: "Acme" },
-    "en",
-  );
-  assert.equal(draft.targetRole, "Head of AI Transformation");
-  assert.equal(draft.basic.title, "Head of AI Transformation");
-  assert.equal(draft.title, "Acme — Head of AI Transformation — EN");
-});
-
-test("removes risky and confirmation-required career claims", () => {
-  const allowed = buildAllowedCareerFacts(`# Experience
-- Confirmed portfolio of 60+ initiatives.
-- 400 million profit. requires confirmation
-# Claims, которые нельзя усиливать без подтверждения
-- Five models in production.
-# Education
-- Higher education.`);
-  assert.match(allowed.prompt, /60\+/);
-  assert.match(allowed.prompt, /Higher education/);
-  assert.doesNotMatch(allowed.prompt, /400 million|Five models/);
-});
 
 test("detects prohibited aggregate total-years claims deterministically", () => {
   assert.equal(isAggregateYearsClaim("6+ лет в AI-трансформации"), true);

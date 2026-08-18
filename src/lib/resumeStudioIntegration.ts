@@ -2,7 +2,8 @@ import type {
   RequirementEvidenceArtifact,
   ResumeSelectionPlan,
   VacancyAnalysis,
-} from "@/lib/server/vacancyRelevance";
+} from "@/lib/careerTwinContract";
+import type { VacancyLaunch } from "@/lib/resumeTailoring";
 
 export type ArtifactLanguage = "ru" | "en";
 
@@ -89,7 +90,7 @@ export const buildResumeStudioMetadata = ({
   excludedClaims: string[];
   vacancyAnalysis: VacancyAnalysis;
   evidenceMatching: RequirementEvidenceArtifact;
-  selectionPlan: ResumeSelectionPlan;
+  selectionPlan?: ResumeSelectionPlan;
   provenance: ResumeStudioProvenance;
 }): ResumeStudioMetadata => ({
   evidenceMap,
@@ -97,7 +98,7 @@ export const buildResumeStudioMetadata = ({
   excludedClaims,
   vacancyAnalysis,
   evidenceMatching,
-  selectionPlan,
+  ...(selectionPlan ? { selectionPlan } : {}),
   ...provenance,
 });
 
@@ -139,9 +140,88 @@ export interface ResumeVariantPayload {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+export interface FinalizedResumeRequest {
+  handoffToken: string;
+  launch: VacancyLaunch;
+}
+
+export const parseFinalizedResumeRequest = (value: unknown): FinalizedResumeRequest => {
+  if (!isRecord(value)) throw new Error("A finalized Career Twin handoff is required");
+  const allowedKeys = new Set(["handoffToken", "launch"]);
+  if (Object.keys(value).some((key) => !allowedKeys.has(key))) {
+    throw new Error("Magic Resume is renderer-only and rejects semantic generation fields");
+  }
+  const handoffToken = value.handoffToken;
+  const launch = value.launch;
+  if (typeof handoffToken !== "string" || !/^[A-Za-z0-9_-]{32,128}$/.test(handoffToken)) {
+    throw new Error("A finalized Career Twin handoff is required");
+  }
+  if (!isRecord(launch) || typeof launch.id !== "string" || !launch.id.trim() ||
+      typeof launch.source !== "string" ||
+      (launch.language !== "ru" && launch.language !== "en") ||
+      typeof launch.company !== "string" || typeof launch.role !== "string" ||
+      !launch.role.trim() || typeof launch.url !== "string") {
+    throw new Error("A valid vacancy launch is required for the finalized handoff");
+  }
+  return { handoffToken, launch: launch as unknown as VacancyLaunch };
+};
+
 export const handoffTokenFromFragment = (fragment: string) => {
   const token = new URLSearchParams(fragment.replace(/^#/, "")).get("handoff_token") || "";
   return /^[A-Za-z0-9_-]{32,128}$/.test(token) ? token : "";
+};
+
+export interface FinalizedResumeHandoff {
+  resume: Record<string, unknown>;
+  analysis: VacancyAnalysis;
+  matching: RequirementEvidenceArtifact;
+  provenance: ResumeStudioProvenance;
+}
+
+export const finalizedResumeFromHandoff = (value: unknown): FinalizedResumeHandoff => {
+  const handoff = isRecord(value) ? value : null;
+  const snapshot = handoff && isRecord(handoff.snapshot) ? handoff.snapshot : null;
+  const resume = snapshot && isRecord(snapshot.resume_content) ? snapshot.resume_content : null;
+  const analysis = snapshot && isRecord(snapshot.vacancy_analysis) ? snapshot.vacancy_analysis : null;
+  const matching = snapshot && isRecord(snapshot.evidence_matching) ? snapshot.evidence_matching : null;
+  const provenance = snapshot && isRecord(snapshot.resume_provenance) ? snapshot.resume_provenance : null;
+  if (!resume || !analysis || !matching || !provenance) {
+    throw new Error("Handoff does not contain finalized Career Twin CV content");
+  }
+  return {
+    resume,
+    analysis: analysis as unknown as VacancyAnalysis,
+    matching: matching as unknown as RequirementEvidenceArtifact,
+    provenance: provenance as unknown as ResumeStudioProvenance,
+  };
+};
+
+export const fetchFinalizedResumeHandoff = async (
+  baseUrl: string,
+  handoffToken: string,
+  fetchImpl: typeof fetch = fetch,
+  capabilityToken = "",
+): Promise<FinalizedResumeHandoff> => {
+  const parsed = new URL(baseUrl);
+  const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
+  const loopback = hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
+  if (parsed.protocol !== "http:" || !loopback || parsed.port !== "8765" ||
+      parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new Error("Job Seeker handoff must use loopback HTTP port 8765");
+  }
+  if (!/^[A-Za-z0-9_-]{32,128}$/.test(handoffToken)) {
+    throw new Error("A finalized Career Twin handoff is required");
+  }
+  const response = await fetchImpl(
+    `${parsed.origin}/api/v1/resume-handoffs/${encodeURIComponent(handoffToken)}`,
+    {
+      headers: capabilityToken ? { Authorization: `Bearer ${capabilityToken}` } : {},
+      redirect: "error",
+      signal: AbortSignal.timeout(10_000),
+    },
+  );
+  if (!response.ok) throw new Error(`RESUME_HANDOFF_${response.status}`);
+  return finalizedResumeFromHandoff(await response.json());
 };
 
 export const resumeVariantFromStoredResume = (
@@ -178,6 +258,9 @@ export const resumeVariantFromStoredResume = (
     status: "created",
   };
 };
+
+export const isCareerTwinManagedResume = (value: unknown) =>
+  resumeVariantFromStoredResume(value) !== null;
 
 export const syncResumeVariant = async (
   baseUrl: string,
@@ -248,45 +331,6 @@ export const completeResumeHandoff = async (
     return {
       ok: false,
       error: error instanceof Error ? error.message : "Unknown handoff completion error",
-    };
-  }
-};
-
-export const syncVacancyFeedback = async (
-  baseUrl: string,
-  vacancyId: string,
-  analysis: VacancyAnalysis,
-  matching: RequirementEvidenceArtifact,
-  fetchImpl: typeof fetch = fetch,
-  capabilityToken = "",
-): Promise<{ ok: boolean; error?: string }> => {
-  try {
-    const parsed = new URL(baseUrl);
-    const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
-    const loopback = hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
-    if (parsed.protocol !== "http:" || !loopback || parsed.port !== "8765" ||
-        parsed.username || parsed.password || parsed.search || parsed.hash) {
-      throw new Error("Job Seeker callback must use loopback HTTP port 8765");
-    }
-    const response = await fetchImpl(
-      `${parsed.origin}/api/v1/vacancies/${encodeURIComponent(vacancyId)}/evidence-feedback`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(capabilityToken ? { Authorization: `Bearer ${capabilityToken}` } : {}),
-        },
-        body: JSON.stringify({ analysis, matching }),
-        redirect: "error",
-        signal: AbortSignal.timeout(10_000),
-      },
-    );
-    if (!response.ok) return { ok: false, error: `HTTP ${response.status}` };
-    return { ok: true };
-  } catch (error) {
-    return {
-      ok: false,
-      error: error instanceof Error ? error.message : "Unknown feedback sync error",
     };
   }
 };

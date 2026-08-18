@@ -34,6 +34,7 @@ import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
+import { isCareerTwinManagedResume } from "@/lib/resumeStudioIntegration";
 import { FAQDialog } from "./FAQDialog";
 import PdfExport from "@/components/shared/PdfExport";
 
@@ -106,12 +107,14 @@ const PreviewDock = ({
 
   const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
   const { globalSettings = {} } = activeResume || {};
+  const semanticRewriteAllowed = !isCareerTwinManagedResume(activeResume);
 
   const { checkConfiguration } = useAIConfiguration();
 
   // ... (keep other hooks)
 
   const handleGrammarCheck = useCallback(async () => {
+    if (!semanticRewriteAllowed) return;
     if (!checkConfiguration()) {
       return;
     }
@@ -134,7 +137,7 @@ const PreviewDock = ({
     } catch (error) {
       toast.error(t("grammarCheck.errorToast"));
     }
-  }, [resumeContentRef, checkConfiguration, checkGrammar, t]);
+  }, [resumeContentRef, checkConfiguration, checkGrammar, semanticRewriteAllowed, t]);
 
   const handleGoGitHub = () => {
     window.open(GITHUB_REPO_URL, "_blank");
@@ -190,9 +193,11 @@ const PreviewDock = ({
                         "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
                         "hover:bg-gray-100/50 dark:hover:bg-neutral-800/50",
                         "transition-all duration-200",
-                        isChecking && "animate-pulse"
+                        isChecking && "animate-pulse",
+                        !semanticRewriteAllowed && "cursor-not-allowed opacity-40"
                       )}
-                      onClick={handleGrammarCheck}
+                      onClick={semanticRewriteAllowed ? handleGrammarCheck : undefined}
+                      aria-disabled={!semanticRewriteAllowed}
                     >
                       <SpellCheck2
                         className={cn("h-4 w-4", isChecking && "animate-spin")}
@@ -201,7 +206,9 @@ const PreviewDock = ({
                   </TooltipTrigger>
                   <TooltipContent side="left" sideOffset={10}>
                     <p>
-                      {isChecking
+                      {!semanticRewriteAllowed
+                        ? "Career Twin controls CV wording"
+                        : isChecking
                         ? t("grammarCheck.checking")
                         : t("grammarCheck.idle")}
                     </p>

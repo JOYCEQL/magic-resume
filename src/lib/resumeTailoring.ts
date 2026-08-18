@@ -56,28 +56,6 @@ export interface TailoredResumeResult {
   audit: TailoringAudit;
 }
 
-export const normalizeRequirementMap = (value: unknown) => {
-  const normalized: Record<string, string[]> = {};
-  if (!Array.isArray(value)) return normalized;
-  for (const item of value) {
-    if (!item || typeof item !== "object") continue;
-    const { claim, requirementIds } = item as {
-      claim?: unknown;
-      requirementIds?: unknown;
-    };
-    if (typeof claim !== "string" || !claim.trim() || !Array.isArray(requirementIds)) {
-      continue;
-    }
-    const ids = requirementIds
-      .filter((id): id is string => typeof id === "string" && Boolean(id.trim()))
-      .map((id) => id.trim());
-    if (ids.length === 0) continue;
-    const key = claim.trim();
-    normalized[key] = Array.from(new Set([...(normalized[key] || []), ...ids]));
-  }
-  return normalized;
-};
-
 const text = (params: URLSearchParams, key: string) =>
   (params.get(key) || "").trim();
 
@@ -99,99 +77,6 @@ export const parseVacancyLaunch = (search: string): VacancyLaunch | null => {
   };
 };
 
-export const vacancySourceIdCandidates = (id: string) => {
-  const values = new Set([id]);
-  const tail = id.match(
-    /(?:(?:RU|AUTO)-(?:HH|GETMATCH|HIRIFY)-|EU-LI-|AUTO-LINKEDIN-)(.+)$/i,
-  )?.[1];
-  if (tail) values.add(tail);
-  const indeedTail = id.match(/^(?:EU-IN-|AUTO-INDEED-)(.+)$/i)?.[1];
-  if (indeedTail) {
-    values.add(indeedTail);
-    if (indeedTail.toLowerCase().startsWith("in-")) {
-      values.add(indeedTail.slice(3));
-    } else {
-      values.add(`in-${indeedTail}`);
-    }
-  }
-  return Array.from(values);
-};
-
-export type VacancySourceFamily =
-  | "hh"
-  | "getmatch"
-  | "linkedin"
-  | "indeed"
-  | "hirify";
-
-export const vacancySourceFamily = (id: string): VacancySourceFamily | null => {
-  if (/^(?:RU|AUTO)-HH-/i.test(id)) return "hh";
-  if (/^(?:RU|AUTO)-GETMATCH-/i.test(id)) return "getmatch";
-  if (/^(?:EU-LI-|AUTO-LINKEDIN-)/i.test(id)) return "linkedin";
-  if (/^(?:EU-IN-|AUTO-INDEED-)/i.test(id)) return "indeed";
-  if (/^(?:RU|AUTO)-HIRIFY-/i.test(id)) return "hirify";
-  return null;
-};
-
-export const isVacancySourceCompatible = (id: string, source: string) => {
-  const family = vacancySourceFamily(id);
-  if (!family) return false;
-  const normalized = source.trim().toLowerCase().replace(/^www\./, "");
-  const allowed: Record<VacancySourceFamily, string[]> = {
-    hh: ["hh", "hh.ru"],
-    getmatch: ["getmatch", "getmatch.ru"],
-    linkedin: ["linkedin", "linkedin.com"],
-    indeed: ["indeed", "indeed.com"],
-    hirify: ["hirify", "hirify.me", "hirify.com"],
-  };
-  return allowed[family].includes(normalized);
-};
-
-const unsafeCareerLine = /требу(?:ет|ют) подтверждения|requires? confirmation|гипотез|hypothes|не использовать|не доказан|не создавать|нельзя |не называть|не позиционировать|не зафиксирован|желательно проверить|проверить актуальность|ожидаем/i;
-
-export const buildAllowedCareerFacts = (markdown: string) => {
-  const facts = new Map<string, string>();
-  const promptLines: string[] = [];
-  let skipLevel: number | null = null;
-  let index = 0;
-
-  for (const rawLine of markdown.split("\n")) {
-    const line = rawLine.trim();
-    if (!line) continue;
-    const heading = line.match(/^(#{1,6})\s+(.+)$/);
-    if (heading) {
-      const level = heading[1].length;
-      if (skipLevel !== null && level <= skipLevel) skipLevel = null;
-      if (/claims, которые нельзя/i.test(heading[2])) {
-        skipLevel = level;
-        continue;
-      }
-    }
-    if (skipLevel !== null || unsafeCareerLine.test(line)) continue;
-    const id = `F${String(++index).padStart(4, "0")}`;
-    facts.set(id, line);
-    promptLines.push(`[${id}] ${line}`);
-  }
-
-  return { facts, prompt: promptLines.join("\n") };
-};
-
-export const semanticVerdictsPass = (
-  expectedIds: string[],
-  value: unknown,
-) => {
-  if (!value || typeof value !== "object") return false;
-  const verdicts = (value as { verdicts?: unknown }).verdicts;
-  if (!Array.isArray(verdicts) || verdicts.length !== expectedIds.length) return false;
-  const verified = new Set(
-    verdicts
-      .filter((item) => item && typeof item === "object" &&
-        typeof item.id === "string" && item.supported === true)
-      .map((item) => item.id as string),
-  );
-  return verified.size === expectedIds.length &&
-    expectedIds.every((id) => verified.has(id));
-};
 
 export const isAggregateYearsClaim = (value: string) => {
   const count = "(?:\\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|один|одна|два|две|три|четыре|пять|шесть|семь|восемь|девять|десять)";
@@ -204,21 +89,6 @@ export const isAggregateYearsClaim = (value: string) => {
   ].some((pattern) => new RegExp(`(?:^|[^A-Za-zА-Яа-яЁё\\d])${pattern}(?:$|[^A-Za-zА-Яа-яЁё])`, "i").test(value));
 };
 
-export const applyTrustedVacancyIdentity = (
-  value: Record<string, unknown>,
-  vacancy: { title: string; company: string },
-  language: "ru" | "en",
-) => {
-  const role = vacancy.title.trim();
-  if (!role) throw new Error("Trusted vacancy does not contain a role title");
-  value.targetRole = role;
-  value.title = `${vacancy.company.trim() || "Vacancy"} — ${role} — ${language.toUpperCase()}`;
-  if (!value.basic || typeof value.basic !== "object" || Array.isArray(value.basic)) {
-    value.basic = {};
-  }
-  (value.basic as Record<string, unknown>).title = role;
-  return value;
-};
 
 export const assertTailoredResume = (
   value: unknown,

@@ -5,16 +5,19 @@ import {
   assertResumeStudioProvenance,
   buildResumeStudioMetadata,
   completeResumeHandoff,
+  fetchFinalizedResumeHandoff,
+  finalizedResumeFromHandoff,
   handoffTokenFromFragment,
+  isCareerTwinManagedResume,
+  parseFinalizedResumeRequest,
   resumeVariantFromStoredResume,
   syncResumeVariant,
-  syncVacancyFeedback,
 } from "./resumeStudioIntegration";
 import type {
   RequirementEvidenceArtifact,
   ResumeSelectionPlan,
   VacancyAnalysis,
-} from "./server/vacancyRelevance";
+} from "./careerTwinContract";
 
 const provenance = {
   handoffId: "handoff-1",
@@ -154,6 +157,79 @@ test("reads the one-time handoff once from a URL fragment", () => {
   assert.equal(handoffTokenFromFragment("#handoff_token=too-short"), "");
 });
 
+test("accepts only finalized Career Twin content from a handoff", () => {
+  const finalized = finalizedResumeFromHandoff({
+    snapshot: {
+      resume_content: { ...nativeResume, summary: "Exact Career Twin wording" },
+      vacancy_analysis: vacancyAnalysis,
+      evidence_matching: evidenceMatching,
+      resume_provenance: provenance,
+    },
+  });
+
+  assert.equal((finalized.resume as { summary: string }).summary, "Exact Career Twin wording");
+  assert.deepEqual(finalized.analysis, vacancyAnalysis);
+  assert.deepEqual(finalized.matching, evidenceMatching);
+  assert.throws(() => finalizedResumeFromHandoff({ snapshot: {} }), /finalized Career Twin/);
+});
+
+test("renderer fetches exactly one finalized handoff from loopback Job Seeker", async () => {
+  let request: { url: string; init?: RequestInit } | undefined;
+  const result = await fetchFinalizedResumeHandoff(
+    "http://127.0.0.1:8765",
+    "one-time-secret-12345678901234567",
+    async (url, init) => {
+      request = { url: String(url), init };
+      return Response.json({
+        snapshot: {
+          resume_content: nativeResume,
+          vacancy_analysis: vacancyAnalysis,
+          evidence_matching: evidenceMatching,
+          resume_provenance: completeProvenance,
+        },
+      });
+    },
+    "scoped-integration-token",
+  );
+
+  assert.equal(result.resume.id, "resume-1");
+  assert.equal(
+    request?.url,
+    "http://127.0.0.1:8765/api/v1/resume-handoffs/one-time-secret-12345678901234567",
+  );
+  assert.equal(
+    (request?.init?.headers as Record<string, string>).Authorization,
+    "Bearer scoped-integration-token",
+  );
+  assert.equal(request?.init?.redirect, "error");
+});
+
+test("renderer request accepts only a finalized Career Twin handoff", () => {
+  const request = parseFinalizedResumeRequest({
+    handoffToken: "handoff-token-12345678901234567890",
+    launch: {
+      id: "EU-LI-123",
+      source: "linkedin.com",
+      language: "en",
+      company: "Acme",
+      role: "Head of AI",
+      url: "https://linkedin.com/jobs/123",
+    },
+  });
+
+  assert.equal(request.handoffToken, "handoff-token-12345678901234567890");
+  assert.equal(request.launch.id, "EU-LI-123");
+  assert.throws(
+    () => parseFinalizedResumeRequest({ ...request, mode: "analysis" }),
+    /renderer-only/,
+  );
+  assert.throws(
+    () => parseFinalizedResumeRequest({ ...request, apiKey: "must-not-reach-renderer" }),
+    /renderer-only/,
+  );
+  assert.throws(() => parseFinalizedResumeRequest({ launch: request.launch }), /handoff/);
+});
+
 test("maps only Resume Studio documents into persistent variant payloads", () => {
   const storedResume = {
     ...nativeResume,
@@ -167,6 +243,18 @@ test("maps only Resume Studio documents into persistent variant payloads", () =>
   assert.deepEqual(payload?.resume, storedResume);
   assert.equal(payload?.provenance.generator, "openai:gpt-test");
   assert.equal(resumeVariantFromStoredResume({ ...nativeResume, metadata: {} }), null);
+});
+
+test("identifies Career Twin-managed resumes so semantic rewrite actions stay disabled", () => {
+  assert.equal(isCareerTwinManagedResume({
+    ...nativeResume,
+    metadata: { resumeStudio: completeProvenance },
+  }), true);
+  assert.equal(isCareerTwinManagedResume(nativeResume), false);
+  assert.equal(isCareerTwinManagedResume({
+    ...nativeResume,
+    metadata: { resumeStudio: {} },
+  }), false);
 });
 
 test("posts a created resume variant using the required contract", async () => {
@@ -234,30 +322,6 @@ test("completes a one-time handoff without exposing the integration capability",
   assert.equal(JSON.parse(String(request?.init?.body)).schema_version, 1);
 });
 
-test("posts analysis feedback without creating a resume document", async () => {
-  let request: { url: string; init?: RequestInit } | undefined;
-  const result = await syncVacancyFeedback(
-    "http://127.0.0.1:8765",
-    "EU-LI-123",
-    vacancyAnalysis,
-    evidenceMatching,
-    async (url, init) => {
-      request = { url: String(url), init };
-      return new Response(null, { status: 200 });
-    },
-    "scoped-integration-token",
-  );
-
-  assert.deepEqual(result, { ok: true });
-  assert.equal(request?.url, "http://127.0.0.1:8765/api/v1/vacancies/EU-LI-123/evidence-feedback");
-  assert.equal(request?.init?.method, "POST");
-  assert.equal(
-    (request?.init?.headers as Record<string, string>).Authorization,
-    "Bearer scoped-integration-token",
-  );
-  assert.deepEqual(JSON.parse(String(request?.init?.body)).analysis, vacancyAnalysis);
-  assert.deepEqual(JSON.parse(String(request?.init?.body)).matching, evidenceMatching);
-});
 
 test("reports callback failures without throwing away the locally-created resume", async () => {
   const result = await syncResumeVariant(

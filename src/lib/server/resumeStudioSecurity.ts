@@ -11,34 +11,7 @@ const isLoopback = (hostname: string) => {
   return value === "localhost" || value === "127.0.0.1" || value === "::1";
 };
 
-const originAllowed = (origin: string | null, ownOrigin: string, allowedOrigins: string[]) =>
-  origin === ownOrigin || (origin !== null && allowedOrigins.includes(origin));
-
-export const resumeStudioCorsHeaders = (
-  request: Request,
-  allowedOrigins: string[] = [],
-): Record<string, string> => {
-  const origin = request.headers.get("origin");
-  if (!origin || !allowedOrigins.includes(origin)) return {};
-  return {
-    "Access-Control-Allow-Credentials": "true",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Origin": origin,
-    Vary: "Origin",
-  };
-};
-
-export const resumeStudioCrossOriginModeStatus = (
-  request: Request,
-  mode: "analysis" | "resume",
-  allowedOrigins: string[] = [],
-) => {
-  const url = new URL(request.url);
-  const origin = request.headers.get("origin");
-  if (origin === url.origin) return 0;
-  return origin !== null && allowedOrigins.includes(origin) && mode === "analysis" ? 0 : 403;
-};
+const originAllowed = (origin: string | null, ownOrigin: string) => origin === ownOrigin;
 
 const tokenMatches = (actual: string, expected: string) => {
   const actualBuffer = Buffer.from(actual);
@@ -70,14 +43,14 @@ export const createResumeStudioSession = (
   expectedToken: string | undefined,
   now = Date.now(),
   nonce = randomBytes(18).toString("base64url"),
-  allowedOrigins: string[] = [],
+  _legacyAllowedOrigins: string[] = [],
 ) => {
   if (!expectedToken || expectedToken.length < 32) return { status: 503 };
   const url = new URL(request.url);
   const origin = request.headers.get("origin");
   const fetchSite = request.headers.get("sec-fetch-site");
   if (!isLoopback(url.hostname) ||
-      (origin ? !originAllowed(origin, url.origin, allowedOrigins) : fetchSite !== "same-origin")) {
+      (origin ? !originAllowed(origin, url.origin) : fetchSite !== "same-origin")) {
     return { status: 403 };
   }
   const timestamp = String(Math.floor(now / 1_000));
@@ -93,13 +66,13 @@ export const resumeStudioRequestStatus = (
   request: Request,
   expectedToken: string | undefined,
   now = Date.now(),
-  allowedOrigins: string[] = [],
+  _legacyAllowedOrigins: string[] = [],
 ) => {
   if (!expectedToken || expectedToken.length < 32) return 503;
 
   const url = new URL(request.url);
   const origin = request.headers.get("origin");
-  if (!isLoopback(url.hostname) || !origin || !originAllowed(origin, url.origin, allowedOrigins)) {
+  if (!isLoopback(url.hostname) || !origin || !originAllowed(origin, url.origin)) {
     return 403;
   }
   if (request.headers.get("content-type")?.split(";", 1)[0] !== "application/json") {

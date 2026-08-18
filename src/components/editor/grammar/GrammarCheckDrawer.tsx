@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import Mark from "mark.js";
 import { toast } from "sonner";
 import { ResumeData } from "@/types/resume";
+import { isCareerTwinManagedResume } from "@/lib/resumeStudioIntegration";
 
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,10 +38,15 @@ export function GrammarCheckDrawer() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
+    if (isCareerTwinManagedResume(activeResume)) {
+      clearErrors();
+      setIsOpen(false);
+      return;
+    }
     if (errors.length > 0) {
       setIsOpen(true);
     }
-  }, [errors.length]);
+  }, [activeResume, clearErrors, errors.length]);
 
   useEffect(() => {
     const handleOpenDrawer = () => setIsOpen(true);
@@ -56,7 +62,7 @@ export function GrammarCheckDrawer() {
 
   const handleAccept = (index: number) => {
     const error = errors[index];
-    if (!error || !activeResume) return;
+    if (!error || !activeResume || isCareerTwinManagedResume(activeResume)) return;
 
     // 递归查找并替换简历数据中的文本
     const newResume = JSON.parse(JSON.stringify(activeResume));

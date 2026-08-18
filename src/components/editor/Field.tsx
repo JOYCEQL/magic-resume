@@ -16,6 +16,8 @@ import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../shared/rich-editor/RichEditor";
 import AIPolishDialog from "../shared/ai/AIPolishDialog";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
+import { isCareerTwinManagedResume } from "@/lib/resumeStudioIntegration";
+import { useResumeStore } from "@/store/useResumeStore";
 import { UnifiedDateInput } from "../ui/unified-date-input";
 import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
 
@@ -45,6 +47,8 @@ const Field = ({
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [showPolishDialog, setShowPolishDialog] = useState(false);
   const { checkConfiguration } = useAIConfiguration();
+  const activeResume = useResumeStore((state) => state.activeResume);
+  const semanticRewriteAllowed = !isCareerTwinManagedResume(activeResume);
   const t = useTranslations();
 
   const currentDate = useMemo(
@@ -178,22 +182,20 @@ const Field = ({
             content={value || ""}
             onChange={onChange}
             placeholder={placeholder}
-            onPolish={() => {
-              if (checkConfiguration()) {
-                setShowPolishDialog(true);
-              }
-            }}
+            onPolish={semanticRewriteAllowed ? () => {
+              if (checkConfiguration()) setShowPolishDialog(true);
+            } : undefined}
           />
         </div>
 
-        <AIPolishDialog
-          open={showPolishDialog}
-          onOpenChange={setShowPolishDialog}
-          content={value || ""}
-          onApply={(content) => {
-            onChange(content);
-          }}
-        />
+        {semanticRewriteAllowed && (
+          <AIPolishDialog
+            open={showPolishDialog}
+            onOpenChange={setShowPolishDialog}
+            content={value || ""}
+            onApply={onChange}
+          />
+        )}
       </motion.div>
     );
   }

@@ -45,6 +45,8 @@ export const ResumeWorkbench = () => {
         createResume,
     } = useResumeStore();
     const {
+        selectedModel,
+        deepseekApiKey,
         geminiApiKey,
         geminiModelId,
     } = useAIConfigStore();
@@ -229,7 +231,15 @@ export const ResumeWorkbench = () => {
     };
 
     const importResumeFromPdf = async (file: File) => {
-        if (!geminiApiKey || !geminiModelId) {
+        const useDeepSeek = selectedModel === "deepseek";
+
+        if (useDeepSeek && !deepseekApiKey) {
+            toast.error(t("dashboard.resumes.importDialog.deepseekConfigRequired"));
+            router.push("/app/dashboard/ai");
+            return;
+        }
+
+        if (!useDeepSeek && (!geminiApiKey || !geminiModelId)) {
             toast.error(t("dashboard.resumes.importDialog.geminiConfigRequired"));
             router.push("/app/dashboard/ai");
             return;
@@ -246,9 +256,10 @@ export const ResumeWorkbench = () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
+                modelType: useDeepSeek ? "deepseek" : "gemini",
                 images: pdfImages,
-                apiKey: geminiApiKey,
-                model: geminiModelId,
+                apiKey: useDeepSeek ? deepseekApiKey : geminiApiKey,
+                model: useDeepSeek ? undefined : geminiModelId,
                 locale,
             }),
         });

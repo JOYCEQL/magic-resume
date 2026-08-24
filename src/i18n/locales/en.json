@@ -126,11 +126,12 @@
         "jsonTitle": "Import JSON",
         "jsonDescription": "Import an exported resume config file (.json)",
         "pdfTitle": "Import PDF",
-        "pdfDescription": "Use Gemini into structured resume data",
+        "pdfDescription": "Use the selected AI provider to generate structured resume data",
         "importing": "Importing, please wait...",
         "geminiConfigRequired": "Please configure Gemini API Key and Model ID in AI settings first",
+        "deepseekConfigRequired": "Please configure DeepSeek API Key in AI settings first",
         "pdfSuccess": "PDF imported successfully",
-        "pdfError": "PDF import failed. Please check PDF content or Gemini configuration"
+        "pdfError": "PDF import failed. Please check the PDF content or current AI provider configuration"
       },
       "notice": {
         "title": "Attention",

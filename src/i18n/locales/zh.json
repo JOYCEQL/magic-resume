@@ -127,11 +127,12 @@
         "jsonTitle": "导入 JSON",
         "jsonDescription": "导入已导出的简历配置文件（.json）",
         "pdfTitle": "导入 PDF",
-        "pdfDescription": "使用 Gemini 自动识别生成简历结构",
+        "pdfDescription": "使用当前选择的 AI 服务自动识别并生成简历结构",
         "importing": "正在导入，请稍候...",
         "geminiConfigRequired": "请先在 AI 服务商设置页配置 Gemini API Key 和模型 ID",
+        "deepseekConfigRequired": "请先在 AI 服务商设置页配置 DeepSeek API Key",
         "pdfSuccess": "PDF 导入成功",
-        "pdfError": "PDF 导入失败，请检查 PDF 内容或 Gemini 配置"
+        "pdfError": "PDF 导入失败，请检查 PDF 内容或当前 AI 服务配置"
       },
       "notice": {
         "title": "注意",

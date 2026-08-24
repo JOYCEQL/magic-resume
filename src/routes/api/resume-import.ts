@@ -1,28 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { formatGeminiErrorMessage, getGeminiModelInstance } from "@/lib/server/gemini";
-
-const parseJsonPayload = (content: string) => {
-  const text = content.trim();
-  try {
-    return JSON.parse(text);
-  } catch (error) {}
-
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (fenced?.[1]) {
-    try {
-      return JSON.parse(fenced[1].trim());
-    } catch (error) {}
-  }
-
-  const objectBlock = text.match(/\{[\s\S]*\}/);
-  if (objectBlock?.[0]) {
-    try {
-      return JSON.parse(objectBlock[0]);
-    } catch (error) {}
-  }
-
-  return null;
-};
+import {
+  ResumeImportUpstreamError,
+  getResumeImportSystemPrompt,
+  normalizeResumeImportModelType,
+  parseResumeJson,
+  requestDeepSeekResumeImport,
+} from "@/lib/server/resumeImport";
 
 const extractBase64Payload = (value: string) => {
   const matched = value.match(/^data:(.*?);base64,(.*)$/);
@@ -45,13 +29,22 @@ export const Route = createFileRoute("/api/resume-import")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { apiKey, model, content, images, locale } = body as {
+          const { apiKey, model, content, images, locale, modelType: rawModelType } = body as {
+            modelType?: unknown;
             apiKey: string;
             model?: string;
             content?: string;
             images?: string[];
             locale?: string;
           };
+          const modelType = normalizeResumeImportModelType(rawModelType);
+
+          if (!modelType) {
+            return Response.json(
+              { error: "Unsupported resume import model type" },
+              { status: 400 },
+            );
+          }
 
           if (!apiKey || (!content && (!images || images.length === 0))) {
             return Response.json(
@@ -60,7 +53,17 @@ export const Route = createFileRoute("/api/resume-import")({
             );
           }
 
-          const language = locale === "en" ? "English" : "Chinese";
+          if (modelType === "deepseek") {
+            const resume = await requestDeepSeekResumeImport({
+              apiKey,
+              images: Array.isArray(images) ? images : [],
+              locale,
+              content,
+            });
+
+            return Response.json({ resume });
+          }
+
           const geminiModel = model || "gemini-flash-latest";
           const imageParts = Array.isArray(images)
             ? images.map((image) => {
@@ -76,57 +79,7 @@ export const Route = createFileRoute("/api/resume-import")({
           const modelInstance = getGeminiModelInstance({
             apiKey,
             model: geminiModel,
-            systemInstruction: `你是一个专业的简历结构化助手。根据用户提供的简历内容，提取信息并只输出一个合法 JSON 对象。
-
-输出约束：
-1. 只允许输出 JSON，不要输出 Markdown，不要输出解释。
-2. 如果某个字段不确定，使用空字符串或空数组。
-3. 请使用 ${language} 输出内容文本。
-4. description/details 字段输出字符串数组，每一项为一句可读内容。
-
-JSON 结构：
-{
-  "title": "简历标题",
-  "basic": {
-    "name": "",
-    "title": "",
-    "email": "",
-    "phone": "",
-    "location": "",
-    "employementStatus": "",
-    "birthDate": ""
-  },
-  "education": [
-    {
-      "school": "",
-      "major": "",
-      "degree": "",
-      "startDate": "",
-      "endDate": "",
-      "gpa": "",
-      "description": ["", ""]
-    }
-  ],
-  "experience": [
-    {
-      "company": "",
-      "position": "",
-      "date": "",
-      "details": ["", ""]
-    }
-  ],
-  "projects": [
-    {
-      "name": "",
-      "role": "",
-      "date": "",
-      "description": ["", ""],
-      "link": "",
-      "linkLabel": ""
-    }
-  ],
-  "skills": ["", ""]
-}`,
+            systemInstruction: getResumeImportSystemPrompt(locale),
             generationConfig: {
               temperature: 0.2,
               responseMimeType: "application/json",
@@ -152,7 +105,7 @@ JSON 结构：
             );
           }
 
-          const parsedResume = parseJsonPayload(aiContent);
+          const parsedResume = parseResumeJson(aiContent);
           if (!parsedResume) {
             return Response.json(
               { error: "Failed to parse AI JSON output" },
@@ -163,6 +116,15 @@ JSON 结构：
           return Response.json({ resume: parsedResume });
         } catch (error) {
           console.error("Error in resume import:", error);
+          if (error instanceof ResumeImportUpstreamError) {
+            return Response.json(
+              {
+                error: error.message,
+                ...(error.code ? { code: error.code } : {}),
+              },
+              { status: error.status },
+            );
+          }
           const status =
             typeof (error as any)?.status === "number"
               ? (error as any).status

@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "release": "bumpp",
     "generate:template-snapshots": "tsx scripts/generate-template-snapshots.ts",
-    "install:playwright": "playwright install chromium"
+    "install:playwright": "playwright install chromium",
+    "test:resume-import": "tsx --test src/lib/server/proxy.test.ts src/lib/server/resumeImport.test.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

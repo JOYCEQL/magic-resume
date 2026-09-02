@@ -33,7 +33,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
   deepseek: {
     url: () => "https://api.deepseek.com/v1/chat/completions",
     requiresModelId: false,
-    defaultModel: "deepseek-chat",
+    defaultModel: "deepseek-v4-flash",
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,

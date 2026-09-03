@@ -239,6 +239,20 @@ export function buildAIRequest(
   };
 }
 
+export function upstreamErrorCode(status: number) {
+  return status === 401
+    ? "authenticationFailed"
+    : status === 403
+      ? "modelAccessDenied"
+      : status === 429
+        ? "rateLimited"
+        : status === 413
+          ? "requestTooLarge"
+          : [400, 404, 422].includes(status)
+            ? "modelOrEndpointError"
+            : "upstreamError";
+}
+
 function checkFinishReason(reason: unknown) {
   if (["MAX_TOKENS", "max_tokens", "length"].includes(textValue(reason)))
     throw new ResumeImportError("truncatedOutput", 502);
@@ -357,18 +371,7 @@ export async function fetchAI(
   }
   if (!response) throw new ResumeImportError("networkError", 502);
   if (!response.ok) {
-    const code =
-      response.status === 401
-        ? "authenticationFailed"
-        : response.status === 403
-          ? "modelAccessDenied"
-          : response.status === 429
-            ? "rateLimited"
-            : response.status === 413
-              ? "requestTooLarge"
-              : [400, 404, 422].includes(response.status)
-                ? "modelOrEndpointError"
-                : "upstreamError";
+    const code = upstreamErrorCode(response.status);
     console.error("[ai-provider] Upstream request failed", {
       provider: connection.provider,
       model: connection.model,

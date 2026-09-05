@@ -1,43 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AIModelType, AI_MODEL_CONFIGS } from "@/config/ai";
-import { formatGeminiErrorMessage, getGeminiModelInstance } from "@/lib/server/gemini";
+import { createChatCompletion } from "@/lib/server/chatCompletion";
+import { formatGeminiErrorMessage } from "@/lib/server/gemini";
 
-const parseUpstreamError = (raw: string, fallback: string) => {
-  if (!raw) return { message: fallback };
-  try {
-    const data = JSON.parse(raw) as {
-      error?: { message?: string; code?: string };
-      message?: string;
-    };
-    return {
-      message: data.error?.message || data.message || fallback,
-      code: data.error?.code
-    };
-  } catch {
-    return { message: raw };
-  }
-};
-
-export const Route = createFileRoute("/api/grammar")({
-  server: {
-    handlers: {
-      POST: async ({ request }) => {
-        try {
-          const body = await request.json();
-          const { apiKey, model, content, modelType, apiEndpoint } = body as {
-            apiKey: string;
-            model: string;
-            content: string;
-            modelType: AIModelType;
-            apiEndpoint?: string;
-          };
-
-          const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
-          if (!modelConfig) {
-            throw new Error("Invalid model type");
-          }
-
-          const systemPrompt = `你是一个专业的中文简历校对助手。你的任务是**仅**找出简历中的**错别字**和**标点符号错误**。
+const GRAMMAR_SYSTEM_PROMPT = `你是一个专业的中文简历校对助手。你的任务是**仅**找出简历中的**错别字**和**标点符号错误**。
 
             **严格禁止**：
             1. ❌ **禁止**提供任何风格、语气、润色或改写建议。如果句子在语法上是正确的（即使读起来不够优美），也**绝对不要**报错。
@@ -65,76 +31,37 @@ export const Route = createFileRoute("/api/grammar")({
               ]
             }
 
-            再次强调：**只找错别字和标点错误，不要做任何润色！**`;
+            再次强调：**只找错别字和标点错误，不要做任何润色！只输出 JSON，不要输出其它说明文字。**`;
 
-          if (modelType === "gemini") {
-            const geminiModel = model || "gemini-flash-latest";
-            const modelInstance = getGeminiModelInstance({
-              apiKey,
-              model: geminiModel,
-              systemInstruction: systemPrompt,
-              generationConfig: {
-                temperature: 0,
-                responseMimeType: "application/json",
-              },
-            });
+export const Route = createFileRoute("/api/grammar")({
+  server: {
+    handlers: {
+      POST: async ({ request }) => {
+        try {
+          const body = await request.json();
+          const { apiKey, model, content, modelType, apiEndpoint } = body as {
+            apiKey: string;
+            model: string;
+            content: string;
+            modelType: AIModelType;
+            apiEndpoint?: string;
+          };
 
-            const result = await modelInstance.generateContent(content);
-            const text = result.response.text() || "";
-
-            return Response.json({
-              choices: [
-                {
-                  message: {
-                    content: text,
-                  },
-                },
-              ],
-            });
+          const modelConfig = AI_MODEL_CONFIGS[modelType as AIModelType];
+          if (!modelConfig) {
+            throw new Error("Invalid model type");
           }
 
-          const response = await fetch(modelConfig.url(apiEndpoint), {
-            method: "POST",
-            headers: modelConfig.headers(apiKey),
-            body: JSON.stringify({
-              model: modelConfig.requiresModelId ? model : modelConfig.defaultModel,
-              response_format: {
-                type: "json_object"
-              },
-              messages: [
-                {
-                  role: "system",
-                  content: systemPrompt
-                },
-                {
-                  role: "user",
-                  content
-                }
-              ]
-            })
+          return createChatCompletion({
+            modelType,
+            apiKey,
+            model,
+            apiEndpoint,
+            systemPrompt: GRAMMAR_SYSTEM_PROMPT,
+            userContent: content,
+            jsonMode: true,
+            temperature: 0,
           });
-
-          const raw = await response.text();
-          if (!response.ok) {
-            const fallbackMessage = `Upstream API error: ${response.status} ${response.statusText}`;
-            const parsedError = parseUpstreamError(raw, fallbackMessage);
-            return Response.json(
-              { error: parsedError },
-              { status: response.status }
-            );
-          }
-
-          let data: unknown;
-          try {
-            data = raw ? JSON.parse(raw) : {};
-          } catch {
-            return Response.json(
-              { error: "Invalid upstream response: expected JSON payload" },
-              { status: 502 }
-            );
-          }
-
-          return Response.json(data);
         } catch (error) {
           console.error("Error in grammar check:", error);
           return Response.json(
@@ -142,7 +69,7 @@ export const Route = createFileRoute("/api/grammar")({
             { status: 500 }
           );
         }
-      }
-    }
-  }
+      },
+    },
+  },
 });

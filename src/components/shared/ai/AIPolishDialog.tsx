@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
+import { resolveActiveProviderCredentials } from "@/lib/ai/credentials";
 import { cn } from "@/lib/utils";
 
 interface AIPolishDialogProps {
@@ -52,19 +53,7 @@ export default function AIPolishDialog({
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
   const [customInstructions, setCustomInstructions] = useState("");
-  const {
-    selectedModel,
-    doubaoApiKey,
-    doubaoModelId,
-    deepseekApiKey,
-    deepseekModelId,
-    openaiApiKey,
-    openaiModelId,
-    openaiApiEndpoint,
-    geminiApiKey,
-    geminiModelId,
-    isConfigured
-  } = useAIConfigStore();
+  const { isConfigured } = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
 
@@ -123,23 +112,10 @@ export default function AIPolishDialog({
 
       abortControllerRef.current = new AbortController();
 
-      const config = AI_MODEL_CONFIGS[selectedModel];
-      const apiKey =
-        selectedModel === "doubao"
-          ? doubaoApiKey
-          : selectedModel === "openai"
-            ? openaiApiKey
-            : selectedModel === "gemini"
-              ? geminiApiKey
-              : deepseekApiKey;
-      const modelId =
-        selectedModel === "doubao"
-          ? doubaoModelId
-          : selectedModel === "openai"
-            ? openaiModelId
-            : selectedModel === "gemini"
-              ? geminiModelId
-              : deepseekModelId;
+      const credentials = resolveActiveProviderCredentials(
+        useAIConfigStore.getState()
+      );
+      const config = AI_MODEL_CONFIGS[credentials.modelType];
 
       const response = await fetch("/api/polish", {
         method: "POST",
@@ -148,10 +124,10 @@ export default function AIPolishDialog({
         },
         body: JSON.stringify({
           content: turndownService.turndown(content),
-          apiKey,
-          apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
-          model: config.requiresModelId ? modelId : config.defaultModel,
-          modelType: selectedModel,
+          apiKey: credentials.apiKey,
+          apiEndpoint: credentials.apiEndpoint,
+          model: config.requiresModelId ? credentials.model : config.defaultModel,
+          modelType: credentials.modelType,
           customInstructions: customInstructions.trim() || undefined
         }),
         signal: abortControllerRef.current.signal

@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
+import { resolveActiveProviderCredentials } from "@/lib/ai/credentials";
 import { cn } from "@/lib/utils";
 
 export interface GrammarError {
@@ -90,36 +91,10 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     set((state) => ({ highlightKey: state.highlightKey + 1 })),
 
   checkGrammar: async (text: string) => {
-    const {
-      selectedModel,
-      doubaoApiKey,
-      doubaoModelId,
-      deepseekApiKey,
-      deepseekModelId,
-      openaiApiKey,
-      openaiModelId,
-      openaiApiEndpoint,
-      geminiApiKey,
-      geminiModelId
-    } = useAIConfigStore.getState();
-
-    const config = AI_MODEL_CONFIGS[selectedModel];
-    const apiKey =
-      selectedModel === "doubao"
-        ? doubaoApiKey
-        : selectedModel === "openai"
-          ? openaiApiKey
-          : selectedModel === "gemini"
-            ? geminiApiKey
-            : deepseekApiKey;
-    const modelId =
-      selectedModel === "doubao"
-        ? doubaoModelId
-        : selectedModel === "openai"
-          ? openaiModelId
-          : selectedModel === "gemini"
-            ? geminiModelId
-            : deepseekModelId;
+    const credentials = resolveActiveProviderCredentials(
+      useAIConfigStore.getState()
+    );
+    const config = AI_MODEL_CONFIGS[credentials.modelType];
 
     set({ isChecking: true });
 
@@ -131,10 +106,10 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
         },
         body: JSON.stringify({
           content: text,
-          apiKey,
-          model: config.requiresModelId ? modelId : config.defaultModel,
-          modelType: selectedModel,
-          apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
+          apiKey: credentials.apiKey,
+          model: config.requiresModelId ? credentials.model : config.defaultModel,
+          modelType: credentials.modelType,
+          apiEndpoint: credentials.apiEndpoint,
         }),
       });
 

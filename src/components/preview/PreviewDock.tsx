@@ -31,7 +31,6 @@ import TemplateSheet from "@/components/shared/TemplateSheet";
 import { GITHUB_REPO_URL, PDF_EXPORT_CONFIG } from "@/config";
 import { cn } from "@/lib/utils";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
-import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { AI_MODEL_CONFIGS } from "@/config/ai";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
@@ -93,17 +92,6 @@ const PreviewDock = ({
   const router = useRouter();
   const t = useTranslations("previewDock");
   const { checkGrammar, isChecking } = useGrammarCheck();
-
-  const {
-    selectedModel,
-    doubaoApiKey,
-    doubaoModelId,
-    deepseekApiKey,
-    deepseekModelId,
-    openaiApiKey,
-    openaiModelId,
-    openaiApiEndpoint
-  } = useAIConfigStore();
 
   const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
   const { globalSettings = {} } = activeResume || {};

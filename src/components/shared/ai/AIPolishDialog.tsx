@@ -19,7 +19,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
-import { AI_MODEL_CONFIGS } from "@/config/ai";
+import { pdfImportErrorMessage } from "@/lib/pdf-import-client";
+import { ResumeImportError } from "@/lib/resume-import-schema";
+import { getTaskModel, isModelConfigured, toAIConnection } from "@/config/ai-models";
 import { cn } from "@/lib/utils";
 
 interface AIPolishDialogProps {
@@ -49,22 +51,11 @@ export default function AIPolishDialog({
   onApply
 }: AIPolishDialogProps) {
   const t = useTranslations("aiPolishDialog");
+  const allTranslations = useTranslations();
   const [isPolishing, setIsPolishing] = useState(false);
   const [polishedContent, setPolishedContent] = useState("");
   const [customInstructions, setCustomInstructions] = useState("");
-  const {
-    selectedModel,
-    doubaoApiKey,
-    doubaoModelId,
-    deepseekApiKey,
-    deepseekModelId,
-    openaiApiKey,
-    openaiModelId,
-    openaiApiEndpoint,
-    geminiApiKey,
-    geminiModelId,
-    isConfigured
-  } = useAIConfigStore();
+  const aiConfig = useAIConfigStore();
   const abortControllerRef = useRef<AbortController | null>(null);
   const polishedContentRef = useRef<HTMLDivElement>(null);
 
@@ -84,10 +75,12 @@ export default function AIPolishDialog({
 
       if (contentType.includes("application/json") || rawText.startsWith("{")) {
         const data = JSON.parse(rawText) as {
+          code?: string;
           error?: string | { message?: string };
           message?: string;
         };
 
+        if (data.code) return pdfImportErrorMessage(new ResumeImportError(data.code), allTranslations);
         if (typeof data.error === "string" && data.error.trim()) {
           return data.error.trim();
         }
@@ -113,7 +106,8 @@ export default function AIPolishDialog({
 
   const handlePolish = async () => {
     try {
-      if (!isConfigured()) {
+      const model = getTaskModel(aiConfig, "text");
+      if (!isModelConfigured(model)) {
         toast.error(t("error.configRequired"));
         return;
       }
@@ -123,24 +117,6 @@ export default function AIPolishDialog({
 
       abortControllerRef.current = new AbortController();
 
-      const config = AI_MODEL_CONFIGS[selectedModel];
-      const apiKey =
-        selectedModel === "doubao"
-          ? doubaoApiKey
-          : selectedModel === "openai"
-            ? openaiApiKey
-            : selectedModel === "gemini"
-              ? geminiApiKey
-              : deepseekApiKey;
-      const modelId =
-        selectedModel === "doubao"
-          ? doubaoModelId
-          : selectedModel === "openai"
-            ? openaiModelId
-            : selectedModel === "gemini"
-              ? geminiModelId
-              : deepseekModelId;
-
       const response = await fetch("/api/polish", {
         method: "POST",
         headers: {
@@ -148,10 +124,7 @@ export default function AIPolishDialog({
         },
         body: JSON.stringify({
           content: turndownService.turndown(content),
-          apiKey,
-          apiEndpoint: selectedModel === "openai" ? openaiApiEndpoint : undefined,
-          model: config.requiresModelId ? modelId : config.defaultModel,
-          modelType: selectedModel,
+          connection: toAIConnection(model),
           customInstructions: customInstructions.trim() || undefined
         }),
         signal: abortControllerRef.current.signal
@@ -173,9 +146,11 @@ export default function AIPolishDialog({
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
+        const chunk = decoder.decode(value, { stream: true });
         setPolishedContent((prev) => prev + chunk);
       }
+      const tail = decoder.decode();
+      if (tail) setPolishedContent((prev) => prev + tail);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Polish aborted");

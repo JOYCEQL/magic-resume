@@ -24,13 +24,16 @@ import { ImportResumeDialog } from "./ImportResumeDialog";
 import { ResumeCardItem } from "./ResumeCardItem";
 import { AnimatedImportButton } from "./AnimatedImportButton";
 import {
-    extractJsonContent,
     createResumeFromAIResult,
     toStringArray
 } from "./utils";
 import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 
-const MAX_PDF_IMPORT_PAGES = 3;
+import { MAX_PDF_IMPORT_PAGES, MAX_PDF_FILE_BYTES, MAX_PDF_REQUEST_BYTES, isPdfImportConfigured } from "@/config/pdf-import";
+import { getTaskModel, toAIConnection } from "@/config/ai-models";
+import { requestPdfImport, pdfImportErrorMessage } from "@/lib/pdf-import-client";
+import { ResumeImportError } from "@/lib/resume-import-schema";
+import { PdfImportPreview } from "./PdfImportPreview";
 const PDF_IMAGE_QUALITY = 0.82;
 const PDF_MAX_IMAGE_WIDTH = 1600;
 
@@ -44,10 +47,9 @@ export const ResumeWorkbench = () => {
         deleteResume,
         createResume,
     } = useResumeStore();
-    const {
-        geminiApiKey,
-        geminiModelId,
-    } = useAIConfigStore();
+    const aiConfig = useAIConfigStore();
+    const pdfConnection = getTaskModel(aiConfig, "pdf");
+    const [pendingPdfResume, setPendingPdfResume] = useState<ReturnType<typeof createResumeFromAIResult> | null>(null);
     const router = useRouter();
     const [hasConfiguredFolder, setHasConfiguredFolder] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -185,97 +187,63 @@ export const ResumeWorkbench = () => {
     };
 
     const extractImagesFromPdf = async (file: File) => {
+        if (file.size > MAX_PDF_FILE_BYTES) throw new ResumeImportError("fileTooLarge");
         const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
-        const buffer = await file.arrayBuffer();
-        const typedPdfjs = pdfjs as any;
-
-        typedPdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
-
-        const loadingTask = typedPdfjs.getDocument({
-            data: new Uint8Array(buffer),
-        });
-        const pdf = await loadingTask.promise;
-        const pageImages: string[] = [];
-        const totalPages = Math.min(pdf.numPages, MAX_PDF_IMPORT_PAGES);
-
-        for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
-            const page = await pdf.getPage(pageNumber);
-            const baseViewport = page.getViewport({ scale: 2 });
-            const widthScale = Math.min(1, PDF_MAX_IMAGE_WIDTH / baseViewport.width);
-            const viewport = page.getViewport({ scale: 2 * widthScale });
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d", { alpha: false });
-
-            if (!context) {
-                throw new Error("Unable to create canvas context");
+        pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+        const loadingTask = pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) });
+        // Password-protected files must fail instead of waiting for an absent password UI.
+        loadingTask.onPassword = () => { void loadingTask.destroy(); };
+        try {
+            const pdf = await loadingTask.promise;
+            if (pdf.numPages > MAX_PDF_IMPORT_PAGES) throw new ResumeImportError("tooManyPages");
+            const images: string[] = [];
+            let imageBytes = 0;
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+                const page = await pdf.getPage(pageNumber);
+                const base = page.getViewport({ scale: 2 });
+                const scale = Math.min(1, PDF_MAX_IMAGE_WIDTH / base.width, 3000 / base.height);
+                const viewport = page.getViewport({ scale: 2 * scale });
+                const canvas = document.createElement("canvas");
+                try {
+                    const context = canvas.getContext("2d", { alpha: false });
+                    if (!context) throw new ResumeImportError("invalidPdf");
+                    canvas.width = Math.max(1, Math.floor(viewport.width));
+                    canvas.height = Math.max(1, Math.floor(viewport.height));
+                    await page.render({ canvas, canvasContext: context, viewport }).promise;
+                    const image = canvas.toDataURL("image/jpeg", PDF_IMAGE_QUALITY);
+                    imageBytes += image.length;
+                    if (imageBytes > MAX_PDF_REQUEST_BYTES) throw new ResumeImportError("requestTooLarge");
+                    images.push(image);
+                } finally {
+                    canvas.width = 0;
+                    canvas.height = 0;
+                    page.cleanup();
+                }
             }
-
-            canvas.width = Math.max(1, Math.floor(viewport.width));
-            canvas.height = Math.max(1, Math.floor(viewport.height));
-
-            await page.render({
-                canvasContext: context,
-                viewport,
-            }).promise;
-
-            const imageDataUrl = canvas.toDataURL("image/jpeg", PDF_IMAGE_QUALITY);
-            pageImages.push(imageDataUrl);
-
-            canvas.width = 0;
-            canvas.height = 0;
-        }
-
-        return pageImages;
+            return images;
+        } finally { await loadingTask.destroy(); }
     };
 
     const importResumeFromPdf = async (file: File) => {
-        if (!geminiApiKey || !geminiModelId) {
-            toast.error(t("dashboard.resumes.importDialog.geminiConfigRequired"));
+        if (!isPdfImportConfigured(pdfConnection)) {
+            toast.error(t("dashboard.resumes.importDialog.configRequired"));
             router.push("/app/dashboard/ai");
             return;
         }
-
-        const pdfImages = await extractImagesFromPdf(file);
-        if (pdfImages.length === 0) {
-            throw new Error("No extractable PDF pages");
-        }
-
-        const response = await fetch("/api/resume-import", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                images: pdfImages,
-                apiKey: geminiApiKey,
-                model: geminiModelId,
-                locale,
-            }),
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            const message = data?.details
-                ? `${data?.error || "Resume import failed"}\n${data.details}`
-                : data?.error || "Resume import failed";
-            throw new Error(message);
-        }
-
-        const aiResume = data?.resume
-            ? data.resume
-            : data?.choices?.[0]?.message?.content
-                ? extractJsonContent(data.choices[0].message.content)
-                : null;
-
-        if (!aiResume) {
-            throw new Error("Invalid AI response");
-        }
-
+        const images = await extractImagesFromPdf(file);
+        const data = await requestPdfImport(toAIConnection(pdfConnection), images);
+        if (!data.resume) throw new ResumeImportError("invalidOutput");
         const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
-        const resume = createResumeFromAIResult(aiResume, nameWithoutExt);
-        const resumeId = addResume(resume);
-        setActiveResume(resumeId);
+        setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt));
         setIsImportDialogOpen(false);
+        if (data.warnings?.includes("missingName")) toast.warning(t("dashboard.resumes.importDialog.missingName"));
+    };
+
+    const confirmPdfImport = () => {
+        if (!pendingPdfResume) return;
+        const resumeId = addResume(pendingPdfResume);
+        setActiveResume(resumeId);
+        setPendingPdfResume(null);
         toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
         router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
@@ -309,12 +277,7 @@ export const ResumeWorkbench = () => {
             setIsImporting(true);
             await importResumeFromPdf(file);
         } catch (error) {
-            console.error("Import PDF error:", error);
-            const message =
-                error instanceof Error && error.message
-                    ? error.message
-                    : t("dashboard.resumes.importDialog.pdfError");
-            toast.error(message);
+            toast.error(pdfImportErrorMessage(error, t));
         } finally {
             setIsImporting(false);
         }
@@ -477,7 +440,10 @@ export const ResumeWorkbench = () => {
                     onCreate={handleCreateFromModal}
                 />
 
+                <PdfImportPreview resume={pendingPdfResume} onCancel={() => setPendingPdfResume(null)} onConfirm={confirmPdfImport} />
                 <ImportResumeDialog
+                    modelLabel={pdfConnection?.model || t("common.notConfigured")}
+                    onConfigure={() => router.push("/app/dashboard/ai")}
                     open={isImportDialogOpen}
                     isImporting={isImporting}
                     onOpenChange={setIsImportDialogOpen}

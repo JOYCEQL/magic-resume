@@ -1,62 +1,92 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { AI_MODEL_CONFIGS, AIModelType } from "@/config/ai";
+import {
+  createJSONStorage,
+  persist,
+  type PersistStorage,
+} from "zustand/middleware";
+import {
+  canModelParsePdf,
+  getTaskModel,
+  isModelConfigured,
+  modelSupportsPdf,
+  type AIModelProfile,
+  type AISettingsData,
+} from "@/config/ai-models";
+import { migrateAISettings } from "./ai-config-migration";
 
-interface AIConfigState {
-  selectedModel: AIModelType;
-  doubaoApiKey: string;
-  doubaoModelId: string;
-  deepseekApiKey: string;
-  deepseekModelId: string;
-  openaiApiKey: string;
-  openaiModelId: string;
-  openaiApiEndpoint: string;
-  geminiApiKey: string;
-  geminiModelId: string;
-  setSelectedModel: (model: AIModelType) => void;
-  setDoubaoApiKey: (apiKey: string) => void;
-  setDoubaoModelId: (modelId: string) => void;
-  setDeepseekApiKey: (apiKey: string) => void;
-  setDeepseekModelId: (modelId: string) => void;
-  setOpenaiApiKey: (apiKey: string) => void;
-  setOpenaiModelId: (modelId: string) => void;
-  setOpenaiApiEndpoint: (endpoint: string) => void;
-  setGeminiApiKey: (apiKey: string) => void;
-  setGeminiModelId: (modelId: string) => void;
+interface AIConfigState extends AISettingsData {
+  saveModel: (profile: AIModelProfile) => void;
+  deleteModel: (id: string) => void;
+  assignModel: (task: "text" | "pdf", id: string | null) => void;
   isConfigured: () => boolean;
 }
 
-export const useAIConfigStore = create<AIConfigState>()(
-  persist(
-    (set, get) => ({
-      selectedModel: "doubao",
-      doubaoApiKey: "",
-      doubaoModelId: "",
-      deepseekApiKey: "",
-      deepseekModelId: "",
-      openaiApiKey: "",
-      openaiModelId: "",
-      openaiApiEndpoint: "",
-      geminiApiKey: "",
-      geminiModelId: "gemini-flash-latest",
-      setSelectedModel: (model: AIModelType) => set({ selectedModel: model }),
-      setDoubaoApiKey: (apiKey: string) => set({ doubaoApiKey: apiKey }),
-      setDoubaoModelId: (modelId: string) => set({ doubaoModelId: modelId }),
-      setDeepseekApiKey: (apiKey: string) => set({ deepseekApiKey: apiKey }),
-      setDeepseekModelId: (modelId: string) => set({ deepseekModelId: modelId }),
-      setOpenaiApiKey: (apiKey: string) => set({ openaiApiKey: apiKey }),
-      setOpenaiModelId: (modelId: string) => set({ openaiModelId: modelId }),
-      setOpenaiApiEndpoint: (endpoint: string) => set({ openaiApiEndpoint: endpoint }),
-      setGeminiApiKey: (apiKey: string) => set({ geminiApiKey: apiKey }),
-      setGeminiModelId: (modelId: string) => set({ geminiModelId: modelId }),
-      isConfigured: () => {
-        const state = get();
-        const config = AI_MODEL_CONFIGS[state.selectedModel];
-        return config.validate(state);
-      }
-    }),
-    {
-      name: "ai-config-storage"
-    }
-  )
-);
+export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
+  create<AIConfigState>()(
+    persist<AIConfigState, [], [], AISettingsData>(
+      (set, get) => ({
+        models: [],
+        textModelId: null,
+        pdfModelId: null,
+        saveModel: (profile) =>
+          set((state) => {
+            const normalized = {
+              ...profile,
+              name: profile.name.trim(),
+              supportsPdf: modelSupportsPdf(profile.provider, profile.model),
+            };
+            const exists = state.models.some(
+              (model) => model.id === profile.id,
+            );
+            return {
+              models: exists
+                ? state.models.map((model) =>
+                    model.id === profile.id ? normalized : model,
+                  )
+                : [...state.models, normalized],
+              pdfModelId:
+                state.pdfModelId === profile.id && !canModelParsePdf(normalized)
+                  ? null
+                  : state.pdfModelId,
+            };
+          }),
+        deleteModel: (id) =>
+          set((state) => ({
+            models: state.models.filter((model) => model.id !== id),
+            textModelId: state.textModelId === id ? null : state.textModelId,
+            pdfModelId: state.pdfModelId === id ? null : state.pdfModelId,
+          })),
+        assignModel: (task, id) =>
+          set((state) => {
+            const profile = state.models.find((model) => model.id === id);
+            if (
+              id !== null &&
+              (!profile ||
+                !isModelConfigured(profile) ||
+                (task === "pdf" && !canModelParsePdf(profile)))
+            )
+              return state;
+            return task === "pdf" ? { pdfModelId: id } : { textModelId: id };
+          }),
+        isConfigured: () => isModelConfigured(getTaskModel(get(), "text")),
+      }),
+      {
+        name: "ai-config-storage",
+        version: 1,
+        storage:
+          storage ?? createJSONStorage<AISettingsData>(() => localStorage),
+        partialize: ({ models, textModelId, pdfModelId }) => ({
+          models,
+          textModelId,
+          pdfModelId,
+        }),
+        migrate: migrateAISettings,
+        merge: (persisted, current) => ({
+          ...current,
+          ...migrateAISettings(persisted),
+        }),
+      },
+    ),
+  );
+
+export const useAIConfigStore = createAIConfigStore();

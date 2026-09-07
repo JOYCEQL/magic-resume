@@ -266,6 +266,7 @@
           "compatibleServiceHint": "官方 OpenAI Key 保持默认地址；中转或兼容服务请填写其提供的 API 根地址。",
           "builtinModels": "内置模型",
           "builtinModelsHint": "无需填写模型 ID",
+          "modelCount": "{count} 个模型",
           "recommended": "推荐",
           "usedByText": "文字助手使用中",
           "usedByPdf": "PDF 解析使用中",
@@ -293,6 +294,7 @@
           "unsaved": "尚未保存",
           "saved": "配置已保存 · 可进行连接测试",
           "delete": "删除模型",
+          "deleteModel": "删除模型 {model}",
           "provider": "服务商",
           "name": "显示名称",
           "optional": "选填",
@@ -348,6 +350,32 @@
             "responses": "Responses",
             "gemini": "Gemini API",
             "anthropic": "Anthropic Messages"
+          },
+          "fetchModels": {
+            "button": "获取模型列表",
+            "noKey": "请先填写 API Key",
+            "success": "模型列表已获取",
+            "empty": "服务商未返回任何模型",
+            "failed": "获取模型列表失败",
+            "listTitle": "服务商返回的模型",
+            "add": "添加",
+            "addModel": "添加模型 {model}",
+            "added": "已添加",
+            "customModel": "自定义模型，来自服务商模型列表",
+            "errors": {
+              "configRequired": "请检查 API Key",
+              "invalidProvider": "服务商配置无效",
+              "invalidEndpoint": "请检查 API 端点",
+              "requestTooLarge": "请求内容过大",
+              "authenticationFailed": "API Key 无效，请检查密钥",
+              "modelAccessDenied": "当前 API Key 无权访问模型列表",
+              "rateLimited": "服务商请求频率或额度受限，请稍后重试",
+              "modelOrEndpointError": "服务商拒绝了请求，请检查 API 端点",
+              "upstreamError": "服务商暂时不可用，请稍后重试",
+              "networkError": "无法连接到服务商，请检查网络和 API 端点",
+              "timeout": "获取模型列表超时，请稍后重试",
+              "invalidRequest": "请求无效，请重试"
+            }
           }
         }
       }

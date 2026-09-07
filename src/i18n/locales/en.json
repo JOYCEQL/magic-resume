@@ -265,6 +265,7 @@
           "compatibleServiceHint": "Keep the default URL for an official OpenAI key. For a relay or compatible service, enter its API base URL.",
           "builtinModels": "Built-in models",
           "builtinModelsHint": "No model ID required",
+          "modelCount": "{count} models",
           "recommended": "Recommended",
           "usedByText": "Used for writing",
           "usedByPdf": "Used for PDF parsing",
@@ -292,6 +293,7 @@
           "unsaved": "Unsaved changes",
           "saved": "Settings saved · Ready to test",
           "delete": "Delete model",
+          "deleteModel": "Delete model {model}",
           "provider": "Provider",
           "name": "Display name",
           "optional": "Optional",
@@ -347,6 +349,32 @@
             "responses": "Responses",
             "gemini": "Gemini API",
             "anthropic": "Anthropic Messages"
+          },
+          "fetchModels": {
+            "button": "Fetch model list",
+            "noKey": "Enter the API key first",
+            "success": "Model list fetched",
+            "empty": "The provider returned no models",
+            "failed": "Failed to fetch the model list",
+            "listTitle": "Models from the provider",
+            "add": "Add",
+            "addModel": "Add model {model}",
+            "added": "Added",
+            "customModel": "Custom model from the provider's model list",
+            "errors": {
+              "configRequired": "Check the API key",
+              "invalidProvider": "Invalid provider configuration",
+              "invalidEndpoint": "Check the API endpoint",
+              "requestTooLarge": "The request is too large",
+              "authenticationFailed": "The API key is invalid. Check the key.",
+              "modelAccessDenied": "This API key cannot access the model list",
+              "rateLimited": "The provider rate-limited the request. Try again later.",
+              "modelOrEndpointError": "The provider rejected the request. Check the API endpoint.",
+              "upstreamError": "The provider is temporarily unavailable. Try again later.",
+              "networkError": "Unable to connect to the provider. Check the network and API endpoint.",
+              "timeout": "Fetching the model list timed out. Try again later.",
+              "invalidRequest": "Invalid request. Try again."
+            }
           }
         }
       }

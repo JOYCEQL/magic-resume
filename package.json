@@ -8,6 +8,7 @@
     "dev": "vite dev",
     "test:ai": "tsx --test tests/*.test.ts",
     "test:resume-import": "tsx --test tests/resume-import.test.ts",
+    "test:font-size": "tsx tests/font-size.browser.ts",
     "build": "vite build",
     "start": "node server.mjs",
     "preview": "vite preview",

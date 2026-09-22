@@ -1,8 +1,5 @@
 import { DEFAULT_TEMPLATES } from "@/config";
-import {
-  initialResumeState,
-  initialResumeStateEn,
-} from "@/config/initialResumeData";
+import { initialResumeByLocale } from "@/i18n/localeContent";
 import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
 
@@ -12,14 +9,15 @@ export const TEMPLATE_SNAPSHOT_VERSION = 1;
 export const TEMPLATE_SNAPSHOT_ROOT_ATTRIBUTE = "data-template-snapshot-root";
 export const TEMPLATE_SNAPSHOT_ROOT_SELECTOR = `[${TEMPLATE_SNAPSHOT_ROOT_ATTRIBUTE}]`;
 export const TEMPLATE_SNAPSHOT_PUBLIC_DIR = "template-snapshots";
-export const TEMPLATE_PREVIEW_LOCALES = ["zh", "en"] as const;
+export const TEMPLATE_PREVIEW_LOCALES = ["zh", "en", "tl"] as const;
 
 export type TemplatePreviewLocale = (typeof TEMPLATE_PREVIEW_LOCALES)[number];
 
 export interface TemplateSnapshotManifest {
   version: number;
   generatedAt: string | null;
-  locales: Record<TemplatePreviewLocale, Record<string, string>>;
+  locales: Partial<Record<TemplatePreviewLocale, Record<string, string>>> &
+    Record<"zh" | "en", Record<string, string>>;
 }
 
 export const createEmptyTemplateSnapshotManifest =
@@ -29,20 +27,21 @@ export const createEmptyTemplateSnapshotManifest =
     locales: {
       zh: {},
       en: {},
+      tl: {},
     },
   });
 
 export const isTemplatePreviewLocale = (
   value: string | null | undefined
 ): value is TemplatePreviewLocale =>
-  value === "zh" || value === "en";
+  value === "zh" || value === "en" || value === "tl";
 
 export const getTemplateById = (templateId: string | undefined): ResumeTemplate =>
   DEFAULT_TEMPLATES.find((template) => template.id === templateId) ??
   DEFAULT_TEMPLATES[0];
 
 export const getTemplatePreviewBaseData = (locale: TemplatePreviewLocale) =>
-  locale === "en" ? initialResumeStateEn : initialResumeState;
+  initialResumeByLocale[locale];
 
 export const createTemplatePreviewData = (
   template: ResumeTemplate,
@@ -79,4 +78,7 @@ export const getTemplateSnapshotSrc = (
   manifest: TemplateSnapshotManifest,
   locale: TemplatePreviewLocale,
   templateId: string
-) => manifest.locales[locale][templateId] ?? null;
+) =>
+  manifest.locales[locale]?.[templateId] ??
+  (locale === "tl" ? manifest.locales.en?.[templateId] : null) ??
+  null;

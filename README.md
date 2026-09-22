@@ -8,7 +8,7 @@
 
 <a href="https://trendshift.io/repositories/13077" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13077" alt="Magic Resume | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-[简体中文](./README.zh-CN.md) | English
+[简体中文](./README.zh-CN.md) | English | [Filipino](./README.tl.md)
 
 </div>
 
@@ -30,6 +30,19 @@ Magic Resume is a modern online resume editor that makes creating professional r
 - 🔄 Real-time preview
 - 💾 Auto-save
 - 🔒 Local storage
+- 🌐 Multi-language UI (中文, English, Filipino)
+
+## 🌐 Languages
+
+Magic Resume supports three locales. Switch languages from the header, or open a locale directly:
+
+| Locale | Language | URL |
+| ------ | -------- | --- |
+| `zh` | 中文 (default) | `/zh` |
+| `en` | English | `/en` |
+| `tl` | Filipino / Tagalog | `/tl` |
+
+Translations live in [`src/i18n/locales/`](src/i18n/locales/). To add or update strings, edit the matching JSON file (for example `tl.json` for Filipino).
 
 ## 🛠️ Tech Stack
 
@@ -63,7 +76,7 @@ pnpm install
 pnpm dev
 ```
 
-4. Open browser and visit `http://localhost:3000`
+4. Open browser and visit `http://localhost:3000` (redirects to `/zh` by default, or try `/en` and `/tl`)
 
 ## 📦 Build and Deploy
 
@@ -112,7 +125,7 @@ Please see the [LICENSE](LICENSE) file for detailed terms.
 ## 🗺️ Roadmap
 
 - [x] AI-assisted writing
-- [x] Multi-language support
+- [x] Multi-language support (中文, English, Filipino)
 - [ ] Support for more resume templates
 - [x] Support for more export formats
 - [x] Import PDF, Markdown, etc.

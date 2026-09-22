@@ -1,6 +1,5 @@
 
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import throttle from "lodash/throttle";
 import { toast } from "sonner";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
@@ -81,56 +80,36 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     const internalResumeContentRef = useRef<HTMLDivElement>(null);
     const resumeContentRef = (ref as React.MutableRefObject<HTMLDivElement>) || internalResumeContentRef;
     const [contentHeight, setContentHeight] = useState(0);
-
-    const updateContentHeight = () => {
-      if (resumeContentRef.current) {
-        const height = resumeContentRef.current.clientHeight;
-        if (height > 0) {
-          if (height !== contentHeight) {
-            setContentHeight(height);
-          }
-        }
-      }
-    };
+    const hasActiveResume = Boolean(activeResume);
 
     useEffect(() => {
-      const debouncedUpdate = throttle(() => {
-        requestAnimationFrame(() => {
-          updateContentHeight();
-        });
-      }, 100);
+      const element = resumeContentRef.current;
+      if (!hasActiveResume || !element) return;
 
-      const observer = new MutationObserver(debouncedUpdate);
+      let frameId: number | undefined;
+      const updateContentHeight = () => {
+        frameId = undefined;
+        const height = element.clientHeight;
+        if (height > 0) {
+          setContentHeight((previous) => previous === height ? previous : height);
+        }
+      };
+      const resizeObserver = new ResizeObserver(() => {
+        if (frameId === undefined) {
+          frameId = requestAnimationFrame(updateContentHeight);
+        }
+      });
 
-      if (resumeContentRef.current) {
-        observer.observe(resumeContentRef.current, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          characterData: true,
-        });
-
-        updateContentHeight();
-      }
-
-      const resizeObserver = new ResizeObserver(debouncedUpdate);
-
-      if (resumeContentRef.current) {
-        resizeObserver.observe(resumeContentRef.current);
-      }
+      // Observe layout size, including padding, rather than every animation/style
+      // mutation. CSS transforms do not change the measured layout dimensions.
+      resizeObserver.observe(element, { box: "border-box" });
+      updateContentHeight();
 
       return () => {
-        observer.disconnect();
         resizeObserver.disconnect();
+        if (frameId !== undefined) cancelAnimationFrame(frameId);
       };
-    }, []);
-
-    useEffect(() => {
-      if (activeResume) {
-        const timer = setTimeout(updateContentHeight, 300);
-        return () => clearTimeout(timer);
-      }
-    }, [activeResume]);
+    }, [hasActiveResume, resumeContentRef]);
 
     const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
     const autoOnePageEnabled = activeResume?.globalSettings?.autoOnePage || false;
@@ -222,12 +201,13 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               onClickCapture={handlePreviewClickCapture}
               style={{
                 fontFamily: selectedFontFamily,
-                padding: `${activeResume.globalSettings?.pagePadding}px`,
+                padding: `${pagePadding}px`,
+                // Keep line wrapping independent of the scale computed from height.
+                width: "100%",
                 ...(isScaled
                   ? {
                     transform: `scale(${scaleFactor})`,
                     transformOrigin: "top left",
-                    width: `${100 / scaleFactor}%`,
                   }
                   : {}),
               }}
@@ -275,7 +255,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               <ResumeTemplateComponent data={activeResume} template={template} />
               {pageBreakLinesVisible && contentHeight > 0 && (
                 <>
-                  <div key={`page-breaks-container-${contentHeight}`}>
+                  <div>
                     {Array.from(
                       { length: Math.min(pageBreakCount, 20) },
                       (_, i) => {

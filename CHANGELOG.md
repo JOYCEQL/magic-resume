@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.0.9
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.8...v2.0.9)
+
+### 🚀 Enhancements
+
+- Implement multi-model AI configuration, PDF import, and state migration ([6407663](https://github.com/JOYCEQL/magic-resume/commit/6407663))
+
+### 🩹 Fixes
+
+- Use runtime-safe AI provider networking ([0181e37](https://github.com/JOYCEQL/magic-resume/commit/0181e37))
+- Stop auto one-page preview layout oscillation and add browser regression coverage ([a9df7c5](https://github.com/JOYCEQL/magic-resume/commit/a9df7c5), [#384](https://github.com/JOYCEQL/magic-resume/issues/384))
+
 
 ## v2.0.8
 

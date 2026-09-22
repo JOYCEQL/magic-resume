@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import type { jsPDF as JsPDF } from "jspdf";
 import { PDF_EXPORT_CONFIG } from "@/config";
 import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
+import { cloneResumeForExport } from "@/utils/resumeLayout";
 import { ResumeData } from "@/types/resume";
 import { generateResumeMarkdown, ResumeMarkdownOptions } from "@/utils/markdown";
 
@@ -205,34 +206,14 @@ const hidePageBreakLines = (element: HTMLElement) => {
 };
 
 const removeLongPageHeightConstraints = (element: HTMLElement) => {
-  // The one-page preview may shrink the whole resume with a CSS transform.
-  // Capturing that transformed clone and then stretching it back to 210 mm
-  // makes raster content such as the profile photo noticeably blurry.
-  // Long-page exports should render at the document's natural A4 width.
-  element.style.setProperty("transform", "none", "important");
-  element.style.setProperty("transform-origin", "top left", "important");
+  // 保留内层的最终宽度和缩放，不在长图导出时重新排版。
   element.style.setProperty("width", "100%", "important");
-
-  const rootElement = element.firstElementChild as HTMLElement | null;
-  if (rootElement) {
-    rootElement.style.setProperty("height", "auto", "important");
-    rootElement.style.setProperty("min-height", "0", "important");
-  }
 
   const constrainedElements = element.querySelectorAll<HTMLElement>(".min-h-screen, .min-h-full, .editorial-print-container");
   constrainedElements.forEach((node) => {
     node.style.setProperty("height", "auto", "important");
     node.style.setProperty("min-height", "0", "important");
   });
-};
-
-const getPreviewScale = (element: HTMLElement) => {
-  const transformValue = element.style.transform || "";
-  const scaleMatch = transformValue.match(/scale\(([\d.]+)\)/);
-  if (!scaleMatch) return 1;
-
-  const scale = Number(scaleMatch[1]);
-  return Number.isFinite(scale) && scale > 0 ? scale : 1;
 };
 
 const waitForImages = async (element: HTMLElement) => {
@@ -331,8 +312,7 @@ const prepareLongPageCapture = async ({
     }
 
     const selectedFontFamily = normalizeFontFamily(fontFamily);
-    const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
-    const previewScale = getPreviewScale(clonedElement);
+    const clonedElement = cloneResumeForExport(pdfElement);
     hidePageBreakLines(clonedElement);
     removeLongPageHeightConstraints(clonedElement);
     await optimizeImages(clonedElement);
@@ -345,7 +325,7 @@ const prepareLongPageCapture = async ({
     const bottomSpacer = document.createElement("div");
     bottomSpacer.setAttribute("aria-hidden", "true");
     bottomSpacer.style.width = "100%";
-    bottomSpacer.style.height = `${Math.ceil(LONG_PAGE_BOTTOM_SAFE_AREA_PX / previewScale)}px`;
+    bottomSpacer.style.height = `${LONG_PAGE_BOTTOM_SAFE_AREA_PX}px`;
     bottomSpacer.style.pointerEvents = "none";
     clonedElement.appendChild(bottomSpacer);
 
@@ -378,7 +358,7 @@ const prepareLongPageCapture = async ({
       renderedRect.width || clonedElement.scrollWidth || A4_WIDTH_MM * PX_PER_MM;
     const contentHeightPx = Math.max(
       renderedRect.height,
-      clonedElement.scrollHeight * previewScale,
+      clonedElement.scrollHeight,
       1
     );
     const pageHeightMm = Math.max(
@@ -563,25 +543,9 @@ export const exportToPdf = async ({
       throw new Error(`PDF element #${elementId} not found`);
     }
 
-    const clonedElement = pdfElement.cloneNode(true) as HTMLElement;
+    const clonedElement = cloneResumeForExport(pdfElement, true);
     const selectedFontFamily = normalizeFontFamily(fontFamily);
-    const transformValue = clonedElement.style.transform || "";
-    const scaleMatch = transformValue.match(/scale\(([\d.]+)\)/);
-    
-    if (scaleMatch) {
-      const scale = Number(scaleMatch[1]);
-      if (Number.isFinite(scale) && scale > 0 && scale < 1) {
-        // 服务端导出前将 transform 缩放转为 zoom，避免分页计算偏差
-        clonedElement.style.removeProperty("transform");
-        clonedElement.style.removeProperty("transform-origin");
-        clonedElement.style.setProperty("width", "100%", "important");
-        clonedElement.style.setProperty("zoom", String(scale));
-      }
-    }
-
-    // 采用 PdfExport.tsx 中的逻辑，统一宽度和 padding 处理
-    clonedElement.style.setProperty("width", "100%", "important");
-    clonedElement.style.setProperty("padding", "0", "important");
+    // 内层保留预览的 zoom 和排版宽度，仅把外层 padding 转为 PDF 页边距。
     clonedElement.style.setProperty("box-sizing", "border-box");
     clonedElement.style.setProperty("font-family", selectedFontFamily, "important");
 

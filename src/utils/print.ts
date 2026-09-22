@@ -1,3 +1,4 @@
+import { cloneResumeForExport } from "@/utils/resumeLayout";
 import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
 
 export const exportResumeToBrowserPrint = async (
@@ -25,21 +26,8 @@ export const exportResumeToBrowserPrint = async (
   try {
     iframeWindow.document.open();
 
-    const clonedContent = resumeContent.cloneNode(true) as HTMLElement;
+    const clonedContent = cloneResumeForExport(resumeContent, true);
     const selectedFontFamily = normalizeFontFamily(fontFamily);
-    const transformValue = clonedContent.style.transform || "";
-    const match = transformValue.match(/scale\(([\d.]+)\)/);
-    if (match) {
-      const scale = Number(match[1]);
-      if (Number.isFinite(scale) && scale > 0 && scale < 1) {
-        // 打印时使用 zoom 参与分页布局计算，比 transform 更接近最终分页效果
-        clonedContent.style.removeProperty("transform");
-        clonedContent.style.removeProperty("transform-origin");
-        clonedContent.style.setProperty("width", "100%");
-        clonedContent.style.setProperty("zoom", String(scale));
-      }
-    }
-
     clonedContent.style.setProperty("font-family", selectedFontFamily, "important");
     const fontFaceStyles = await getFontFaceCss(selectedFontFamily);
 
@@ -53,7 +41,7 @@ export const exportResumeToBrowserPrint = async (
 
             @page {
               size: A4;
-              margin: 0;
+              margin: ${pagePadding}px;
               padding: 0;
             }
             * {
@@ -75,7 +63,7 @@ export const exportResumeToBrowserPrint = async (
 
             #resume-preview {
               margin: 0 !important;
-              padding: ${pagePadding}px !important;
+              padding: 0 !important;
               -webkit-box-decoration-break: clone;
               box-decoration-break: clone;
               font-family: ${selectedFontFamily} !important;
@@ -83,7 +71,7 @@ export const exportResumeToBrowserPrint = async (
             }
 
             #print-content {
-              width: 210mm;
+              width: calc(210mm - ${2 * pagePadding}px);
               margin: 0 auto;
               padding: 0;
               background: white;
@@ -93,12 +81,6 @@ export const exportResumeToBrowserPrint = async (
               box-shadow: none !important;
             }
 
-            #resume-preview .min-h-screen,
-            #resume-preview .min-h-full,
-            #resume-preview [style*="min-height"] {
-              min-height: 0 !important;
-            }
-            
             .page-break-line {
               display: none;
             }

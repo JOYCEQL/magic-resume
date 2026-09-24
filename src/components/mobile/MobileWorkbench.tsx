@@ -21,7 +21,7 @@ export function MobileWorkbench() {
     <button
       onClick={() => setActiveTab(tab)}
       className={cn(
-        "flex flex-col items-center justify-center py-2 px-4 flex-1 transition-colors",
+        "relative flex flex-1 flex-col items-center justify-center px-4 py-2 transition-colors",
         activeTab === tab
           ? "text-primary"
           : "text-muted-foreground hover:text-primary/80"
@@ -34,14 +34,14 @@ export function MobileWorkbench() {
       {activeTab === tab && (
         <motion.div
           layoutId="mobile-nav-indicator"
-          className="absolute bottom-0 w-12 h-1 bg-primary rounded-t-full"
+          className="absolute top-0 h-1 w-12 rounded-b-full bg-primary"
         />
       )}
     </button>
   );
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] bg-background">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background">
       {/* 主要内容区域 */}
       <div className="flex-1 overflow-hidden relative">
         <AnimatePresence mode="wait">
@@ -138,10 +138,12 @@ export function MobileWorkbench() {
       </div>
 
       {/* 底部导航栏 */}
-      <div className="h-16 border-t bg-background flex items-center justify-around relative shadow-[0_-1px_3px_rgba(0,0,0,0.05)] z-50">
-        {renderNavItem("content", <FileText className="w-5 h-5" />, "内容")}
-        {renderNavItem("style", <Palette className="w-5 h-5" />, "样式")}
-        {renderNavItem("preview", <Eye className="w-5 h-5" />, "预览")}
+      <div className="relative z-50 shrink-0 border-t bg-background pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+        <div className="flex h-16 items-center justify-around">
+          {renderNavItem("content", <FileText className="w-5 h-5" />, "内容")}
+          {renderNavItem("style", <Palette className="w-5 h-5" />, "样式")}
+          {renderNavItem("preview", <Eye className="w-5 h-5" />, "预览")}
+        </div>
       </div>
     </div>
   );

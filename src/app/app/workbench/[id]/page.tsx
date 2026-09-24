@@ -280,14 +280,13 @@ export default function Home() {
   return (
     <main
       className={cn(
-        "w-full min-h-screen  overflow-hidden",
-        "w-full min-h-screen overflow-hidden",
+        "flex h-screen h-[100dvh] w-full flex-col overflow-hidden",
         "bg-background text-foreground"
       )}
     >
       <EditorHeader />
       {/* 桌面端布局 */}
-      <div className="hidden md:block h-[calc(100vh-64px)] relative flex w-full">
+      <div className="relative hidden min-h-0 flex-1 w-full md:block">
         <div className={cn(
           "h-full transition-all duration-300",
           previewPanelCollapsed ? "w-[calc(100%-4rem)]" : "w-full"
@@ -371,7 +370,7 @@ export default function Home() {
       </div>
 
       {/* 移动端布局 */}
-      <div className="md:hidden h-[calc(100vh-64px)]">
+      <div className="min-h-0 flex-1 md:hidden">
         <MobileWorkbench />
       </div>
     </main>

@@ -13,6 +13,7 @@ import { useState, useCallback } from "react";
 import Field from "../Field";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
+import LogoSelector from "@/components/shared/LogoSelector";
 
 interface EducationEditorProps {
   education: Education;
@@ -48,6 +49,26 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
             value={education.major}
             onChange={(value) => handleChange("major", value)}
             placeholder={t("placeholders.major")}
+          />
+        </div>
+
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={education.logo}
+            config={education.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...education,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...education,
+                logoConfig: config,
+              });
+            }}
           />
         </div>
 
@@ -87,7 +108,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
         <Field
           label={t("labels.description")}
-          value={education.description}
+          value={education.description || ""}
           onChange={(value) => handleChange("description", value)}
           type="editor"
           placeholder={t("placeholders.description")}

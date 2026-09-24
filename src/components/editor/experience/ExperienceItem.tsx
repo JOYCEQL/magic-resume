@@ -13,6 +13,7 @@ import { Experience } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useTranslations } from "@/i18n/compat/client";
+import LogoSelector from "@/components/shared/LogoSelector";
 
 interface ProjectEditorProps {
   experience: Experience;
@@ -49,6 +50,25 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
             value={experience.position}
             onChange={(value) => handleChange("position", value)}
             placeholder={t("placeholders.position")}
+          />
+        </div>
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={experience.logo}
+            config={experience.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...experience,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...experience,
+                logoConfig: config,
+              });
+            }}
           />
         </div>
         <Field

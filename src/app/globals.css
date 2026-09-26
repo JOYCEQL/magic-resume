@@ -136,7 +136,11 @@
   }
 
   body.workbench-body-lock {
-    overflow-y: hidden;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
 

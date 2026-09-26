@@ -4,7 +4,8 @@ import { useTranslations } from "@/i18n/compat/client";
 import StarterKit from "@tiptap/starter-kit";
 import { ListKit } from "@tiptap/extension-list";
 import TextAlign from "@tiptap/extension-text-align";
-import { TextStyle } from "@tiptap/extension-text-style";
+import { FontSize, TextStyle } from "@tiptap/extension-text-style";
+import FontSizeSelect from "./FontSizeSelect";
 import Underline from "@tiptap/extension-underline";
 import Color from "@tiptap/extension-color";
 import Link from "@tiptap/extension-link";
@@ -471,6 +472,7 @@ const RichTextEditor = ({
         alignments: ["left", "center", "right", "justify"],
       }),
       TextStyle,
+      FontSize,
       Underline,
       Color,
       Link.configure({
@@ -561,7 +563,7 @@ const RichTextEditor = ({
           "bg-background dark:bg-neutral-900/50 dark:border-neutral-800"
         )}
       >
-        <div className="flex items-center gap-0.5">
+        <div className="flex flex-wrap items-center gap-0.5">
           <MenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive("bold")}
@@ -586,6 +588,7 @@ const RichTextEditor = ({
           <LinkButton editor={editor} />
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
+          <FontSizeSelect editor={editor} />
         </div>
 
         <div className={cn("h-5 w-px", "bg-border/60 dark:bg-neutral-800")} />

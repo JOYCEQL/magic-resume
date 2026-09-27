@@ -13,7 +13,7 @@ const FONT_SIZES = [12, 13, 14, 15, 16, 18, 20, 24];
 function readSelection(editor: Editor) {
   const { doc, selection } = editor.state;
   const sizes = new Set<string>();
-    // 检查选区内的每个文本节点；光标 marks 无法识别混合字号。
+  // 检查选区内的每个文本节点；光标 marks 无法识别混合字号。
   if (!selection.empty) {
     doc.nodesBetween(selection.from, selection.to, (node) => {
       if (node.isText) {

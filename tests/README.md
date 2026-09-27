@@ -6,6 +6,26 @@
 pnpm test:ai
 ```
 
+This includes the numeric-content import regression tests in
+`resume-import-content.test.ts` and the existing AI/import tests.
+
+## Mobile workbench regression
+
+With a production server running (`pnpm build && pnpm start`), install both
+browsers and run:
+
+```sh
+pnpm exec playwright install chromium webkit
+pnpm test:mobile
+```
+
+Use production mode to avoid the development-only React Grab overlay intercepting
+touch input. Set `TEST_BASE_URL` to use another server address. The suite checks tab switching,
+short and narrow viewports, simulated 34px bottom insets, editing, desktop layout,
+and releasing the page scroll lock when leaving the workbench in Chromium and
+WebKit. Viewport resizing approximates available-space changes; physical iOS
+keyboard and Safari toolbar behavior still require a device check.
+
 ## Body font size browser regression
 
 Requires Node.js 20.19+ (or a supported newer release), the project's pnpm

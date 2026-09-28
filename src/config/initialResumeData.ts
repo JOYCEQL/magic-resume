@@ -379,3 +379,133 @@ export const blankResumeStateEn = {
   certificates: [],
   menuSections: [initialResumeStateEn.menuSections[0]],
 };
+
+export const initialResumeStateTl = {
+  ...initialResumeStateEn,
+  title: "Bagong Resume",
+  basic: {
+    ...initialResumeStateEn.basic,
+    name: "Juan",
+    title: "Senior Frontend Engineer",
+    employementStatus: "Available",
+    email: "juan.delacruz@example.com",
+    phone: "0917-123-4567",
+    location: "Makati, Metro Manila",
+  },
+  education: [
+    {
+      ...initialResumeStateEn.education[0],
+      school: "University of the Philippines",
+      major: "Computer Science",
+      description: `<ul>
+        <li>Mga pangunahing kurso: Data Structures, Algorithms, Operating Systems, Computer Networks, Web Development</li>
+        <li>Nasa top 5% ng klase, tumanggap ng Dean's List honors sa tatlong sunod-sunod na taon</li>
+        <li>Nagsilbing Technical Director ng Computer Science Association, nag-organisa ng maraming tech workshop</li>
+        <li>Nag-ambag sa open-source projects, nakuha ang GitHub Campus Expert certification</li>
+      </ul>`,
+    },
+  ],
+  skillContent: `<div class="skill-content">
+  <ul>
+    <li>Frontend Frameworks: React, Vue.js, Next.js, Nuxt.js at iba pang SSR frameworks</li>
+    <li>Mga Wika: TypeScript, JavaScript(ES6+), HTML5, CSS3</li>
+    <li>UI/Styling: TailwindCSS, Sass/Less, CSS Modules, Styled-components</li>
+    <li>State Management: Redux, Vuex, Zustand, Jotai, React Query</li>
+    <li>Build Tools: Webpack, Vite, Rollup, Babel, ESLint</li>
+    <li>Testing: Jest, React Testing Library, Cypress</li>
+    <li>Performance: Browser rendering principles, performance metrics monitoring, code splitting, lazy loading</li>
+    <li>Version Control: Git, SVN</li>
+    <li>Technical Leadership: May karanasan sa team management, nanguna sa technology selection at architecture design para sa malalaking proyekto</li>
+  </ul>
+</div>`,
+  experience: [
+    {
+      ...initialResumeStateEn.experience[0],
+      company: "Grab Philippines",
+      position: "Senior Frontend Engineer",
+      details: `<ul>
+      <li>Responsable sa development at maintenance ng Creator Platform, nanguna sa technical solution design para sa core features</li>
+      <li>Na-optimize ang build configuration, binawasan ang build time mula 8 minuto patungong 2 minuto</li>
+      <li>Nag-disenyo at nag-implement ng component library, tumaas ang code reuse ng 70%</li>
+      <li>Nanguna sa performance optimization project, binawasan ang first-screen loading time ng 50%</li>
+      <li>Nag-mentor sa junior engineers, nag-organisa ng technical sharing sessions</li>
+    </ul>`,
+    },
+  ],
+  projects: initialResumeStateEn.projects.map((project) => ({
+    ...project,
+    name:
+      project.id === "p1"
+        ? "Creator Platform"
+        : project.id === "p2"
+          ? "Mini Program Developer Tools"
+          : "Frontend Monitoring Platform",
+    role:
+      project.id === "p1"
+        ? "Frontend Lead"
+        : project.id === "p2"
+          ? "Core Developer"
+          : "Technical Lead",
+  })),
+  menuSections: [
+    {
+      id: "basic",
+      title: "Profile",
+      icon: "👤",
+      enabled: true,
+      order: 0,
+    },
+    {
+      id: "skills",
+      title: "Mga Kasanayan",
+      icon: "⚡",
+      enabled: true,
+      order: 1,
+    },
+    {
+      id: "experience",
+      title: "Karanasan",
+      icon: "💼",
+      enabled: true,
+      order: 2,
+    },
+    {
+      id: "projects",
+      title: "Mga Proyekto",
+      icon: "🚀",
+      enabled: true,
+      order: 3,
+    },
+    {
+      id: "education",
+      title: "Edukasyon",
+      icon: "🎓",
+      enabled: true,
+      order: 4,
+    },
+  ],
+};
+
+export const blankResumeStateTl = {
+  ...initialResumeStateTl,
+  title: "Bagong Resume",
+  basic: {
+    ...initialResumeStateTl.basic,
+    name: "",
+    title: "",
+    email: "",
+    phone: "",
+    location: "",
+    birthDate: "",
+    employementStatus: "",
+    photo: "",
+    customFields: [],
+  },
+  education: [],
+  skillContent: "",
+  selfEvaluationContent: "",
+  experience: [],
+  projects: [],
+  certificates: [],
+  menuSections: [initialResumeStateTl.menuSections[0]],
+};

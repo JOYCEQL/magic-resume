@@ -9,7 +9,7 @@
 <a href="https://trendshift.io/repositories/13077" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13077" alt="Magic Resume | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 
-简体中文 | [English](./README.md)
+简体中文 | [English](./README.md) | [Filipino](./README.tl.md)
 
 </div>
 
@@ -30,6 +30,19 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
 - 🔄 实时预览
 - 💾 自动保存
 - 🔒 硬盘级存储
+- 🌐 多语言界面（中文、English、Filipino）
+
+## 🌐 语言支持
+
+Magic Resume 支持三种语言，可在页面顶部切换，或直接访问对应路径：
+
+| 语言代码 | 语言 | 路径 |
+| -------- | ---- | ---- |
+| `zh` | 中文（默认） | `/zh` |
+| `en` | English | `/en` |
+| `tl` | Filipino / Tagalog | `/tl` |
+
+翻译文件位于 [`src/i18n/locales/`](src/i18n/locales/)，如需新增或修改文案，请编辑对应的 JSON 文件（例如 Filipino 对应 `tl.json`）。
 
 ## 🛠️ 技术栈
 
@@ -63,7 +76,7 @@ pnpm install
 pnpm dev
 ```
 
-4. 打开浏览器访问 `http://localhost:3000`
+4. 打开浏览器访问 `http://localhost:3000`（默认跳转到 `/zh`，也可访问 `/en` 和 `/tl`）
 
 ## 📦 构建打包
 
@@ -112,7 +125,7 @@ docker compose up -d
 ## 🗺️ 路线图
 
 - [x] AI 辅助编写
-- [x] 多语言支持
+- [x] 多语言支持（中文、English、Filipino）
 - [ ] 支持更多简历模板
 - [x] 更多格式导出
 - [x] 自定义模型

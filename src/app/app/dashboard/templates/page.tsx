@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ResumeTemplateComponent from "@/components/templates";
-import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
+import { initialResumeByLocale } from "@/i18n/localeContent";
+import type { Locale } from "@/i18n/config";
 import type { ResumeTemplate } from "@/types/template";
 import { normalizeFontFamily } from "@/utils/fonts";
 
@@ -32,8 +33,7 @@ const getTemplateKey = (templateId: string) =>
   templateId === "left-right" ? "leftRight" : templateId;
 
 type TemplatePreviewBaseData =
-  | typeof initialResumeState
-  | typeof initialResumeStateEn;
+  (typeof initialResumeByLocale)[Locale];
 
 const buildTemplatePreviewData = (
   baseData: TemplatePreviewBaseData,
@@ -235,7 +235,7 @@ const TemplatesPage = () => {
     }
   };
 
-  const baseData = locale === "en" ? initialResumeStateEn : initialResumeState;
+  const baseData = initialResumeByLocale[locale as Locale] ?? initialResumeByLocale.zh;
   const activePreviewTemplate =
     DEFAULT_TEMPLATES.find((template) => template.id === previewTemplate) ??
     null;

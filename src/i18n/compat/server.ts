@@ -1,14 +1,13 @@
 import { defaultLocale, Locale } from "@/i18n/config";
-import zhMessages from "@/i18n/locales/zh.json";
-import enMessages from "@/i18n/locales/en.json";
+import { getMessagesForLocale, messagesByLocale } from "@/i18n/messages";
 import { createTranslator } from "./utils";
 
 type Messages = Record<string, unknown>;
 
-const MESSAGES: Record<Locale, Messages> = {
-  zh: zhMessages as Messages,
-  en: enMessages as Messages
-};
+const MESSAGES: Record<Locale, Messages> = messagesByLocale as Record<
+  Locale,
+  Messages
+>;
 
 let requestLocale: Locale = defaultLocale;
 

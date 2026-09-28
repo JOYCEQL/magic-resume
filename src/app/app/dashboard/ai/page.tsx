@@ -83,7 +83,7 @@ function ModelCard({
         <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground">{model.name}</h3>
+            <h3 className="min-w-0 break-all text-sm font-semibold text-foreground">{model.name}</h3>
             {model.recommended && (
               <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
                 {t("recommended")}
@@ -343,6 +343,8 @@ export default function AISettingsPage() {
     const controller = new AbortController();
     modelFetchController.current = controller;
     setFetchingModels(true);
+    setFetchedModels([]);
+    setModelListOpen(false);
 
     try {
       const response = await fetch("/api/models", {
@@ -360,9 +362,9 @@ export default function AISettingsPage() {
         code?: string;
       } | null;
       if (requestRevision !== modelFetchRevision.current) return;
-      if (!response.ok || !data?.models) {
+      if (!response.ok || !Array.isArray(data?.models)) {
         toast.error(
-          data?.code
+          data?.code && typeof t.raw(`fetchModels.errors.${data.code}`) === "string"
             ? t(`fetchModels.errors.${data.code}`)
             : t("fetchModels.failed"),
         );
@@ -623,7 +625,7 @@ export default function AISettingsPage() {
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-semibold tracking-tight text-foreground">
-                    {t("builtinModels")}
+                    {t("availableModels")}
                   </h3>
                   <span className="rounded-full border border-border/80 bg-muted/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
                     {t("modelCount", {

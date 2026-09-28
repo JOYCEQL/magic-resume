@@ -68,6 +68,20 @@ async function getProxyTransport(
   return proxyTransport;
 }
 
+/** Share the runtime-safe, provider-scoped transport across all AI endpoints. */
+export async function fetchAIProvider(
+  provider: AIConnection["provider"],
+  url: Parameters<typeof fetch>[0],
+  options: RequestInit,
+  fetcher: typeof fetch = fetch,
+) {
+  const transport = await getProxyTransport(provider, fetcher);
+  return (transport?.fetcher ?? fetcher)(url, {
+    ...options,
+    ...(transport ? { dispatcher: transport.dispatcher } : {}),
+  } as RequestInit);
+}
+
 function waitForRetry(delay: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
     if (signal.aborted) {
@@ -323,20 +337,22 @@ export async function fetchAI(
   fetcher: typeof fetch = fetch,
 ) {
   const request = buildAIRequest(connection, input);
-  const transport = await getProxyTransport(connection.provider, fetcher);
-  const requestFetch = transport?.fetcher ?? fetcher;
   const body = JSON.stringify(request.body);
   let response: Response | undefined;
   for (let attempt = 0; attempt <= UPSTREAM_RETRY_DELAYS_MS.length; attempt++) {
     try {
-      response = await requestFetch(request.url, {
-        method: "POST",
-        headers: request.headers,
-        body,
-        signal,
-        redirect: "manual",
-        ...(transport ? { dispatcher: transport.dispatcher } : {}),
-      } as RequestInit);
+      response = await fetchAIProvider(
+        connection.provider,
+        request.url,
+        {
+          method: "POST",
+          headers: request.headers,
+          body,
+          signal,
+          redirect: "manual",
+        },
+        fetcher,
+      );
     } catch (error) {
       console.error("[ai-provider] Network request failed", {
         provider: connection.provider,

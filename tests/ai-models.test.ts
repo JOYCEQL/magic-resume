@@ -196,3 +196,87 @@ test("invalid upstream model list payloads return an upstream error", async () =
   assert.equal(response.status, 502);
   assert.equal((await response.json()).code, "upstreamError");
 });
+
+test("model discovery caps and deduplicates large catalogs", async () => {
+  const response = await handleModelsRequest(
+    modelsRequest({ provider: "openai", apiKey: "test-key" }),
+    (async () => Response.json({ data: [
+      { id: "model-0000" },
+      ...Array.from({ length: 550 }, (_, i) => ({ id: `model-${String(i).padStart(4, "0")}` })),
+    ] })) as typeof fetch,
+  );
+  const { models } = await response.json();
+  assert.equal(models.length, 500);
+  assert.equal(new Set(models.map((model: { id: string }) => model.id)).size, 500);
+});
+
+test("pagination stops when upstream repeats its cursor", async () => {
+  for (const provider of ["gemini", "anthropic"]) {
+    let requests = 0;
+    const response = await handleModelsRequest(
+      modelsRequest({ provider, apiKey: "test-key" }),
+      (async () => {
+        requests++;
+        return Response.json(provider === "gemini"
+          ? { models: [{ name: "models/test", supportedGenerationMethods: ["generateContent"] }], nextPageToken: "same" }
+          : { data: [{ id: "test" }], has_more: true, last_id: "same" });
+      }) as typeof fetch,
+    );
+    assert.equal(response.status, 200);
+    assert.equal(requests, 2);
+    assert.equal((await response.json()).models.length, 1);
+  }
+});
+
+test("discovery cancels oversized upstream bodies", async () => {
+  let cancelled = false;
+  const response = await handleModelsRequest(
+    modelsRequest({ provider: "qwen", apiKey: "test-key" }),
+    (async () => new Response(new ReadableStream({
+      start(controller) { controller.enqueue(new Uint8Array(2 * 1024 * 1024 + 1)); },
+      cancel() { cancelled = true; },
+    }))) as typeof fetch,
+  );
+  assert.equal(response.status, 502);
+  assert.equal((await response.json()).code, "upstreamError");
+  assert.equal(cancelled, true);
+});
+
+test("discovery forwards request cancellation", async () => {
+  const controller = new AbortController();
+  const request = new Request("http://localhost/api/models", {
+    method: "POST",
+    body: JSON.stringify({ provider: "openai", apiKey: "test-key" }),
+    signal: controller.signal,
+  });
+  let started!: () => void;
+  const ready = new Promise<void>((resolve) => { started = resolve; });
+  const pending = handleModelsRequest(request, (async (_url, options) => {
+    assert.equal(options?.redirect, "manual");
+    started();
+    await new Promise((_, reject) => {
+      options!.signal!.addEventListener("abort", () => reject(options!.signal!.reason), { once: true });
+    });
+    throw new Error("unreachable");
+  }) as typeof fetch);
+  await ready;
+  controller.abort();
+  const response = await pending;
+  assert.equal(response.status, 504);
+  assert.equal((await response.json()).code, "timeout");
+});
+
+test("discovery rejects upstream redirects without forwarding credentials", async () => {
+  let requests = 0;
+  const response = await handleModelsRequest(
+    modelsRequest({ provider: "openai", apiKey: "test-key" }),
+    (async (_url, options) => {
+      requests++;
+      assert.equal(options?.redirect, "manual");
+      return new Response(null, { status: 302, headers: { Location: "https://unexpected.example/models" } });
+    }) as typeof fetch,
+  );
+  assert.equal(requests, 1);
+  assert.equal(response.status, 502);
+  assert.equal((await response.json()).code, "modelOrEndpointError");
+});

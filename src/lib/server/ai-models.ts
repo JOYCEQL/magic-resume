@@ -6,8 +6,7 @@ import {
 import { ResumeImportError } from "../resume-import-schema";
 import { combineAbortSignals } from "../abort-signal";
 import { readLimitedJson } from "./ai-request";
-import { ensureGeminiProxyDispatcher } from "./gemini";
-import { asRecord, upstreamErrorCode } from "./ai-provider";
+import { asRecord, fetchAIProvider, upstreamErrorCode } from "./ai-provider";
 
 export interface FetchedModel {
   id: string;
@@ -58,7 +57,9 @@ async function readResponseJson(response: Response): Promise<unknown> {
 }
 
 function uniqueModels(models: FetchedModel[], sort = false) {
-  const unique = [...new Map(models.map((model) => [model.id, model])).values()];
+  const unique = Array.from(
+    new Map(models.map((model) => [model.id, model])).values(),
+  );
   if (sort) unique.sort((a, b) => a.id.localeCompare(b.id));
   return unique.slice(0, MAX_MODELS);
 }
@@ -80,7 +81,9 @@ async function fetchUpstream(
     method: "GET",
     headers,
     signal,
-    redirect: "error",
+    // Workers do not implement redirect: "error". Never forward credentials
+    // to a redirected endpoint; reject its response explicitly instead.
+    redirect: "manual",
   });
   if (!response.ok) {
     console.error("[ai-models] Upstream request failed", {
@@ -88,6 +91,8 @@ async function fetchUpstream(
       upstreamStatus: response.status,
     });
     if (response.body) await response.body.cancel().catch(() => {});
+    if (response.status >= 300 && response.status < 400)
+      throw new ResumeImportError("modelOrEndpointError", 502);
     throw new ResumeImportError(
       upstreamErrorCode(response.status),
       response.status >= 500 ? 502 : response.status,
@@ -221,27 +226,29 @@ async function fetchAnthropicModels(
     }
 
     const lastModel = asRecord(page.at(-1));
-    afterId = data.has_more === true
-      ? modelText(data.last_id, MAX_MODEL_ID_LENGTH) ||
-        modelText(lastModel.id, MAX_MODEL_ID_LENGTH) ||
-        undefined
-      : undefined;
+    afterId =
+      data.has_more === true
+        ? modelText(data.last_id, MAX_MODEL_ID_LENGTH) ||
+          modelText(lastModel.id, MAX_MODEL_ID_LENGTH) ||
+          undefined
+        : undefined;
     pages += 1;
   } while (afterId && pages < MAX_PAGES && models.length < MAX_MODELS);
 
   return uniqueModels(models);
 }
 
-export async function handleModelsRequest(request: Request, fetcher: typeof fetch = fetch) {
+export async function handleModelsRequest(
+  request: Request,
+  fetcher: typeof fetch = fetch,
+) {
   try {
     const body = asRecord(await readLimitedJson(request));
     const provider = AI_PROVIDERS.find((item) => item === body.provider);
     if (!provider) throw new ResumeImportError("invalidProvider");
     const preset = AI_PROVIDER_DEFINITIONS[provider];
     const apiKey = textValue(body.apiKey).trim();
-    const baseUrl = modelsBaseUrl(
-      textValue(body.baseUrl) || preset.baseUrl,
-    );
+    const baseUrl = modelsBaseUrl(textValue(body.baseUrl) || preset.baseUrl);
     if (!apiKey || apiKey.length > 4096 || /[\r\n]/.test(apiKey))
       throw new ResumeImportError("configRequired");
     if (!isValidBaseUrl(baseUrl)) throw new ResumeImportError("invalidEndpoint");
@@ -250,13 +257,14 @@ export async function handleModelsRequest(request: Request, fetcher: typeof fetc
       request.signal,
       AbortSignal.timeout(30_000),
     ]);
-    ensureGeminiProxyDispatcher();
+    const providerFetch: typeof fetch = (url, options) =>
+      fetchAIProvider(provider, url, options ?? {}, fetcher);
     const models =
       provider === "gemini"
-        ? await fetchGeminiModels(baseUrl, apiKey, signal, fetcher)
+        ? await fetchGeminiModels(baseUrl, apiKey, signal, providerFetch)
         : provider === "anthropic"
-          ? await fetchAnthropicModels(baseUrl, apiKey, signal, fetcher)
-          : await fetchOpenAICompatibleModels(baseUrl, apiKey, signal, fetcher);
+          ? await fetchAnthropicModels(baseUrl, apiKey, signal, providerFetch)
+          : await fetchOpenAICompatibleModels(baseUrl, apiKey, signal, providerFetch);
     return Response.json({ models });
   } catch (error) {
     const known = error instanceof ResumeImportError;

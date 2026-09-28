@@ -81,8 +81,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
-      <SidebarProvider open={open} onOpenChange={setOpen}>
+    <div className="flex h-dvh overflow-hidden bg-background">
+      <SidebarProvider className="min-h-0" open={open} onOpenChange={setOpen}>
         <Sidebar
           collapsible={collapsible}
           className="border-r border-border/40 bg-card/50 backdrop-blur-xl"
@@ -168,11 +168,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </SidebarContent>
           <SidebarFooter />
         </Sidebar>
-        <main className="flex-1 flex flex-col">
-          <div className="p-2">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <div className="shrink-0 p-2">
             <SidebarTrigger />
           </div>
-          <div className="flex-1">{children}</div>
+          <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
         </main>
       </SidebarProvider>
     </div>

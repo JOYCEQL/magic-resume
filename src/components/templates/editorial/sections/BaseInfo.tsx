@@ -58,7 +58,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
 
   const getIcon = (iconName: string | undefined) => {
     const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-    return IconComponent ? <IconComponent className="mt-[0.2em] h-3.5 w-3.5 shrink-0" /> : null;
+    return IconComponent ? <IconComponent className="h-3.5 w-3.5 shrink-0" /> : null;
   };
 
   const showPhoto = basic.photo && basic.photoConfig?.visible;
@@ -109,7 +109,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
             </div>
           )}
 
-          <motion.div layout="position" className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 w-[80%] flex-shrink-0" style={{ fontSize: `${globalSettings?.baseFontSize || 14}px` }}>
+          <motion.div layout="position" className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2 uppercase tracking-[0.05em] text-gray-500 w-[80%] flex-shrink-0" style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: 1.5 }}>
             {allFields.map((item) => {
               const customFieldHref =
                 item.custom && "href" in item && typeof item.href === "string"
@@ -119,7 +119,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
               return (
                 <div key={item.key} className="flex items-start gap-2">
                   {globalSettings?.useIconMode && (
-                    <span className="inline-flex shrink-0 text-gray-400">
+                    <span className="inline-flex h-[1.5em] shrink-0 items-center text-gray-400">
                       {getIcon(item.custom ? (item as any).icon : basic.icons?.[item.key as keyof typeof basic.icons])}
                     </span>
                   )}

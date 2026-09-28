@@ -23,7 +23,11 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
 
     const getIcon = (iconName: string | undefined) => {
         const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
-        return IconComponent ? <IconComponent className="mt-[0.2em] h-4 w-4 shrink-0" /> : null;
+        return IconComponent ? (
+            <span className="inline-flex h-[1.5em] shrink-0 items-center">
+                <IconComponent className="h-4 w-4 shrink-0" />
+            </span>
+        ) : null;
     };
 
     const getOrderedFields = React.useMemo(() => {
@@ -80,7 +84,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                         )}
                     </div>
                 </div>
-                <motion.div layout="position" className={styles.fields} style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, color: "rgb(75, 85, 99)", maxWidth: layout === "center" ? "none" : "600px" }}>
+                <motion.div layout="position" className={styles.fields} style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: 1.5, color: "rgb(75, 85, 99)", maxWidth: layout === "center" ? "none" : "600px" }}>
                     {allFields.map((item) => {
                         const customFieldHref = item.custom && "href" in item && typeof item.href === "string" ? item.href : null;
 

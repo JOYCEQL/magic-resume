@@ -1,11 +1,10 @@
-import { FileText, PenLine, Cpu, Sparkles, CheckCircle2 } from "lucide-react";
+import { FileText, PenLine, Cpu, Sparkles } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import {
   canModelParsePdf,
@@ -47,36 +46,33 @@ export function ModelAssignment({
           <article
             key={task}
             className={cn(
-              "group relative overflow-hidden rounded-2xl border bg-card/50 p-5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] backdrop-blur-sm transition-all duration-300",
+              "min-w-0 rounded-xl border bg-white/85 p-5 shadow-[0_1px_2px_rgba(28,28,24,0.035),0_4px_12px_rgba(28,28,24,0.02)] dark:bg-white/[0.035]",
               isAssigned
-                ? "border-border/90 hover:border-foreground/20 hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)]"
-                : "border-border/60 hover:border-border",
+                ? "border-border"
+                : "border-border/70",
             )}
           >
-            {/* Top delicate atmosphere gradient */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/[0.08] to-transparent" />
-
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-3.5">
                 <div
                   className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-all duration-300",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
                     isAssigned
-                      ? "border-border/80 bg-background text-foreground shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-                      : "border-border/50 bg-muted/30 text-muted-foreground",
+                      ? "bg-secondary/70 text-foreground"
+                      : "bg-secondary/40 text-muted-foreground",
                   )}
                 >
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-semibold tracking-tight text-foreground">
+                    <h2 className="font-sans text-sm font-semibold tracking-tight text-foreground">
                       {t(`${task}Title`)}
                     </h2>
                     {isAssigned && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                         <span className="h-1 w-1 rounded-full bg-emerald-500" />
-                        Active
+                        {t("active")}
                       </span>
                     )}
                   </div>
@@ -97,12 +93,12 @@ export function ModelAssignment({
                 <SelectTrigger
                   aria-label={t(`${task}Change`)}
                   className={cn(
-                    "h-11 rounded-xl border bg-background/80 text-sm font-medium transition-all duration-200",
-                    "hover:bg-background hover:border-foreground/20 focus:ring-1 focus:ring-foreground/20",
+                    "h-10 min-w-0 rounded-lg border border-border/80 bg-background/70 text-sm font-medium shadow-[inset_0_1px_2px_rgba(28,28,24,0.025)] transition-[background-color,border-color,box-shadow] duration-150 motion-reduce:transition-none",
+                    "hover:border-foreground/25 hover:bg-background focus:border-foreground/30 focus:ring-2 focus:ring-foreground/10 focus:ring-offset-0 data-[state=open]:border-foreground/30 data-[state=open]:bg-background",
                     !selectedId && "text-muted-foreground font-normal",
                   )}
                 >
-                  <div className="flex items-center gap-2 truncate">
+                  <div className="flex min-w-0 items-center gap-2 truncate">
                     {selectedId ? (
                       <>
                         <Cpu className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -117,7 +113,7 @@ export function ModelAssignment({
                     )}
                   </div>
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-border/80 p-1 shadow-lg">
+                <SelectContent className="rounded-xl border-border/80 bg-popover p-1 shadow-[0_4px_8px_rgba(28,28,24,0.06),0_12px_32px_rgba(28,28,24,0.1)]">
                   <SelectItem
                     value="none"
                     className="rounded-lg text-xs text-muted-foreground hover:text-foreground"
@@ -141,7 +137,7 @@ export function ModelAssignment({
             </div>
 
             {!options.length && (
-              <div className="mt-2.5 flex items-center gap-1.5 text-xs text-amber-600/90 dark:text-amber-400/90">
+              <div className="mt-2.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Sparkles className="h-3 w-3 shrink-0" />
                 <span>{t(task === "pdf" ? "noPdfModels" : "noModels")}</span>
               </div>

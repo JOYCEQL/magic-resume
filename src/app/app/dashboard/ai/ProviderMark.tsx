@@ -48,15 +48,17 @@ export function ProviderMark({ provider, compact = false }: Props) {
     <span
       aria-hidden
       className={cn(
-        "relative flex shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/95 shadow-[0_1px_3px_rgba(0,0,0,0.04)] ring-1 ring-black/[0.02] dark:ring-white/[0.04] transition-all duration-200",
-        compact ? "h-9 w-9" : "h-11 w-11",
+        "flex shrink-0 items-center justify-center rounded-lg",
+        compact
+          ? "h-9 w-9"
+          : "h-11 w-11 border border-border/60 bg-background/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:shadow-none",
       )}
     >
       <img
         src={theme.icon}
         alt=""
         className={cn(
-          "object-contain transition-transform duration-200",
+          "object-contain",
           compact ? "h-4 w-4" : "h-5 w-5",
           theme.monochrome && "dark:invert",
         )}

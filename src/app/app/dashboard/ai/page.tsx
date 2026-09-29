@@ -9,7 +9,6 @@ import {
   Wifi,
   Eye,
   EyeOff,
-  ShieldCheck,
   SlidersHorizontal,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -79,11 +78,11 @@ function ModelCard({
 
   return (
     <>
-      <article className="rounded-xl border border-border bg-card p-4 transition-all hover:border-border/80 shadow-sm">
+      <article className="rounded-xl border border-border/70 bg-background/30 p-4">
         <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="min-w-0 break-all text-sm font-semibold text-foreground">{model.name}</h3>
+            <h3 className="min-w-0 break-all font-sans text-sm font-semibold leading-5 text-foreground">{model.name}</h3>
             {model.recommended && (
               <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
                 {t("recommended")}
@@ -91,7 +90,7 @@ function ModelCard({
             )}
           </div>
           <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            {model.description}
+            {t(model.descriptionKey)}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-1.5">
@@ -109,7 +108,7 @@ function ModelCard({
         </div>
       </div>
 
-      <div className="mt-4 flex min-h-9 flex-wrap items-center gap-2 border-t border-border/60 pt-3">
+      <div className="mt-4 flex min-h-9 flex-wrap items-center gap-2 border-t border-border/50 pt-3">
         <Button
           type="button"
           size="sm"
@@ -118,7 +117,7 @@ function ModelCard({
             !isModelConfigured(profile) || test.state.status === "running"
           }
           onClick={() => test.run(model.supportsPdf ? "pdf" : "text")}
-          className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium"
+          className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none"
         >
           {test.state.status === "running" ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -134,7 +133,7 @@ function ModelCard({
             variant="ghost"
             onClick={() => setShowDeleteDialog(true)}
             aria-label={t("deleteModel", { model: model.name })}
-            className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium text-muted-foreground hover:text-destructive"
+            className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none text-muted-foreground hover:text-destructive"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>{t("delete")}</span>
@@ -408,30 +407,27 @@ export default function AISettingsPage() {
   ).length;
 
   return (
-    <div className="relative mx-auto w-full max-w-6xl px-4 pb-16 pt-8 sm:px-6 lg:px-8">
-      {/* Delicate background ambient aura */}
-      <div className="pointer-events-none absolute -top-20 left-1/2 -z-10 h-72 w-full max-w-4xl -translate-x-1/2 opacity-40 blur-3xl [background:radial-gradient(ellipse_at_top,_hsl(var(--primary)/0.08),_transparent_70%)]" />
-
-      {/* Page Header with Editorial Serif Feel */}
+    <div className="mx-auto w-full max-w-[1600px] px-4 py-8 sm:px-6">
       <header className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-2.5 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur-md mb-2.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
-              <span>
-                {configuredCount > 0
-                  ? `${configuredCount} / ${AI_PROVIDERS.length} 厂商已连接`
-                  : "尚未配置服务商"}
-              </span>
-            </div>
-            <h1 className="text-3xl font-serif font-medium tracking-tight text-foreground sm:text-4xl">
-              {t("title")}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground leading-relaxed">
-              {t("catalogDescription")}
-            </p>
+        <div className="flex min-h-[50px] flex-wrap items-center justify-between gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            {t("title")}
+          </h1>
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/60 px-3 py-1.5 text-xs text-muted-foreground dark:bg-white/[0.03]">
+            <span className={cn(
+              "h-1.5 w-1.5 rounded-full",
+              configuredCount > 0 ? "bg-emerald-500" : "bg-muted-foreground/40",
+            )} />
+            <span>
+              {configuredCount > 0
+                ? t("configuredProviders", { count: configuredCount, total: AI_PROVIDERS.length })
+                : t("noConfiguredProviders")}
+            </span>
           </div>
         </div>
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {t("catalogDescription")}
+        </p>
       </header>
 
       {/* Model Assignment Section */}
@@ -445,17 +441,17 @@ export default function AISettingsPage() {
         }}
       />
 
-      {/* Main Provider Studio Panel */}
-      <section className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-card/40 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.03)] transition-all">
+      {/* Provider configuration */}
+      <section className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-white/90 shadow-[0_1px_2px_rgba(28,28,24,0.025),0_8px_24px_rgba(28,28,24,0.025)] dark:bg-white/[0.035]">
         <div className="grid min-h-[560px] grid-cols-[230px_minmax(0,1fr)] md:grid-cols-[270px_minmax(0,1fr)]">
           {/* Left Sidebar: Providers Navigation */}
-          <aside className="border-r border-border/70 bg-muted/15 p-3.5 flex flex-col justify-between">
+          <aside className="border-r border-border/60 bg-background/80 p-4">
             <div>
-              <div className="px-2.5 pb-3 pt-1">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <div className="px-3 pb-4 pt-1">
+                <h2 className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
                   {t("providersTitle")}
                 </h2>
-                <p className="mt-1 text-[11px] text-muted-foreground/80">
+                <p className="mt-1 text-[11px] text-muted-foreground">
                   {t("providersHint")}
                 </p>
               </div>
@@ -469,6 +465,7 @@ export default function AISettingsPage() {
                     <button
                       key={item}
                       type="button"
+                      aria-pressed={active}
                       onClick={() => {
                         setProvider(item);
                         setShowKey(false);
@@ -476,16 +473,16 @@ export default function AISettingsPage() {
                         setModelListOpen(false);
                       }}
                       className={cn(
-                        "group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200",
+                        "group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.985] motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2",
                         active
-                          ? "bg-background shadow-[0_1px_3px_rgba(0,0,0,0.06)] border border-border/80 text-foreground"
-                          : "border border-transparent text-muted-foreground hover:bg-background/50 hover:text-foreground",
+                          ? "border border-border/70 bg-white text-foreground shadow-[0_1px_2px_rgba(28,28,24,0.04),0_3px_8px_rgba(28,28,24,0.035)] dark:bg-white/[0.07]"
+                          : "border border-transparent text-foreground/75 hover:bg-secondary/50 hover:text-foreground",
                       )}
                     >
                       <ProviderMark provider={item} compact />
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center justify-between">
-                          <span className="truncate text-sm font-medium">
+                          <span className={cn("truncate text-sm", active ? "font-semibold" : "font-medium")}>
                             {t(`providers.${item}`)}
                           </span>
                           {active && (
@@ -497,7 +494,7 @@ export default function AISettingsPage() {
                             className={cn(
                               "h-1.5 w-1.5 rounded-full transition-all",
                               configured
-                                ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]"
+                                ? "bg-emerald-500"
                                 : "bg-muted-foreground/30",
                             )}
                           />
@@ -511,25 +508,16 @@ export default function AISettingsPage() {
                 })}
               </div>
             </div>
-
-            {/* Bottom Security Note */}
-            <div className="rounded-xl border border-border/60 bg-background/50 p-3 text-[11px] text-muted-foreground leading-relaxed">
-              <div className="flex items-center gap-1.5 font-medium text-foreground mb-1">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span>隐私与安全保证</span>
-              </div>
-              <p>Key 仅保存在本地浏览器，AI 请求端到端直连官方，不经中间服务器转存。</p>
-            </div>
           </aside>
 
           {/* Right Workspace */}
-          <div className="p-6 sm:p-8">
+          <div className="min-w-0 p-6 sm:p-8">
             {/* Header of Active Provider */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border/60 pb-6">
+            <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3.5">
                 <ProviderMark provider={provider} />
                 <div>
-                  <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                  <h2 className="font-sans text-xl font-semibold tracking-tight text-foreground">
                     {t(`providers.${provider}`)}
                   </h2>
                   <p className="mt-0.5 text-xs text-muted-foreground">
@@ -542,7 +530,7 @@ export default function AISettingsPage() {
                 href={providerDefinition.keyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 shadow-sm transition-all"
+                className="inline-flex h-9 shrink-0 items-center gap-1.5 self-start rounded-lg border border-border bg-white/70 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/20 hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-white/[0.03] sm:self-auto"
               >
                 <span>{t("getKey")}</span>
                 <ExternalLink className="h-3 w-3" />
@@ -552,7 +540,7 @@ export default function AISettingsPage() {
             {/* API Key Input Section */}
             <div className="mt-6 space-y-3">
               <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
-                API Key
+                {t("apiKey")}
               </Label>
               <div className="relative flex items-center">
                 <Input
@@ -564,13 +552,13 @@ export default function AISettingsPage() {
                     syncProviderModels(provider, event.target.value)
                   }
                   placeholder={t("providerKeyPlaceholder")}
-                  className="h-11 rounded-xl border-border/80 bg-background/90 pr-10 font-mono text-xs tracking-wider shadow-sm focus:border-foreground/30 focus:ring-1 focus:ring-foreground/20"
+                  className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 p-1 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={showKey ? "Hide API key" : "Show API key"}
+                  className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={t(showKey ? "hideKey" : "showKey")}
                 >
                   {showKey ? (
                     <EyeOff className="h-4 w-4" />
@@ -586,7 +574,7 @@ export default function AISettingsPage() {
 
               {/* OpenAI Compatible Service Endpoint */}
               {provider === "openai" && (
-                <details className="group rounded-xl border border-border/60 bg-muted/20 p-3.5 transition-all">
+                <details className="group rounded-lg border border-border/60 bg-background/50 p-3.5">
                   <summary className="cursor-pointer text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-2 list-none">
                     <SlidersHorizontal className="h-3.5 w-3.5" />
                     <span>
@@ -594,10 +582,11 @@ export default function AISettingsPage() {
                         ? t("compatibleService")
                         : t("customEndpointActive")}
                     </span>
+                    <ChevronDown className="ml-auto h-3.5 w-3.5 transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none" />
                   </summary>
                   <div className="mt-3 space-y-2 border-t border-border/40 pt-3">
                     <Label htmlFor="provider-endpoint" className="text-xs text-foreground">
-                      API Endpoint
+                      {t("apiEndpoint")}
                     </Label>
                     <Input
                       id="provider-endpoint"
@@ -610,7 +599,7 @@ export default function AISettingsPage() {
                         )
                       }
                       placeholder="https://api.openai.com/v1"
-                      className="h-10 rounded-lg font-mono text-xs shadow-sm"
+                      className="h-10 rounded-lg border-border/80 bg-background/70 font-mono text-xs shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
                     />
                     <p className="text-xs text-muted-foreground">
                       {t("compatibleServiceHint")}
@@ -624,10 +613,10 @@ export default function AISettingsPage() {
             <div className="mt-8">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold tracking-tight text-foreground">
+                  <h3 className="font-sans text-sm font-semibold tracking-tight text-foreground">
                     {t("availableModels")}
                   </h3>
-                  <span className="rounded-full border border-border/80 bg-muted/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                  <span className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground">
                     {t("modelCount", {
                       count: providerProfiles.length + customProfiles.length,
                     })}
@@ -641,7 +630,7 @@ export default function AISettingsPage() {
                     type="button"
                     onClick={fetchProviderModels}
                     disabled={fetchingModels}
-                    className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground disabled:opacity-50 transition-colors"
+                    className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-foreground/75 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
                   >
                     {fetchingModels ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -659,7 +648,7 @@ export default function AISettingsPage() {
                     type="button"
                     onClick={() => setModelListOpen(!modelListOpen)}
                     aria-expanded={modelListOpen}
-                    className="flex w-full cursor-pointer items-center gap-2 border-b border-border/60 bg-muted/20 px-3.5 py-2 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    className="flex w-full cursor-pointer items-center gap-2 border-b border-border/60 bg-secondary/40 px-3.5 py-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <ChevronDown
                       className={cn(
@@ -725,7 +714,7 @@ export default function AISettingsPage() {
                 </div>
               )}
 
-              <div className="grid gap-3.5 xl:grid-cols-2">
+              <div className="grid gap-4 xl:grid-cols-2">
                 {providerProfiles.map(({ model, profile }) => (
                   <ModelCard
                     key={model.id}
@@ -741,7 +730,7 @@ export default function AISettingsPage() {
                     model={{
                       id: profile.model,
                       name: profile.model,
-                      description: t("fetchModels.customModel"),
+                      descriptionKey: "fetchModels.customModel",
                       supportsPdf: profile.supportsPdf,
                     }}
                     profile={profile}

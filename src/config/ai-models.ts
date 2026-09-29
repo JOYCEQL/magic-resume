@@ -36,7 +36,7 @@ export interface AISettingsData {
 export interface BuiltinAIModel {
   id: string;
   name: string;
-  description: string;
+  descriptionKey: string;
   supportsPdf: boolean;
   recommended?: boolean;
   protocol?: AIProtocol;
@@ -115,7 +115,7 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "gpt-5.6-sol",
         name: "GPT-5.6 Sol",
-        description: "复杂写作与高质量解析",
+        descriptionKey: "modelDescriptions.writingAndParsing",
         supportsPdf: true,
         recommended: true,
         protocol: "responses",
@@ -123,14 +123,14 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "gpt-5.6-terra",
         name: "GPT-5.6 Terra",
-        description: "质量、速度与成本均衡",
+        descriptionKey: "modelDescriptions.balancedQualitySpeedCost",
         supportsPdf: true,
         protocol: "responses",
       },
       {
         id: "gpt-5.6-luna",
         name: "GPT-5.6 Luna",
-        description: "快速、低成本的日常处理",
+        descriptionKey: "modelDescriptions.fastEveryday",
         supportsPdf: true,
         protocol: "responses",
       },
@@ -139,20 +139,20 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "qwen3.8-max",
         name: "Qwen 3.8 Max",
-        description: "旗舰视觉理解与结构化提取",
+        descriptionKey: "modelDescriptions.flagshipVision",
         supportsPdf: true,
         recommended: true,
       },
       {
         id: "qwen3.7-plus",
         name: "Qwen 3.7 Plus",
-        description: "效果与成本均衡",
+        descriptionKey: "modelDescriptions.balancedQualityCost",
         supportsPdf: true,
       },
       {
         id: "qwen3.8-flash",
         name: "Qwen 3.8 Flash",
-        description: "快速、低成本的批量解析",
+        descriptionKey: "modelDescriptions.fastBatchParsing",
         supportsPdf: true,
       },
     ],
@@ -160,20 +160,20 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "doubao-seed-2-1-pro-260628",
         name: "Doubao Seed 2.1 Pro",
-        description: "复杂文本生成与推理",
+        descriptionKey: "modelDescriptions.textAndReasoning",
         supportsPdf: false,
         recommended: true,
       },
       {
         id: "doubao-seed-2-0-lite-260215",
         name: "Doubao Seed 2.0 Lite",
-        description: "快速、低成本的文字处理",
+        descriptionKey: "modelDescriptions.fastText",
         supportsPdf: false,
       },
       {
         id: "doubao-seed-1-6-vision-250815",
         name: "Doubao Seed 1.6 Vision",
-        description: "图片理解与简历解析",
+        descriptionKey: "modelDescriptions.visionAndResume",
         supportsPdf: true,
       },
     ],
@@ -181,20 +181,20 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "deepseek-v4-pro",
         name: "DeepSeek V4 Pro",
-        description: "复杂写作与深度推理",
+        descriptionKey: "modelDescriptions.writingAndReasoning",
         supportsPdf: false,
       },
       {
         id: "deepseek-v4-flash",
         name: "DeepSeek V4 Flash",
-        description: "快速、低成本的文字处理",
+        descriptionKey: "modelDescriptions.fastText",
         supportsPdf: false,
         recommended: true,
       },
       {
         id: "deepseek-v4-flash-vision-exp",
         name: "DeepSeek V4 Vision",
-        description: "实验性图片理解模型",
+        descriptionKey: "modelDescriptions.experimentalVision",
         supportsPdf: true,
       },
     ],
@@ -202,20 +202,20 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "gemini-3.8-flash",
         name: "Gemini 3.8 Flash",
-        description: "高质量多模态处理",
+        descriptionKey: "modelDescriptions.multimodal",
         supportsPdf: true,
         recommended: true,
       },
       {
         id: "gemini-3.1-pro-preview",
         name: "Gemini 3.1 Pro",
-        description: "复杂推理与高质量提取",
+        descriptionKey: "modelDescriptions.reasoningAndExtraction",
         supportsPdf: true,
       },
       {
         id: "gemini-3.1-flash-lite",
         name: "Gemini 3.1 Flash-Lite",
-        description: "低成本、高吞吐解析",
+        descriptionKey: "modelDescriptions.highThroughput",
         supportsPdf: true,
       },
     ],
@@ -223,20 +223,20 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
       {
         id: "claude-sonnet-5",
         name: "Claude Sonnet 5",
-        description: "质量与速度均衡",
+        descriptionKey: "modelDescriptions.balancedQualitySpeed",
         supportsPdf: true,
         recommended: true,
       },
       {
         id: "claude-opus-5",
         name: "Claude Opus 5",
-        description: "复杂任务与高质量理解",
+        descriptionKey: "modelDescriptions.complexUnderstanding",
         supportsPdf: true,
       },
       {
         id: "claude-haiku-4-5-20251001",
         name: "Claude Haiku 4.5",
-        description: "快速、低成本的日常处理",
+        descriptionKey: "modelDescriptions.fastEveryday",
         supportsPdf: true,
       },
     ],

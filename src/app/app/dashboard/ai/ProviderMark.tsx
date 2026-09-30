@@ -6,6 +6,7 @@ import openaiIcon from "@lobehub/icons-static-svg/icons/openai.svg?url";
 import qwenIcon from "@lobehub/icons-static-svg/icons/qwen-color.svg?url";
 import { cn } from "@/lib/utils";
 import type { AIProvider } from "@/config/ai-models";
+import OrcaRouterLogo from "@/components/ai/icon/IconOrcaRouter";
 
 interface Props {
   provider: AIProvider;
@@ -15,8 +16,9 @@ interface Props {
 const PROVIDER_THEMES: Record<
   AIProvider,
   {
-    icon: string;
+    icon?: string;
     monochrome?: boolean;
+    vector?: boolean;
   }
 > = {
   openai: {
@@ -39,6 +41,10 @@ const PROVIDER_THEMES: Record<
     icon: anthropicIcon,
     monochrome: true,
   },
+  orcarouter: {
+    vector: true,
+    monochrome: true,
+  },
 };
 
 export function ProviderMark({ provider, compact = false }: Props) {
@@ -54,15 +60,25 @@ export function ProviderMark({ provider, compact = false }: Props) {
           : "h-11 w-11 border border-border/60 bg-background/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:shadow-none",
       )}
     >
-      <img
-        src={theme.icon}
-        alt=""
-        className={cn(
-          "object-contain",
-          compact ? "h-4 w-4" : "h-5 w-5",
-          theme.monochrome && "dark:invert",
-        )}
-      />
+      {theme.vector ? (
+        <OrcaRouterLogo
+          size={compact ? 16 : 20}
+          className={cn(
+            "object-contain",
+            theme.monochrome && "text-foreground",
+          )}
+        />
+      ) : (
+        <img
+          src={theme.icon}
+          alt=""
+          className={cn(
+            "object-contain",
+            compact ? "h-4 w-4" : "h-5 w-5",
+            theme.monochrome && "dark:invert",
+          )}
+        />
+      )}
     </span>
   );
 }

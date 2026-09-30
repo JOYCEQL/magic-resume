@@ -366,7 +366,8 @@
             "doubao": "Doubao",
             "deepseek": "DeepSeek",
             "gemini": "Gemini",
-            "anthropic": "Claude"
+            "anthropic": "Claude",
+            "orcarouter": "OrcaRouter"
           },
           "protocols": {
             "chat-completions": "Chat Completions",
@@ -398,6 +399,51 @@
               "networkError": "Unable to connect to the provider. Check the network and API endpoint.",
               "timeout": "Fetching the model list timed out. Try again later.",
               "invalidRequest": "Invalid request. Try again."
+            }
+          },
+          "orca": {
+            "apiKeyTitle": "OrcaRouter - API",
+            "apiKeyHint": "Paste an existing OrcaRouter API key. It is stored only in this browser.",
+            "apiKeyLabel": "OrcaRouter API key",
+            "signInTitle": "OrcaRouter - Auth",
+            "signInHint": "Sign in with your OrcaRouter account. No client secret and no redirect URI to register.",
+            "emailLabel": "Email (optional)",
+            "emailPlaceholder": "you@example.com",
+            "connectAction": "Connect with OrcaRouter",
+            "codeHint": "Approve the request in the tab that just opened, then paste the code shown there.",
+            "codePlaceholder": "Paste the code",
+            "codeSubmit": "Connect",
+            "cancelSignIn": "Cancel sign-in",
+            "connected": "Connected to OrcaRouter",
+            "clearKey": "Clear key",
+            "hideKey": "Hide API key",
+            "showKey": "Show API key",
+            "manageKeys": "Manage authorized apps",
+            "saveHint": "Settings stay in this browser. Live discovery replaces the {count}-model verified fallback.",
+            "needsReauth": "OrcaRouter rejected this key. Sign in again or paste a new key.",
+            "reauth": "Sign in again",
+            "modelSelectorTitle": "Model",
+            "modelPlaceholder": "Choose a model",
+            "modelSearch": "Search models",
+            "modelEmpty": "No compatible models",
+            "catalogLive": "Live catalog",
+            "catalogDegraded": "Verified fallback",
+            "catalogCount": "{count} compatible models",
+            "catalogRefresh": "Refresh",
+            "catalogInvalidated": "The selected model is no longer in the catalog. Choose another one.",
+            "capabilityImage": "image input",
+            "errors": {
+              "missingKey": "Enter an OrcaRouter API key.",
+              "invalidKey": "That API key is not usable. Check for line breaks or extra spaces.",
+              "signInDenied": "The authorization request was denied.",
+              "signInStateMismatch": "The returned state did not match this sign-in attempt.",
+              "signInExpired": "That code is unknown, expired, or already used. Start a new sign-in.",
+              "signInScope": "OrcaRouter granted a different scope than requested.",
+              "signInRateLimited": "Too many sign-ins. Reuse the saved key or try again later.",
+              "signInTimeout": "The sign-in timed out. Start again.",
+              "signInCancelled": "Sign-in cancelled.",
+              "signInNetwork": "Could not reach OrcaRouter. Check the network and try again.",
+              "signInUnavailable": "OrcaRouter sign-in is unavailable. Use an API key instead."
             }
           }
         }

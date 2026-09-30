@@ -40,6 +40,12 @@ src/routeTree.gen.ts
 # idea
 .idea
 
+# python evidence tooling
+__pycache__/
+
+# generated PR evidence (produced by scripts/orca-evidence.mjs, never committed)
+/orca-evidence/
+
 .history
 .agent
 .tanstack

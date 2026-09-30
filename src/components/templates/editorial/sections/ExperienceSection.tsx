@@ -7,6 +7,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import SectionLogo from "../../shared/SectionLogo";
 
 interface ExperienceSectionProps {
   experiences?: Experience[];
@@ -27,19 +28,20 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
           <motion.div key={exp.id} layout="position" className={cn("relative pb-6 last:border-0 last:pb-0", showTimeline ? "pl-5 border-l-[1.5px] border-[#e5e7eb]" : "")} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
             {/* Timeline Dot */}
             {showTimeline && <div className="absolute left-[-2.25px] top-2.5 w-1.5 h-1.5 bg-black rounded-full" />}
-            
+
             {/* Title: Company as Priority */}
-            <motion.h4 layout="position" className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
+            <motion.h4 layout="position" className="font-bold text-black flex items-center gap-2" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
+              <SectionLogo src={exp.logo} config={exp.logoConfig} size={globalSettings?.subheaderSize || 18} />
               {exp.company}
             </motion.h4>
-            
+
             {/* Position & Date */}
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
               {exp.position ? <span className="font-semibold text-black">{exp.position}</span> : null}
               {exp.position && " • "}
               {formatDateString(exp.date, locale)}
             </motion.div>
-            
+
             {/* Details */}
             {exp.details && (
               <motion.div

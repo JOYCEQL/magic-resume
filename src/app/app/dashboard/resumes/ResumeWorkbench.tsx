@@ -350,7 +350,7 @@ export const ResumeWorkbench = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-foreground">
                         {t("dashboard.resumes.myResume")}
                     </h1>
                     <div className="flex items-center space-x-2">
@@ -400,10 +400,10 @@ export const ResumeWorkbench = () => {
                                     >
                                         <Plus className="h-8 w-8 text-gray-600 dark:text-primary" />
                                     </motion.div>
-                                    <CardTitle className="text-xl text-gray-900 dark:text-gray-100 px-4">
+                                    <CardTitle className="text-xl text-gray-900 dark:text-foreground px-4">
                                         {t("dashboard.resumes.newResume")}
                                     </CardTitle>
-                                    <CardDescription className="mt-2 text-gray-600 dark:text-gray-400 px-4">
+                                    <CardDescription className="mt-2 text-gray-600 dark:text-muted-foreground px-4">
                                         {t("dashboard.resumes.newResumeDescription")}
                                     </CardDescription>
                                 </CardContent>

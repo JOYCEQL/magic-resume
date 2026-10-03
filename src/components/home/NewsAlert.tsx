@@ -13,7 +13,7 @@ export default function NewsAlert({ className }: NewsAlertProps) {
     <div
       className={cn(
         "relative inline-flex items-center gap-3 px-5 py-2.5 text-sm font-medium rounded-full",
-        "bg-white shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:bg-slate-900",
+        "bg-white shadow-[0_1px_1px_rgba(0,0,0,0.1)] dark:bg-card",
         "border border-slate-200/80 dark:border-white/10",
         "hover:shadow-[0_2px_2px_rgba(0,0,0,0.1)] dark:hover:shadow-white/5",
         "transition-all duration-300 cursor-pointer group",

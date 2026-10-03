@@ -90,39 +90,49 @@
   }
 
   .dark {
-    --background: 60 5% 10%; /* Dark Charcoal */
-    --foreground: 48 20% 97%; /* Off White text */
-    --card: 60 5% 12%;
-    --card-foreground: 48 20% 97%;
-    --popover: 60 5% 12%;
-    --popover-foreground: 48 20% 97%;
-    --primary: 48 20% 97%; /* Off White for primary buttons in dark mode or a light tint */
-    --primary-foreground: 60 5% 10%;
-    --secondary: 60 5% 15%;
-    --secondary-foreground: 48 20% 97%;
-    --muted: 60 2% 40%;
-    --muted-foreground: 60 2% 60%;
-    --accent: 60 5% 15%; /* Dark accent */
-    --accent-foreground: 48 20% 97%;
-    --destructive: 0 62.8% 30.6%;
+    /* Neutral charcoal surfaces, with warm off-white reserved for text and actions. */
+    --background: 240 5% 9%;
+    --foreground: 40 10% 94%;
+    --card: 240 4% 12%;
+    --card-foreground: 40 10% 94%;
+    --popover: 240 4% 14%;
+    --popover-foreground: 40 10% 94%;
+    --primary: 40 16% 92%;
+    --primary-foreground: 240 5% 10%;
+    --secondary: 240 4% 17%;
+    --secondary-foreground: 40 10% 94%;
+    --muted: 240 4% 17%;
+    --muted-foreground: 240 4% 68%;
+    --accent: 240 4% 21%;
+    --accent-foreground: 40 10% 94%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 20% 98%;
-    --border: 60 5% 20%;
-    --input: 60 5% 20%;
-    --ring: 48 20% 97%;
+    --border: 240 4% 23%;
+    --input: 240 4% 32%;
+    --ring: 40 16% 78%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    --sidebar-background: 60 5% 8%;
-    --sidebar-foreground: 48 20% 90%;
-    --sidebar-primary: 260 60% 70%;
-    --sidebar-primary-foreground: 60 5% 10%;
-    --sidebar-accent: 60 5% 15%;
-    --sidebar-accent-foreground: 60 5% 90%;
-    --sidebar-border: 60 5% 15%;
-    --sidebar-ring: 260 60% 70%;
+    --sidebar-background: 240 5% 8%;
+    --sidebar-foreground: 40 6% 85%;
+    --sidebar-primary: 40 16% 92%;
+    --sidebar-primary-foreground: 240 5% 10%;
+    --sidebar-accent: 240 4% 17%;
+    --sidebar-accent-foreground: 40 10% 94%;
+    --sidebar-border: 240 4% 20%;
+    --sidebar-ring: 40 16% 78%;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--input));
   }
 }
 
@@ -165,7 +175,7 @@
     font-family: inherit;
   }
 
-  ::-moz-selection {
+  ::selection {
     @apply text-primary-foreground bg-primary;
   }
 

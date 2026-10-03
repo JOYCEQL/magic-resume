@@ -39,7 +39,7 @@ export function Dock({ children, className, ...props }: DockProps) {
       <div
         {...props}
         className={cn(
-          "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-2 shadow-lg backdrop-blur-md dark:bg-slate-800/[0.7] dark:shadow-slate-900/20",
+          "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-2 shadow-lg backdrop-blur-md dark:bg-popover/95 dark:shadow-black/20",
           className
         )}
       >
@@ -57,7 +57,7 @@ export function Dock({ children, className, ...props }: DockProps) {
     <div
       {...props}
       className={cn(
-        "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-4 shadow-lg backdrop-blur-md dark:bg-slate-800/[0.7] dark:shadow-slate-900/20",
+        "flex flex-col items-center gap-4 rounded-xl bg-white/[0.7] p-4 shadow-lg backdrop-blur-md dark:bg-popover/95 dark:shadow-black/20",
         className
       )}
     >
@@ -68,7 +68,7 @@ export function Dock({ children, className, ...props }: DockProps) {
 
       {/* Decorative line */}
       {topChildren.length > 0 && (
-        <div className="w-8 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+        <div className="w-8 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-border" />
       )}
 
       {/* Middle (TemplateSheet) */}
@@ -76,7 +76,7 @@ export function Dock({ children, className, ...props }: DockProps) {
 
       {/* Decorative line */}
       {bottomChildren.length > 0 && (
-        <div className="w-8 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+        <div className="w-8 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-border" />
       )}
 
       {/* Bottom group */}
@@ -98,7 +98,7 @@ export function DockIcon({ children, className, onClick }: DockIconProps) {
       whileHover={{ scale: 1.2 }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        "flex size-8 items-center justify-center rounded-sm bg-white text-neutral-700 shadow-sm transition-colors hover:bg-gray-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:shadow-slate-900/20",
+        "flex size-8 items-center justify-center rounded-sm bg-white text-neutral-700 shadow-sm transition-colors hover:bg-gray-100 dark:bg-transparent dark:text-foreground dark:hover:bg-accent dark:shadow-black/20",
         className
       )}
       onClick={onClick}

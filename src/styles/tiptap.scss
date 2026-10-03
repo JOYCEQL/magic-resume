@@ -1,3 +1,28 @@
+.dark .tiptap[contenteditable="true"] {
+  code {
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+  }
+
+  pre {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+
+    code {
+      background: none;
+      color: inherit;
+    }
+  }
+
+  a.rich-text-link {
+    color: #93c5fd;
+
+    &:hover {
+      color: #bfdbfe;
+    }
+  }
+}
+
 .tiptap {
   min-height: 300px;
   border-radius: 0 0 4px 4px;

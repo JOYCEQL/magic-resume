@@ -504,7 +504,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
             <Search
               className={cn(
                 "w-4 h-4 transition-colors duration-300",
-                "dark:text-neutral-400",
+                "dark:text-muted-foreground",
                 "text-neutral-500"
               )}
             />
@@ -516,7 +516,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
               className={cn(
                 "w-full bg-transparent border-none outline-none text-sm",
                 "transition-colors duration-300",
-                "dark:text-neutral-200",
+                "dark:text-foreground",
                 "text-neutral-700",
                 "placeholder:text-neutral-500",
                 "focus:ring-0"
@@ -555,7 +555,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
                 className={cn(
                   "relative p-2 h-10  group",
                   "hover:bg-muted text-muted-foreground hover:text-foreground",
-                  value === iconValue && "bg-primary text-white  "
+                  value === iconValue && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                 )}
               >
                 <Icon className={cn("w-4 h-4")} />
@@ -589,7 +589,7 @@ const IconSelector: React.FC<IconSelectorProps> = ({ value, onChange }) => {
               className={cn(
                 "flex flex-col items-center justify-center py-8 px-4",
                 "text-sm",
-                "dark:text-neutral-400",
+                "dark:text-muted-foreground",
                 "text-neutral-500"
               )}
             >

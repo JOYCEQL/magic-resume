@@ -35,7 +35,7 @@ const DynamicHelpIcon = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttr
       <div className="absolute inset-0 rounded-full bg-primary/10 blur-xl group-hover:bg-primary/30 transition-all duration-700 animate-[pulse_4s_ease-in-out_infinite]" />
       
       {/* Glass Container */}
-      <div className="absolute inset-0 rounded-full bg-background/40 dark:bg-zinc-900/40 backdrop-blur-md border border-primary/20 group-hover:border-primary/50 transition-colors duration-500 shadow-lg" />
+      <div className="absolute inset-0 rounded-full bg-background/40 dark:bg-card/40 backdrop-blur-md border border-primary/20 group-hover:border-primary/50 transition-colors duration-500 shadow-lg" />
 
       <svg
         viewBox="0 0 100 100"

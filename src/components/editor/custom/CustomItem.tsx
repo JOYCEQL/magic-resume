@@ -142,7 +142,7 @@ const CustomItem = ({
               <p
                 className={cn(
                   "text-sm truncate",
-                  "dark:text-neutral-400 text-gray-500"
+                  "dark:text-muted-foreground text-gray-500"
                 )}
               >
                 {item.subtitle}

@@ -46,7 +46,7 @@ export function ModelAssignment({
           <article
             key={task}
             className={cn(
-              "min-w-0 rounded-xl border bg-white/85 p-5 shadow-[0_1px_2px_rgba(28,28,24,0.035),0_4px_12px_rgba(28,28,24,0.02)] dark:bg-white/[0.035]",
+              "min-w-0 rounded-xl border bg-white/85 p-5 shadow-[0_1px_2px_rgba(28,28,24,0.035),0_4px_12px_rgba(28,28,24,0.02)] dark:bg-card",
               isAssigned
                 ? "border-border"
                 : "border-border/70",

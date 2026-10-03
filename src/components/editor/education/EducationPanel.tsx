@@ -31,7 +31,7 @@ const EducationPanel = () => {
     <div
       className={cn(
         "space-y-4 px-4 py-4 rounded-lg",
-        "dark:bg-neutral-900/30",
+        "dark:bg-card/30",
       )}
     >
       <Reorder.Group

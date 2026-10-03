@@ -325,7 +325,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
       <DrawerContent
         ref={drawerContentRef}
         className={cn(
-          "dark:bg-neutral-900 dark:text-white bg-white",
+          "dark:bg-popover dark:text-foreground bg-white",
           "md:fixed md:border-none md:flex md:bottom-0 md:left-0 md:right-0 md:h-[93%] md:max-w-[360px] md:mx-[-1px] md:z-10 md:outline-none shadow shadow-blue-500/40"
         )}
       >
@@ -338,7 +338,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
             className={cn(
               "relative overflow-hidden border-2 transition-all mx-auto",
               isDragging ? "border-blue-500 border-solid" : "border-dashed",
-              "dark:border-neutral-700 dark:hover:border-neutral-600 border-neutral-300 hover:border-neutral-400"
+              "dark:border-input dark:hover:border-input border-neutral-300 hover:border-neutral-400"
             )}
             style={{
               width: `${config.width}px`,
@@ -380,7 +380,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                 <Upload
                   className={cn(
                     "w-6 h-6 mb-2",
-                    "dark:text-neutral-400 text-neutral-500"
+                    "dark:text-muted-foreground text-neutral-500"
                   )}
                 />
               </Button>
@@ -408,7 +408,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                 placeholder={t("upload.urlPlaceholder")}
                 className={cn(
                   "h-9",
-                  "dark:bg-neutral-800 dark:border-neutral-700"
+                  "dark:bg-secondary dark:border-input"
                 )}
               />
             </div>
@@ -424,7 +424,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       onBlur={(e) => handleInputBlur(e, "width")}
                       className={cn(
                         "h-9 pr-7",
-                        "dark:bg-neutral-800 dark:border-neutral-700"
+                        "dark:bg-secondary dark:border-input"
                       )}
                       min={24}
                       max={200}
@@ -433,7 +433,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     <div
                       className={cn(
                         "absolute right-3 top-1/2 -translate-y-1/2 text-sm",
-                        "dark:text-neutral-400 text-neutral-500"
+                        "dark:text-muted-foreground text-neutral-500"
                       )}
                     >
                       W
@@ -446,7 +446,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                       onBlur={(e) => handleInputBlur(e, "height")}
                       className={cn(
                         "h-9 pr-7",
-                        "dark:bg-neutral-800 dark:border-neutral-700"
+                        "dark:bg-secondary dark:border-input"
                       )}
                       min={24}
                       max={200}
@@ -455,7 +455,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                     <div
                       className={cn(
                         "absolute right-3 top-1/2 -translate-y-1/2 text-sm",
-                        "dark:text-neutral-400 text-neutral-500"
+                        "dark:text-muted-foreground text-neutral-500"
                       )}
                     >
                       H
@@ -530,7 +530,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
                         handleInputChange(e, "customBorderRadius")
                       }
                       onBlur={(e) => handleInputBlur(e, "customBorderRadius")}
-                      className={cn("h-9 mt-2", "dark:bg-neutral-800")}
+                      className={cn("h-9 mt-2", "dark:bg-secondary")}
                       min={0}
                       max={Math.min(config.width, config.height) / 2}
                       placeholder={t("config.borderRadius.customPlaceholder")}

@@ -123,7 +123,7 @@ const TemplateCardItem = ({
         )}
       >
         <CardContent
-          className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer"
+          className="p-0 flex-1 relative bg-gray-50 dark:bg-card overflow-hidden cursor-pointer"
           onClick={onPreview}
         >
           <div
@@ -147,20 +147,20 @@ const TemplateCardItem = ({
             </div>
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-gray-950 dark:via-gray-950/90 z-0" />
-          <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-gray-950/50">
+          <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-background dark:via-background/90 z-0" />
+          <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-background/50">
             <div className="flex flex-col w-full">
-              <span className="text-[15px] font-semibold truncate text-gray-900 dark:text-gray-100 drop-shadow-sm">
+              <span className="text-[15px] font-semibold truncate text-gray-900 dark:text-foreground drop-shadow-sm">
                 {templateName}
               </span>
-              <span className="text-[11px] text-gray-600 dark:text-gray-300 mt-0.5 font-medium truncate">
+              <span className="text-[11px] text-gray-600 dark:text-foreground/85 mt-0.5 font-medium truncate">
                 {templateDescription}
               </span>
             </div>
           </div>
         </CardContent>
 
-        <CardFooter className="pt-2 pb-2 px-2 bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 z-10">
+        <CardFooter className="pt-2 pb-2 px-2 bg-white dark:bg-background border-t border-gray-100 dark:border-border z-10">
           <div className="grid grid-cols-2 gap-2 w-full">
             <motion.div
               whileHover={{ scale: 1.05 }}
@@ -274,7 +274,7 @@ const TemplatesPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h2 className="text-3xl font-bold tracking-tight">{t("title")}</h2>
 
-            <div className="flex items-center space-x-2 bg-gray-50/50 dark:bg-gray-900/50 p-2 rounded-full border border-gray-100 dark:border-gray-800 backdrop-blur-sm self-start sm:self-auto overflow-x-auto">
+            <div className="flex items-center space-x-2 bg-gray-50/50 dark:bg-card/50 p-2 rounded-full border border-gray-100 dark:border-border backdrop-blur-sm self-start sm:self-auto overflow-x-auto">
               {PRESET_COLORS.map((color) => (
                 <button
                   key={color.name}
@@ -283,7 +283,7 @@ const TemplatesPage = () => {
                   className={cn(
                     "relative w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform hover:scale-110",
                     selectedColor === color.value
-                      ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-950 scale-110"
+                      ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-background scale-110"
                       : ""
                   )}
                   title={color.name === "default" ? "Default" : color.name}
@@ -294,8 +294,8 @@ const TemplatesPage = () => {
                       style={{ backgroundColor: color.value }}
                     />
                   ) : (
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-300 dark:border-gray-700 shadow-sm flex items-center justify-center">
-                      <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-tighter">
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-secondary dark:to-card border border-gray-300 dark:border-input shadow-sm flex items-center justify-center">
+                      <span className="text-[10px] text-gray-500 dark:text-muted-foreground font-medium tracking-tighter">
                         Tpl
                       </span>
                     </div>
@@ -333,14 +333,14 @@ const TemplatesPage = () => {
             }}
           >
             {activePreviewTemplate && (
-              <DialogContent className="max-w-[680px] p-0 overflow-hidden border-0 shadow-lg rounded-xl bg-white dark:bg-gray-900">
+              <DialogContent className="max-w-[680px] p-0 overflow-hidden border-0 shadow-lg rounded-xl bg-white dark:bg-card">
                 <div className="flex flex-col">
-                  <div className="border-b border-gray-100 dark:border-gray-800 px-4 py-4">
+                  <div className="border-b border-gray-100 dark:border-border px-4 py-4">
                     <DialogTitle className="text-lg font-medium">
                       {t(`${getTemplateKey(activePreviewTemplate.id)}.name`)}
                     </DialogTitle>
                   </div>
-                  <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-gray-950 py-8 pointer-events-none">
+                  <div className="overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-background py-8 pointer-events-none">
                     <div
                       className="relative bg-white shadow-md ring-1 ring-gray-200/50 overflow-hidden"
                       style={{ width: "420px", height: "594px" }}
@@ -375,7 +375,7 @@ const TemplatesPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="p-3 pt-2 border-t border-gray-100 dark:border-gray-800 flex justify-center">
+                  <div className="p-3 pt-2 border-t border-gray-100 dark:border-border flex justify-center">
                     <Button
                       className="w-full"
                       onClick={() => {

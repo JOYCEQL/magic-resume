@@ -49,7 +49,7 @@ const DragHandle = ({ show = true }) => {
       <div
         className={cn(
           "absolute top-1/2 left-1/2 z-20 h-7 w-2 -translate-x-1/2 -translate-y-1/2",
-          "rounded-full border border-border/80 bg-white dark:bg-neutral-900 shadow-sm", // 强制实体背景
+          "rounded-full border border-border/80 bg-white dark:bg-card shadow-sm", // 强制实体背景
           "transition-all duration-200",
           "group-hover:border-primary/50 group-hover:scale-110",
           "group-active:border-primary group-active:scale-105"
@@ -339,7 +339,7 @@ export default function Home() {
               order={3}
               collapsible={false}
               defaultSize={panelSizes?.[2]}
-              className={cn("bg-gray-100", previewPanelCollapsed && "hidden")}
+              className={cn("bg-gray-100 dark:bg-background", previewPanelCollapsed && "hidden")}
             >
               <div
                 className="h-full overflow-y-auto"

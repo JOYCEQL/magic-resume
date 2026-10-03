@@ -87,7 +87,7 @@ export const ResumeCardItem = ({
                 )}
             >
                 <CardContent 
-                    className="p-0 flex-1 relative bg-gray-50 dark:bg-gray-900 overflow-hidden cursor-pointer"
+                    className="p-0 flex-1 relative bg-gray-50 dark:bg-card overflow-hidden cursor-pointer"
                     onClick={(e) => {
                         e.stopPropagation();
                         router.push({ to: "/app/workbench/$id", params: { id } });
@@ -111,13 +111,13 @@ export const ResumeCardItem = ({
                         </div>
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-gray-950 dark:via-gray-950/90 z-0"></div>
-                    <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex justify-between items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-gray-950/50">
+                    <div className="absolute inset-x-0 bottom-0 top-[60%] pointer-events-none bg-gradient-to-t from-white via-white/90 to-transparent dark:from-background dark:via-background/90 z-0"></div>
+                    <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-4 flex justify-between items-end border-t border-transparent z-10 transition-colors group-hover:bg-white/50 dark:group-hover:bg-background/50">
                         <div className="flex flex-col w-full">
-                            <span className="text-[15px] font-semibold truncate text-gray-900 dark:text-gray-100 drop-shadow-sm w-[90%]">
+                            <span className="text-[15px] font-semibold truncate text-gray-900 dark:text-foreground drop-shadow-sm w-[90%]">
                                 {resume.title || t("dashboard.resumes.untitled")}
                             </span>
-                            <span className="text-[11px] text-gray-600 dark:text-gray-300 mt-0.5 font-medium">
+                            <span className="text-[11px] text-gray-600 dark:text-foreground/85 mt-0.5 font-medium">
                                 {t(`dashboard.templates.${templateNameKey}.name`)} · {new Intl.DateTimeFormat(locale, {
                                     year: 'numeric',
                                     month: 'short',
@@ -130,14 +130,14 @@ export const ResumeCardItem = ({
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="p-0 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 overflow-hidden">
-                    <div className="flex w-full h-11 divide-x divide-gray-100 dark:divide-gray-800">
+                <CardFooter className="p-0 border-t border-gray-100 dark:border-border bg-gray-50/50 dark:bg-card/30 overflow-hidden">
+                    <div className="flex w-full h-11 divide-x divide-gray-100 dark:divide-border">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 router.push({ to: "/app/workbench/$id", params: { id } });
                             }}
-                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-primary font-medium text-sm group"
+                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-secondary/80 transition-all duration-200 text-gray-700 dark:text-foreground hover:text-primary font-medium text-sm group"
                         >
                             <Edit2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform opacity-70 group-hover:opacity-100" />
                             <span>{t("common.edit")}</span>
@@ -148,7 +148,7 @@ export const ResumeCardItem = ({
                                 e.stopPropagation();
                                 duplicateResume(resume);
                             }}
-                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm group"
+                            className="flex-1 flex items-center justify-center gap-1.5 hover:bg-white dark:hover:bg-secondary/80 transition-all duration-200 text-gray-700 dark:text-foreground hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm group"
                         >
                             <Copy className="w-3.5 h-3.5 group-hover:scale-110 transition-transform opacity-70 group-hover:opacity-100" />
                             <span>{t("common.copy")}</span>

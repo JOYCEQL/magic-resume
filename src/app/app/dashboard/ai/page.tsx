@@ -413,7 +413,7 @@ export default function AISettingsPage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
             {t("title")}
           </h1>
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/60 px-3 py-1.5 text-xs text-muted-foreground dark:bg-white/[0.03]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-white/60 px-3 py-1.5 text-xs text-muted-foreground dark:bg-secondary/50">
             <span className={cn(
               "h-1.5 w-1.5 rounded-full",
               configuredCount > 0 ? "bg-emerald-500" : "bg-muted-foreground/40",
@@ -442,7 +442,7 @@ export default function AISettingsPage() {
       />
 
       {/* Provider configuration */}
-      <section className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-white/90 shadow-[0_1px_2px_rgba(28,28,24,0.025),0_8px_24px_rgba(28,28,24,0.025)] dark:bg-white/[0.035]">
+      <section className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-white/90 shadow-[0_1px_2px_rgba(28,28,24,0.025),0_8px_24px_rgba(28,28,24,0.025)] dark:bg-card">
         <div className="grid min-h-[560px] grid-cols-[230px_minmax(0,1fr)] md:grid-cols-[270px_minmax(0,1fr)]">
           {/* Left Sidebar: Providers Navigation */}
           <aside className="border-r border-border/60 bg-background/80 p-4">
@@ -475,7 +475,7 @@ export default function AISettingsPage() {
                       className={cn(
                         "group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.985] motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2",
                         active
-                          ? "border border-border/70 bg-white text-foreground shadow-[0_1px_2px_rgba(28,28,24,0.04),0_3px_8px_rgba(28,28,24,0.035)] dark:bg-white/[0.07]"
+                          ? "border border-border/70 bg-white text-foreground shadow-[0_1px_2px_rgba(28,28,24,0.04),0_3px_8px_rgba(28,28,24,0.035)] dark:bg-secondary"
                           : "border border-transparent text-foreground/75 hover:bg-secondary/50 hover:text-foreground",
                       )}
                     >
@@ -530,7 +530,7 @@ export default function AISettingsPage() {
                 href={providerDefinition.keyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 shrink-0 items-center gap-1.5 self-start rounded-lg border border-border bg-white/70 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/20 hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-white/[0.03] sm:self-auto"
+                className="inline-flex h-9 shrink-0 items-center gap-1.5 self-start rounded-lg border border-border bg-white/70 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/20 hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-secondary/50 sm:self-auto"
               >
                 <span>{t("getKey")}</span>
                 <ExternalLink className="h-3 w-3" />

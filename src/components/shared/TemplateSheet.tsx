@@ -36,11 +36,11 @@ const TemplatePreview = ({
       className={cn(
         "relative group rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02] text-left",
         isActive
-          ? "border-primary dark:border-primary shadow-lg dark:shadow-primary/30"
-          : "border-gray-100 hover:border-gray-200 dark:border-neutral-800 dark:hover:border-neutral-700"
+          ? "border-primary dark:border-primary shadow-lg dark:shadow-black/30"
+          : "border-gray-100 hover:border-gray-200 dark:border-border dark:hover:border-input"
       )}
     >
-      <div className="relative aspect-[210/297] w-full overflow-hidden bg-gray-50 dark:bg-gray-900">
+      <div className="relative aspect-[210/297] w-full overflow-hidden bg-gray-50 dark:bg-card">
         {snapshotSrc ? (
           <img
             src={snapshotSrc}
@@ -50,7 +50,7 @@ const TemplatePreview = ({
             draggable={false}
           />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-500 dark:from-neutral-900 dark:to-neutral-950 dark:text-neutral-400">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-500 dark:from-card dark:to-background dark:text-muted-foreground">
             <ImageIcon className="h-8 w-8" />
             <span className="px-4 text-center text-sm font-medium">
               {template.name}

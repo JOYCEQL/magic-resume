@@ -4,8 +4,6 @@ import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import zhMessages from "@/i18n/locales/zh.json";
 import enMessages from "@/i18n/locales/en.json";
 
-import landingCss from "@/components/home/landing.css?url";
-
 const SEO_BASE_URL = "https://magicv.art";
 
 function resolveLocale(rawLocale: string): Locale {
@@ -55,7 +53,6 @@ export const Route = createFileRoute("/$locale")({
         { name: "twitter:image", content: `${SEO_BASE_URL}/web-shot.png` },
       ],
       links: [
-        { rel: "stylesheet", href: landingCss },
         {
           rel: "preload",
           href: "/fonts/landing/source-han-serif-500.woff2",

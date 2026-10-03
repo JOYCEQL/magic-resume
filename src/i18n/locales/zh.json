@@ -48,11 +48,11 @@
       "storage": {
         "badge": "隐私安全",
         "title": "数据安全，隐私优先",
-        "description": "所有简历数据完全存储在您的本地设备中，无需担心隐私泄露。支持数据导出备份，确保您的简历数据随时可用。",
+        "description": "简历保存在当前浏览器中，也可以选择本地文件夹备份。数据由你管理，导出后随时带走。",
         "item1": "本地文件存储",
-        "item1_description": "简历数据安全存储在您的电脑硬盘中",
+        "item1_description": "本地保存，支持选择文件夹备份",
         "item2": "多种导出格式",
-        "item2_description": "支持PDF和JSON格式导出",
+        "item2_description": "支持 PDF、PNG、JSON 和 Markdown",
         "item3": "支持数据导出备份"
       },
       "preview": {
@@ -85,11 +85,11 @@
         },
         {
           "question": "我的简历数据安全吗？",
-          "answer": "是的，非常安全。魔方简历采用本地存储方式，您的所有数据都保存在您自己的设备上，不存在云存储，完全保护您的隐私。"
+          "answer": "魔方简历采用本地存储方式，简历数据保存在当前浏览器中，支持选择本地文件夹备份。使用 AI 功能时，相关内容会发送给您配置的模型服务商处理。"
         },
         {
           "question": "支持哪些简历格式导出？",
-          "answer": "目前支持导出PDF格式，确保您的简历在任何设备上都能保持一致的排版效果。未来我们还将支持更多导出格式。"
+          "answer": "目前支持导出 PDF、PNG 长图、JSON 配置和 Markdown，也支持浏览器打印。PDF 适合正式投递，JSON 可用于备份和换设备继续编辑。"
         },
         {
           "question": "多设备如何同步",
@@ -100,6 +100,69 @@
           "answer": "我们提供丰富的自定义操作，包括颜色、布局等，让您能够根据个人喜好和行业特点调整简历风格。"
         }
       ]
+    },
+    "redesign": {
+      "start": "开始使用",
+      "nav": {
+        "features": "功能",
+        "templates": "模板",
+        "label": "官网导航",
+        "home": "魔方简历首页",
+        "language": "Switch to English",
+        "theme": "切换主题",
+        "menu": "打开菜单",
+        "close": "关闭菜单",
+        "skip": "跳转到主要内容"
+      },
+      "hero": {
+        "editorAlt": "魔方简历真实工作台：内容编辑与实时简历预览",
+        "free": "免费，无需注册",
+        "ai": "AI 辅助表达",
+        "local": "简历本地保存"
+      },
+      "templates": {
+        "title": "你的风格，不止一种。",
+        "description": "干净利落，或鲜明大胆。挑一个喜欢的起点，写下只属于你的经历。",
+        "browse": "浏览模板",
+        "all": "查看全部模板",
+        "choose": "选择简历模板",
+        "classic": "经典",
+        "minimalist": "极简",
+        "editorial": "画报",
+        "swiss": "瑞士风格",
+        "preview": "放大预览{name}模板",
+        "alt": "{name}模板的示例简历",
+        "previewDescription": "当前为示例内容。进入模板库，即可选择模板并开始编辑。"
+      },
+      "footer": {
+        "note": "免费、开源。为你的下一步而做。",
+        "source": "查看源码"
+      },
+      "illustrations": {
+        "experience": "项目经历",
+        "draft": "初稿",
+        "before": "负责 AI 助手开发，做了一些回答优化。",
+        "polished": "表达，更进一步",
+        "after": "负责 AI 助手开发与回答质量优化，提升回答的准确性和相关性。",
+        "clear": "重点清楚",
+        "concise": "表达简洁",
+        "yourVoice": "保留你的声音",
+        "review": "修改建议，由你确认",
+        "grammar": "细节，也照顾到",
+        "grammarStart": "在项目中",
+        "grammarCorrect": "独立负责",
+        "grammarEnd": "AI 应用开发，与团队协作交付。",
+        "grammarError": "独力负责",
+        "corrected": "用词已修正",
+        "yourResume": "你的简历",
+        "apply": "投递申请",
+        "backup": "可编辑备份",
+        "share": "长图分享",
+        "alsoMarkdown": "也支持 Markdown 与打印",
+        "yourDevice": "你的设备，你的空间",
+        "localTitle": "保存在本地",
+        "localCaption": "随时编辑，自主备份"
+      }
     }
   },
   "dashboard": {

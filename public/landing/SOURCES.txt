@@ -1,0 +1,40 @@
+Magic Resume landing page assets
+
+Hero composition:
+- Right: unfold.webp, original artwork generated with OpenAI imagegen on 2026-10-03.
+  Brief: translucent ice-blue paper unfolding, fine pigment particles, empty left
+  half for copy, near-white background. Encoded from the generated PNG to WebP.
+- Below, centered: the original project asset /web-shot.png, used unchanged.
+
+Why Choose (current):
+DOM/CSS feature demonstrations in FeatureDemo.tsx, explicitly requested by the
+user: writing comparison, grammar correction, local archive, and export formats.
+Standard icons use Lucide. Main page copy remains unchanged.
+
+Earlier Why Choose imagery (retained, no longer used by the page):
+- writing-editorial.webp: generated with built-in OpenAI imagegen, 2026-10-03.
+  Prompt: white resume paper with embossed "Better Resume A Brighter You",
+  silver pen at lower right, subtle neutral light, matching the selected mock.
+- storage-editorial.webp: generated with built-in OpenAI imagegen, 2026-10-03.
+  Prompt: white envelope holding a RESUME sheet, delicate white paper leaves,
+  neutral paper texture and lighting, matching the selected mock.
+Both are conceptual editorial imagery, not screenshots of the application.
+
+Closing section:
+- closing-paper.webp: generated with built-in OpenAI imagegen, 2026-10-03.
+  Prompt: pure white upper and central negative space, faint neutral paper
+  curves along the bottom corners, left low and right high, no text or UI.
+
+Selected visual target:
+exec-3a37f867-34d8-4b3e-9ecb-8b0d6821fedf.png, explicitly selected by the user.
+The page retains the existing product copy and real template previews.
+
+zh-*.webp / en-*.webp:
+Template images derived from this project's public/template-snapshots.
+
+Design reference: https://chatterfly.tencent.com/
+Used for atmospheric composition, whitespace, and product storytelling.
+No Chatterfly brand marks, text, or media are used.
+
+Homepage fonts are subsets of the project's existing MiSans and Source Han Serif files.
+Regenerate after changing copy with scripts/generate-landing-fonts.py.

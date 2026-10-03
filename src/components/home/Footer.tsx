@@ -1,22 +1,21 @@
-import { useTranslations } from "@/i18n/compat/client";
-import Logo from "@/components/shared/Logo";
+import { ArrowUpRight } from "lucide-react";
+import { useLocale, useTranslations } from "@/i18n/compat/client";
+import { GITHUB_REPO_URL } from "@/config/constants";
 
 export default function Footer() {
-  const t = useTranslations("home");
-
+  const locale = useLocale();
+  const t = useTranslations("home.redesign");
   return (
-    <footer className="py-16 md:py-24 border-t border-border/50 bg-secondary/10">
-      <div className="container mx-auto px-6 max-w-6xl">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-3">
-            <Logo size={32} />
-            <span className="font-serif font-semibold text-lg text-foreground/80">Magic Resume</span>
-          </div>
-          
-          <div className="text-sm text-muted-foreground/60 font-light">
-            <p>{t("footer.copyright")}</p>
-          </div>
-        </div>
+    <footer className="landing-footer">
+      <div className="landing-nav-shell">
+        <a href={`/${locale}`} className="landing-brand">
+          <span>{locale === "zh" ? "魔方简历" : "Magic Resume"}</span>
+        </a>
+        <p>{t("footer.note")}</p>
+        <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">
+          {t("footer.source")}
+          <ArrowUpRight size={14} />
+        </a>
       </div>
     </footer>
   );

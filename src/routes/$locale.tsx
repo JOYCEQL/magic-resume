@@ -4,6 +4,8 @@ import { defaultLocale, locales, type Locale } from "@/i18n/config";
 import zhMessages from "@/i18n/locales/zh.json";
 import enMessages from "@/i18n/locales/en.json";
 
+import landingCss from "@/components/home/landing.css?url";
+
 const SEO_BASE_URL = "https://magicv.art";
 
 function resolveLocale(rawLocale: string): Locale {
@@ -26,7 +28,7 @@ function getLocaleSeo(locale: Locale) {
     description,
     localeTag,
     canonical,
-    alternateLocale
+    alternateLocale,
   };
 }
 
@@ -50,21 +52,36 @@ export const Route = createFileRoute("/$locale")({
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: seo.title },
         { name: "twitter:description", content: seo.description },
-        { name: "twitter:image", content: `${SEO_BASE_URL}/web-shot.png` }
+        { name: "twitter:image", content: `${SEO_BASE_URL}/web-shot.png` },
       ],
       links: [
+        { rel: "stylesheet", href: landingCss },
+        {
+          rel: "preload",
+          href: "/fonts/landing/source-han-serif-500.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous" as const,
+        },
+        ...[400, 700].map((weight) => ({
+          rel: "preload",
+          href: `/fonts/landing/misans-${weight}.woff2`,
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous" as const,
+        })),
         { rel: "canonical", href: seo.canonical },
         { rel: "alternate", hrefLang: locale, href: seo.canonical },
         {
           rel: "alternate",
           hrefLang: seo.alternateLocale,
-          href: `${SEO_BASE_URL}/${seo.alternateLocale}`
+          href: `${SEO_BASE_URL}/${seo.alternateLocale}`,
         },
-        { rel: "alternate", hrefLang: "x-default", href: `${SEO_BASE_URL}/zh` }
-      ]
+        { rel: "alternate", hrefLang: "x-default", href: `${SEO_BASE_URL}/zh` },
+      ],
     };
   },
-  component: LocaleLandingPage
+  component: LocaleLandingPage,
 });
 
 function LocaleLandingPage() {

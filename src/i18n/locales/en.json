@@ -48,11 +48,11 @@
       "storage": {
         "badge": "Local Storage",
         "title": "Data Security, Privacy First",
-        "description": "All resume data is fully stored locally, no need to worry about privacy leaks. Support data export backup, ensure your resume data is always available.",
+        "description": "Your resumes stay in your browser, with an optional local backup folder. Keep control of your files and take them with you.",
         "item1": "Local file storage",
-        "item1_description": "Resume data securely stored on your computer's hard drive",
+        "item1_description": "Save locally and choose a backup folder",
         "item2": "Multiple export formats",
-        "item2_description": "Support PDF and JSON format export",
+        "item2_description": "Export PDF, PNG, JSON, or Markdown",
         "item3": "Support data export backup"
       },
       "preview": {
@@ -84,7 +84,7 @@
         },
         {
           "question": "Is my resume data secure?",
-          "answer": "Yes, very secure. Magic Resume uses local storage, meaning all your data is stored on your own device with no cloud storage, ensuring complete privacy protection."
+          "answer": "Magic Resume uses local storage. Resume data is stored in your current browser, with an optional local backup folder. When you use AI features, relevant content is sent to your configured model provider."
         },
         {
           "question": "What export formats are supported?",
@@ -99,6 +99,69 @@
           "answer": "We offer rich customization options, including colors, layouts, and more, allowing you to adjust your resume style according to personal preferences and industry requirements."
         }
       ]
+    },
+    "redesign": {
+      "start": "Get Started",
+      "nav": {
+        "features": "Features",
+        "templates": "Templates",
+        "label": "Main navigation",
+        "home": "Magic Resume home",
+        "language": "切换到中文",
+        "theme": "Change theme",
+        "menu": "Open menu",
+        "close": "Close menu",
+        "skip": "Skip to content"
+      },
+      "hero": {
+        "editorAlt": "Magic Resume workspace with content editing and a live resume preview",
+        "free": "Free. No account needed.",
+        "ai": "AI writing assistance",
+        "local": "Stored on your device"
+      },
+      "templates": {
+        "title": "A style that feels like you.",
+        "description": "Quietly confident or a little more expressive. Pick a starting point and make it your own.",
+        "browse": "Browse Templates",
+        "all": "View All Templates",
+        "choose": "Choose a resume template",
+        "classic": "Classic",
+        "minimalist": "Minimal",
+        "editorial": "Editorial",
+        "swiss": "Swiss",
+        "preview": "Preview {name} template",
+        "alt": "Example resume in the {name} template",
+        "previewDescription": "This is sample content. Open the template library to choose a template and start editing."
+      },
+      "footer": {
+        "note": "Free and open source. For your next step.",
+        "source": "View Source"
+      },
+      "illustrations": {
+        "experience": "Experience",
+        "draft": "DRAFT",
+        "before": "Built an AI assistant and worked on its responses.",
+        "polished": "A little clearer",
+        "after": "Developed an AI assistant and refined its responses for greater accuracy and relevance.",
+        "clear": "Clearer focus",
+        "concise": "Fewer words",
+        "yourVoice": "Your voice",
+        "review": "Every suggestion is yours to approve",
+        "grammar": "Details matter",
+        "grammarStart": "",
+        "grammarCorrect": "Led",
+        "grammarEnd": " AI application development with the team.",
+        "grammarError": "Lead",
+        "corrected": "Past tense",
+        "yourResume": "Your resume",
+        "apply": "Applications",
+        "backup": "Editable backup",
+        "share": "Image sharing",
+        "alsoMarkdown": "Markdown and printing, too",
+        "yourDevice": "Your device. Your space.",
+        "localTitle": "Stored locally",
+        "localCaption": "Keep editing. Back up anytime."
+      }
     }
   },
   "dashboard": {

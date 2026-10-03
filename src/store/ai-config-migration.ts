@@ -4,6 +4,9 @@ import {
   canModelParsePdf,
   createModelProfile,
   modelSupportsPdf,
+  profileAuthMethod,
+  supportsAuthMethod,
+  type AIAuthMethod,
   type AIModelProfile,
   type AIProvider,
   type AISettingsData,
@@ -16,6 +19,11 @@ const record = (value: unknown): Record<string, unknown> =>
 const string = (value: unknown) => (typeof value === "string" ? value : "");
 const isProvider = (value: unknown): value is AIProvider =>
   AI_PROVIDERS.some((provider) => provider === value);
+/** Unknown credential states must not be resurrected as trusted. */
+const generation = (value: unknown) =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : 0;
+const isAuthMethod = (value: unknown): value is AIAuthMethod =>
+  value === "api-key" || value === "oauth";
 
 export function migrateAISettings(value: unknown): AISettingsData {
   const old = record(value);
@@ -43,6 +51,18 @@ export function migrateAISettings(value: unknown): AISettingsData {
         baseUrl: string(entry.baseUrl),
         protocol,
         supportsPdf: modelSupportsPdf(entry.provider, model),
+        ...(supportsAuthMethod(entry.provider, "oauth")
+          ? {
+              authMethod: isAuthMethod(entry.authMethod)
+                ? profileAuthMethod({
+                    provider: entry.provider,
+                    authMethod: entry.authMethod,
+                  })
+                : "api-key",
+              generation: generation(entry.generation),
+              needsReauth: entry.needsReauth === true,
+            }
+          : {}),
       });
     }
     return {

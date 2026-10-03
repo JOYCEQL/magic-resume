@@ -3,6 +3,17 @@ import {
   AI_PROVIDERS,
   isValidBaseUrl,
 } from "../../config/ai-models";
+import {
+  matchesOrcaCapability,
+  orcaEnvironmentFromProcess,
+  parseOrcaCatalogEntry,
+  resolveOrcaOrigins,
+  ORCA_CAPABILITIES,
+  ORCA_INPUT_MODALITIES,
+  type OrcaCapability,
+  type OrcaCatalogEntry,
+  type OrcaInputModality,
+} from "../../config/orcarouter";
 import { ResumeImportError } from "../resume-import-schema";
 import { combineAbortSignals } from "../abort-signal";
 import { readLimitedJson } from "./ai-request";
@@ -11,6 +22,10 @@ import { asRecord, fetchAIProvider, upstreamErrorCode } from "./ai-provider";
 export interface FetchedModel {
   id: string;
   description?: string;
+  name?: string;
+  contextLength?: number;
+  /** Whether the catalog declares non-text input for this model. */
+  supportsImages?: boolean;
 }
 
 const MAX_PAGES = 10;
@@ -238,6 +253,48 @@ async function fetchAnthropicModels(
   return uniqueModels(models);
 }
 
+/**
+ * OrcaRouter catalogs carry capability metadata, so the server filters here
+ * and the browser never receives models it cannot use.
+ */
+async function fetchOrcaModels(
+  baseUrl: string,
+  apiKey: string,
+  capability: OrcaCapability,
+  requiredModalities: OrcaInputModality[],
+  signal: AbortSignal,
+  fetcher: typeof fetch,
+): Promise<FetchedModel[]> {
+  const url = new URL(`${baseUrl}/models`);
+  url.searchParams.set("capability", capability);
+  const response = await fetchUpstream(
+    url.toString(),
+    { Authorization: `Bearer ${apiKey}` },
+    signal,
+    fetcher,
+  );
+  const data = asRecord(await readResponseJson(response));
+  if (!Array.isArray(data.data)) throw invalidUpstreamResponse();
+
+  const entries = data.data
+    .map(parseOrcaCatalogEntry)
+    .filter((entry): entry is OrcaCatalogEntry => !!entry)
+    .filter((entry) =>
+      matchesOrcaCapability(entry, capability, requiredModalities),
+    );
+
+  return uniqueModels(
+    entries.map((entry) => ({
+      id: entry.id,
+      name: entry.name,
+      description: entry.description,
+      contextLength: entry.contextLength,
+      supportsImages: matchesOrcaCapability(entry, "chat", ["image"]),
+    })),
+    true,
+  );
+}
+
 export async function handleModelsRequest(
   request: Request,
   fetcher: typeof fetch = fetch,
@@ -248,7 +305,13 @@ export async function handleModelsRequest(
     if (!provider) throw new ResumeImportError("invalidProvider");
     const preset = AI_PROVIDER_DEFINITIONS[provider];
     const apiKey = textValue(body.apiKey).trim();
-    const baseUrl = modelsBaseUrl(textValue(body.baseUrl) || preset.baseUrl);
+    const requestedBaseUrl = textValue(body.baseUrl).trim();
+    // The inference origin belongs to the provider; the browser only holds a
+    // hard-coded default and cannot be redirected by one stored field.
+    const baseUrl =
+      provider === "orcarouter"
+        ? resolveOrcaOrigins(orcaEnvironmentFromProcess()).apiBase
+        : modelsBaseUrl(requestedBaseUrl || preset.baseUrl);
     if (!apiKey || apiKey.length > 4096 || /[\r\n]/.test(apiKey))
       throw new ResumeImportError("configRequired");
     if (!isValidBaseUrl(baseUrl)) throw new ResumeImportError("invalidEndpoint");
@@ -259,12 +322,37 @@ export async function handleModelsRequest(
     ]);
     const providerFetch: typeof fetch = (url, options) =>
       fetchAIProvider(provider, url, options ?? {}, fetcher);
-    const models =
-      provider === "gemini"
-        ? await fetchGeminiModels(baseUrl, apiKey, signal, providerFetch)
-        : provider === "anthropic"
-          ? await fetchAnthropicModels(baseUrl, apiKey, signal, providerFetch)
-          : await fetchOpenAICompatibleModels(baseUrl, apiKey, signal, providerFetch);
+    let models: FetchedModel[];
+    if (provider === "orcarouter") {
+      const capability = textValue(body.capability).trim();
+      if (!ORCA_CAPABILITIES.includes(capability as OrcaCapability))
+        throw new ResumeImportError("invalidRequest");
+      const requiredModalities = String(body.modalities ?? "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item): item is OrcaInputModality =>
+          ORCA_INPUT_MODALITIES.includes(item as OrcaInputModality),
+        );
+      models = await fetchOrcaModels(
+        baseUrl,
+        apiKey,
+        capability as OrcaCapability,
+        requiredModalities,
+        signal,
+        providerFetch,
+      );
+    } else if (provider === "gemini") {
+      models = await fetchGeminiModels(baseUrl, apiKey, signal, providerFetch);
+    } else if (provider === "anthropic") {
+      models = await fetchAnthropicModels(baseUrl, apiKey, signal, providerFetch);
+    } else {
+      models = await fetchOpenAICompatibleModels(
+        baseUrl,
+        apiKey,
+        signal,
+        providerFetch,
+      );
+    }
     return Response.json({ models });
   } catch (error) {
     const known = error instanceof ResumeImportError;

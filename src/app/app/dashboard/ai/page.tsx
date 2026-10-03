@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Check,
   ChevronDown,
@@ -35,15 +35,28 @@ import {
   isModelConfigured,
   modelSupportsPdf,
   type AIModelProfile,
+  type AIAuthMethod,
   type AIProvider,
   type BuiltinAIModel,
 } from "@/config/ai-models";
+import { ORCAROUTER_SEED_CATALOG, registerOrcaCatalog } from "@/config/orcarouter";
+import { orcaChatOption, orcaImageOption } from "@/lib/orcarouter/catalog";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import { ResumeImportError } from "@/lib/resume-import-schema";
 import { ModelAssignment } from "./ModelAssignment";
+import { OrcaAuthPanel } from "./OrcaAuthPanel";
+import { OrcaModelSelector } from "./OrcaModelSelector";
 import { ProviderMark } from "./ProviderMark";
 import { useModelTest } from "./useModelTest";
+
+interface FetchedModel {
+  id: string;
+  name?: string;
+  description?: string;
+  contextLength?: number;
+  supportsImages?: boolean;
+}
 
 interface ModelCardProps {
   model: BuiltinAIModel;
@@ -208,11 +221,11 @@ export default function AISettingsPage() {
     const selected = models.find((model) => model.id === textModelId);
     return selected?.provider ?? models[0]?.provider ?? "deepseek";
   });
-  const [fetchedModels, setFetchedModels] = useState<
-    { id: string; description?: string }[]
-  >([]);
+  const [fetchedModels, setFetchedModels] = useState<FetchedModel[]>([]);
   const [fetchingModels, setFetchingModels] = useState(false);
   const [modelListOpen, setModelListOpen] = useState(false);
+  const [orcaLiveModelId, setOrcaLiveModelId] = useState<string | null>(null);
+  const [orcaQuery, setOrcaQuery] = useState("");
   const modelFetchRevision = useRef(0);
   const modelFetchController = useRef<AbortController | null>(null);
 
@@ -241,32 +254,40 @@ export default function AISettingsPage() {
     item: AIProvider,
     apiKey: string,
     baseUrl = getProviderBaseUrl(item),
+    authMethod?: AIAuthMethod,
   ) => {
     const catalog = BUILTIN_AI_MODELS[item];
     const providerModels = models.filter((model) => model.provider === item);
+
+    const applyCredentials = (profile: AIModelProfile): AIModelProfile => ({
+      ...profile,
+      apiKey,
+      ...(authMethod ? { authMethod } : {}),
+    });
 
     for (const model of catalog) {
       const existing = providerModels.find(
         (profile) => profile.model === model.id,
       );
       saveModel(
-        existing
-          ? {
-              ...existing,
-              name: model.name,
-              apiKey,
-              baseUrl,
-              protocol:
-                model.protocol ?? AI_PROVIDER_DEFINITIONS[item].protocol,
-              supportsPdf: model.supportsPdf,
-            }
-          : { ...createBuiltinModelProfile(item, model, apiKey), baseUrl },
+        applyCredentials(
+          existing
+            ? {
+                ...existing,
+                name: model.name,
+                baseUrl,
+                protocol:
+                  model.protocol ?? AI_PROVIDER_DEFINITIONS[item].protocol,
+                supportsPdf: model.supportsPdf,
+              }
+            : { ...createBuiltinModelProfile(item, model, apiKey), baseUrl },
+        ),
       );
     }
 
     for (const profile of providerModels) {
       if (!catalog.some((model) => model.id === profile.model)) {
-        saveModel({ ...profile, apiKey, baseUrl });
+        saveModel(applyCredentials({ ...profile, baseUrl }));
       }
     }
   };
@@ -292,9 +313,108 @@ export default function AISettingsPage() {
     }
   }, [models]);
 
+  /** Adopts the live catalog and selects its first entry. */
+  const selectOrcaModel = (id: string) => {
+    const entry = orcaFilteredModels.find((model) => model.id === id);
+    if (!entry) return;
+    saveModel({
+      id: `custom:orcarouter:${entry.id}`,
+      provider: "orcarouter",
+      name: entry.name ?? "",
+      apiKey: providerKey,
+      model: entry.id,
+      baseUrl: providerBaseUrl,
+      protocol: "chat-completions",
+      supportsPdf: !!entry.supportsImages,
+    });
+  };
+
+  const clearOrcarouterCredential = () => {
+    for (const profile of models.filter(
+      (model) => model.provider === "orcarouter",
+    ))
+      saveModel({ ...profile, apiKey: "", needsReauth: false });
+  };
+
+  const selectOrcaMethod = (method: AIAuthMethod, apiKey?: string) => {
+    for (const profile of models.filter(
+      (model) => model.provider === "orcarouter",
+    ))
+      saveModel({
+        ...profile,
+        authMethod: method,
+        ...(apiKey !== undefined
+          ? { apiKey, needsReauth: false }
+          : {}),
+      });
+  };
+
   const providerKey = getProviderKey(provider);
   const providerDefinition = AI_PROVIDER_DEFINITIONS[provider];
-  const providerBaseUrl = getProviderBaseUrl(provider);
+  const orcaCredential = provider === "orcarouter" ? providerKey : "";
+  const providerBaseUrl =
+    provider === "orcarouter"
+      ? "https://api.orcarouter.ai/v1"
+      : getProviderBaseUrl(provider);
+  const orcaMethod: AIAuthMethod = provider === "orcarouter"
+    ? (models.find((model) => model.provider === "orcarouter")?.authMethod ??
+      "api-key")
+    : "api-key";
+  const hasOrcaLiveCatalog = provider === "orcarouter" && !!orcaLiveModelId;
+  /**
+   * Options handed to the model selector. A live catalog is authoritative;
+   * without one, only the verified seed is offered. Entries that fail the
+   * chat capability filter — and the image requirement when the PDF/image
+   * entry point is what the user is configuring — never reach the selector.
+   */
+  const orcaRequiresImage = (() => {
+    if (provider !== "orcarouter") return false;
+    const assigned = models.find(
+      (model) => model.provider === "orcarouter" && model.id === pdfModelId,
+    );
+    return !!assigned;
+  })();
+
+  const orcaFilteredModels: FetchedModel[] = useMemo(() => {
+    if (provider !== "orcarouter") return [];
+    const source: FetchedModel[] = hasOrcaLiveCatalog
+      ? fetchedModels
+      : ORCAROUTER_SEED_CATALOG.map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          description: entry.description,
+          contextLength: entry.contextLength,
+          supportsImages: !!entry.inputModalities?.includes("image"),
+        }));
+    return source.filter((entry) =>
+      orcaRequiresImage ? orcaImageOption(entry) : orcaChatOption(entry),
+    );
+  }, [provider, hasOrcaLiveCatalog, fetchedModels, orcaRequiresImage]);
+
+  const orcaSelectedModel =
+    models.find(
+      (model) => model.provider === "orcarouter" && model.id === textModelId,
+    )?.model ?? "";
+  const orcaModelOptions = useMemo(() => {
+    const query = orcaQuery.trim().toLowerCase();
+    if (!query) return orcaFilteredModels;
+    return orcaFilteredModels.filter((entry) =>
+      entry.id.toLowerCase().includes(query),
+    );
+  }, [orcaFilteredModels, orcaQuery]);
+
+  useEffect(() => {
+    if (provider !== "orcarouter") return;
+    const current = models.find(
+      (model) => model.provider === "orcarouter" && model.id === textModelId,
+    );
+    if (!current || !current.model.trim()) return;
+    // Revalidate a restored selection against the compatible options and
+    // clear it rather than keeping a value the catalog no longer proves.
+    if (orcaFilteredModels.some((entry) => entry.id === current.model)) return;
+    saveModel({ ...current, model: "" });
+    toast.info(t("orca.catalogInvalidated"));
+  }, [provider, models, textModelId, orcaFilteredModels, saveModel, t]);
 
   useEffect(() => {
     modelFetchRevision.current += 1;
@@ -303,6 +423,7 @@ export default function AISettingsPage() {
     setFetchedModels([]);
     setModelListOpen(false);
     setFetchingModels(false);
+    setOrcaLiveModelId(null);
 
     return () => {
       modelFetchRevision.current += 1;
@@ -310,6 +431,30 @@ export default function AISettingsPage() {
       modelFetchController.current = null;
     };
   }, [provider, providerKey, providerBaseUrl]);
+
+  useEffect(() => {
+    if (provider !== "orcarouter") return;
+    const current = models.find(
+      (model) => model.provider === "orcarouter" && model.id === textModelId,
+    );
+    if (!current || !current.model.trim()) return;
+    const catalog: { id: string }[] = hasOrcaLiveCatalog
+      ? fetchedModels
+      : ORCAROUTER_SEED_CATALOG.map((entry) => ({ id: entry.id }));
+    // Revalidate a restored selection against the compatible list, and clear
+    // it rather than keeping a value the catalog no longer proves.
+    if (catalog.some((entry) => entry.id === current.model)) return;
+    saveModel({ ...current, model: "" });
+    toast.info(t("orca.catalogInvalidated"));
+  }, [
+    provider,
+    models,
+    textModelId,
+    hasOrcaLiveCatalog,
+    fetchedModels,
+    saveModel,
+    t,
+  ]);
 
   const providerProfiles = BUILTIN_AI_MODELS[provider].map((model) => ({
     model,
@@ -322,10 +467,12 @@ export default function AISettingsPage() {
       baseUrl: providerBaseUrl,
     },
   }));
+
   const customProfiles = models.filter(
     (profile) =>
       profile.provider === provider &&
-      !BUILTIN_AI_MODELS[provider].some((model) => model.id === profile.model),
+      !BUILTIN_AI_MODELS[provider].some((model) => model.id === profile.model) &&
+      !(provider === "orcarouter" && profile.model === orcaLiveModelId),
   );
 
   const fetchProviderModels = async () => {
@@ -353,11 +500,14 @@ export default function AISettingsPage() {
           provider: requestProvider,
           apiKey: requestKey,
           baseUrl: requestBaseUrl,
+          ...(requestProvider === "orcarouter"
+            ? { capability: "chat", modalities: "text,image" }
+            : {}),
         }),
         signal: controller.signal,
       });
       const data = (await response.json().catch(() => null)) as {
-        models?: { id: string; description?: string }[];
+        models?: FetchedModel[];
         code?: string;
       } | null;
       if (requestRevision !== modelFetchRevision.current) return;
@@ -371,6 +521,23 @@ export default function AISettingsPage() {
       }
       setFetchedModels(data.models);
       setModelListOpen(true);
+      if (requestProvider === "orcarouter") {
+        // Live discovery is authoritative: it replaces the seed catalog
+        // outright, both for the selector and for capability metadata.
+        registerOrcaCatalog(
+          data.models.map((model) => ({
+            id: model.id,
+            name: model.name,
+            description: model.description,
+            contextLength: model.contextLength,
+            inputModalities: model.supportsImages
+              ? (["text", "image"] as const)
+              : (["text"] as const),
+          })),
+        );
+        setFetchedModels(data.models);
+        setOrcaLiveModelId(data.models[0]?.id ?? null);
+      }
       if (data.models.length) {
         toast.success(t("fetchModels.success"));
       } else {
@@ -539,34 +706,70 @@ export default function AISettingsPage() {
 
             {/* API Key Input Section */}
             <div className="mt-6 space-y-3">
-              <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
-                {t("apiKey")}
-              </Label>
-              <div className="relative flex items-center">
-                <Input
-                  id="provider-key"
-                  type={showKey ? "text" : "password"}
-                  autoComplete="off"
-                  value={providerKey}
-                  onChange={(event) =>
-                    syncProviderModels(provider, event.target.value)
-                  }
-                  placeholder={t("providerKeyPlaceholder")}
-                  className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
+              {provider === "orcarouter" ? (
+                <OrcaAuthPanel
+                  profile={{
+                    id: "orcarouter-provider",
+                    provider: "orcarouter",
+                    protocol: "chat-completions",
+                    apiKey: orcaCredential,
+                    model: "",
+                    baseUrl: providerBaseUrl,
+                    name: "",
+                    supportsPdf: false,
+                    authMethod: orcaMethod,
+                    generation:
+                      models.find((model) => model.provider === "orcarouter")
+                        ?.generation ?? 0,
+                    needsReauth: !!models.find(
+                      (model) => model.provider === "orcarouter",
+                    )?.needsReauth,
+                  }}
+                  onKeyChange={(apiKey) => {
+                    syncProviderModels(
+                      provider,
+                      apiKey,
+                      providerBaseUrl,
+                      "api-key",
+                    );
+                    // A different key invalidates the discovered catalog.
+                    setOrcaQuery("");
+                  }}
+                  onSelectMethod={selectOrcaMethod}
+                  onClearKey={clearOrcarouterCredential}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={t(showKey ? "hideKey" : "showKey")}
-                >
-                  {showKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+              ) : (
+                <>
+                  <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
+                    {t("apiKey")}
+                  </Label>
+                  <div className="relative flex items-center">
+                    <Input
+                      id="provider-key"
+                      type={showKey ? "text" : "password"}
+                      autoComplete="off"
+                      value={providerKey}
+                      onChange={(event) =>
+                        syncProviderModels(provider, event.target.value)
+                      }
+                      placeholder={t("providerKeyPlaceholder")}
+                      className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowKey(!showKey)}
+                      className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label={t(showKey ? "hideKey" : "showKey")}
+                    >
+                      {showKey ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
 
               <p className="text-xs text-muted-foreground">
                 {t("keySharedHint")}
@@ -610,24 +813,38 @@ export default function AISettingsPage() {
             </div>
 
             {/* Built-in Models Grid */}
-            <div className="mt-8">
+            <div className="mt-8" data-testid="orca-model-grid">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <h3 className="font-sans text-sm font-semibold tracking-tight text-foreground">
                     {t("availableModels")}
                   </h3>
-                  <span className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground">
+                  <span
+                    data-testid="orca-model-count"
+                    className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground"
+                  >
                     {t("modelCount", {
                       count: providerProfiles.length + customProfiles.length,
                     })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
+                  {provider === "orcarouter" && (
+                    <span
+                      data-testid="orca-catalog-source"
+                      className="rounded-md bg-secondary/60 px-2 py-0.5 text-[10px] text-muted-foreground"
+                    >
+                      {hasOrcaLiveCatalog
+                        ? t("orca.catalogLive")
+                        : t("orca.catalogSeed")}
+                    </span>
+                  )}
                   <span className="text-xs text-muted-foreground">
                     {t("builtinModelsHint")}
                   </span>
                   <button
                     type="button"
+                    data-testid="orca-refresh-models"
                     onClick={fetchProviderModels}
                     disabled={fetchingModels}
                     className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-foreground/75 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
@@ -712,6 +929,19 @@ export default function AISettingsPage() {
                     </div>
                   )}
                 </div>
+              )}
+
+              {provider === "orcarouter" && orcaCredential.trim() && (
+                <OrcaModelSelector
+                  models={orcaModelOptions}
+                  source={hasOrcaLiveCatalog ? "live" : "seed"}
+                  selectedId={orcaSelectedModel}
+                  onSelect={selectOrcaModel}
+                  query={orcaQuery}
+                  onQueryChange={setOrcaQuery}
+                  loading={fetchingModels}
+                  onRefresh={fetchProviderModels}
+                />
               )}
 
               <div className="grid gap-4 xl:grid-cols-2">

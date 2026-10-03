@@ -27,7 +27,7 @@ interface MenuItem {
   title: string;
   url?: string;
   href?: string;
-  icon: any;
+  icon: typeof IconResumes;
   items?: { title: string; href: string }[];
 }
 
@@ -115,19 +115,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                               <SidebarMenuButton
                                 asChild
                                 isActive={active}
-                                className={`w-full transition-all duration-200 ease-in-out h-12 mb-1 [&>svg]:size-auto ${active
-                                  ? "bg-primary/10 text-primary font-bold hover:bg-primary/20 hover:text-primary"
+                                className={`w-full transition-colors duration-200 h-12 mb-1 [&>svg]:size-5 ${active
+                                  ? "bg-primary/10 text-primary font-medium hover:bg-primary/20 hover:text-primary"
                                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                                   }`}
                               >
                                 <div
-                                  className="flex items-center gap-2 px-2 cursor-pointer"
+                                  className="flex items-center gap-3 px-2 cursor-pointer"
                                   onClick={() => handleItemClick(item)}
                                 >
-                                  <item.icon
-                                    size={24}
-                                    active={active}
-                                  />
+                                  <item.icon />
                                   {open && (
                                     <span className="flex-1 text-sm">
                                       {item.title}

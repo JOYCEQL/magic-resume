@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "@/lib/navigation";
 import { Input } from "@/components/ui/input";
 import PdfExport from "../shared/PdfExport";
-import ThemeToggle from "../shared/ThemeToggle";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useGrammarCheck } from "@/hooks/useGrammarCheck";
 import {
@@ -240,7 +239,6 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
              </div>
           )}
 
-          <ThemeToggle></ThemeToggle>
           <div className="md:flex items-center ">
             <PdfExport />
           </div>

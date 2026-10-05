@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Folder, Trash2 } from "lucide-react";
+import { FolderSync, FolderOpen, FolderCheck, FolderPlus, Trash2 } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/utils/fileSystem";
 import { useResumeStore } from "@/store/useResumeStore";
 import { syncResumesFromDirectory } from "@/utils/resumeFileSync";
+import ThemeSettings from "./ThemeSettings";
 
 const SettingsPage = () => {
   const [directoryHandle, setDirectoryHandle] =
@@ -86,64 +87,89 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto py-8 px-6 lg:px-8">
+    <div className="w-full max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col space-y-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">
+        <header className="border-b border-border/40 pb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
             {t("dashboard.settings.title")}
-          </h2>
-        </div>
+          </h1>
+          <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
+            {t("dashboard.settings.description")}
+          </p>
+        </header>
 
         <div className="space-y-6">
-          <Card className="overflow-hidden border border-gray-200 dark:border-border shadow-sm hover:shadow-md transition-all duration-300 bg-white dark:bg-card/50">
-            <CardHeader className="border-b border-gray-100 dark:border-border/50 pb-6">
+          <ThemeSettings />
+
+          <Card className="overflow-hidden rounded-2xl border border-border/70 bg-card shadow-xs transition-shadow hover:shadow-sm">
+            <CardHeader className="border-b border-border/40 p-6 pb-5">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-orange-50 dark:bg-orange-900/20 shrink-0">
-                  <Folder className="h-6 w-6 text-[#D97757] dark:text-[#D97757]/90" />
+                <div className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-xs dark:bg-zinc-800 dark:text-zinc-100 dark:border dark:border-zinc-700">
+                  <FolderSync className="size-5" />
+                  {directoryHandle && (
+                    <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-emerald-500 ring-2 ring-card" />
+                  )}
                 </div>
                 <div className="space-y-1">
-                  <CardTitle className="text-xl font-semibold text-gray-900 dark:text-foreground">
-                    {t("dashboard.settings.sync.title")}
-                  </CardTitle>
-                  <CardDescription className="text-base text-gray-500 dark:text-muted-foreground leading-relaxed">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <CardTitle className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+                      {t("dashboard.settings.sync.title")}
+                    </CardTitle>
+                    {directoryHandle ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <span className="size-1.5 rounded-full bg-emerald-500" />
+                        {t("dashboard.settings.syncDirectory.statusConfigured")}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                        <span className="size-1.5 rounded-full bg-amber-500" />
+                        {t("dashboard.settings.syncDirectory.statusNotConfigured")}
+                      </span>
+                    )}
+                  </div>
+                  <CardDescription className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {t("dashboard.settings.sync.description")}
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-8 px-6 pb-8 md:px-8">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <div className="flex-1 relative group">
+            <CardContent className="p-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex-1 min-w-0">
                   {directoryHandle ? (
-                    <div className="h-12 px-4 flex items-center gap-3 bg-gray-50/50 dark:bg-secondary/50 border border-gray-200 dark:border-input rounded-xl transition-colors group-hover:border-[#D97757]/30 group-hover:bg-orange-50/30 dark:group-hover:bg-orange-900/10">
-                      <Folder className="h-5 w-5 text-[#D97757]" />
-                      <span className="truncate font-medium text-gray-700 dark:text-foreground/85 font-mono text-sm">
+                    <div className="flex h-11 items-center gap-3 rounded-xl border border-border/80 bg-muted/30 px-3.5 transition-colors">
+                      <FolderCheck className="size-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+                      <span className="truncate font-mono text-xs sm:text-sm font-medium text-foreground">
                         {folderPath}
                       </span>
                     </div>
                   ) : (
-                    <div className="h-12 px-4 flex items-center justify-center sm:justify-start text-gray-400 dark:text-muted-foreground bg-gray-50 dark:bg-card border border-dashed border-gray-300 dark:border-input rounded-xl">
-                      {t("dashboard.settings.syncDirectory.noFolderConfigured")}
+                    <div className="flex h-11 items-center justify-center sm:justify-start gap-2 rounded-xl border border-dashed border-border/80 bg-muted/20 px-3.5 text-xs sm:text-sm text-muted-foreground">
+                      <FolderPlus className="size-4 shrink-0 text-muted-foreground/60" />
+                      <span>{t("dashboard.settings.syncDirectory.noFolderConfigured")}</span>
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-3 w-full sm:w-auto">
+                <div className="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
                   <Button
                     onClick={handleSelectDirectory}
                     variant="default"
-                    className="flex-1 sm:flex-none h-12 px-6 text-primary-foreground shadow-sm hover:shadow transition-all duration-200 rounded-xl font-medium cursor-pointer"
+                    className="flex-1 sm:flex-none h-11 px-5 rounded-xl font-medium shadow-xs hover:shadow transition-all cursor-pointer bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
                   >
-                    {t("dashboard.settings.sync.select")}
+                    <FolderOpen className="mr-2 size-4" />
+                    {directoryHandle
+                      ? t("dashboard.settings.syncDirectory.changeFolder")
+                      : t("dashboard.settings.sync.select")}
                   </Button>
                   {directoryHandle && (
                     <Button
                       onClick={handleRemoveDirectory}
                       variant="outline"
                       size="icon"
-                      className="h-12 w-12 rounded-xl border-gray-200 dark:border-border hover:bg-red-50 hover:text-red-500 hover:border-red-200 dark:hover:bg-red-950/30 dark:hover:text-red-400 dark:hover:border-red-900/50 transition-colors"
-                      title="Remove synced directory"
+                      className="size-11 shrink-0 rounded-xl border-border/80 text-muted-foreground hover:bg-red-500/10 hover:text-red-600 hover:border-red-500/30 dark:hover:bg-red-500/15 dark:hover:text-red-400 transition-colors cursor-pointer"
+                      title={t("dashboard.settings.syncDirectory.removeFolder")}
                     >
-                      <Trash2 className="h-5 w-5" />
+                      <Trash2 className="size-4" />
                     </Button>
                   )}
                 </div>

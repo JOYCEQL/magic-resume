@@ -139,7 +139,6 @@ export type GlobalSettings = {
   centerSubtitle?: boolean | undefined;
   flexibleHeaderLayout?: boolean | undefined;
   autoOnePage?: boolean | undefined;
-  pageBreakLinesVisible?: boolean | undefined;
 };
 
 export interface ResumeTheme {

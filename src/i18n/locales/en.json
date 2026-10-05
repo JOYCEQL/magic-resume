@@ -265,17 +265,28 @@
     },
     "settings": {
       "title": "Settings",
+      "description": "Manage workspace appearance and local resume backup settings.",
+      "appearance": {
+        "title": "Appearance",
+        "description": "Choose a light or dark look for your workspace.",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
       "syncDirectory": {
-        "title": "Sync Directory",
-        "description": "Choose a folder to sync and backup your resumes.",
-        "currentSyncFolder": "Current Sync Folder",
-        "noFolderConfigured": "No folder configured",
+        "title": "Local Backup Directory",
+        "description": "Choose a folder to sync and backup your resumes. All data is stored locally for synchronization.",
+        "currentSyncFolder": "Current Local Backup Folder",
+        "noFolderConfigured": "No local backup folder configured",
         "changeFolder": "Change Folder",
-        "selectFolder": "Select Folder"
+        "selectFolder": "Select Folder",
+        "statusConfigured": "Configured",
+        "statusNotConfigured": "Not configured",
+        "removeFolder": "Remove local backup directory"
       },
       "sync": {
-        "title": "Sync Directory",
-        "description": "Choose a folder to sync and backup your resumes.",
+        "title": "Local Backup Directory",
+        "description": "Choose a folder to sync and backup your resumes. All data is stored locally for synchronization.",
         "select": "Select Folder"
       },
       "ai": {
@@ -584,11 +595,6 @@
       "enabled": "One page mode enabled",
       "disabled": "One page mode disabled",
       "cannotFit": "Too much content. Optimized as much as possible but cannot fit on one page. Try simplifying the content or adjusting margins and font size in the sidebar."
-    },
-    "pageBreakLine": {
-      "tooltip": "Page Break Line",
-      "visible": "Page break line shown",
-      "hidden": "Page break line hidden"
     },
     "backup": {
       "configured": "Backed up",

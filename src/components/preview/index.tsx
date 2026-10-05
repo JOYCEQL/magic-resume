@@ -82,8 +82,6 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     const resumeContentRef = (ref as React.MutableRefObject<HTMLDivElement>) || internalResumeContentRef;
     const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
     const autoOnePageEnabled = activeResume?.globalSettings?.autoOnePage || false;
-    const pageBreakLinesVisible =
-      activeResume?.globalSettings?.pageBreakLinesVisible !== false;
 
     const { contentHeight, scaleFactor, isScaled, cannotFit } = useAutoOnePage({
       contentRef: resumeContentRef,
@@ -214,7 +212,7 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               <div data-resume-content style={{ width: "100%", display: "flow-root", zoom: scaleFactor }}>
                 <ResumeTemplateComponent data={activeResume} template={template} />
               </div>
-              {pageBreakLinesVisible && contentHeight > 0 && (
+              {contentHeight > 0 && (
                 <>
                   <div>
                     {Array.from(

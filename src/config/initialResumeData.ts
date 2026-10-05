@@ -11,7 +11,6 @@ const initialGlobalSettings: GlobalSettings = {
   useIconMode: true,
   themeColor: "#000000",
   centerSubtitle: true,
-  pageBreakLinesVisible: true,
 };
 
 export const initialResumeState = {

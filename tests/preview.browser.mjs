@@ -33,7 +33,6 @@ test("one-page preview settles and responds to subsequent layout changes", {
         globalSettings: {
           ...store.activeResume.globalSettings,
           autoOnePage: enabled,
-          pageBreakLinesVisible: true,
           baseFontSize: fontSize,
           pagePadding: padding,
         },

@@ -1,5 +1,30 @@
 # Changelog
 
+## v2.0.10
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.9...v2.0.10)
+
+### 🚀 Enhancements
+
+- Redesign the landing page with interactive feature demos ([1a2fd3c](https://github.com/JOYCEQL/magic-resume/commit/1a2fd3c)).
+- Add light, dark, and system appearance controls in settings, refine backup configuration states, and remove the page-break visibility toggle while preserving pagination guides ([05ffbb0](https://github.com/JOYCEQL/magic-resume/commit/05ffbb0)).
+- Discover available AI models from provider APIs and refine model management and bilingual settings ([51c4185](https://github.com/JOYCEQL/magic-resume/commit/51c4185), [3d0f319](https://github.com/JOYCEQL/magic-resume/commit/3d0f319)).
+- Support font sizes for selected resume body text ([aeadde5](https://github.com/JOYCEQL/magic-resume/commit/aeadde5)).
+- Refine dashboard sidebar icons and dark-mode contrast ([79bd313](https://github.com/JOYCEQL/magic-resume/commit/79bd313), [c121791](https://github.com/JOYCEQL/magic-resume/commit/c121791)).
+
+### 🩹 Fixes
+
+- Prevent the landing page from briefly losing styles when navigating from the dashboard ([0a4d754](https://github.com/JOYCEQL/magic-resume/commit/0a4d754)).
+- Stabilize one-page resume layout and align export output ([fe19c2c](https://github.com/JOYCEQL/magic-resume/commit/fe19c2c)).
+- Keep mobile workbench navigation visible and constrain dashboard scrolling to the viewport ([83d6461](https://github.com/JOYCEQL/magic-resume/commit/83d6461), [eb909f1](https://github.com/JOYCEQL/magic-resume/commit/eb909f1)).
+- Preserve leading numbers during resume import ([de7c2b6](https://github.com/JOYCEQL/magic-resume/commit/de7c2b6)).
+- Align contact icons with the first text line and preserve contact-field casing in the editorial template ([3cfaf40](https://github.com/JOYCEQL/magic-resume/commit/3cfaf40), [9fec18b](https://github.com/JOYCEQL/magic-resume/commit/9fec18b)).
+
+### 🏡 Chore
+
+- Add the promotional video composition, rendering script, local assets, and still frames ([482b7df](https://github.com/JOYCEQL/magic-resume/commit/482b7df)).
+- Add Chromium and WebKit coverage for mobile workbench navigation ([e6044cd](https://github.com/JOYCEQL/magic-resume/commit/e6044cd)).
+
 ## v2.0.9
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.8...v2.0.9)

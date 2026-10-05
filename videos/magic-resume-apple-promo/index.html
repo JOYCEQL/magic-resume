@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>魔方简历 · 宣传片</title>
+<style>
+  @font-face { font-family: "RF-PuHuiTi"; src: url("assets/fonts/AlibabaPuHuiTi-3-85-Bold.ttf"); }
+  @font-face { font-family: "RF-MiSans"; src: url("assets/fonts/MiSans-Medium.ttf"); }
+  @font-face { font-family: "RF-SourceHanSerif"; src: url("assets/fonts/SourceHanSerifSC-Bold.otf"); }
+  @font-face { font-family: "RF-NotoSans"; src: url("assets/fonts/NotoSansSC-Bold.otf"); }
+
+  :root {
+    --font: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    --grad: linear-gradient(90deg, #b06cff 0%, #ff5fa2 55%, #ff9f43 100%);
+    --ink: #1d1d1f;
+    --mute: #86868b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; overflow: hidden; width: 100%; height: 100%; }
+  #stage {
+    position: absolute; left: 0; top: 0; overflow: hidden; background: #000;
+    font-family: var(--font); color: #f5f5f7;
+    -webkit-font-smoothing: antialiased; transform-origin: 0 0;
+  }
+  .scene { position: absolute; inset: 0; display: none; overflow: hidden; }
+  .scene.light { background: #f5f5f7; color: var(--ink); }
+  .scene.white { background: #ffffff; color: var(--ink); }
+  .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .col-mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .col-top { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .h1 { font-weight: 600; letter-spacing: -0.015em; line-height: 1.1; }
+  .h-xxl { font-size: 132px; }
+  .h-xl { font-size: 120px; }
+  .h-lg { font-size: 88px; }
+  .dark { color: var(--ink); }
+  .eyebrow {
+    font-size: 34px; font-weight: 600; margin-bottom: 18px;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { font-size: 36px; font-weight: 500; color: var(--mute); margin-top: 22px; }
+  .glow {
+    position: absolute; left: 50%; top: 50%; width: 1400px; height: 1400px; margin: -700px 0 0 -700px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(150, 90, 255, 0.34) 0%, rgba(255, 95, 162, 0.16) 32%, rgba(0, 0, 0, 0) 62%);
+  }
+
+  /* S2 / S12 brand */
+  .logo { width: 330px; height: 220px; margin-bottom: 4px; }
+  .brand {
+    font-size: 150px; font-weight: 700;
+    background: linear-gradient(100deg, #ffffff 0%, #ffffff 38%, #b9b9c2 50%, #ffffff 62%, #ffffff 100%);
+    background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cta {
+    margin-top: 56px; padding: 20px 48px; border-radius: 999px; background: #f5f5f7; color: #000;
+    font-size: 36px; font-weight: 600; letter-spacing: 0.01em; display: flex; align-items: center; gap: 14px;
+  }
+  .tiny { margin-top: 28px; font-size: 28px; color: var(--mute); font-weight: 500; letter-spacing: 0.08em; }
+
+  /* S3 workbench */
+  .s3-head { top: 96px; }
+  .s3-wrap { position: absolute; left: 50%; top: 400px; width: 1520px; margin-left: -760px; perspective: 2200px; }
+  .win {
+    width: 100%; border-radius: 26px; overflow: hidden; background: #fff; transform-origin: 50% 0%;
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+  .win-bar { height: 46px; background: #ececee; display: flex; align-items: center; gap: 10px; padding-left: 20px; }
+  .win-bar i { width: 14px; height: 14px; border-radius: 50%; background: #ff5f57; }
+  .win-bar i:nth-child(2) { background: #febc2e; }
+  .win-bar i:nth-child(3) { background: #28c840; }
+  .win-body { position: relative; overflow: hidden; width: 100%; height: 775px; }
+  .win-body img { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+
+  /* S4 AI polish */
+  .card {
+    margin-top: 56px; width: 1180px; padding: 44px 48px; border-radius: 32px; text-align: left;
+    background: linear-gradient(180deg, #1c1c1e 0%, #141416 100%); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .card-label { font-size: 26px; font-weight: 600; color: var(--mute); margin-bottom: 12px; }
+  .draft { position: relative; display: inline-block; font-size: 40px; color: #c7c7cc; line-height: 1.5; }
+  .strike { position: absolute; left: -4px; right: -4px; top: 52%; height: 4px; border-radius: 2px; background: #ff453a; transform-origin: 0 50%; }
+  .spark-row { display: flex; align-items: center; gap: 18px; height: 76px; }
+  .spark-row .line { flex: 1; height: 1px; background: linear-gradient(90deg, rgba(176, 108, 255, 0.7), rgba(255, 255, 255, 0)); }
+  .spark { width: 40px; height: 40px; }
+  .polished { font-size: 42px; line-height: 1.55; color: #f5f5f7; font-weight: 500; min-height: 130px; }
+  .polished span { display: inline-block; white-space: pre; }
+  .prov-cap { margin-top: 52px; font-size: 26px; color: var(--mute); font-weight: 500; }
+  .providers { display: flex; gap: 18px; margin-top: 20px; flex-wrap: wrap; justify-content: center; max-width: 1400px; }
+  .chip { display: flex; align-items: center; gap: 12px; padding: 14px 26px 14px 18px; border-radius: 999px; background: #1c1c1e; font-size: 28px; font-weight: 600; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .chip img { width: 38px; height: 38px; }
+  .chip img.mono { filter: invert(1); }
+
+  /* S5 grammar */
+  .sentence { margin-top: 70px; font-size: 64px; font-weight: 500; line-height: 1.6; color: #f5f5f7; }
+  .fix { position: relative; display: inline-block; vertical-align: top; height: 1.6em; }
+  .fix .old, .fix .new { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .fix .old { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-thickness: 3px; text-underline-offset: 12px; }
+  .fix .new { color: #30d158; }
+  .pill-ok { margin-top: 56px; display: flex; align-items: center; gap: 12px; padding: 16px 34px; border-radius: 999px; background: rgba(48, 209, 88, 0.14); color: #30d158; font-size: 30px; font-weight: 600; }
+  .pill-ok svg { width: 30px; height: 30px; }
+
+  /* S6 PDF import */
+  .s6-stage { display: flex; align-items: center; gap: 150px; margin-top: 70px; }
+  .doc { position: relative; width: 320px; height: 420px; border-radius: 22px; background: #f5f5f7; padding: 44px 34px; overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); }
+  .doc .dl { height: 12px; border-radius: 6px; background: #d2d2d7; margin-bottom: 16px; }
+  .doc .dl.h { height: 20px; width: 55%; background: #1d1d1f; margin-bottom: 22px; }
+  .doc .dl.s { width: 32%; background: #ff4f12; height: 12px; margin-top: 26px; }
+  .doc-tag { position: absolute; right: 22px; top: 22px; padding: 6px 14px; border-radius: 10px; background: #ff3b30; color: #fff; font-size: 22px; font-weight: 700; }
+  .scan { position: absolute; left: 0; right: 0; height: 90px; background: linear-gradient(180deg, rgba(176, 108, 255, 0) 0%, rgba(176, 108, 255, 0.35) 80%, rgba(255, 95, 162, 0.9) 100%); }
+  .s6-items { display: flex; flex-direction: column; gap: 20px; }
+  .item { width: 440px; height: 86px; border-radius: 22px; background: #1c1c1e; display: flex; align-items: center; gap: 20px; padding: 0 26px; font-size: 32px; font-weight: 600; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .item .ico { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; background: rgba(176, 108, 255, 0.18); color: #c99bff; }
+  .item .ico svg { width: 26px; height: 26px; }
+  .item .lbl { flex: 1; text-align: left; }
+  .item .ok { width: 34px; height: 34px; border-radius: 50%; background: #30d158; display: flex; align-items: center; justify-content: center; color: #000; }
+  .item .ok svg { width: 20px; height: 20px; }
+
+  /* S7 templates */
+  .s7-head { top: 100px; }
+  .row { position: absolute; left: 0; display: flex; gap: 40px; will-change: transform; }
+  .tcard { flex: none; width: 400px; }
+  .tcard .tm { width: 400px; height: 566px; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05); }
+  .tcard img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tname { margin-top: 18px; text-align: center; font-size: 26px; font-weight: 600; color: #6e6e73; }
+
+  /* S8 customize */
+  .s8-layout { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 140px; }
+  .paper { --accent: #1d1d1f; --rfont: "RF-PuHuiTi"; width: 560px; height: 792px; border-radius: 10px; background: #fff; padding: 52px 50px; text-align: left; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06); }
+  .pp-head { display: flex; align-items: center; gap: 28px; padding-bottom: 26px; border-bottom: 3px solid var(--accent); }
+  .pp-photo { width: 92px; height: 122px; border-radius: 8px; background-image: url("assets/templates/creative.png"); background-size: 812px auto; background-position: -31px -47px; }
+  .pp-name { font-family: var(--rfont); font-size: 46px; color: var(--accent); line-height: 1.2; }
+  .pp-role { font-family: var(--rfont); font-size: 22px; color: #6e6e73; margin-top: 6px; }
+  .pp-sec { margin-top: 30px; }
+  .pp-h { font-family: var(--rfont); font-size: 24px; color: var(--accent); margin-bottom: 8px; }
+  .pp-rule { height: 2px; background: var(--accent); opacity: 0.85; margin-bottom: 16px; }
+  .pp-l { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
+  .pp-l b { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+  .pp-l i { display: block; height: 10px; border-radius: 5px; background: #e5e5ea; }
+  .s8-copy { width: 720px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+  .swatches { position: relative; display: flex; gap: 22px; margin-top: 56px; }
+  .sw { width: 52px; height: 52px; border-radius: 50%; }
+  .ring { position: absolute; left: 0; top: 0; width: 66px; height: 66px; margin: -7px 0 0 -7px; border-radius: 50%; border: 3px solid #1d1d1f; }
+  .fontpill { margin-top: 40px; display: flex; align-items: center; gap: 18px; padding: 16px 30px; border-radius: 18px; background: #f5f5f7; font-size: 32px; color: var(--ink); }
+  .fp-label { font-size: 24px; color: var(--mute); font-weight: 600; }
+
+  /* S9 one page */
+  .s9-pages { display: flex; gap: 60px; margin-top: 64px; }
+  .page { position: relative; width: 360px; height: 509px; border-radius: 8px; background: #f5f5f7; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); }
+  .page-in { position: absolute; left: 30px; right: 30px; top: 30px; bottom: 30px; overflow: hidden; display: flex; flex-direction: column; }
+  .page-in > div { flex: none; border-radius: 4px; background: #c7c7cc; }
+  .page-in > .n { height: 22px; width: 46%; background: #1d1d1f; }
+  .page-in > .t { height: 10px; width: 30%; background: #8e8e93; }
+  .page-in > .h { height: 14px; width: 34%; background: #ff4f12; }
+  .page-in > .l { height: 8px; }
+  .pno { position: absolute; bottom: -46px; left: 0; right: 0; text-align: center; color: var(--mute); font-size: 22px; font-weight: 600; }
+  .s9-badge { margin-top: 90px; display: flex; align-items: center; gap: 12px; padding: 14px 32px; border-radius: 999px; background: #1c1c1e; font-size: 30px; font-weight: 600; }
+  .s9-badge svg { width: 28px; height: 28px; }
+
+  /* S10 export */
+  .tiles { display: flex; gap: 32px; margin-top: 72px; }
+  .tile { width: 270px; height: 330px; border-radius: 34px; background: #1c1c1e; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  .tile svg { width: 120px; height: 150px; }
+  .tile .tn { margin-top: 26px; font-size: 34px; font-weight: 700; }
+  .tile .td { margin-top: 8px; font-size: 24px; color: var(--mute); font-weight: 500; }
+
+  /* S11 montage */
+  .word { font-size: 170px; font-weight: 700; letter-spacing: -0.02em; }
+
+  /* controls (preview only) */
+  #ctrl { position: fixed; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; padding: 10px 16px; background: rgba(0, 0, 0, 0.6); color: #fff; font: 13px var(--font); z-index: 10; }
+  #ctrl input { flex: 1; }
+  #ctrl[hidden] { display: none; }
+  .card-label.grad { color: transparent; }
+
+  /* ---------- portrait overrides ---------- */
+  .portrait .h-xxl { font-size: 112px; }
+  .portrait .h-xl { font-size: 112px; }
+  .portrait .h-lg { font-size: 80px; }
+  .portrait .eyebrow { font-size: 32px; }
+  .portrait .sub { font-size: 34px; }
+  .portrait .brand { font-size: 140px; }
+  .portrait .s3-head { top: 190px; }
+  .portrait .s3-wrap { top: 560px; width: 960px; margin-left: -480px; }
+  .portrait .win-body { height: 1180px; }
+  .portrait .win-body img { width: auto; height: 100%; }
+  .portrait .card { width: 940px; }
+  .portrait .providers { max-width: 900px; }
+  .portrait .sentence { font-size: 54px; max-width: 960px; }
+  .portrait .s6-stage { flex-direction: column; gap: 70px; }
+  .portrait .doc { width: 300px; height: 394px; }
+  .portrait .s7-head { top: 200px; }
+  .portrait .tcard, .portrait .tcard .tm { width: 380px; }
+  .portrait .tcard .tm { height: 537px; }
+  .portrait .s8-layout { flex-direction: column; gap: 80px; }
+  .portrait .s8-copy { order: -1; align-items: center; text-align: center; width: 960px; }
+  .portrait .s8-copy .sub { margin-top: 18px; }
+  .portrait .swatches { margin-top: 44px; }
+  .portrait .paper { width: 600px; height: 848px; }
+  .portrait .s9-pages { gap: 40px; zoom: 1.18; }
+  .portrait .tiles { display: grid; grid-template-columns: 340px 340px; gap: 32px; }
+  .portrait .tile { width: 340px; height: 360px; }
+  .portrait .word { font-size: 150px; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- S1 Intro -->
+  <section class="scene" id="s1">
+    <div class="center"><div class="h1 h-xxl" id="s1a">这一次，</div></div>
+    <div class="center"><div class="h1 h-xxl" id="s1b">简历，从此不同。</div></div>
+  </section>
+
+  <!-- S2 Brand -->
+  <section class="scene" id="s2">
+    <div class="glow" id="s2glow"></div>
+    <div class="center">
+      <img class="logo" id="s2logo" src="assets/logo-white.svg" alt="" />
+      <div class="h1 brand" id="s2title">魔方简历</div>
+      <div class="sub" id="s2sub">Magic Resume · AI 驱动的简历编辑器</div>
+    </div>
+  </section>
+
+  <!-- S3 Workbench -->
+  <section class="scene light" id="s3">
+    <div class="col-top s3-head">
+      <div class="eyebrow" id="s3eb">实时预览</div>
+      <div class="h1 h-lg dark" id="s3title">所见即所得。</div>
+      <div class="sub" id="s3sub">左边编辑，右边即刻成形。</div>
+    </div>
+    <div class="s3-wrap">
+      <div class="win" id="s3win">
+        <div class="win-bar"><i></i><i></i><i></i></div>
+        <div class="win-body"><img id="s3img" src="assets/web-shot.png" alt="" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S4 AI Polish -->
+  <section class="scene" id="s4">
+    <div class="col-mid" id="s4col">
+      <div class="eyebrow" id="s4eb">AI 润色</div>
+      <div class="h1 h-lg" id="s4title">一键润色，表达更专业。</div>
+      <div class="card" id="s4card">
+        <div class="card-label">初稿</div>
+        <div class="draft"><span id="s4draft">负责 AI 助手开发，做了一些回答优化。</span><i class="strike" id="s4strike"></i></div>
+        <div class="spark-row">
+          <svg class="spark" id="s4spark" viewBox="0 0 24 24" fill="none" stroke="url(#sg)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b06cff" /><stop offset="0.6" stop-color="#ff5fa2" /><stop offset="1" stop-color="#ff9f43" /></linearGradient></defs>
+            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+            <path d="M20 3v4" /><path d="M22 5h-4" /><path d="M4 17v2" /><path d="M5 18H3" />
+          </svg>
+          <i class="line"></i>
+        </div>
+        <div class="card-label grad" id="s4pl">AI 润色后</div>
+        <div class="polished" id="s4pol"></div>
+      </div>
+      <div class="prov-cap" id="s4cap">接入六大模型服务商，也可自定义模型</div>
+      <div class="providers" id="s4prov">
+        <div class="chip"><img class="mono" src="assets/icons/openai.svg" alt="" />OpenAI</div>
+        <div class="chip"><img src="assets/icons/claude-color.svg" alt="" />Claude</div>
+        <div class="chip"><img src="assets/icons/gemini-color.svg" alt="" />Gemini</div>
+        <div class="chip"><img src="assets/icons/deepseek-color.svg" alt="" />DeepSeek</div>
+        <div class="chip"><img src="assets/icons/qwen-color.svg" alt="" />通义千问</div>
+        <div class="chip"><img src="assets/icons/doubao-color.svg" alt="" />豆包</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 Grammar -->
+  <section class="scene" id="s5">
+    <div class="col-mid" id="s5col">
+      <div class="eyebrow" id="s5eb">AI 语法纠错</div>
+      <div class="h1 h-lg" id="s5title">错别字，无处遁形。</div>
+      <div class="sentence" id="s5sent">熟悉 <span class="fix" id="fx1"><span class="old">Recat</span><span class="new">React</span></span> 框架，主导了项目<span class="fix" id="fx2"><span class="old">的的</span><span class="new">的</span></span>架构重构。</div>
+      <div class="pill-ok" id="s5ok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+        已修正 2 处问题
+      </div>
+    </div>
+  </section>
+
+  <!-- S6 PDF import -->
+  <section class="scene" id="s6">
+    <div class="col-mid" id="s6col">
+      <div class="eyebrow" id="s6eb">PDF 智能导入</div>
+      <div class="h1 h-lg" id="s6title">旧简历，一键导入。</div>
+      <div class="sub" id="s6sub">视觉模型读懂 PDF，自动生成可编辑简历。</div>
+      <div class="s6-stage">
+        <div class="doc" id="s6doc">
+          <div class="doc-tag">PDF</div>
+          <div class="dl h"></div><div class="dl" style="width:40%"></div>
+          <div class="dl s"></div><div class="dl" style="width:92%"></div><div class="dl" style="width:78%"></div><div class="dl" style="width:85%"></div>
+          <div class="dl s"></div><div class="dl" style="width:88%"></div><div class="dl" style="width:70%"></div><div class="dl" style="width:82%"></div>
+          <div class="scan" id="s6scan"></div>
+        </div>
+        <div class="s6-items" id="s6items"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S7 Templates -->
+  <section class="scene light" id="s7">
+    <div class="col-top s7-head">
+      <div class="h1 h-lg dark" id="s7title">九套精美模板。</div>
+      <div class="sub" id="s7sub">你的风格，不止一种。</div>
+    </div>
+    <div id="s7rows"></div>
+  </section>
+
+  <!-- S8 Customize -->
+  <section class="scene white" id="s8">
+    <div class="s8-layout">
+      <div class="paper" id="s8paper">
+        <div class="pp-head">
+          <div class="pp-photo"></div>
+          <div><div class="pp-name">宋哈娜</div><div class="pp-role">高级前端工程师 · 北京</div></div>
+        </div>
+        <div id="s8secs"></div>
+      </div>
+      <div class="s8-copy" id="s8copy">
+        <div class="eyebrow" id="s8eb">个性定制</div>
+        <div class="h1 h-xl dark" id="s8title">随心定制。</div>
+        <div class="sub" id="s8sub">主题色、字体、间距，一切由你。</div>
+        <div class="swatches" id="s8sw"><div class="ring" id="s8ring"></div></div>
+        <div class="fontpill" id="s8fp"><span class="fp-label">字体</span><span id="s8font">阿里巴巴普惠体</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S9 Auto one page -->
+  <section class="scene" id="s9">
+    <div class="col-mid" id="s9col">
+      <div class="eyebrow" id="s9eb">自动一页纸</div>
+      <div class="h1 h-lg" id="s9title">内容再多，刚好一页。</div>
+      <div class="s9-pages">
+        <div class="page" id="s9p1"><div class="page-in" id="s9in1"></div><div class="pno">第 1 页</div></div>
+        <div class="page" id="s9p2"><div class="page-in" id="s9in2"></div><div class="pno">第 2 页</div></div>
+      </div>
+      <div class="s9-badge" id="s9badge">
+        <svg id="s9check" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+        <span id="s9count">共 2 页</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S10 Export -->
+  <section class="scene" id="s10">
+    <div class="col-mid" id="s10col">
+      <div class="eyebrow" id="s10eb">多格式导出</div>
+      <div class="h1 h-lg" id="s10title">一键导出，随处投递。</div>
+      <div class="tiles" id="s10tiles"></div>
+    </div>
+  </section>
+
+  <!-- S11 Montage -->
+  <section class="scene" id="s11">
+    <div class="center"><div class="word" id="s11w"></div></div>
+  </section>
+
+  <!-- S12 End card -->
+  <section class="scene" id="s12">
+    <div class="glow" id="s12glow"></div>
+    <div class="center" id="s12col">
+      <img class="logo" id="s12logo" src="assets/logo-white.svg" alt="" />
+      <div class="h1 brand" id="s12title">魔方简历</div>
+      <div class="sub" id="s12sub">让简历制作变得简单而智能。</div>
+      <div class="cta" id="s12cta">magicv.art
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg>
+      </div>
+      <div class="tiny" id="s12tiny">免费 · 开源 · 无需注册</div>
+    </div>
+  </section>
+</div>
+
+<div id="ctrl" hidden>
+  <button id="play">⏸</button><input id="scrub" type="range" min="0" max="30" step="0.01" value="0" /><span id="tc">0.00s</span>
+</div>
+
+<script>
+(() => {
+  const qs = new URLSearchParams(location.search);
+  const PORTRAIT = qs.get("o") === "portrait";
+  const RENDER = qs.get("render") === "1";
+  const W = PORTRAIT ? 1080 : 1920;
+  const H = PORTRAIT ? 1920 : 1080;
+  const DURATION = 30;
+  document.body.classList.add(PORTRAIT ? "portrait" : "landscape");
+  const stage = document.getElementById("stage");
+  stage.style.width = W + "px";
+  stage.style.height = H + "px";
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- math ----------
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const E = {
+    linear: (x) => x,
+    outExpo: (x) => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x)),
+    outQuart: (x) => 1 - Math.pow(1 - x, 4),
+    outCubic: (x) => 1 - Math.pow(1 - x, 3),
+    inCubic: (x) => x * x * x,
+    inOutCubic: (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2),
+    inOutQuart: (x) => (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2),
+    outBack: (x) => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  };
+  const pr = (t, a, b, e = E.outQuart) => e(clamp((t - a) / (b - a)));
+
+  function style(el, { o = 1, x = 0, y = 0, s = 1, rx = 0, rot = 0, blur = 0 } = {}) {
+    el.style.opacity = o.toFixed(4);
+    el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotateX(${rx.toFixed(3)}deg) rotate(${rot.toFixed(3)}deg) scale(${s.toFixed(4)})`;
+    el.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
+  }
+
+  // Apple-style reveal: blur + rise in, optional blur + fade out
+  function rv(el, t, a, d = 0.7, out = null, od = 0.25, o = {}) {
+    const { y = 44, blur = 14, s0 = 1, s1 = 1, yOut = -24, ease = E.outQuart } = o;
+    const pi = pr(t, a, a + d, ease);
+    const po = out == null ? 0 : pr(t, out, out + od, E.inCubic);
+    style(el, {
+      o: pi * (1 - po),
+      y: (1 - pi) * y + po * yOut,
+      s: lerp(s0, 1, pi) * lerp(1, s1, po),
+      blur: (1 - pi) * blur + po * blur,
+    });
+  }
+
+  function hexToRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function gradAt(k) {
+    const stops = ["#b06cff", "#ff5fa2", "#ff9f43"].map(hexToRgb);
+    const seg = k < 0.55 ? 0 : 1;
+    const local = seg === 0 ? k / 0.55 : (k - 0.55) / 0.45;
+    const a = stops[seg], b = stops[seg + 1];
+    return `rgb(${Math.round(lerp(a[0], b[0], local))},${Math.round(lerp(a[1], b[1], local))},${Math.round(lerp(a[2], b[2], local))})`;
+  }
+
+  const icons = {
+    user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+    briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+    layers: '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+    cap: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+  };
+  const svg = (inner, sw = 2) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+
+  // ---------- build dynamic DOM ----------
+  // S4 polished text
+  const polText = "负责 AI 助手开发与回答质量优化，提升回答的准确性和相关性。";
+  const hlRanges = [[polText.indexOf("回答质量优化"), "回答质量优化".length], [polText.indexOf("准确性和相关性"), "准确性和相关性".length]];
+  const polChars = [];
+  [...polText].forEach((ch, i) => {
+    const sp = document.createElement("span");
+    sp.textContent = ch;
+    for (const [st, len] of hlRanges) {
+      if (i >= st && i < st + len) { sp.style.color = gradAt((i - st) / (len - 1)); sp.style.fontWeight = "600"; }
+    }
+    $("s4pol").appendChild(sp);
+    polChars.push(sp);
+  });
+  const chips = [...$("s4prov").children];
+
+  // S6 items
+  const s6data = [["user", "基本信息"], ["briefcase", "工作经历"], ["layers", "项目经历"], ["cap", "教育经历"]];
+  const s6items = s6data.map(([ic, label]) => {
+    const d = document.createElement("div");
+    d.className = "item";
+    d.innerHTML = `<span class="ico">${svg(icons[ic])}</span><span class="lbl">${label}</span><span class="ok">${svg(icons.check, 3)}</span>`;
+    $("s6items").appendChild(d);
+    return d;
+  });
+
+  // S7 template rows
+  const tpls = [["classic", "经典"], ["modern", "两栏"], ["creative", "创意"], ["timeline", "时间轴"], ["minimalist", "极简"], ["elegant", "优雅"], ["left-right", "标题色块"], ["editorial", "画报"], ["swiss", "瑞士美学"]];
+  const rowCount = PORTRAIT ? 2 : 1;
+  const rows = [];
+  for (let r = 0; r < rowCount; r++) {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.style.top = (PORTRAIT ? (r === 0 ? 470 : 1130) : 340) + "px";
+    const order = r === 0 ? tpls : [...tpls.slice(4), ...tpls.slice(0, 4)];
+    for (let k = 0; k < 3; k++) {
+      for (const [id, name] of order) {
+        const c = document.createElement("div");
+        c.className = "tcard";
+        c.innerHTML = `<div class="tm"><img src="assets/templates/${id}.png" alt=""></div><div class="tname">${name}</div>`;
+        row.appendChild(c);
+      }
+    }
+    $("s7rows").appendChild(row);
+    rows.push(row);
+  }
+
+  // S8 paper sections, swatches
+  const secNames = ["专业技能", "工作经验", "项目经历", "教育经历"];
+  const secLines = [[88, 76, 82], [92, 70, 84, 64], [86, 78, 60], [72]];
+  $("s8secs").innerHTML = secNames.map((n, i) => `<div class="pp-sec"><div class="pp-h">${n}</div><div class="pp-rule"></div>${secLines[i].map((w) => `<div class="pp-l"><b></b><i style="width:${w}%"></i></div>`).join("")}</div>`).join("");
+  const palette = ["#1d1d1f", "#0a5cff", "#ff4f12", "#8e44ec", "#16a34a", "#c2185b", "#0ea5a4", "#f59e0b"];
+  palette.forEach((c) => { const d = document.createElement("div"); d.className = "sw"; d.style.background = c; $("s8sw").appendChild(d); });
+  const fonts = [["阿里巴巴普惠体", "RF-PuHuiTi"], ["MiSans", "RF-MiSans"], ["思源宋体", "RF-SourceHanSerif"], ["Noto Sans SC", "RF-NotoSans"]];
+
+  // S9 pages
+  const s9items = [["n"], ["t"]];
+  const s9w = [[90, 72, 84, 66, 80], [94, 78, 88, 62, 74], [86, 92, 70, 82, 58], [80, 68, 90, 76, 60]];
+  s9w.forEach((ws) => { s9items.push(["h"]); ws.forEach((w) => s9items.push(["l", w])); });
+  const mk = (it) => { const d = document.createElement("div"); d.className = it[0]; if (it[1]) d.style.width = it[1] + "%"; return d; };
+  s9items.forEach((it) => $("s9in1").appendChild(mk(it)));
+  const GAP0 = 16, GAP1 = 7.6;
+
+  // S10 tiles
+  const tiles = [["PDF", "#ff3b30", "#fff", "正式投递首选"], ["PNG", "#0a84ff", "#fff", "长图一键分享"], ["JSON", "#ffd60a", "#1d1d1f", "备份与迁移"], ["MD", "#f5f5f7", "#1d1d1f", "Markdown 文本"]];
+  const tileEls = tiles.map(([ext, bg, fg, desc]) => {
+    const d = document.createElement("div");
+    d.className = "tile";
+    d.innerHTML = `<svg viewBox="0 0 120 150"><path d="M16 4h60l40 40v92a12 12 0 0 1-12 12H16A12 12 0 0 1 4 136V16A12 12 0 0 1 16 4z" fill="#3a3a3c"/><path d="M76 4v28a12 12 0 0 0 12 12h28" fill="#5a5a5e"/><rect x="14" y="84" width="92" height="38" rx="9" fill="${bg}"/><text x="60" y="111" text-anchor="middle" font-family="SF Pro Display, -apple-system, sans-serif" font-size="${ext.length > 3 ? 22 : 24}" font-weight="700" fill="${fg}">${ext}</text></svg><div class="tn">${ext === "MD" ? "Markdown" : ext}</div><div class="td">${desc}</div>`;
+    $("s10tiles").appendChild(d);
+    return d;
+  });
+
+  const words = ["无需注册。", "数据存本地。", "深色模式。", "中英双语。", "手机也能改。", "免费。", "开源。"];
+
+  // ---------- measurements after layout/fonts ----------
+  let fixW = [];
+  let s3PanMax = 0;
+  function measure() {
+    fixW = ["fx1", "fx2"].map((id) => {
+      const el = $(id);
+      return [el.querySelector(".old").offsetWidth, el.querySelector(".new").offsetWidth];
+    });
+    // page 2 content = items overflowing page 1 at the initial gap
+    const in1 = $("s9in1");
+    in1.style.gap = GAP0 + "px";
+    const limit = in1.clientHeight;
+    $("s9in2").innerHTML = "";
+    $("s9in2").style.gap = GAP0 + "px";
+    [...in1.children].forEach((c, i) => { if (c.offsetTop + c.offsetHeight > limit) $("s9in2").appendChild(mk(s9items[i])); });
+    if (PORTRAIT) s3PanMax = $("s3img").offsetWidth - $("s3img").parentElement.clientWidth;
+  }
+
+  // ---------- scenes ----------
+  const scenes = [
+    { id: "s1", start: 0.0, end: 2.6, render(t) {
+      rv($("s1a"), t, 0.15, 0.8, 1.05, 0.3, { y: 0, s0: 1.08, blur: 22 });
+      rv($("s1b"), t, 1.3, 0.8, 2.25, 0.35, { y: 0, s0: 1.08, s1: 1.18, blur: 22, yOut: 0 });
+    } },
+    { id: "s2", start: 2.6, end: 5.0, render(t) {
+      const out = 2.0;
+      const g = pr(t, 0, 1.4, E.outCubic) * (1 - pr(t, out, 2.4, E.inCubic));
+      style($("s2glow"), { o: g, s: lerp(0.7, 1.05, pr(t, 0, 2.4, E.outCubic)), rot: t * 20 });
+      rv($("s2logo"), t, 0.1, 0.9, out, 0.35, { y: 0, s0: 0.75, s1: 0.94, blur: 24, yOut: 0 });
+      rv($("s2title"), t, 0.45, 0.8, out + 0.03, 0.35, { y: 36, s1: 0.96, yOut: 0 });
+      $("s2title").style.backgroundPosition = `${lerp(100, 0, pr(t, 0.7, 2.0, E.inOutCubic))}% 0`;
+      rv($("s2sub"), t, 0.7, 0.8, out + 0.06, 0.35, { y: 30, s1: 0.96, yOut: 0 });
+    } },
+    { id: "s3", start: 5.0, end: 8.0, render(t) {
+      rv($("s3eb"), t, 0.1, 0.7);
+      rv($("s3title"), t, 0.15, 0.7);
+      rv($("s3sub"), t, 0.3, 0.7);
+      const rise = pr(t, 0.2, 1.5, E.outQuart);
+      const drift = pr(t, 1.5, 3.0, E.inOutCubic);
+      const win = $("s3win");
+      win.style.opacity = clamp(rise * 1.6).toFixed(3);
+      win.style.transform = `translate3d(0, ${lerp(320, 0, rise) - drift * 30}px, 0) rotateX(${lerp(32, 0, rise)}deg) scale(${lerp(0.9, 1, rise) * lerp(1, 1.045, drift)})`;
+      if (PORTRAIT) {
+        const pan = pr(t, 1.1, 2.85, E.inOutQuart);
+        $("s3img").style.transform = `translate3d(${-pan * s3PanMax}px, 0, 0)`;
+      }
+    } },
+    { id: "s4", start: 8.0, end: 11.0, render(t) {
+      const out = pr(t, 2.78, 3.0, E.inCubic);
+      $("s4col").style.opacity = 1 - out;
+      rv($("s4eb"), t, 0.05, 0.6);
+      rv($("s4title"), t, 0.1, 0.7);
+      rv($("s4card"), t, 0.28, 0.8, null, 0, { y: 70, blur: 10 });
+      const strike = pr(t, 0.95, 1.3, E.inOutCubic);
+      $("s4strike").style.transform = `scaleX(${strike})`;
+      $("s4strike").style.opacity = strike > 0 ? 1 : 0;
+      $("s4draft").style.opacity = lerp(1, 0.42, pr(t, 1.0, 1.35));
+      const sp = pr(t, 1.0, 1.5, E.outBack);
+      style($("s4spark"), { o: clamp(sp), s: lerp(0.4, 1, sp), rot: t * 60 });
+      rv($("s4pl"), t, 1.1, 0.5, null, 0, { y: 14, blur: 6 });
+      polChars.forEach((c, i) => {
+        const k = pr(t, 1.22 + i * 0.026, 1.22 + i * 0.026 + 0.32, E.outCubic);
+        style(c, { o: k, y: (1 - k) * 14, blur: (1 - k) * 8 });
+      });
+      rv($("s4cap"), t, 1.9, 0.6, null, 0, { y: 20, blur: 8 });
+      chips.forEach((c, i) => rv(c, t, 2.0 + i * 0.06, 0.55, null, 0, { y: 30, s0: 0.9, blur: 8 }));
+    } },
+    { id: "s5", start: 11.0, end: 13.2, render(t) {
+      const out = pr(t, 2.0, 2.2, E.inCubic);
+      $("s5col").style.opacity = 1 - out;
+      rv($("s5eb"), t, 0.05, 0.6);
+      rv($("s5title"), t, 0.1, 0.7);
+      rv($("s5sent"), t, 0.3, 0.7, null, 0, { y: 40 });
+      const ul = pr(t, 0.65, 0.9, E.outCubic);
+      ["fx1", "fx2"].forEach((id, i) => {
+        const el = $(id);
+        const sw = pr(t, 1.0 + i * 0.12, 1.4 + i * 0.12, E.inOutCubic);
+        el.style.width = lerp(fixW[i][0], fixW[i][1], sw).toFixed(2) + "px";
+        const old = el.querySelector(".old"), nu = el.querySelector(".new");
+        old.style.textDecorationColor = `rgba(255,69,58,${ul.toFixed(3)})`;
+        style(old, { o: 1 - sw, y: -sw * 26, blur: sw * 8 });
+        style(nu, { o: sw, y: (1 - sw) * 26, blur: (1 - sw) * 8 });
+      });
+      rv($("s5ok"), t, 1.45, 0.5, null, 0, { y: 20, s0: 0.8, blur: 6, ease: E.outBack });
+    } },
+    { id: "s6", start: 13.2, end: 15.6, render(t) {
+      const out = pr(t, 2.2, 2.4, E.inCubic);
+      $("s6col").style.opacity = 1 - out;
+      rv($("s6eb"), t, 0.05, 0.6);
+      rv($("s6title"), t, 0.1, 0.7);
+      rv($("s6sub"), t, 0.2, 0.7);
+      rv($("s6doc"), t, 0.25, 0.7, null, 0, { y: 60, s0: 0.92 });
+      const sc = pr(t, 0.55, 1.3, E.inOutCubic);
+      const docH = $("s6doc").clientHeight;
+      $("s6scan").style.top = (lerp(-90, docH, sc)).toFixed(1) + "px";
+      $("s6scan").style.opacity = sc > 0 && sc < 1 ? 1 : 0;
+      s6items.forEach((it, i) => {
+        const k = pr(t, 1.05 + i * 0.12, 1.6 + i * 0.12, E.outQuart);
+        style(it, { o: k, x: PORTRAIT ? 0 : (1 - k) * -160, y: PORTRAIT ? (1 - k) * -60 : 0, s: lerp(0.9, 1, k), blur: (1 - k) * 10 });
+        const ok = pr(t, 1.35 + i * 0.12, 1.7 + i * 0.12, E.outBack);
+        style(it.querySelector(".ok"), { o: clamp(ok), s: Math.max(0, ok) });
+      });
+    } },
+    { id: "s7", start: 15.6, end: 19.0, render(t) {
+      rv($("s7title"), t, 0.05, 0.7);
+      rv($("s7sub"), t, 0.15, 0.7);
+      const m = pr(t, 0, 3.4, E.outCubic);
+      const cardW = PORTRAIT ? 380 : 400;
+      const gap = 40;
+      const setW = (cardW + gap) * tpls.length;
+      rows.forEach((row, r) => {
+        const x = r === 0 ? lerp(W * 0.55, W * 0.55 - setW * 0.62, m) : lerp(W * 0.45 - setW * 2, W * 0.45 - setW * 2 + setW * 0.62, m);
+        row.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+        row.style.opacity = pr(t, 0, 0.4, E.outCubic).toFixed(3);
+      });
+    } },
+    { id: "s8", start: 19.0, end: 21.6, render(t) {
+      rv($("s8paper"), t, 0.05, 0.8, null, 0, { y: 90, blur: 10 });
+      rv($("s8eb"), t, 0.15, 0.6);
+      rv($("s8title"), t, 0.2, 0.7);
+      rv($("s8sub"), t, 0.3, 0.7);
+      rv($("s8sw"), t, 0.4, 0.7, null, 0, { y: 30 });
+      rv($("s8fp"), t, 0.5, 0.7, null, 0, { y: 30 });
+      const step = 0.27, c0 = 0.75;
+      const ci = clamp((t - c0) / step, 0, palette.length - 1);
+      const idx = Math.floor(ci);
+      const frac = E.inOutCubic(clamp((ci - idx) / 0.45));
+      const sws = $("s8sw").querySelectorAll(".sw");
+      const pos = (i) => sws[i].offsetLeft;
+      const ringX = idx < palette.length - 1 ? lerp(pos(idx), pos(idx + 1), frac) : pos(idx);
+      $("s8ring").style.transform = `translate3d(${ringX}px,0,0)`;
+      const colorIdx = Math.round(ci - 0.2) < 0 ? 0 : Math.min(palette.length - 1, Math.round(ci - 0.2));
+      $("s8paper").style.setProperty("--accent", palette[t < c0 ? 0 : colorIdx]);
+      $("s8ring").style.borderColor = palette[t < c0 ? 0 : colorIdx];
+      const fi = t < 0.9 ? 0 : Math.min(fonts.length - 1, Math.floor((t - 0.9) / 0.42));
+      $("s8paper").style.setProperty("--rfont", `"${fonts[fi][1]}"`);
+      const fEl = $("s8font");
+      if (fEl.dataset.i !== String(fi)) { fEl.textContent = fonts[fi][0]; fEl.style.fontFamily = `"${fonts[fi][1]}"`; fEl.dataset.i = String(fi); }
+    } },
+    { id: "s9", start: 21.6, end: 23.8, render(t) {
+      const out = pr(t, 2.0, 2.2, E.inCubic);
+      $("s9col").style.opacity = 1 - out;
+      rv($("s9eb"), t, 0.05, 0.6);
+      rv($("s9title"), t, 0.1, 0.7);
+      const cmp = pr(t, 0.8, 1.5, E.inOutCubic);
+      const shift = (360 + (PORTRAIT ? 40 : 60)) / 2;
+      const p1In = pr(t, 0.2, 0.8);
+      const p2In = pr(t, 0.3, 0.9);
+      style($("s9p1"), { o: p1In, y: (1 - p1In) * 60, x: cmp * shift, blur: (1 - p1In) * 10 });
+      style($("s9p2"), { o: p2In * (1 - cmp), y: (1 - p2In) * 60, x: -cmp * shift * 1.2, s: lerp(1, 0.86, cmp), blur: (1 - p2In) * 10 + cmp * 6 });
+      $("s9in1").style.gap = lerp(GAP0, GAP1, cmp).toFixed(2) + "px";
+      rv($("s9badge"), t, 0.5, 0.6, null, 0, { y: 24 });
+      const done = t >= 1.45;
+      const ck = pr(t, 1.45, 1.8, E.outBack);
+      $("s9check").style.display = done ? "block" : "none";
+      $("s9check").style.transform = `scale(${Math.max(0, ck)})`;
+      $("s9count").textContent = done ? "刚好 1 页" : "共 2 页";
+      $("s9count").style.color = done ? "#30d158" : "#f5f5f7";
+    } },
+    { id: "s10", start: 23.8, end: 25.6, render(t) {
+      const out = pr(t, 1.6, 1.8, E.inCubic);
+      $("s10col").style.opacity = 1 - out;
+      rv($("s10eb"), t, 0.05, 0.6);
+      rv($("s10title"), t, 0.1, 0.7);
+      tileEls.forEach((el, i) => rv(el, t, 0.3 + i * 0.08, 0.6, null, 0, { y: 80, s0: 0.85, blur: 10, ease: E.outBack }));
+    } },
+    { id: "s11", start: 25.6, end: 27.7, render(t) {
+      const per = 0.3;
+      const i = Math.min(words.length - 1, Math.floor(t / per));
+      const lt = t - i * per;
+      const w = $("s11w");
+      if (w.dataset.i !== String(i)) { w.textContent = words[i]; w.className = "word" + (i >= words.length - 2 ? " grad" : ""); w.dataset.i = String(i); }
+      const k = pr(lt, 0, 0.12, E.outCubic);
+      const end = i === words.length - 1 ? pr(t, 1.85, 2.1, E.inCubic) : 0;
+      style(w, { o: k * (1 - end), s: lerp(1.08, 1, k) * lerp(1, 0.94, end), blur: (1 - k) * 10 + end * 10 });
+    } },
+    { id: "s12", start: 27.7, end: 30.0, render(t) {
+      style($("s12glow"), { o: pr(t, 0, 1.2, E.outCubic), s: lerp(0.8, 1.05, pr(t, 0, 2.3, E.outCubic)), rot: -t * 18 });
+      rv($("s12logo"), t, 0.1, 0.9, null, 0, { y: 0, s0: 0.78, blur: 22 });
+      rv($("s12title"), t, 0.3, 0.8);
+      $("s12title").style.backgroundPosition = `${lerp(100, 0, pr(t, 0.6, 1.9, E.inOutCubic))}% 0`;
+      rv($("s12sub"), t, 0.5, 0.8);
+      rv($("s12cta"), t, 0.72, 0.8, null, 0, { y: 30, s0: 0.92 });
+      rv($("s12tiny"), t, 0.9, 0.8, null, 0, { y: 20 });
+    } },
+  ];
+
+  function renderFrame(t) {
+    for (const sc of scenes) {
+      const el = $(sc.id);
+      const on = t >= sc.start && t < sc.end;
+      if (on) { el.style.display = "block"; sc.render(t - sc.start, sc.end - sc.start); }
+      else if (el.style.display !== "none") el.style.display = "none";
+    }
+    // keep last frame visible at t === DURATION
+    if (t >= DURATION) { const last = scenes[scenes.length - 1]; $(last.id).style.display = "block"; last.render(last.end - last.start); }
+  }
+
+  async function init() {
+    await Promise.all([...document.images].map((img) => img.decode().catch((e) => { throw new Error("image failed: " + img.src + " " + e); })));
+    await Promise.all(fonts.map(([, f]) => document.fonts.load(`40px "${f}"`, "宋哈娜专业技能阿里巴巴普惠体思源宋体")));
+    await document.fonts.ready;
+    // all scenes visible once so measurements work
+    scenes.forEach((s) => ($(s.id).style.display = "block"));
+    measure();
+    scenes.forEach((s) => ($(s.id).style.display = "none"));
+    window.renderFrame = renderFrame;
+    window.__meta = { W, H, DURATION };
+    renderFrame(0);
+    window.__ready = true;
+    if (!RENDER) startPreview();
+  }
+
+  function startPreview() {
+    const fit = () => { const k = Math.min(innerWidth / W, (innerHeight - 44) / H); stage.style.transform = `scale(${k})`; stage.style.left = (innerWidth - W * k) / 2 + "px"; };
+    fit(); addEventListener("resize", fit);
+    const ctrl = $("ctrl"); ctrl.hidden = false;
+    let playing = true, t0 = performance.now(), cur = Number(qs.get("t") || 0);
+    t0 -= cur * 1000;
+    const tick = () => {
+      if (playing) cur = ((performance.now() - t0) / 1000) % DURATION;
+      renderFrame(cur); $("scrub").value = cur; $("tc").textContent = cur.toFixed(2) + "s";
+      requestAnimationFrame(tick);
+    };
+    $("play").onclick = () => { playing = !playing; $("play").textContent = playing ? "⏸" : "▶"; t0 = performance.now() - cur * 1000; };
+    $("scrub").oninput = (e) => { cur = Number(e.target.value); t0 = performance.now() - cur * 1000; };
+    addEventListener("keydown", (e) => { if (e.code === "Space") $("play").click(); });
+    tick();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

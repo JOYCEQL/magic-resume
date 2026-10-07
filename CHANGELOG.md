@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.11
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.10...v2.0.11)
+
+### 🩹 Fixes
+
+- Preserve list and heading styles during one-page measurement, and share measured scaling and page capacity across preview, PDF export, and browser printing ([9c18c15](https://github.com/JOYCEQL/magic-resume/commit/9c18c15), [#392](https://github.com/JOYCEQL/magic-resume/issues/392)).
+- Wait for fonts and images before export, and retain pagination when content still exceeds one page at the 90% minimum scale.
+- Restore overflow warning toasts and load Sonner styles through the root route so notifications remain visible after document hydration recovery.
+
+### ✅ Tests
+
+- Add coverage for nine templates, nested lists, preview/PDF page counts, and toast visibility after hydration recovery.
+
 ## v2.0.10
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.9...v2.0.10)

@@ -9,6 +9,7 @@ import appCss from "../app/globals.css?url";
 import appFontCss from "../app/font.css?url";
 import tiptapCss from "../styles/tiptap.scss?url";
 import landingCss from "@/components/home/landing.css?url";
+import sonnerCss from "sonner/dist/styles.css?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -62,6 +63,11 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: landingCss,
+      },
+      // React owns this link, so toast styles survive a document remount.
+      {
+        rel: "stylesheet",
+        href: sonnerCss,
       },
       ...(matches.some(
         (match) => getLocaleFromPathname(match.pathname) !== null,

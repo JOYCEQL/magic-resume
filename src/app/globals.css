@@ -158,12 +158,12 @@
   }
 
   /* Reset headings in resume preview to inherit or use sans */
-  #resume-preview h1, 
-  #resume-preview h2, 
-  #resume-preview h3, 
-  #resume-preview h4, 
-  #resume-preview h5, 
-  #resume-preview h6,
+  [data-resume-document] h1,
+  [data-resume-document] h2,
+  [data-resume-document] h3,
+  [data-resume-document] h4,
+  [data-resume-document] h5,
+  [data-resume-document] h6,
   .resume-preview h1,
   .resume-preview h2,
   .resume-preview h3,

@@ -1,0 +1,168 @@
+{
+  "basic": {
+    "name": "分页回归测试",
+    "title": "高级前端工程师",
+    "employementStatus": "离职",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "birthDate": "2025-01",
+    "fieldOrder": [
+      {
+        "id": "1",
+        "key": "name",
+        "label": "姓名",
+        "type": "text",
+        "visible": true
+      },
+      {
+        "id": "2",
+        "key": "title",
+        "label": "职位",
+        "type": "text",
+        "visible": true
+      },
+      {
+        "id": "3",
+        "key": "employementStatus",
+        "label": "状态",
+        "type": "text",
+        "visible": true
+      },
+      {
+        "id": "4",
+        "key": "birthDate",
+        "label": "生日",
+        "type": "date",
+        "visible": true
+      },
+      {
+        "id": "5",
+        "key": "email",
+        "label": "邮箱",
+        "type": "text",
+        "visible": true
+      },
+      {
+        "id": "6",
+        "key": "phone",
+        "label": "电话",
+        "type": "text",
+        "visible": true
+      },
+      {
+        "id": "7",
+        "key": "location",
+        "label": "所在地",
+        "type": "text",
+        "visible": true
+      }
+    ],
+    "icons": {
+      "email": "Mail",
+      "phone": "Phone",
+      "birthDate": "CalendarRange",
+      "employementStatus": "Briefcase",
+      "location": "MapPin"
+    },
+    "photoConfig": {
+      "width": 90,
+      "height": 120,
+      "aspectRatio": "1:1",
+      "borderRadius": "none",
+      "customBorderRadius": 0,
+      "visible": true
+    },
+    "customFields": [],
+    "photo": "/avatar.png",
+    "githubKey": "",
+    "githubUseName": "",
+    "githubContributionsVisible": false,
+    "layout": "left"
+  },
+  "education": [],
+  "skillContent": "<ul><li><p>前端框架：熟悉 React、Vue.js，熟悉 Next.js、Nuxt.js 等 SSR 框架</p></li><li><p>开发语言：TypeScript、JavaScript(ES6+)、HTML5、CSS3</p></li><li><p>UI/样式：熟悉 TailwindCSS、Sass/Less、CSS Module、Styled-components</p></li><li><p>状态管理：Redux、Vuex、Zustand、Jotai、React Query</p></li><li><p>工程化工具：Webpack、Vite、Rollup、Babel、ESLint</p></li><li><p>测试工具：Jest、React Testing Library、Cypress</p></li><li><p>性能优化：熟悉浏览器渲染原理、性能指标监控、代码分割、懒加载等优化技术</p></li><li><p>版本控制：Git、SVN</p></li><li><p>技术管理：具备团队管理经验，主导过多个大型项目的技术选型和架构设计</p></li></ul>",
+  "selfEvaluationContent": "",
+  "experience": [],
+  "projects": [
+    {
+      "id": "p1",
+      "name": "抖音创作者中台",
+      "role": "前端负责人",
+      "date": "2022.06 - 2023.12",
+      "description": "<ul class=\"custom-list\">\n        <li>基于 React 开发的创作者数据分析和内容管理平台，服务百万级创作者群体</li>\n        <li>包含数据分析、内容管理、收益管理等多个子系统</li>\n        <li>使用 Redux 进行状态管理，实现复杂数据流的高效处理</li>\n        <li>采用 Ant Design 组件库，确保界面设计的一致性和用户体验</li>\n        <li>实施代码分割和懒加载策略，优化大规模应用的加载性能</li>\n      </ul>",
+      "visible": true
+    },
+    {
+      "id": "p2",
+      "name": "微信小程序开发者工具",
+      "role": "核心开发者",
+      "date": "2020.03 - 2021.06",
+      "description": "<ul class=\"custom-list\">\n        <li>为开发者提供小程序开发、调试和发布的一站式解决方案</li>\n        <li>基于 Electron 构建的跨平台桌面应用</li>\n        <li>支持多平台开发，包括 Windows、macOS 和 Linux</li>\n        <li>提供实时的错误日志和性能分析工具</li>\n        <li>集成第三方插件和 SDK，支持开发者自定义功能</li>\n      </ul>",
+      "visible": true
+    },
+    {
+      "id": "p3",
+      "name": "前端监控平台",
+      "role": "技术负责人",
+      "date": "2021.09 - 2022.03",
+      "description": "<ul class=\"custom-list\">\n        <li>一个完整的前端监控解决方案，包含错误监控、性能监控、用户行为分析等功能</li>\n        <li>基于 Vue 和 Element UI 构建，提供实时的监控数据和可视化分析工具。</li>\n        <li>支持多种监控指标，包括错误日志、性能指标、用户行为分析等。</li>\n        <li>提供详细的错误日志和性能分析工具，帮助开发者定位和优化问题。</li>\n        <li>集成第三方插件和 SDK，支持开发者自定义功能。</li>\n      </ul>",
+      "visible": true
+    }
+  ],
+  "menuSections": [
+    {
+      "id": "basic",
+      "title": "基本信息",
+      "icon": "👤",
+      "enabled": true,
+      "order": 0
+    },
+    {
+      "id": "projects",
+      "title": "项目经历",
+      "icon": "🚀",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "id": "skills",
+      "title": "专业技能",
+      "icon": "⚡",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "id": "experience",
+      "title": "工作经验",
+      "icon": "💼",
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "id": "education",
+      "title": "教育经历",
+      "icon": "🎓",
+      "enabled": true,
+      "order": 4
+    }
+  ],
+  "certificates": [],
+  "customData": {},
+  "globalSettings": {
+    "baseFontSize": 16,
+    "pagePadding": 32,
+    "paragraphSpacing": 16,
+    "lineHeight": 1.5,
+    "sectionSpacing": 24,
+    "headerSize": 18,
+    "subheaderSize": 16,
+    "useIconMode": true,
+    "themeColor": "#FF4500",
+    "centerSubtitle": true,
+    "fontFamily": "\"Alibaba PuHuiTi\", sans-serif",
+    "flexibleHeaderLayout": false,
+    "autoOnePage": true
+  },
+  "templateId": "left-right"
+}

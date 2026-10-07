@@ -1,7 +1,10 @@
 import { useLayoutEffect, useState, type RefObject } from "react";
-import { A4_HEIGHT_PX, RESUME_CONTENT_SELECTOR } from "@/utils/resumeLayout";
-
-const MIN_SCALE = 0.9;
+import {
+  createResumeMeasurement,
+  measureResumeLayout,
+  RESUME_CONTENT_SELECTOR,
+  type ResumeLayout,
+} from "@/utils/resumeLayout";
 
 interface UseAutoOnePageOptions {
   contentRef: RefObject<HTMLDivElement>;
@@ -10,23 +13,16 @@ interface UseAutoOnePageOptions {
   enabled: boolean;
 }
 
-interface UseAutoOnePageResult {
-  contentHeight: number;
-  scaleFactor: number;
-  isScaled: boolean;
-  cannotFit: boolean;
-}
-
 export function useAutoOnePage({
   contentRef,
   content,
   pagePadding,
   enabled,
-}: UseAutoOnePageOptions): UseAutoOnePageResult {
-  const [layout, setLayout] = useState<UseAutoOnePageResult>({
+}: UseAutoOnePageOptions): ResumeLayout {
+  const [layout, setLayout] = useState<ResumeLayout>({
     contentHeight: 0,
     scaleFactor: 1,
-    isScaled: false,
+    pageCount: 1,
     cannotFit: false,
   });
 
@@ -34,62 +30,52 @@ export function useAutoOnePage({
     const element = contentRef.current;
     if (!element) return;
 
-    // 独立副本始终按原始宽度测量，不观察显示层的缩放或宽度变化。
-    const measurement = element.cloneNode(true) as HTMLDivElement;
-    measurement.removeAttribute("id");
-    measurement.setAttribute("data-resume-measurement", "");
-    measurement.setAttribute("aria-hidden", "true");
-    measurement.inert = true;
-    Object.assign(measurement.style, {
-      position: "fixed",
-      left: "-10000px",
-      top: "0",
-      width: getComputedStyle(element).width,
-      visibility: "hidden",
-      pointerEvents: "none",
-    });
-    measurement.querySelectorAll(".page-break-line").forEach((line) => line.remove());
-    const measuredContent = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
-    measuredContent.style.zoom = "1";
-    document.body.appendChild(measurement);
+    let measurement = createResumeMeasurement(element);
+    let measuredContent = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+    const displayedContent = element.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+    let needsClone = false;
 
     let frameId: number | undefined;
     const measure = () => {
       frameId = undefined;
-      const availableHeight = A4_HEIGHT_PX - 2 * pagePadding;
-      const naturalHeight = parseFloat(getComputedStyle(measuredContent).height);
-      const scaleFactor = enabled && naturalHeight > availableHeight
-        ? Math.max(MIN_SCALE, availableHeight / naturalHeight)
-        : 1;
-
-      // 比例只由原始高度决定；最终高度仅用于分页和溢出提示，不反推比例。
-      let renderedHeight: number;
-      try {
-        measuredContent.style.zoom = String(scaleFactor);
-        renderedHeight = parseFloat(getComputedStyle(measuredContent).height) * scaleFactor;
-      } finally {
-        measuredContent.style.zoom = "1";
+      if (needsClone) {
+        observer.unobserve(measuredContent);
+        measurement.remove();
+        measurement = createResumeMeasurement(element);
+        measuredContent = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR)!;
+        observer.observe(measuredContent, { box: "border-box" });
+        needsClone = false;
       }
-      const next = {
-        contentHeight: renderedHeight + 2 * pagePadding,
-        scaleFactor,
-        isScaled: scaleFactor < 1,
-        cannotFit: enabled && renderedHeight > availableHeight + 0.5,
-      };
+      const next = measureResumeLayout(measuredContent, pagePadding, enabled);
       setLayout((previous) =>
         previous.contentHeight === next.contentHeight &&
         previous.scaleFactor === next.scaleFactor &&
-        previous.cannotFit === next.cannotFit ? previous : next,
+        previous.cannotFit === next.cannotFit &&
+        previous.pageCount === next.pageCount ? previous : next,
       );
     };
-    const observer = new ResizeObserver(() => {
-      if (frameId === undefined) frameId = requestAnimationFrame(measure);
+    let disposed = false;
+    const scheduleMeasure = () => {
+      if (!disposed && frameId === undefined) frameId = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(scheduleMeasure);
+    // AnimatePresence may remove exiting children after the React data update.
+    // Observe only content, excluding our own page indicators and zoom attribute.
+    const mutations = new MutationObserver(() => {
+      needsClone = true;
+      scheduleMeasure();
     });
+    mutations.observe(displayedContent, { childList: true, subtree: true, characterData: true });
+    document.fonts.addEventListener("loadingdone", scheduleMeasure);
+    void document.fonts.ready.then(scheduleMeasure);
     observer.observe(measuredContent, { box: "border-box" });
     measure();
 
     return () => {
+      disposed = true;
+      document.fonts.removeEventListener("loadingdone", scheduleMeasure);
       observer.disconnect();
+      mutations.disconnect();
       if (frameId !== undefined) cancelAnimationFrame(frameId);
       measurement.remove();
     };

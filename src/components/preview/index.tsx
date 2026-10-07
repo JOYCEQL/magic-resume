@@ -7,7 +7,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { useAutoOnePage } from "@/hooks/useAutoOnePage";
 import { useTranslations } from "@/i18n/compat/client";
 import { normalizeFontFamily } from "@/utils/fonts";
-import { A4_HEIGHT_PX, RESUME_LAYOUT_CSS } from "@/utils/resumeLayout";
+import { getPageContentHeight, RESUME_LAYOUT_CSS } from "@/utils/resumeLayout";
 import ResumeTemplateComponent from "../templates";
 
 interface PreviewPanelProps {
@@ -83,43 +83,30 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     const pagePadding = activeResume?.globalSettings?.pagePadding || 0;
     const autoOnePageEnabled = activeResume?.globalSettings?.autoOnePage || false;
 
-    const { contentHeight, scaleFactor, isScaled, cannotFit } = useAutoOnePage({
+    const { contentHeight, scaleFactor, pageCount, cannotFit } = useAutoOnePage({
       contentRef: resumeContentRef,
       content: activeResume,
       pagePadding,
       enabled: autoOnePageEnabled,
     });
 
+    const contentPerPagePx = getPageContentHeight(pagePadding);
+    const pageBreakCount = pageCount - 1;
+    const cannotFitMessage = t("autoOnePage.cannotFit");
+    const cannotFitToastId = `auto-one-page-cannot-fit-${activeResume?.id}`;
+
     useEffect(() => {
-      if (cannotFit) {
-        toast.warning(t("autoOnePage.cannotFit"), {
-          duration: 4000,
-        });
-      }
-    }, [cannotFit, t]);
+      if (!autoOnePageEnabled || !cannotFit) return;
 
-    const { contentPerPagePx, pageBreakCount } = useMemo(() => {
-      // 与 Puppeteer PDF 导出一致：margin: pagePadding px（上下各一份）
-      // 每页可用内容高度 = A4 总高度 - 上 margin - 下 margin
-      const baseContentPerPage = A4_HEIGHT_PX - 2 * pagePadding;
+      toast.warning(cannotFitMessage, {
+        id: cannotFitToastId,
+        duration: 5000,
+      });
 
-      // 一页纸模式启用且内容能完美一页时，才隐藏分页线
-      // cannotFit 时内容仍超出一页，需要保留分页线
-      if ((isScaled && !cannotFit) || contentHeight <= 0) {
-        return { contentPerPagePx: baseContentPerPage, pageBreakCount: 0 };
-      }
-
-      // 页边距不缩放，contentHeight 已经是最终显示高度。
-      const effectiveContentPerPage = baseContentPerPage;
-
-      // contentHeight 包含 #resume-preview 的 padding（上+下）
-      // 实际内容高度 = contentHeight - 2 * pagePadding
-      const actualContentHeight = contentHeight - 2 * pagePadding;
-      const pageCount = Math.max(1, Math.ceil(actualContentHeight / effectiveContentPerPage));
-      const pageBreakCount = Math.max(0, pageCount - 1);
-
-      return { contentPerPagePx: effectiveContentPerPage, pageBreakCount };
-    }, [contentHeight, pagePadding, isScaled, cannotFit, scaleFactor]);
+      return () => {
+        toast.dismiss(cannotFitToastId);
+      };
+    }, [autoOnePageEnabled, cannotFit, cannotFitMessage, cannotFitToastId]);
 
     if (!activeResume) return null;
 
@@ -161,6 +148,8 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
               ref={resumeContentRef}
               id="resume-preview"
               data-resume-document
+              data-auto-one-page={autoOnePageEnabled}
+              data-page-count={pageCount}
               onClickCapture={handlePreviewClickCapture}
               style={{
                 fontFamily: selectedFontFamily,

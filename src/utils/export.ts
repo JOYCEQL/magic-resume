@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import type { jsPDF as JsPDF } from "jspdf";
 import { PDF_EXPORT_CONFIG } from "@/config";
 import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
-import { cloneResumeForExport } from "@/utils/resumeLayout";
+import { cloneResumeForExport, waitForResumeAssets } from "@/utils/resumeLayout";
 import { ResumeData } from "@/types/resume";
 import { generateResumeMarkdown, ResumeMarkdownOptions } from "@/utils/markdown";
 
@@ -49,7 +49,6 @@ export const getOptimizedStyles = () => {
             if (rule instanceof CSSImportRule) return false;
             if (normalizedRuleText.includes("fonts.googleapis.com")) return false;
             if (normalizedRuleText.includes("fonts.gstatic.com")) return false;
-            if (ruleText.includes("font-family")) return false;
             if (ruleText.includes("@keyframes")) return false;
             if (ruleText.includes("animation")) return false;
             if (ruleText.includes("transition")) return false;
@@ -543,6 +542,7 @@ export const exportToPdf = async ({
       throw new Error(`PDF element #${elementId} not found`);
     }
 
+    await waitForResumeAssets(pdfElement);
     const clonedElement = cloneResumeForExport(pdfElement, true);
     const selectedFontFamily = normalizeFontFamily(fontFamily);
     // 内层保留预览的 zoom 和排版宽度，仅把外层 padding 转为 PDF 页边距。

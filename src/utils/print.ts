@@ -1,4 +1,4 @@
-import { cloneResumeForExport } from "@/utils/resumeLayout";
+import { cloneResumeForExport, waitForResumeAssets } from "@/utils/resumeLayout";
 import { getFontFaceCss, normalizeFontFamily } from "@/utils/fonts";
 
 export const exportResumeToBrowserPrint = async (
@@ -24,6 +24,7 @@ export const exportResumeToBrowserPrint = async (
   }
 
   try {
+    await waitForResumeAssets(resumeContent);
     iframeWindow.document.open();
 
     const clonedContent = cloneResumeForExport(resumeContent, true);

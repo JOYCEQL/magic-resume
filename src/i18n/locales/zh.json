@@ -441,7 +441,8 @@
             "doubao": "豆包",
             "deepseek": "DeepSeek",
             "gemini": "Gemini",
-            "anthropic": "Claude"
+            "anthropic": "Claude",
+            "orcarouter": "OrcaRouter"
           },
           "protocols": {
             "chat-completions": "Chat Completions",
@@ -473,6 +474,51 @@
               "networkError": "无法连接到服务商，请检查网络和 API 端点",
               "timeout": "获取模型列表超时，请稍后重试",
               "invalidRequest": "请求无效，请重试"
+            }
+          },
+          "orca": {
+            "apiKeyTitle": "OrcaRouter - API",
+            "apiKeyHint": "粘贴已有的 OrcaRouter API Key，仅保存在当前浏览器。",
+            "apiKeyLabel": "OrcaRouter API Key",
+            "signInTitle": "OrcaRouter - Auth",
+            "signInHint": "使用 OrcaRouter 账号登录，无需 client secret，也无需预注册回调地址。",
+            "emailLabel": "邮箱（可选）",
+            "emailPlaceholder": "you@example.com",
+            "connectAction": "使用 OrcaRouter 登录",
+            "codeHint": "在刚打开的页面中确认授权，然后粘贴页面显示的验证码。",
+            "codePlaceholder": "粘贴验证码",
+            "codeSubmit": "连接",
+            "cancelSignIn": "取消登录",
+            "connected": "已连接 OrcaRouter",
+            "clearKey": "清除密钥",
+            "hideKey": "隐藏 API Key",
+            "showKey": "显示 API Key",
+            "manageKeys": "管理已授权应用",
+            "saveHint": "配置仅保存在当前浏览器；获取模型列表后将替换 {count} 个已校验的备用模型。",
+            "needsReauth": "OrcaRouter 已拒绝该密钥，请重新登录或粘贴新密钥。",
+            "reauth": "重新登录",
+            "modelSelectorTitle": "模型",
+            "modelPlaceholder": "选择模型",
+            "modelSearch": "搜索模型",
+            "modelEmpty": "暂无兼容模型",
+            "catalogLive": "实时目录",
+            "catalogDegraded": "已校验备用列表",
+            "catalogCount": "{count} 个兼容模型",
+            "catalogRefresh": "刷新",
+            "catalogInvalidated": "所选模型已不在目录中，请重新选择。",
+            "capabilityImage": "支持图片",
+            "errors": {
+              "missingKey": "请填写 OrcaRouter API Key。",
+              "invalidKey": "该 API Key 不可用，请检查是否含换行或多余空格。",
+              "signInDenied": "授权请求被拒绝。",
+              "signInStateMismatch": "返回的 state 与本次登录不匹配。",
+              "signInExpired": "验证码无效、已过期或已被使用，请重新登录。",
+              "signInScope": "OrcaRouter 授予的 scope 与请求不一致。",
+              "signInRateLimited": "登录次数过多，请复用已保存的密钥或稍后再试。",
+              "signInTimeout": "登录超时，请重新开始。",
+              "signInCancelled": "已取消登录。",
+              "signInNetwork": "无法连接 OrcaRouter，请检查网络后重试。",
+              "signInUnavailable": "OrcaRouter 登录暂不可用，可改用 API Key。"
             }
           }
         }

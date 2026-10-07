@@ -9,6 +9,7 @@ import {
   getTaskModel,
   isModelConfigured,
   modelSupportsPdf,
+  profileAuthMethod,
   type AIModelProfile,
   type AISettingsData,
 } from "@/config/ai-models";
@@ -18,6 +19,7 @@ interface AIConfigState extends AISettingsData {
   saveModel: (profile: AIModelProfile) => void;
   deleteModel: (id: string) => void;
   assignModel: (task: "text" | "pdf", id: string | null) => void;
+  markNeedsReauth: (provider: AIModelProfile["provider"], generation: number) => void;
   isConfigured: () => boolean;
 }
 
@@ -30,10 +32,23 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
         pdfModelId: null,
         saveModel: (profile) =>
           set((state) => {
-            const normalized = {
+            const previous = state.models.find(
+              (model) => model.id === profile.id,
+            );
+            const replacedCredential =
+              !!previous && previous.apiKey.trim() !== profile.apiKey.trim();
+            const normalized: AIModelProfile = {
               ...profile,
               name: profile.name.trim(),
+              authMethod: profileAuthMethod(profile),
               supportsPdf: modelSupportsPdf(profile.provider, profile.model),
+              generation: replacedCredential
+                ? (previous?.generation ?? 0) + 1
+                : (profile.generation ?? previous?.generation ?? 0),
+              // A freshly stored credential is usable until it is rejected.
+              needsReauth: replacedCredential
+                ? false
+                : (profile.needsReauth ?? previous?.needsReauth ?? false),
             };
             const exists = state.models.some(
               (model) => model.id === profile.id,
@@ -63,12 +78,30 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
               id !== null &&
               (!profile ||
                 !isModelConfigured(profile) ||
+                profile.needsReauth ||
                 (task === "pdf" && !canModelParsePdf(profile)))
             )
               return state;
             return task === "pdf" ? { pdfModelId: id } : { textModelId: id };
           }),
-        isConfigured: () => isModelConfigured(getTaskModel(get(), "text")),
+        /**
+         * Terminal reauthentication. Only the exact account generation that
+         * made the rejected request is marked, so a late failure can never
+         * poison a credential the user just replaced.
+         */
+        markNeedsReauth: (provider, generation) =>
+          set((state) => ({
+            models: state.models.map((model) =>
+              model.provider === provider &&
+              (model.generation ?? 0) === generation
+                ? { ...model, needsReauth: true }
+                : model,
+            ),
+          })),
+        isConfigured: () => {
+          const task = getTaskModel(get(), "text");
+          return !!task && !task.needsReauth && isModelConfigured(task);
+        },
       }),
       {
         name: "ai-config-storage",

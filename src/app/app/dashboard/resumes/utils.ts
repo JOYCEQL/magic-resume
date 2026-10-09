@@ -3,10 +3,7 @@ import { initialResumeState } from "@/config/initialResumeData";
 import { DEFAULT_TEMPLATES } from "@/config";
 
 export const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const toString = (value: unknown) =>
   typeof value === "string" ? value.trim() : "";
@@ -18,9 +15,7 @@ const LIST_MARKER_PREFIX_REGEX = /^\s*(?:[-*•]+\s*|\d+[.)]\s+)/;
 
 export const toStringArray = (value: unknown) => {
   if (Array.isArray(value)) {
-    return value
-      .map((item) => toString(item))
-      .filter(Boolean);
+    return value.map((item) => toString(item)).filter(Boolean);
   }
 
   if (typeof value === "string") {
@@ -45,20 +40,20 @@ export const extractJsonContent = (content: string) => {
   const direct = content.trim();
   try {
     return JSON.parse(direct);
-  } catch (error) { }
+  } catch (error) {}
 
   const fencedMatch = direct.match(/```(?:json)?\s*([\s\S]*?)```/i);
   if (fencedMatch?.[1]) {
     try {
       return JSON.parse(fencedMatch[1].trim());
-    } catch (error) { }
+    } catch (error) {}
   }
 
   const objectMatch = direct.match(/\{[\s\S]*\}/);
   if (objectMatch?.[0]) {
     try {
       return JSON.parse(objectMatch[0]);
-    } catch (error) { }
+    } catch (error) {}
   }
 
   throw new Error("Invalid AI JSON content");
@@ -78,7 +73,10 @@ export const createResumeFromAIResult = (result: any, fileName: string) => {
   return {
     ...initialResumeState,
     id,
-    title: toString(result?.title) || fileName || `Imported Resume ${id.slice(0, 6)}`,
+    title:
+      toString(result?.title) ||
+      fileName ||
+      `Imported Resume ${id.slice(0, 6)}`,
     createdAt: now,
     updatedAt: now,
     templateId: DEFAULT_TEMPLATES[0]?.id,
@@ -108,6 +106,7 @@ export const createResumeFromAIResult = (result: any, fileName: string) => {
         gpa: toString(item?.gpa),
         description: toListHtml(item?.description),
         visible: true,
+        logo: "",
       }))
       .filter((item: any) => item.school || item.major || item.degree),
     experience: experience
@@ -118,8 +117,12 @@ export const createResumeFromAIResult = (result: any, fileName: string) => {
         date: toString(item?.date),
         details: toListHtml(item?.details || item?.description),
         visible: true,
+        logo: "",
       }))
-      .filter((item: any) => item.company || item.position || item.date || item.details),
+      .filter(
+        (item: any) =>
+          item.company || item.position || item.date || item.details,
+      ),
     projects: projects
       .map((item: any) => ({
         id: generateUUID(),
@@ -132,11 +135,13 @@ export const createResumeFromAIResult = (result: any, fileName: string) => {
           item?.linkLabel ??
             item?.linkText ??
             item?.displayText ??
-            item?.linkDisplayText
+            item?.linkDisplayText,
         ),
         visible: true,
       }))
-      .filter((item: any) => item.name || item.role || item.date || item.description),
+      .filter(
+        (item: any) => item.name || item.role || item.date || item.description,
+      ),
     skillContent,
     customData: {},
   };

@@ -55,6 +55,15 @@ export const initialResumeState = {
       endDate: "2017-06",
       visible: true,
       gpa: "",
+      logo: "/university.png",
+      logoConfig: {
+        width: 30,
+        height: 30,
+        aspectRatio: "1:1",
+        borderRadius: "none",
+        customBorderRadius: 0,
+        visible: true,
+      },
       description: `<ul>
         <li>主修课程：数据结构、算法设计、操作系统、计算机网络、Web开发技术</li>
         <li>专业排名前 5%，连续三年获得一等奖学金</li>
@@ -84,6 +93,15 @@ export const initialResumeState = {
       position: "高级前端工程师",
       date: "2021.07 - 2024.12",
       visible: true,
+      logo: "/company.png",
+      logoConfig: {
+        width: 30,
+        height: 30,
+        aspectRatio: "1:1",
+        borderRadius: "none",
+        customBorderRadius: 0,
+        visible: true,
+      },
       details: `<ul>
       <li>负责抖音创作者平台的开发与维护，主导多个核心功能的技术方案设计</li>
       <li>优化项目工程化配置，将构建时间从 8 分钟优化至 2 分钟，提升团队开发效率</li>
@@ -205,6 +223,15 @@ export const initialResumeStateEn = {
       endDate: "2017-06",
       visible: true,
       gpa: "",
+      logo: "/university.png",
+      logoConfig: {
+        width: 20,
+        height: 20,
+        aspectRatio: "1:1",
+        borderRadius: "none",
+        customBorderRadius: 0,
+        visible: true,
+      },
       description: `<ul>
         <li>Core courses: Data Structures, Algorithms, Operating Systems, Computer Networks, Web Development</li>
         <li>Top 5% of class, received Dean's List honors for three consecutive years</li>
@@ -234,6 +261,15 @@ export const initialResumeStateEn = {
       position: "Senior Frontend Engineer",
       date: "2021.07 - 2024.12",
       visible: true,
+      logo: "/company.png",
+      logoConfig: {
+        width: 20,
+        height: 20,
+        aspectRatio: "1:1",
+        borderRadius: "none",
+        customBorderRadius: 0,
+        visible: true,
+      },
       details: `<ul>
       <li>Responsible for development and maintenance of TikTok Creator Platform, leading technical solution design for core features</li>
       <li>Optimized build configuration, reducing build time from 8 minutes to 2 minutes, improving team development efficiency</li>

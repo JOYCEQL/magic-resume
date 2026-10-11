@@ -7,6 +7,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateRange } from "@/lib/utils";
 import { useLocale } from "@/i18n/compat/client";
+import SectionLogo from "../../shared/SectionLogo";
 
 interface EducationSectionProps {
   education?: Education[];
@@ -26,18 +27,19 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education, globalSe
         {visibleEducation?.map((edu) => (
           <motion.div key={edu.id} layout="position" className={cn("relative pb-6 last:border-0 last:pb-0", showTimeline ? "pl-5 border-l-[1.5px] border-[#e5e7eb]" : "")} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
             {showTimeline && <div className="absolute left-[-2.25px] top-2.5 w-1.5 h-1.5 bg-black rounded-full" />}
-            
-            <motion.h4 layout="position" className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
+
+            <motion.h4 layout="position" className="font-bold text-black flex items-center gap-2" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
+              <SectionLogo src={edu.logo} config={edu.logoConfig} size={globalSettings?.subheaderSize || 18} />
               {edu.school}
             </motion.h4>
-            
+
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
               {[edu.degree, edu.major].filter(Boolean).join(" in ")}
               {(edu.degree || edu.major) ? " • " : ""}
               {formatDateRange(edu.startDate, edu.endDate, locale)}
               {edu.gpa && ` • GPA: ${edu.gpa}`}
             </motion.div>
-            
+
             {edu.description && (
               <motion.div
                 layout="position"

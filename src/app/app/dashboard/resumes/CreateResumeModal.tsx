@@ -235,54 +235,52 @@ export const CreateResumeModal = ({
 
                     <div className="flex-1 min-h-0 relative w-full">
                         <ScrollArea className="h-full w-full">
-                            <div className="px-8 pb-12 max-w-7xl mx-auto space-y-12">
+                            <div className="px-8 pb-10 max-w-7xl mx-auto space-y-7">
                                 {/* SECTION 1: BLANK TEMPLATE */}
                                 <section>
-                                    <div className="flex items-center mb-6">
-                                        <h4 className="text-xl font-bold text-gray-900 dark:text-foreground">
+                                    <div className="flex items-center mb-3">
+                                        <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-foreground">
                                             {t("dashboard.resumes.createDialog.startFromBlank")}
                                         </h4>
-                                        <div className="h-px bg-gray-200 dark:bg-secondary flex-1 ml-6" />
+                                        <div className="h-px bg-gray-200 dark:bg-secondary flex-1 ml-4" />
                                     </div>
                                     <motion.div
                                         layoutId={`card-container-blank`}
-                                        whileHover={{ y: -4, scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
                                         onClick={() => handleCreate(BLANK_TEMPLATE)}
-                                        className="group cursor-pointer rounded-2xl border border-gray-200/60 dark:border-border/60 shadow-sm bg-gray-50/50 dark:bg-card/50 hover:bg-white dark:hover:bg-card hover:shadow-xl hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300 p-6 flex flex-col sm:flex-row items-center gap-6"
+                                        className="group cursor-pointer rounded-xl sm:rounded-2xl border border-gray-200/60 dark:border-border/60 shadow-sm bg-gray-50/50 dark:bg-card/50 hover:bg-white dark:hover:bg-card hover:border-primary/50 dark:hover:border-primary/50 transition-colors p-3.5 sm:p-4 flex items-center gap-4"
                                     >
                                         {/* Small visual icon area */}
                                         <motion.div
                                             layoutId={`card-image-blank`}
-                                            className="h-28 w-28 sm:h-32 sm:w-32 flex-shrink-0 rounded-2xl bg-white dark:bg-secondary shadow-inner flex items-center justify-center border border-gray-100 dark:border-input"
+                                            className="h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 rounded-xl bg-white dark:bg-secondary shadow-inner flex items-center justify-center border border-gray-100 dark:border-input"
                                         >
-                                            <FilePlus className="w-10 h-10 text-gray-400 group-hover:text-primary transition-colors" />
+                                            <FilePlus className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-primary transition-colors" />
                                         </motion.div>
 
-                                        <div className="flex-1 text-center sm:text-left">
+                                        <div className="flex-1 text-left min-w-0">
                                             <motion.div layoutId={`card-title-blank`} className="inline-block">
-                                                <h5 className="text-xl font-bold text-gray-900 dark:text-foreground mb-2 group-hover:text-primary transition-colors">
+                                                <h5 className="text-base font-bold text-gray-900 dark:text-foreground mb-0.5 group-hover:text-primary transition-colors">
                                                     {t("dashboard.resumes.createDialog.blankTitle")}
                                                 </h5>
                                             </motion.div>
-                                            <p className="text-gray-500 dark:text-muted-foreground text-sm max-w-lg leading-relaxed">
+                                            <p className="text-gray-500 dark:text-muted-foreground text-xs sm:text-sm line-clamp-1 leading-normal">
                                                 {t("dashboard.resumes.createDialog.blankCardDescription")}
                                             </p>
                                         </div>
 
-                                        <div className="hidden sm:flex text-primary font-medium items-center text-sm   group-hover:translate-x-0 duration-300">
-                                            {t("dashboard.resumes.createDialog.createNow")} <ChevronLeft className="w-4 h-4 ml-1 rotate-180" />
+                                        <div className="flex text-primary font-medium items-center text-xs sm:text-sm shrink-0">
+                                            {t("dashboard.resumes.createDialog.createNow")} <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 rotate-180" />
                                         </div>
                                     </motion.div>
                                 </section>
 
                                 {/* SECTION 2: NORMAL TEMPLATES */}
                                 <section>
-                                    <div className="flex items-center mb-6">
-                                        <h4 className="text-xl font-bold text-gray-900 dark:text-foreground">
+                                    <div className="flex items-center mb-4">
+                                        <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-foreground">
                                             {t("dashboard.resumes.createDialog.startFromTemplate")}
                                         </h4>
-                                        <div className="h-px bg-gray-200 dark:bg-secondary flex-1 ml-6" />
+                                        <div className="h-px bg-gray-200 dark:bg-secondary flex-1 ml-4" />
                                     </div>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 sm:gap-8 hover:!shadow-none">
                                         {NORMAL_TEMPLATES.map((template) => {
@@ -292,8 +290,6 @@ export const CreateResumeModal = ({
                                                 <motion.div
                                                     key={template.id}
                                                     layoutId={`card-container-${template.id}`}
-                                                    whileHover={{ y: 0, scale: 1.02 }}
-                                                    whileTap={{ scale: 0.98 }}
                                                     onClick={() => setPreviewTarget(template)}
                                                     className="group cursor-pointer flex flex-col"
                                                 >
@@ -396,7 +392,7 @@ export const CreateResumeModal = ({
                                         <div className="space-y-4">
                                             <Button
                                                 size="lg"
-                                                className="w-full h-14 text-lg font-bold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                                className="w-full h-14 text-lg font-bold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25 transition-colors"
                                                 onClick={() => handleCreate(previewTarget)}
                                             >
                                                 {t("dashboard.resumes.createDialog.useThisTemplate")}

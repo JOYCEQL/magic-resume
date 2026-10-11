@@ -26,6 +26,7 @@ export function PdfImportPreview({ resume, onCancel, onConfirm }: Props) {
           ["education", resume.education.map((item: { school: string; major: string; degree: string }) => [item.school, item.major, item.degree].filter(Boolean).join(" · "))],
           ["experience", resume.experience.map((item: { company: string; position: string; date: string }) => [item.company, item.position, item.date].filter(Boolean).join(" · "))],
           ["projects", resume.projects.map((item: { name: string; role: string; date: string }) => [item.name, item.role, item.date].filter(Boolean).join(" · "))],
+          ["publications", resume.publications.map((item) => [item.title, item.venue, item.date].filter(Boolean).join(" · "))],
         ] as [string, string[]][]).map(([label, items]) => <div key={label}>
           <h3 className="text-sm font-medium">{t(label)} <span className="text-muted-foreground">({items.length})</span></h3>
           <ul className="mt-2 space-y-1 text-sm text-muted-foreground">{items.map((item, index) => <li key={index}>{item}</li>)}</ul>

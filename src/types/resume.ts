@@ -125,6 +125,21 @@ export interface Certificate {
   width: number; // Width percentage to support flex layouts
 }
 
+export type PublicationStatus = "" | "published" | "accepted" | "preprint" | "submitted";
+
+export interface Publication {
+  id: string;
+  title: string;
+  authors: string;
+  highlightedAuthor: string;
+  venue: string;
+  date: string;
+  status: PublicationStatus;
+  link: string;
+  description: string;
+  visible: boolean;
+}
+
 export type GlobalSettings = {
   themeColor?: string | undefined;
   fontFamily?: string | undefined;
@@ -189,6 +204,8 @@ export interface ResumeData {
   education: Education[];
   experience: Experience[];
   projects: Project[];
+  /** Optional for compatibility with resumes saved before this section existed. */
+  publications?: Publication[];
   certificates: Certificate[];
   customData: Record<string, CustomItem[]>;
   skillContent: string;

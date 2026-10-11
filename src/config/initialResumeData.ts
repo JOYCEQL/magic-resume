@@ -164,6 +164,7 @@ export const initialResumeState = {
       order: 4,
     },
   ],
+  publications: [],
   certificates: [],
   customData: {},
   activeSection: "basic",
@@ -325,6 +326,7 @@ export const initialResumeStateEn = {
       order: 4,
     },
   ],
+  publications: [],
   certificates: [],
   customData: {},
   activeSection: "basic",
@@ -351,6 +353,7 @@ export const blankResumeState = {
   selfEvaluationContent: "",
   experience: [],
   projects: [],
+  publications: [],
   certificates: [],
   menuSections: [initialResumeState.menuSections[0]],
 };
@@ -375,6 +378,7 @@ export const blankResumeStateEn = {
   selfEvaluationContent: "",
   experience: [],
   projects: [],
+  publications: [],
   certificates: [],
   menuSections: [initialResumeStateEn.menuSections[0]],
 };

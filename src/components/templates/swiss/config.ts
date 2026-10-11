@@ -20,5 +20,5 @@ export const swissConfig: ResumeTemplate = {
   basic: {
     layout: "left",
   },
-  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation", "certificates"],
+  availableSections: ["skills", "experience", "projects", "education", "selfEvaluation", "publications", "certificates"],
 };

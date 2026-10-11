@@ -1,6 +1,8 @@
 import { generateUUID } from "@/utils/uuid";
 import { initialResumeState } from "@/config/initialResumeData";
 import { DEFAULT_TEMPLATES } from "@/config";
+import { PUBLICATION_STATUSES, hasPublicationContent } from "@/lib/publication";
+import type { Publication } from "@/types/resume";
 
 export const escapeHtml = (value: string) =>
   value
@@ -64,13 +66,26 @@ export const extractJsonContent = (content: string) => {
   throw new Error("Invalid AI JSON content");
 };
 
-export const createResumeFromAIResult = (result: any, fileName: string) => {
+export const createResumeFromAIResult = (result: any, fileName: string, locale = "zh") => {
   const now = new Date().toISOString();
   const id = generateUUID();
 
   const education = Array.isArray(result?.education) ? result.education : [];
   const experience = Array.isArray(result?.experience) ? result.experience : [];
   const projects = Array.isArray(result?.projects) ? result.projects : [];
+  const publications: Publication[] = (Array.isArray(result?.publications) ? result.publications : [])
+    .map((item: any): Publication => ({
+      id: generateUUID(),
+      title: toString(item?.title),
+      authors: toString(item?.authors),
+      highlightedAuthor: toString(item?.highlightedAuthor),
+      venue: toString(item?.venue),
+      date: toString(item?.date),
+      status: PUBLICATION_STATUSES.includes(item?.status) ? item.status : "",
+      link: toString(item?.link),
+      description: toStringArray(item?.description).join("\n"),
+      visible: true,
+    })).filter(hasPublicationContent);
 
   const skillSource = result?.skillContent ?? result?.skills;
   const skillContent = toListHtml(skillSource);
@@ -138,6 +153,11 @@ export const createResumeFromAIResult = (result: any, fileName: string) => {
       }))
       .filter((item: any) => item.name || item.role || item.date || item.description),
     skillContent,
+    publications,
+    menuSections: [
+      ...initialResumeState.menuSections,
+      ...(publications.length ? [{ id: "publications", title: locale === "en" ? "Publications" : "论文发表", icon: "publications", enabled: true, order: initialResumeState.menuSections.length }] : []),
+    ],
     customData: {},
   };
 };

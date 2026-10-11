@@ -1,3 +1,4 @@
+import PublicationsSection from "../shared/PublicationsSection";
 import React from "react";
 import { ResumeData } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
@@ -34,6 +35,12 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ data, template }) => 
                 return <SkillSection skill={data.skillContent} globalSettings={data.globalSettings} />;
             case "projects":
                 return <ProjectSection projects={data.projects} globalSettings={data.globalSettings} />;
+            case "publications":
+                return (
+                    <PublicationsSection publications={data.publications} globalSettings={data.globalSettings}>
+                        <SectionTitle type="publications" globalSettings={data.globalSettings} />
+                    </PublicationsSection>
+                );
             case "certificates":
                 return (
                     <SectionWrapper sectionId="certificates" style={{ marginTop: `${data.globalSettings?.sectionSpacing || 24}px` }}>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslations } from "@/i18n/compat/client";
+import { useTranslations, useLocale } from "@/i18n/compat/client";
 import { Download, Loader2, ChevronDown, ShieldCheck } from "lucide-react";
 import { useResumeStore } from "@/store/useResumeStore";
 import { Button } from "@/components/ui/button";
@@ -101,6 +101,7 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
   const { activeResume } = useResumeStore();
   const { globalSettings = {}, title } = activeResume || {};
   const t = useTranslations("pdfExport");
+  const locale = useLocale();
   const tBasicField = useTranslations("workbench.basicPanel.basicFields");
 
   const handleExport = async () => {
@@ -162,6 +163,7 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
       successMessage: t("toast.markdownSuccess"),
       errorMessage: t("toast.markdownError"),
       markdownOptions: {
+        locale,
         basicFieldLabels: {
           name: tBasicField("name"),
           title: tBasicField("title"),

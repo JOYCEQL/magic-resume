@@ -204,6 +204,7 @@
         "education": "教育经历",
         "experience": "工作经历",
         "projects": "项目经历",
+        "publications": "论文发表",
         "missingName": "未识别到姓名，请在创建后核对简历内容",
         "errors": {
           "configRequired": "请填写 PDF 导入模型的 API Key、模型 ID 和 Base URL",
@@ -568,6 +569,7 @@
           "projects": "项目经历",
           "education": "教育经历",
           "selfEvaluation": "自我评价",
+          "publications": "论文发表",
           "certificates": "证书作品"
         }
       },
@@ -793,6 +795,54 @@
       "visibility": {
         "show": "显示",
         "hide": "隐藏"
+      }
+    },
+    "publicationsPanel": {
+      "intro": "展示与你的申请方向相关的论文与研究成果。留空的字段不会出现在简历中。",
+      "emptyTitle": "让研究成果被看见",
+      "emptyDescription": "添加期刊论文、会议论文或预印本，清晰展示作者、发表信息与论文链接。",
+      "addFirst": "添加第一篇论文",
+      "add": "添加论文",
+      "untitled": "未命名论文",
+      "itemHint": "填写论文标题与发表信息",
+      "hide": "隐藏论文",
+      "show": "显示论文",
+      "delete": "删除论文",
+      "expand": "展开论文",
+      "collapse": "收起论文",
+      "reorder": "拖动排序",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "authorsHint": "按署名顺序填写，用分号、逗号或换行分隔；共同一作可在姓名后加 *。",
+      "selectSelf": "选择本人",
+      "selectSelfHint": "点击下方名字在简历中加粗",
+      "clearHighlight": "清除加粗",
+      "selfBadge": "本人",
+      "invalidLink": "请输入有效的网址或 DOI，例如 https://arxiv.org/abs/… 或 10.1234/…",
+      "labels": {
+        "title": "论文标题",
+        "authors": "作者",
+        "highlightedAuthor": "突出显示的作者",
+        "venue": "期刊 / 会议",
+        "date": "发表日期",
+        "status": "发表状态",
+        "link": "论文链接 / DOI",
+        "description": "补充说明（可选）"
+      },
+      "placeholders": {
+        "title": "例如：面向低资源场景的多模态表示学习",
+        "authors": "例如：林知远*; 王晓*; 陈明",
+        "highlightedAuthor": "例如：林知远",
+        "venue": "例如：NeurIPS 2025 / IEEE TPAMI",
+        "link": "https://… 或 10.xxxx/…",
+        "description": "例如：* 共同第一作者。负责模型设计与实验验证。"
+      },
+      "statuses": {
+        "none": "不显示",
+        "published": "已发表",
+        "accepted": "已录用",
+        "preprint": "预印本",
+        "submitted": "在投"
       }
     },
     "certificatesPanel": {

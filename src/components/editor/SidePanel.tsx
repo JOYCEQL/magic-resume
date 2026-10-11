@@ -1,3 +1,4 @@
+import SectionIcon from "@/components/shared/SectionIcon";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";
@@ -214,7 +215,7 @@ export function SidePanel({
                       }}
                       className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors text-left"
                     >
-                      <span className="text-lg">{section.icon}</span>
+                      <span className="text-lg"><SectionIcon icon={section.icon} /></span>
                       <span>{t(`layout.standardSections.${section.titleKey}`)}</span>
                     </button>
                   ))}

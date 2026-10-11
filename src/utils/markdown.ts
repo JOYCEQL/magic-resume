@@ -2,6 +2,7 @@ import TurndownService from "turndown";
 import { DEFAULT_FIELD_ORDER } from "@/config";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 import { getProjectLinkMeta } from "@/lib/projectLink";
+import { getAuthorDelimiter, getPublicationAuthors, getPublicationLink, getPublicationStatusLabel, hasPublicationContent } from "@/lib/publication";
 import { BasicFieldType, BasicInfo, CustomItem, MenuSection, ResumeData } from "@/types/resume";
 
 const HTML_TAG_REGEX = /<\/?[a-z][\s\S]*>/i;
@@ -14,7 +15,8 @@ const DEFAULT_BASIC_SECTION_TITLES = {
   projects: "Projects",
   education: "Education",
   selfEvaluation: "Self Evaluation",
-  certificates: "Certificates"
+  certificates: "Certificates",
+  publications: "Publications"
 } as const;
 
 type ExportableBasicFieldKey =
@@ -48,6 +50,7 @@ const DEFAULT_BASIC_FIELD_LABELS: Record<ExportableBasicFieldKey, string> = {
 
 export interface ResumeMarkdownOptions {
   basicFieldLabels?: Partial<Record<ExportableBasicFieldKey, string>>;
+  locale?: string;
 }
 
 const normalizeText = (value?: string) => value?.trim() || "";
@@ -101,7 +104,8 @@ const getOrderedEnabledSections = (resume: ResumeData): MenuSection[] => {
     { id: "projects", title: DEFAULT_BASIC_SECTION_TITLES.projects, icon: "", enabled: true, order: 3 },
     { id: "education", title: DEFAULT_BASIC_SECTION_TITLES.education, icon: "", enabled: true, order: 4 },
     { id: "selfEvaluation", title: DEFAULT_BASIC_SECTION_TITLES.selfEvaluation, icon: "", enabled: true, order: 5 },
-    { id: "certificates", title: DEFAULT_BASIC_SECTION_TITLES.certificates, icon: "", enabled: true, order: 6 }
+    { id: "publications", title: DEFAULT_BASIC_SECTION_TITLES.publications, icon: "", enabled: true, order: 6 },
+    { id: "certificates", title: DEFAULT_BASIC_SECTION_TITLES.certificates, icon: "", enabled: true, order: 7 }
   ];
 };
 
@@ -269,6 +273,23 @@ const renderCertificateSection = (title: string, resume: ResumeData) => {
   return `## ${title}\n\n${lines.join("\n")}`;
 };
 
+const escapeMarkdownText = (text: string) => text.replace(/([\\`*_{}\[\]<>#])/g, "\\$1");
+
+const renderPublicationsSection = (title: string, resume: ResumeData, locale = "en") => {
+  const blocks = (resume.publications ?? [])
+    .filter((item) => item.visible !== false && hasPublicationContent(item))
+    .map((item) => {
+      const delimiter = getAuthorDelimiter(item.authors);
+      const authors = getPublicationAuthors(item.authors, item.highlightedAuthor)
+        .map(({ name, highlighted }) => highlighted ? `**${escapeMarkdownText(name)}**` : escapeMarkdownText(name)).join(delimiter);
+      const meta = [item.venue, item.date, getPublicationStatusLabel(item.status, locale)].filter(Boolean).map(escapeMarkdownText).join(" | ");
+      const link = getPublicationLink(item.link);
+      return [item.title && `### ${escapeMarkdownText(item.title)}`, authors, meta, link && `[${locale === "en" ? "Paper" : "论文链接"}](<${link.replace(/</g, "%3C").replace(/>/g, "%3E")}>)`, escapeMarkdownText(item.description)]
+        .filter(Boolean).join("\n\n");
+    });
+  return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";
+};
+
 const renderCustomSection = (title: string, items: CustomItem[]) => {
   const blocks = items
     .filter((item) => item.visible)
@@ -330,6 +351,9 @@ export const generateResumeMarkdown = (
         break;
       case "certificates":
         content = renderCertificateSection(sectionTitle, resume);
+        break;
+      case "publications":
+        content = renderPublicationsSection(sectionTitle, resume, options?.locale);
         break;
       default: {
         const customItems = resume.customData?.[section.id] || [];

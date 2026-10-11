@@ -203,6 +203,7 @@
         "education": "Education",
         "experience": "Experience",
         "projects": "Projects",
+        "publications": "Publications",
         "missingName": "No name was recognized. Review the resume after creation.",
         "errors": {
           "configRequired": "Enter the PDF model API key, model ID and Base URL.",
@@ -614,6 +615,7 @@
           "projects": "Projects",
           "education": "Education",
           "selfEvaluation": "Self Evaluation",
+          "publications": "Publications",
           "certificates": "Certificates"
         }
       },
@@ -838,6 +840,54 @@
       "visibility": {
         "show": "Show",
         "hide": "Hide"
+      }
+    },
+    "publicationsPanel": {
+      "intro": "Highlight papers and research relevant to your application. Empty fields are omitted from your resume.",
+      "emptyTitle": "Give your research a place",
+      "emptyDescription": "Add journal articles, conference papers or preprints with authors, publication details and links.",
+      "addFirst": "Add your first paper",
+      "add": "Add paper",
+      "untitled": "Untitled paper",
+      "itemHint": "Add a title and publication details",
+      "hide": "Hide paper",
+      "show": "Show paper",
+      "delete": "Delete paper",
+      "expand": "Expand paper",
+      "collapse": "Collapse paper",
+      "reorder": "Drag to reorder",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "authorsHint": "List authors in order, separated by semicolons, commas or newlines. Add * after equal contributors.",
+      "selectSelf": "Select self",
+      "selectSelfHint": "Click your name below to bold it on your resume",
+      "clearHighlight": "Clear highlight",
+      "selfBadge": "You",
+      "invalidLink": "Enter a valid web address or DOI, such as https://arxiv.org/abs/… or 10.1234/…",
+      "labels": {
+        "title": "Paper title",
+        "authors": "Authors",
+        "highlightedAuthor": "Author to highlight",
+        "venue": "Journal / conference",
+        "date": "Publication date",
+        "status": "Publication status",
+        "link": "Paper link / DOI",
+        "description": "Additional details (optional)"
+      },
+      "placeholders": {
+        "title": "e.g. Multimodal Representation Learning in Low-Resource Settings",
+        "authors": "e.g. Alex Lin*; Jamie Wang*; Ming Chen",
+        "highlightedAuthor": "e.g. Alex Lin",
+        "venue": "e.g. NeurIPS 2025 / IEEE TPAMI",
+        "link": "https://… or 10.xxxx/…",
+        "description": "e.g. * Equal contribution. Designed the model and led experimental evaluation."
+      },
+      "statuses": {
+        "none": "Not shown",
+        "published": "Published",
+        "accepted": "Accepted",
+        "preprint": "Preprint",
+        "submitted": "Submitted"
       }
     },
     "certificatesPanel": {

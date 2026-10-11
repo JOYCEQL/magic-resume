@@ -1,3 +1,5 @@
+import PublicationsPanel from "./publications/PublicationsPanel";
+import SectionIcon from "@/components/shared/SectionIcon";
 import React from "react";
 import { Pencil } from "lucide-react";
 import { motion } from "framer-motion";
@@ -38,6 +40,8 @@ export function EditPanel() {
         return <SkillPanel />;
       case "selfEvaluation":
         return <SelfEvaluationPanel />;
+      case "publications":
+        return <PublicationsPanel key={activeResume.id} />;
       case "certificates":
         return <CertificatesPanel />;
       default:
@@ -65,7 +69,7 @@ export function EditPanel() {
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">
-              {menuSections?.find((s) => s.id === activeSection)?.icon}
+              <SectionIcon icon={menuSections?.find((s) => s.id === activeSection)?.icon} />
             </span>
 
             {/* 如果是基本信息的展示话展示div */}

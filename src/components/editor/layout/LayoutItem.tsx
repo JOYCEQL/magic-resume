@@ -1,3 +1,4 @@
+import SectionIcon from "@/components/shared/SectionIcon";
 
 import { motion, Reorder, useDragControls } from "framer-motion";
 import { Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
@@ -59,7 +60,7 @@ const LayoutItem = ({
               "text-muted-foreground group-hover:text-foreground transition-colors"
             )}
           >
-            {item.icon}
+            <SectionIcon icon={item.icon} />
           </span>
           <span className={cn("text-sm flex-1 cursor-pointer")}>
             {item.title}
@@ -115,7 +116,7 @@ const LayoutItem = ({
               "text-muted-foreground group-hover:text-foreground transition-colors"
             )}
           >
-            {item.icon}
+            <SectionIcon icon={item.icon} />
           </span>
           <span className="text-sm flex-1">{item.title}</span>
           <motion.button

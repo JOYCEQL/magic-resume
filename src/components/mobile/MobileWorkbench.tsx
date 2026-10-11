@@ -1,3 +1,4 @@
+import SectionIcon from "@/components/shared/SectionIcon";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -86,7 +87,7 @@ export function MobileWorkbench() {
                               : "bg-background text-muted-foreground border-border hover:bg-muted"
                           )}
                         >
-                          <span className="mr-1.5">{section.icon}</span>
+                          <span className="mr-1.5"><SectionIcon icon={section.icon} /></span>
                           {section.title}
                         </button>
                       ))}

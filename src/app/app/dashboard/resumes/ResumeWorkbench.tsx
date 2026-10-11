@@ -234,7 +234,7 @@ export const ResumeWorkbench = () => {
         const data = await requestPdfImport(toAIConnection(pdfConnection), images);
         if (!data.resume) throw new ResumeImportError("invalidOutput");
         const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
-        setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt));
+        setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt, locale));
         setIsImportDialogOpen(false);
         if (data.warnings?.includes("missingName")) toast.warning(t("dashboard.resumes.importDialog.missingName"));
     };

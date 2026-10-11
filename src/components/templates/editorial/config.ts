@@ -20,5 +20,5 @@ export const editorialConfig: ResumeTemplate = {
   basic: {
     layout: "left",
   },
-  availableSections: ["basic", "experience", "education", "projects", "skills", "selfEvaluation", "certificates", "languages", "custom"],
+  availableSections: ["basic", "experience", "education", "projects", "skills", "selfEvaluation", "publications", "certificates", "languages", "custom"],
 };

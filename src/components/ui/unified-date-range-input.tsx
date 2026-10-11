@@ -5,6 +5,8 @@ import { CalendarDate, parseDate } from "@internationalized/date";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
+import { useLocale } from "@/i18n/compat/client";
+
 interface UnifiedDateRangeInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -57,6 +59,9 @@ export function UnifiedDateRangeInput({
   onChange,
   className,
 }: UnifiedDateRangeInputProps) {
+  const currentLocale = useLocale();
+  const dateLocale = currentLocale === "en" ? "en-US" : "zh-CN";
+
   const [range, setRange] = useState<{ start: CalendarDate | null; end: CalendarDate | null }>(
     () => parseRange(value)
   );
@@ -71,7 +76,7 @@ export function UnifiedDateRangeInput({
       `${d.year}/${d.month.toString().padStart(2, "0")}`;
 
     const startStr = newStart ? format(newStart) : "";
-    const endStr = isPresent ? (value.includes("至今") ? "至今" : "Present") : (newEnd ? format(newEnd) : "");
+    const endStr = isPresent ? (currentLocale === "en" ? "Present" : "至今") : (newEnd ? format(newEnd) : "");
 
     if (!startStr && !endStr) {
       onChange("");
@@ -104,7 +109,7 @@ export function UnifiedDateRangeInput({
 
   return (
     <div className={cn("w-full", className)}>
-      <HeroUIProvider locale="ja-JP">
+      <HeroUIProvider locale={dateLocale}>
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <DateInput
@@ -113,7 +118,7 @@ export function UnifiedDateRangeInput({
               variant="bordered"
               granularity={"month" as any}
               shouldForceLeadingZeros
-              aria-label="Start Date"
+              aria-label={currentLocale === "en" ? "Start date" : "开始日期"}
               classNames={{
                 inputWrapper:
                   "bg-background hover:bg-muted/20 h-9 min-h-0 py-0 px-3 shadow-sm ring-1 ring-inset ring-input border-0",
@@ -129,7 +134,7 @@ export function UnifiedDateRangeInput({
               variant="bordered"
               granularity={"month" as any}
               shouldForceLeadingZeros
-              aria-label="End Date"
+              aria-label={currentLocale === "en" ? "End date" : "结束日期"}
               isDisabled={isPresent}
               className={cn(isPresent && "opacity-50")}
               classNames={{

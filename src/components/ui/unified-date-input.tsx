@@ -5,6 +5,8 @@ import { CalendarDate, parseDate } from "@internationalized/date";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
+import { useLocale } from "@/i18n/compat/client";
+
 interface UnifiedDateInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -21,6 +23,9 @@ export function UnifiedDateInput({
   isRequired,
   className,
 }: UnifiedDateInputProps) {
+  const currentLocale = useLocale();
+  const dateLocale = currentLocale === "en" ? "en-US" : "zh-CN";
+
   const parseValue = (input: string): CalendarDate | null => {
     if (!input) return null;
     try {
@@ -54,7 +59,7 @@ export function UnifiedDateInput({
 
   return (
     <div className={className}>
-      <HeroUIProvider locale="ja-JP">
+      <HeroUIProvider locale={dateLocale}>
         <DateInput
           value={isPresent ? null : selectedDate}
           onChange={handleDateChange}

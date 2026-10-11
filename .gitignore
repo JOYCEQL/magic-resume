@@ -43,3 +43,7 @@ src/routeTree.gen.ts
 .history
 .agent
 .tanstack
+
+# standalone promotional video projects
+/videos/
+/promo-video/

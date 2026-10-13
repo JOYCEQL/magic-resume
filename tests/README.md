@@ -9,6 +9,21 @@ pnpm test:ai
 This includes the numeric-content import regression tests in
 `resume-import-content.test.ts` and the existing AI/import tests.
 
+## OrcaRouter provider
+
+`tests/orcarouter-auth.test.ts` and `tests/orcarouter-catalog.test.ts` are part of
+`pnpm test:ai` and run with fake credentials only: they cover the API-key and PKCE
+credential adapters, the authorize/exchange contract, catalog parsing and the
+per-capability model filters.
+
+`tests/orcarouter-live.test.ts` is part of the same command but skips itself unless
+`ORCAROUTER_API_KEY` is set, and then talks to `https://api.orcarouter.ai/v1`. It
+checks that the live catalog is namespaced, that the multimodal filter is a strict
+subset of the text list, that a request through the server's own OrcaRouter path
+succeeds, and that a rejected key is reported as an authentication error. Live
+counts are printed by the suite itself rather than asserted, so the catalog can
+grow without breaking the tests.
+
 ## Mobile workbench regression
 
 With a production server running (`pnpm build && pnpm start`), install both

@@ -17,6 +17,7 @@
     "preview": "vite preview",
     "release": "bumpp",
     "generate:template-snapshots": "tsx scripts/generate-template-snapshots.ts",
+    "test:orca-evidence": "node scripts/orca-evidence.mjs",
     "install:playwright": "playwright install chromium"
   },
   "dependencies": {

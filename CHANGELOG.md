@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.0.12
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.11...v2.0.12)
+
+### 🚀 Enhancements
+
+- Add publications module with template rendering and import/export support ([0850277](https://github.com/JOYCEQL/magic-resume/commit/0850277)).
+- Add language preference settings and refresh dashboard controls ([a6ce0a1](https://github.com/JOYCEQL/magic-resume/commit/a6ce0a1), [48cafbb](https://github.com/JOYCEQL/magic-resume/commit/48cafbb)).
+- Support preset date formats across all resume templates and Markdown export ([f57a974](https://github.com/JOYCEQL/magic-resume/commit/f57a974), [#367](https://github.com/JOYCEQL/magic-resume/issues/367)).
+
+### 🩹 Fixes
+
+- Align DeepSeek Flash models, migrate saved settings, disable thinking mode only for grammar checks, and isolate connection tests from resume parsing ([4b91e67](https://github.com/JOYCEQL/magic-resume/commit/4b91e67), [da611b1](https://github.com/JOYCEQL/magic-resume/commit/da611b1), [6a0ff06](https://github.com/JOYCEQL/magic-resume/commit/6a0ff06), [#370](https://github.com/JOYCEQL/magic-resume/pull/370)).
+- Fix date input placeholder and date range localization in English ([8cae524](https://github.com/JOYCEQL/magic-resume/commit/8cae524)).
+
+### 🏡 Chore
+
+- Remove the promotional video project and ignore video directories ([0a1e2be](https://github.com/JOYCEQL/magic-resume/commit/0a1e2be)).
+
 ## v2.0.11
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.10...v2.0.11)

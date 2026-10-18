@@ -10,6 +10,8 @@ import type { AIProvider } from "@/config/ai-models";
 interface Props {
   provider: AIProvider;
   compact?: boolean;
+  size?: "xs" | "sm" | "md" | "lg";
+  className?: string;
 }
 
 const PROVIDER_THEMES: Record<
@@ -41,17 +43,36 @@ const PROVIDER_THEMES: Record<
   },
 };
 
-export function ProviderMark({ provider, compact = false }: Props) {
+export function ProviderMark({
+  provider,
+  compact = false,
+  size,
+  className,
+}: Props) {
   const theme = PROVIDER_THEMES[provider];
+  const resolvedSize = size ?? (compact ? "md" : "lg");
+
+  const containerSizeClass = {
+    xs: "h-5 w-5 rounded-md border border-border/60 bg-white shadow-2xs dark:bg-secondary/80",
+    sm: "h-6 w-6 rounded-md border border-border/60 bg-white shadow-2xs dark:bg-secondary/80",
+    md: "h-9 w-9 rounded-lg",
+    lg: "h-11 w-11 rounded-lg border border-border/60 bg-background/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:shadow-none",
+  }[resolvedSize];
+
+  const iconSizeClass = {
+    xs: "h-3 w-3",
+    sm: "h-3.5 w-3.5",
+    md: "h-4 w-4",
+    lg: "h-5 w-5",
+  }[resolvedSize];
 
   return (
     <span
-      aria-hidden
+      aria-hidden="true"
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-lg",
-        compact
-          ? "h-9 w-9"
-          : "h-11 w-11 border border-border/60 bg-background/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:shadow-none",
+        "flex shrink-0 items-center justify-center",
+        containerSizeClass,
+        className,
       )}
     >
       <img
@@ -59,7 +80,7 @@ export function ProviderMark({ provider, compact = false }: Props) {
         alt=""
         className={cn(
           "object-contain",
-          compact ? "h-4 w-4" : "h-5 w-5",
+          iconSizeClass,
           theme.monochrome && "dark:invert",
         )}
       />

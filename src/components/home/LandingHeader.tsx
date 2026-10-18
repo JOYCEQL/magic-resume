@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useLocale, useTranslations } from "@/i18n/compat/client";
+import { useTranslations } from "@/i18n/compat/client";
+import { useLocaleSwitch } from "@/hooks/useLocaleSwitch";
 import Link from "@/lib/link";
 import Logo from "@/components/shared/Logo";
 import { GitHubStars } from "@/components/shared/GitHubStars";
 
 export default function LandingHeader() {
-  const locale = useLocale();
+  const { locale, switchLocale } = useLocaleSwitch();
   const t = useTranslations("home.redesign");
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -34,7 +35,8 @@ export default function LandingHeader() {
         <div className="landing-header-actions">
           <Link
             href={locale === "zh" ? "/en" : "/zh"}
-            className="landing-icon-button landing-language"
+            onClick={() => switchLocale(locale === "zh" ? "en" : "zh")}
+            className="landing-icon-button landing-language cursor-pointer"
             aria-label={t("nav.language")}
           >
             {locale === "zh" ? "EN" : "中"}

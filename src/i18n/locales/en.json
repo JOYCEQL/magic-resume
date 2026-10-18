@@ -274,6 +274,14 @@
         "dark": "Dark",
         "system": "System"
       },
+      "language": {
+        "title": "Language",
+        "description": "Choose your preferred display language.",
+        "zh": "简体中文",
+        "zhDesc": "Chinese (Simplified)",
+        "en": "English",
+        "enDesc": "English (US)"
+      },
       "syncDirectory": {
         "title": "Local Backup Directory",
         "description": "Choose a folder to sync and backup your resumes. All data is stored locally for synchronization.",

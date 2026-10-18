@@ -11,12 +11,14 @@ import tiptapCss from "../styles/tiptap.scss?url";
 import landingCss from "@/components/home/landing.css?url";
 import sonnerCss from "sonner/dist/styles.css?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
 import enMessages from "@/i18n/locales/en.json";
 import { Providers } from "@/app/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocaleFromPathname, getPreferredLocale } from "@/i18n/runtime";
+import { LOCALE_CHANGE_EVENT } from "@/hooks/useLocaleSwitch";
+import type { Locale } from "@/i18n/config";
 import { ReactGrab } from "@/components/dev/ReactGrab";
 
 const defaultFontPreloadLinks = [
@@ -90,15 +92,37 @@ function RootComponent() {
   const pathname = useLocation({
     select: (location) => location.pathname,
   });
-  const locale = getPreferredLocale(pathname);
   const landingLocale = getLocaleFromPathname(pathname);
   const isLandingPage =
     landingLocale !== null &&
     pathname.replace(/\/$/, "") === `/${landingLocale}`;
+
+  const [locale, setLocale] = useState<Locale>(() => getPreferredLocale(pathname));
+
+  useEffect(() => {
+    const nextFromPath = getLocaleFromPathname(pathname);
+    if (nextFromPath && nextFromPath !== locale) {
+      setLocale(nextFromPath);
+    }
+  }, [pathname, locale]);
+
+  useEffect(() => {
+    const handleLocaleChange = (e: Event) => {
+      const customEvent = e as CustomEvent<Locale>;
+      if (customEvent.detail && (customEvent.detail === "zh" || customEvent.detail === "en")) {
+        setLocale(customEvent.detail);
+      }
+    };
+    window.addEventListener(LOCALE_CHANGE_EVENT, handleLocaleChange);
+    return () => {
+      window.removeEventListener(LOCALE_CHANGE_EVENT, handleLocaleChange);
+    };
+  }, []);
+
   const messages = locale === "en" ? enMessages : zhMessages;
 
   useEffect(() => {
-    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000`;
+    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
   }, [locale]);
 
   return (

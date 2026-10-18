@@ -275,6 +275,14 @@
         "dark": "深色",
         "system": "跟随系统"
       },
+      "language": {
+        "title": "语言",
+        "description": "选择您偏好的界面显示语言。",
+        "zh": "简体中文",
+        "zhDesc": "中文 (简体)",
+        "en": "English",
+        "enDesc": "英语 (美国)"
+      },
       "syncDirectory": {
         "title": "本地备份目录",
         "description": "选择一个文件夹来同步和备份您的简历，数据仅存储在本地进行同步。",

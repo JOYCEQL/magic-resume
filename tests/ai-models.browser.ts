@@ -27,9 +27,19 @@ for (const engine of [chromium, webkit]) {
         ? { code: "unexpectedCode" }
         : { models: [{ id: "local-review-chat", description: "Local test fixture" }, { id: "gpt-4.1-local-review" }] } });
     });
+    const testedModels: string[] = [];
+    let connectionTimeout = false;
+    let importRequests = 0;
+    await page.route("**/api/resume-import", async (route) => {
+      importRequests++;
+      await route.fulfill({ status: 500, json: { code: "invalidRequest" } });
+    });
     await page.route("**/api/ai-test", async (route) => {
-      assert.equal(route.request().postDataJSON().connection.model, "local-review-chat");
-      await route.fulfill({ json: { ok: true } });
+      const body = route.request().postDataJSON();
+      assert.deepEqual(Object.keys(body), ["connection"]);
+      testedModels.push(body.connection.model);
+      await route.fulfill({ status: connectionTimeout ? 504 : 200,
+        json: connectionTimeout ? { code: "timeout" } : { ok: true } });
     });
     await page.goto(`${origin}/app/dashboard/ai`);
     const fetchButton = page.getByRole("button", { name: "获取模型列表", exact: true });
@@ -37,7 +47,7 @@ for (const engine of [chromium, webkit]) {
     await fetchButton.click();
     await page.getByText("请先填写 API Key", { exact: true }).waitFor();
     assert.equal(modelRequests, 0);
-    await page.getByLabel("API Key", { exact: true }).fill("local-test-key");
+    await page.getByLabel("API 密钥", { exact: true }).fill("local-test-key");
     await fetchButton.click();
     const addChat = page.getByRole("button", { name: "添加模型 local-review-chat", exact: true });
     await addChat.click();
@@ -46,6 +56,15 @@ for (const engine of [chromium, webkit]) {
     const chatCard = page.locator("article").filter({ has: page.getByRole("heading", { name: "local-review-chat", exact: true }) });
     await chatCard.getByRole("button", { name: "检测连接", exact: true }).click();
     await chatCard.getByRole("status").filter({ hasText: "连接正常" }).waitFor();
+    const visionCard = page.locator("article").filter({ has: page.getByRole("heading", { name: "gpt-4.1-local-review", exact: true }) });
+    await visionCard.getByRole("button", { name: "检测连接", exact: true }).click();
+    await visionCard.getByRole("status").filter({ hasText: "连接正常" }).waitFor();
+    connectionTimeout = true;
+    await visionCard.getByRole("button", { name: "检测连接", exact: true }).click();
+    await visionCard.getByRole("status").filter({ hasText: "连接检测超时，请稍后重试或检查模型服务" }).waitFor();
+    assert.deepEqual(testedModels, ["local-review-chat", "gpt-4.1-local-review", "gpt-4.1-local-review"]);
+    assert.equal(importRequests, 0);
+    connectionTimeout = false;
     await page.getByRole("combobox", { name: "选择文字助手模型" }).click();
     await page.getByRole("option", { name: "gpt-4.1-local-review", exact: true }).click();
     await page.getByRole("combobox", { name: "选择 PDF 解析模型" }).click();
@@ -81,10 +100,10 @@ for (const engine of [chromium, webkit]) {
       await fetchButton.click();
       await request;
       await page.waitForFunction(() => document.querySelector<HTMLButtonElement>('button:has(svg.animate-spin)')?.disabled);
-      if (change === "key") await page.getByLabel("API Key", { exact: true }).fill("local-test-key-updated");
+      if (change === "key") await page.getByLabel("API 密钥", { exact: true }).fill("local-test-key-updated");
       if (change === "endpoint") {
         await page.locator("summary").click();
-        await page.getByLabel("API Endpoint", { exact: true }).fill("https://example.invalid/v1");
+        await page.getByLabel("API 地址", { exact: true }).fill("https://example.invalid/v1");
       }
       if (change === "provider") await page.getByRole("button", { name: /^DeepSeek/ }).click();
       assert.ok(delayed);

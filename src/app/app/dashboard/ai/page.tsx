@@ -61,7 +61,7 @@ function ModelCard({
   onDelete,
 }: ModelCardProps) {
   const t = useTranslations("dashboard.settings.ai.workspace");
-  const tError = useTranslations("dashboard.resumes.importDialog.errors");
+  const tError = useTranslations("dashboard.settings.ai.workspace.connectionErrors");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const test = useModelTest(profile);
   const assignedToText = profile.id === textModelId;
@@ -116,7 +116,7 @@ function ModelCard({
           disabled={
             !isModelConfigured(profile) || test.state.status === "running"
           }
-          onClick={() => test.run(model.supportsPdf ? "pdf" : "text")}
+          onClick={() => test.run()}
           className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none"
         >
           {test.state.status === "running" ? (

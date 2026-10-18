@@ -17,6 +17,13 @@ for (const provider of AI_PROVIDERS) {
       const request = new Request("http://localhost/api", { method: "POST", body: JSON.stringify({ connection, content: "简历正文" }) });
       const response = await handleTextRequest(request, task, (async (_url, options) => {
         assert.ok((String(_url) + String(options?.body)).includes("test-model"));
+        if (task === "test") {
+          const sent = String(options?.body);
+          assert.ok(sent.includes("Test this connection."));
+          assert.ok(sent.includes("Reply with exactly OK."));
+          assert.ok(!sent.includes("简历正文"));
+          assert.ok(!sent.includes("image"));
+        }
         assert.equal(options?.redirect, "manual");
         const upstream = JSON.parse(String(options?.body));
         if (provider === "deepseek" && task === "grammar") assert.deepEqual(upstream.thinking, { type: "disabled" });

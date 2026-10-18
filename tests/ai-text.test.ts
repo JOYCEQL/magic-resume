@@ -19,7 +19,7 @@ for (const provider of AI_PROVIDERS) {
         assert.ok((String(_url) + String(options?.body)).includes("test-model"));
         assert.equal(options?.redirect, "manual");
         const upstream = JSON.parse(String(options?.body));
-        if (provider === "deepseek") assert.deepEqual(upstream.thinking, { type: "disabled" });
+        if (provider === "deepseek" && task === "grammar") assert.deepEqual(upstream.thinking, { type: "disabled" });
         else assert.equal(upstream.thinking, undefined);
         return Response.json(payload(connection.protocol, task === "test" ? "OK" : '{"errors":[]}'));
       }) as typeof fetch);
@@ -66,7 +66,7 @@ test("polish returns incremental plain text from the configured provider", async
   assert.equal(await response.text(), "Updated resume");
 });
 
-test("legacy DeepSeek text requests use current Flash with thinking disabled", async () => {
+test("legacy DeepSeek requests disable thinking only for grammar", async () => {
   for (const task of ["grammar", "polish", "test"] as const) {
     const request = new Request("http://localhost/api", {
       method: "POST",
@@ -76,7 +76,8 @@ test("legacy DeepSeek text requests use current Flash with thinking disabled", a
       const body = JSON.parse(String(options?.body));
       assert.equal(String(url), "https://api.deepseek.com/v1/chat/completions");
       assert.equal(body.model, "deepseek-flash");
-      assert.deepEqual(body.thinking, { type: "disabled" });
+      if (task === "grammar") assert.deepEqual(body.thinking, { type: "disabled" });
+      else assert.equal(body.thinking, undefined);
       if (task === "polish") {
         assert.equal(body.stream, true);
         return new Response('data: {"choices":[{"delta":{"content":"Updated resume"}}]}\n\ndata: [DONE]\n\n');
@@ -90,7 +91,7 @@ test("legacy DeepSeek text requests use current Flash with thinking disabled", a
   }
 });
 
-test("configured DeepSeek Pro polish keeps the selected model and disables thinking", async () => {
+test("configured DeepSeek Pro polish keeps the selected model and default thinking", async () => {
   const connection = { ...createModelProfile("deepseek", "pro"), apiKey: "key", model: "deepseek-v4-pro" };
   const response = await handleTextRequest(new Request("http://localhost/api", {
     method: "POST",
@@ -98,8 +99,8 @@ test("configured DeepSeek Pro polish keeps the selected model and disables think
   }), "polish", (async (_url, options) => {
     const body = JSON.parse(String(options?.body));
     assert.equal(body.model, "deepseek-v4-pro");
-    assert.deepEqual(body.thinking, { type: "disabled" });
-    return new Response('data: {"choices":[{"delta":{"content":"Updated"}}]}\n\ndata: [DONE]\n\n');
+    assert.equal(body.thinking, undefined);
+    return new Response('data: {"choices":[{"delta":{"reasoning_content":"Planning changes"}}]}\n\ndata: {"choices":[{"delta":{"content":"Updated"}}]}\n\ndata: [DONE]\n\n');
   }) as typeof fetch);
   assert.equal(response.status, 200);
   assert.equal(await response.text(), "Updated");

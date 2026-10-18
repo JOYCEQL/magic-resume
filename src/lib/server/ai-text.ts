@@ -41,7 +41,7 @@ export async function handleTextRequest(request: Request, task: "polish" | "gram
       text,
       json: task === "grammar",
       stream: task === "polish",
-      disableThinking: true,
+      disableThinking: task === "grammar",
     }, signal, fetcher);
     if (task === "polish") {
       if (!response.body) throw new ResumeImportError("emptyOutput", 502);

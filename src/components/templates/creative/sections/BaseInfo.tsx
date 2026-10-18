@@ -40,11 +40,11 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
         return basic.fieldOrder
             .filter((field) => field.visible !== false && field.key !== "name" && field.key !== "title")
             .map((field) => ({
-                key: field.key, value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale) : (basic[field.key] as string),
+                key: field.key, value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale, globalSettings?.dateFormat) : (basic[field.key] as string),
                 icon: basic.icons?.[field.key] || "User", label: field.label, visible: field.visible, custom: field.custom,
             }))
             .filter((item) => Boolean(item.value));
-    }, [basic]);
+    }, [basic, locale, globalSettings?.dateFormat]);
 
     const allFields = [
         ...getOrderedFields,

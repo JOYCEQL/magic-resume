@@ -140,6 +140,16 @@ export interface Publication {
   visible: boolean;
 }
 
+export const RESUME_DATE_FORMATS = [
+  "YYYY/MM",
+  "YYYY.MM",
+  "YYYY-MM",
+  "MM/YYYY",
+  "short-month",
+] as const;
+
+export type ResumeDateFormat = (typeof RESUME_DATE_FORMATS)[number];
+
 export type GlobalSettings = {
   themeColor?: string | undefined;
   fontFamily?: string | undefined;
@@ -154,6 +164,7 @@ export type GlobalSettings = {
   centerSubtitle?: boolean | undefined;
   flexibleHeaderLayout?: boolean | undefined;
   autoOnePage?: boolean | undefined;
+  dateFormat?: ResumeDateFormat | undefined;
 };
 
 export interface ResumeTheme {

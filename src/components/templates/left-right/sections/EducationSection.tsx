@@ -36,7 +36,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                             )}
                             <span className={`text-subtitleFont shrink-0 ${flexLayout ? "ml-auto" : "flex-1 text-right"}`} suppressHydrationWarning
                                 style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                {formatDateRange(edu.startDate, edu.endDate, locale)}
+                                {formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}
                             </span>
                         </motion.div>
                         {!centerSubtitle && (

@@ -37,7 +37,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
               {exp.position ? <span className="font-semibold text-black">{exp.position}</span> : null}
               {exp.position && " • "}
-              {formatDateString(exp.date, locale)}
+              {formatDateString(exp.date, locale, globalSettings?.dateFormat)}
             </motion.div>
             
             {/* Details */}

@@ -34,7 +34,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
               {project.role && <span className="font-semibold text-black">{project.role}</span>}
               {project.role && " • "}
-              {formatDateString(project.date, locale)}
+              {formatDateString(project.date, locale, globalSettings?.dateFormat)}
               {projectLink && (
                 <>
                   <span className="mx-2">•</span>

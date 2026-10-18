@@ -34,7 +34,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                 </motion.div>
               )}
               <span className="flex-1 text-right text-gray-500 shrink-0" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                {formatDateString(item.dateRange, locale)}
+                {formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}
               </span>
             </motion.div>
             {item.description && (

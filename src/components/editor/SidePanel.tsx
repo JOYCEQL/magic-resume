@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { Layout, Type, SpaceIcon, Palette, Zap } from "lucide-react";
 import debounce from "lodash/debounce";
-import { useTranslations } from "@/i18n/compat/client";
+import { useLocale, useTranslations } from "@/i18n/compat/client";
 import {
   Select,
   SelectContent,
@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
 import { useResumeStore } from "@/store/useResumeStore";
-import { cn } from "@/lib/utils";
-import { THEME_COLORS, MenuSection } from "@/types/resume";
+import { cn, normalizeDateFormat } from "@/lib/utils";
+import { THEME_COLORS, MenuSection, ResumeDateFormat } from "@/types/resume";
 import { ColorPicker } from "@/components/ui/color-picker";
 import {
   Popover,
@@ -96,6 +96,15 @@ export function SidePanel({
 
   const { themeColor = THEME_COLORS[0] } = globalSettings;
   const t = useTranslations("workbench.sidePanel");
+  const locale = useLocale();
+
+  const dateFormatOptions: { value: ResumeDateFormat; label: string }[] = [
+    { value: "YYYY/MM", label: "2024/06 (YYYY/MM)" },
+    { value: "YYYY.MM", label: "2024.06 (YYYY.MM)" },
+    { value: "YYYY-MM", label: "2024-06 (YYYY-MM)" },
+    { value: "MM/YYYY", label: "06/2024 (MM/YYYY)" },
+    { value: "short-month", label: t("mode.dateFormat.shortMonth") },
+  ];
 
   const currentTemplate = DEFAULT_TEMPLATES.find(
     (t) => t.id === activeResume?.templateId
@@ -806,6 +815,46 @@ export function SidePanel({
                   }
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-muted-foreground">
+                {t("mode.dateFormat.title")}
+              </Label>
+              <Select
+                value={
+                  normalizeDateFormat(globalSettings?.dateFormat) ??
+                  (locale === "en" ? "MM/YYYY" : "YYYY/MM")
+                }
+                onValueChange={(value) =>
+                  updateGlobalSettings({
+                    dateFormat: value as ResumeDateFormat,
+                  })
+                }
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <SelectTrigger
+                    aria-label={t("mode.dateFormat.title")}
+                    className="border border-input bg-background transition-colors"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                </motion.div>
+                <SelectContent className="bg-popover border-border">
+                  {dateFormatOptions.map((option) => (
+                    <SelectItem
+                      key={option.value}
+                      value={option.value}
+                      className="cursor-pointer transition-colors hover:bg-accent focus:bg-accent"
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </SettingCard>

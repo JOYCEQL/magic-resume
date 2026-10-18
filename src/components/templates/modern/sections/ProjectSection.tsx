@@ -49,7 +49,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                     </motion.div>
                                 )}
                                 <div className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                    {formatDateString(project.date, locale)}
+                                    {formatDateString(project.date, locale, globalSettings?.dateFormat)}
                                 </div>
                             </motion.div>
                             {project.role && !centerSubtitle && (

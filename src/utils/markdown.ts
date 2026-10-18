@@ -3,7 +3,8 @@ import { DEFAULT_FIELD_ORDER } from "@/config";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
 import { getProjectLinkMeta } from "@/lib/projectLink";
 import { getAuthorDelimiter, getPublicationAuthors, getPublicationLink, getPublicationStatusLabel, hasPublicationContent } from "@/lib/publication";
-import { BasicFieldType, BasicInfo, CustomItem, MenuSection, ResumeData } from "@/types/resume";
+import { BasicFieldType, BasicInfo, CustomItem, MenuSection, ResumeData, ResumeDateFormat } from "@/types/resume";
+import { formatDateRange, formatDateString, normalizeDateFormat } from "@/lib/utils";
 
 const HTML_TAG_REGEX = /<\/?[a-z][\s\S]*>/i;
 const DATA_URL_REGEX = /^data:/i;
@@ -53,6 +54,11 @@ export interface ResumeMarkdownOptions {
   locale?: string;
 }
 
+interface MarkdownDateContext {
+  locale: string;
+  dateFormat?: ResumeDateFormat;
+}
+
 const normalizeText = (value?: string) => value?.trim() || "";
 const normalizeDateRangeText = (value?: string) =>
   normalizeText(value)
@@ -60,6 +66,20 @@ const normalizeDateRangeText = (value?: string) =>
     .map((part) => part.trim())
     .filter(Boolean)
     .join(" - ");
+
+const getMarkdownDateContext = (
+  resume: ResumeData,
+  options?: ResumeMarkdownOptions
+): MarkdownDateContext => ({
+  locale: options?.locale || "en",
+  dateFormat: normalizeDateFormat(resume.globalSettings?.dateFormat)
+});
+
+// 仅在用户显式选择日期格式后才格式化；未设置时原样返回，保持历史导出结果不变
+const applyDateFormat = (text: string, context: MarkdownDateContext) =>
+  context.dateFormat && text
+    ? formatDateString(text, context.locale, context.dateFormat)
+    : text;
 
 const createTurndownService = () =>
   new TurndownService({
@@ -112,7 +132,8 @@ const getOrderedEnabledSections = (resume: ResumeData): MenuSection[] => {
 const renderBasicSection = (
   title: string,
   resume: ResumeData,
-  options?: ResumeMarkdownOptions
+  options: ResumeMarkdownOptions | undefined,
+  dateContext: MarkdownDateContext
 ) => {
   const fieldOrder = (resume.basic.fieldOrder?.length
     ? resume.basic.fieldOrder
@@ -131,7 +152,8 @@ const renderBasicSection = (
     if (field.visible === false) continue;
     if (key === "name" || key === "title") continue;
 
-    const value = pickBasicFieldValue(resume.basic, key);
+    const rawValue = pickBasicFieldValue(resume.basic, key);
+    const value = key === "birthDate" ? applyDateFormat(rawValue, dateContext) : rawValue;
     if (!value) continue;
 
     const label =
@@ -179,14 +201,14 @@ const renderSelfEvaluationSection = (title: string, resume: ResumeData) => {
   return `## ${title}\n\n${content}`;
 };
 
-const renderExperienceSection = (title: string, resume: ResumeData) => {
+const renderExperienceSection = (title: string, resume: ResumeData, dateContext: MarkdownDateContext) => {
   const blocks = resume.experience
     .filter((item) => item.visible)
     .map((item) => {
       const heading = [normalizeText(item.company), normalizeText(item.position)]
         .filter(Boolean)
         .join(" | ");
-      const date = normalizeDateRangeText(item.date);
+      const date = applyDateFormat(normalizeDateRangeText(item.date), dateContext);
       const details = markdownFromText(item.details);
       const lines: string[] = [];
 
@@ -202,12 +224,12 @@ const renderExperienceSection = (title: string, resume: ResumeData) => {
   return `## ${title}\n\n${blocks.join("\n\n")}`;
 };
 
-const renderProjectSection = (title: string, resume: ResumeData) => {
+const renderProjectSection = (title: string, resume: ResumeData, dateContext: MarkdownDateContext) => {
   const blocks = resume.projects
     .filter((item) => item.visible)
     .map((item) => {
       const heading = normalizeText(item.name);
-      const meta = [normalizeText(item.role), normalizeDateRangeText(item.date)]
+      const meta = [normalizeText(item.role), applyDateFormat(normalizeDateRangeText(item.date), dateContext)]
         .filter(Boolean)
         .join(" | ");
       const description = markdownFromText(item.description);
@@ -229,16 +251,18 @@ const renderProjectSection = (title: string, resume: ResumeData) => {
   return `## ${title}\n\n${blocks.join("\n\n")}`;
 };
 
-const renderEducationSection = (title: string, resume: ResumeData) => {
+const renderEducationSection = (title: string, resume: ResumeData, dateContext: MarkdownDateContext) => {
   const blocks = resume.education
     .filter((item) => item.visible)
     .map((item) => {
       const heading = [normalizeText(item.school), normalizeText(item.major)]
         .filter(Boolean)
         .join(" | ");
-      const duration = [normalizeText(item.startDate), normalizeText(item.endDate)]
-        .filter(Boolean)
-        .join(" - ");
+      const duration = dateContext.dateFormat
+        ? formatDateRange(normalizeText(item.startDate), normalizeText(item.endDate), dateContext.locale, dateContext.dateFormat)
+        : [normalizeText(item.startDate), normalizeText(item.endDate)]
+          .filter(Boolean)
+          .join(" - ");
       const metadata = [normalizeText(item.degree), duration, item.gpa ? `GPA: ${normalizeText(item.gpa)}` : ""]
         .filter(Boolean)
         .join(" | ");
@@ -275,14 +299,15 @@ const renderCertificateSection = (title: string, resume: ResumeData) => {
 
 const escapeMarkdownText = (text: string) => text.replace(/([\\`*_{}\[\]<>#])/g, "\\$1");
 
-const renderPublicationsSection = (title: string, resume: ResumeData, locale = "en") => {
+const renderPublicationsSection = (title: string, resume: ResumeData, dateContext: MarkdownDateContext, locale = "en") => {
   const blocks = (resume.publications ?? [])
     .filter((item) => item.visible !== false && hasPublicationContent(item))
     .map((item) => {
       const delimiter = getAuthorDelimiter(item.authors);
       const authors = getPublicationAuthors(item.authors, item.highlightedAuthor)
         .map(({ name, highlighted }) => highlighted ? `**${escapeMarkdownText(name)}**` : escapeMarkdownText(name)).join(delimiter);
-      const meta = [item.venue, item.date, getPublicationStatusLabel(item.status, locale)].filter(Boolean).map(escapeMarkdownText).join(" | ");
+      const date = dateContext.dateFormat ? applyDateFormat(normalizeText(item.date), dateContext) : item.date;
+      const meta = [item.venue, date, getPublicationStatusLabel(item.status, locale)].filter(Boolean).map(escapeMarkdownText).join(" | ");
       const link = getPublicationLink(item.link);
       return [item.title && `### ${escapeMarkdownText(item.title)}`, authors, meta, link && `[${locale === "en" ? "Paper" : "论文链接"}](<${link.replace(/</g, "%3C").replace(/>/g, "%3E")}>)`, escapeMarkdownText(item.description)]
         .filter(Boolean).join("\n\n");
@@ -290,7 +315,7 @@ const renderPublicationsSection = (title: string, resume: ResumeData, locale = "
   return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";
 };
 
-const renderCustomSection = (title: string, items: CustomItem[]) => {
+const renderCustomSection = (title: string, items: CustomItem[], dateContext: MarkdownDateContext) => {
   const blocks = items
     .filter((item) => item.visible)
     .map((item, index) => {
@@ -299,7 +324,7 @@ const renderCustomSection = (title: string, items: CustomItem[]) => {
         normalizeText(item.subtitle) ||
         `Item ${index + 1}`;
       const subtitle = normalizeText(item.subtitle);
-      const dateRange = normalizeDateRangeText(item.dateRange);
+      const dateRange = applyDateFormat(normalizeDateRangeText(item.dateRange), dateContext);
       const details = markdownFromText(item.description);
       const metadata = [subtitle !== heading ? subtitle : "", dateRange]
         .filter(Boolean)
@@ -325,6 +350,7 @@ export const generateResumeMarkdown = (
   const topTitle = normalizeText(resume.title) || "Resume";
   const sections = getOrderedEnabledSections(resume);
   const blocks: string[] = [`# ${topTitle}`];
+  const dateContext = getMarkdownDateContext(resume, options);
 
   for (const section of sections) {
     const sectionTitle = normalizeText(section.title) || section.id;
@@ -332,19 +358,19 @@ export const generateResumeMarkdown = (
 
     switch (section.id) {
       case "basic":
-        content = renderBasicSection(sectionTitle, resume, options);
+        content = renderBasicSection(sectionTitle, resume, options, dateContext);
         break;
       case "skills":
         content = renderSkillsSection(sectionTitle, resume);
         break;
       case "experience":
-        content = renderExperienceSection(sectionTitle, resume);
+        content = renderExperienceSection(sectionTitle, resume, dateContext);
         break;
       case "projects":
-        content = renderProjectSection(sectionTitle, resume);
+        content = renderProjectSection(sectionTitle, resume, dateContext);
         break;
       case "education":
-        content = renderEducationSection(sectionTitle, resume);
+        content = renderEducationSection(sectionTitle, resume, dateContext);
         break;
       case "selfEvaluation":
         content = renderSelfEvaluationSection(sectionTitle, resume);
@@ -353,11 +379,11 @@ export const generateResumeMarkdown = (
         content = renderCertificateSection(sectionTitle, resume);
         break;
       case "publications":
-        content = renderPublicationsSection(sectionTitle, resume, options?.locale);
+        content = renderPublicationsSection(sectionTitle, resume, dateContext, options?.locale);
         break;
       default: {
         const customItems = resume.customData?.[section.id] || [];
-        content = renderCustomSection(sectionTitle, customItems);
+        content = renderCustomSection(sectionTitle, customItems, dateContext);
         break;
       }
     }

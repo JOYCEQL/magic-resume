@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { GlobalSettings, Publication } from "@/types/resume";
 import { useLocale } from "@/i18n/compat/client";
 import { getAuthorDelimiter, getPublicationAuthors, getPublicationLink, getPublicationStatusLabel, hasPublicationContent } from "@/lib/publication";
+import { formatDateString, normalizeDateFormat } from "@/lib/utils";
 import SectionWrapper from "./SectionWrapper";
 
 export default function PublicationsSection({ publications = [], globalSettings, children }: {
@@ -10,6 +11,8 @@ export default function PublicationsSection({ publications = [], globalSettings,
   children: ReactNode;
 }) {
   const locale = useLocale();
+  // 历史版本直接输出原始日期；仅在用户显式选择日期格式后才格式化
+  const dateFormat = normalizeDateFormat(globalSettings?.dateFormat);
   const items = publications.filter((item) => item.visible !== false && hasPublicationContent(item));
   if (!items.length) return null;
 
@@ -25,7 +28,7 @@ export default function PublicationsSection({ publications = [], globalSettings,
             <article key={item.id} data-publication-id={item.id} className="break-inside-avoid" style={{ marginTop: globalSettings?.paragraphSpacing ?? 12, overflowWrap: "anywhere" }}>
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
                 {item.title && <h4 className="min-w-0 flex-1 font-bold" style={{ fontSize: globalSettings?.subheaderSize ?? 16 }}>{item.title}</h4>}
-                {item.date && <span className="shrink-0 text-subtitleFont">{item.date}</span>}
+                {item.date && <span className="shrink-0 text-subtitleFont">{dateFormat ? formatDateString(item.date, locale, dateFormat) : item.date}</span>}
               </div>
               {authors.length > 0 && <p>{authors.map((author, index) => {
                 const delimiter = getAuthorDelimiter(item.authors);

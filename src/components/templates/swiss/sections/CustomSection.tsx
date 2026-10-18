@@ -49,7 +49,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                                 <div 
                                     className="ml-auto self-center font-mono text-slate-400 bg-slate-50 border border-slate-100/80 px-2 py-0.5 rounded text-[11px] font-semibold shrink-0"
                                 >
-                                    {formatDateString(item.dateRange, locale)}
+                                    {formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}
                                 </div>
                             </div>
 

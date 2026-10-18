@@ -36,7 +36,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                                 </motion.div>
                             )}
                             <span className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                {formatDateString(item.dateRange, locale)}
+                                {formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}
                             </span>
                         </motion.div>
                         {!centerSubtitle && item.subtitle && (

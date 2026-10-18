@@ -651,6 +651,10 @@
         },
         "flexibleHeaderLayout": {
           "title": "长标题模式"
+        },
+        "dateFormat": {
+          "title": "日期格式",
+          "shortMonth": "2024年06月 (中文年月)"
         }
       }
     },

@@ -28,12 +28,12 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
       .filter((field) => field.visible !== false && field.key !== "name" && field.key !== "title")
       .map((field) => ({
         key: field.key,
-        value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale) : (basic[field.key] as string),
+        value: field.key === "birthDate" && basic[field.key] ? formatDateString(basic[field.key] as string, locale, globalSettings?.dateFormat) : (basic[field.key] as string),
         label: field.label,
         custom: false,
       }))
       .filter((item) => !!item.value);
-  }, [basic, locale]);
+  }, [basic, locale, globalSettings?.dateFormat]);
 
   const customFields =
     basic.customFields?.filter(

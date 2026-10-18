@@ -47,7 +47,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true, variant
                             <span className={cn("text-subtitleFont shrink-0 whitespace-nowrap", !flexLayout && !isSidebar && "text-right", isSidebar && "opacity-80")}
                                 suppressHydrationWarning
                                 style={{ fontSize: isSidebar ? "12px" : `${globalSettings?.subheaderSize || 16}px`, color: isSidebar ? "#fff" : "inherit" }}>
-                                {formatDateRange(edu.startDate, edu.endDate, locale)}
+                                {formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}
                             </span>
                         </div>
                         {(!centerSubtitle || isSidebar) && (

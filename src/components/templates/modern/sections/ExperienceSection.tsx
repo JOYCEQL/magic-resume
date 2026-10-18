@@ -35,7 +35,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                                 </motion.div>
                             )}
                             <div className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                {formatDateString(exp.date, locale)}
+                                {formatDateString(exp.date, locale, globalSettings?.dateFormat)}
                             </div>
                         </motion.div>
                         {exp.position && !centerSubtitle && (

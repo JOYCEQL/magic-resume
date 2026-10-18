@@ -697,6 +697,10 @@
         },
         "flexibleHeaderLayout": {
           "title": "Long Title"
+        },
+        "dateFormat": {
+          "title": "Date Format",
+          "shortMonth": "Jun 2024 (MMM YYYY)"
         }
       }
     },

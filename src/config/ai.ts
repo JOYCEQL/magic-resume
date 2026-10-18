@@ -1,3 +1,5 @@
+import { AI_PROVIDER_DEFINITIONS } from "./ai-models";
+
 export type AIModelType = "doubao" | "deepseek" | "openai" | "gemini";
 
 export interface AIValidationContext {
@@ -33,7 +35,7 @@ export const AI_MODEL_CONFIGS: Record<AIModelType, AIModelConfig> = {
   deepseek: {
     url: () => "https://api.deepseek.com/v1/chat/completions",
     requiresModelId: false,
-    defaultModel: "deepseek-chat",
+    defaultModel: AI_PROVIDER_DEFINITIONS.deepseek.defaultModel,
     headers: (apiKey: string) => ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,

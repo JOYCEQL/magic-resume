@@ -133,6 +133,7 @@ export interface AIGenerationInput {
   images?: string[];
   json?: boolean;
   stream?: boolean;
+  disableThinking?: boolean;
 }
 
 export function buildAIRequest(
@@ -234,6 +235,9 @@ export function buildAIRequest(
     body: {
       model,
       stream,
+      ...(connection.provider === "deepseek" && input.disableThinking
+        ? { thinking: { type: "disabled" } }
+        : {}),
       messages: [
         { role: "system", content: system },
         {

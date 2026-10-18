@@ -36,7 +36,13 @@ export async function handleTextRequest(request: Request, task: "polish" | "gram
       abort.signal,
       AbortSignal.timeout(120_000),
     ]);
-    const response = await fetchAI(connection, { system, text, json: task === "grammar", stream: task === "polish" }, signal, fetcher);
+    const response = await fetchAI(connection, {
+      system,
+      text,
+      json: task === "grammar",
+      stream: task === "polish",
+      disableThinking: true,
+    }, signal, fetcher);
     if (task === "polish") {
       if (!response.body) throw new ResumeImportError("emptyOutput", 502);
       return new Response(createTextStream(response.body, connection.protocol, abort), {

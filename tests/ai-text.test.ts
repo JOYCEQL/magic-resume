@@ -18,6 +18,9 @@ for (const provider of AI_PROVIDERS) {
       const response = await handleTextRequest(request, task, (async (_url, options) => {
         assert.ok((String(_url) + String(options?.body)).includes("test-model"));
         assert.equal(options?.redirect, "manual");
+        const upstream = JSON.parse(String(options?.body));
+        if (provider === "deepseek") assert.deepEqual(upstream.thinking, { type: "disabled" });
+        else assert.equal(upstream.thinking, undefined);
         return Response.json(payload(connection.protocol, task === "test" ? "OK" : '{"errors":[]}'));
       }) as typeof fetch);
       assert.equal(response.status, 200);
@@ -61,4 +64,49 @@ test("polish returns incremental plain text from the configured provider", async
     return new Response('data: {"choices":[{"delta":{"content":"Updated "}}]}\n\ndata: {"choices":[{"delta":{"content":"resume"}}]}\n\ndata: [DONE]\n\n');
   }) as typeof fetch);
   assert.equal(await response.text(), "Updated resume");
+});
+
+test("legacy DeepSeek text requests use current Flash with thinking disabled", async () => {
+  for (const task of ["grammar", "polish", "test"] as const) {
+    const request = new Request("http://localhost/api", {
+      method: "POST",
+      body: JSON.stringify({ modelType: "deepseek", apiKey: "legacy-key", content: "original" }),
+    });
+    const response = await handleTextRequest(request, task, (async (url, options) => {
+      const body = JSON.parse(String(options?.body));
+      assert.equal(String(url), "https://api.deepseek.com/v1/chat/completions");
+      assert.equal(body.model, "deepseek-flash");
+      assert.deepEqual(body.thinking, { type: "disabled" });
+      if (task === "polish") {
+        assert.equal(body.stream, true);
+        return new Response('data: {"choices":[{"delta":{"content":"Updated resume"}}]}\n\ndata: [DONE]\n\n');
+      }
+      return Response.json(payload("chat-completions", task === "test" ? "OK" : '{"errors":[]}'));
+    }) as typeof fetch);
+    assert.equal(response.status, 200);
+    if (task === "polish") assert.equal(await response.text(), "Updated resume");
+    else if (task === "test") assert.deepEqual(await response.json(), { ok: true });
+    else assert.deepEqual(JSON.parse((await response.json()).choices[0].message.content), { errors: [] });
+  }
+});
+
+test("configured DeepSeek Pro polish keeps the selected model and disables thinking", async () => {
+  const connection = { ...createModelProfile("deepseek", "pro"), apiKey: "key", model: "deepseek-v4-pro" };
+  const response = await handleTextRequest(new Request("http://localhost/api", {
+    method: "POST",
+    body: JSON.stringify({ connection, content: "original" }),
+  }), "polish", (async (_url, options) => {
+    const body = JSON.parse(String(options?.body));
+    assert.equal(body.model, "deepseek-v4-pro");
+    assert.deepEqual(body.thinking, { type: "disabled" });
+    return new Response('data: {"choices":[{"delta":{"content":"Updated"}}]}\n\ndata: [DONE]\n\n');
+  }) as typeof fetch);
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), "Updated");
+});
+
+test("DeepSeek image parsing requests retain their default thinking behavior", () => {
+  const connection = { ...createModelProfile("deepseek", "flash"), apiKey: "key" };
+  const built = buildAIRequest(connection, { system: "Parse resume", text: "Read page", images: ["data:image/png;base64,AA=="], json: true });
+  assert.equal("thinking" in built.body, false);
 });

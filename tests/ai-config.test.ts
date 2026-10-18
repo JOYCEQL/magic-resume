@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { createJSONStorage, type StateStorage } from "zustand/middleware";
 import {
   AI_PROVIDERS,
+  AI_PROVIDER_DEFINITIONS,
   BUILTIN_AI_MODELS,
   createBuiltinModelProfile,
   createModelProfile,
@@ -131,13 +132,57 @@ test("PDF capability follows known model families without a manual setting", () 
 test("every provider exposes built-in models that share one provider key", () => {
   for (const provider of AI_PROVIDERS) {
     const catalog = BUILTIN_AI_MODELS[provider];
-    assert.ok(catalog.length >= 3);
+    assert.ok(catalog.length > 0);
     assert.equal(new Set(catalog.map((item) => item.id)).size, catalog.length);
     assert.ok(catalog.some((item) => item.supportsPdf));
     const profiles = catalog.map((item) =>
       createBuiltinModelProfile(provider, item, "shared-key"),
     );
     assert.ok(profiles.every((item) => item.apiKey === "shared-key"));
+  }
+});
+
+test("DeepSeek Flash supports both tasks while Pro remains text-only", () => {
+  assert.equal(AI_PROVIDER_DEFINITIONS.deepseek.defaultModel, "deepseek-flash");
+  assert.equal(AI_PROVIDER_DEFINITIONS.deepseek.pdfModel, "deepseek-flash");
+  const store = createAIConfigStore(memory().storage);
+  store.getState().saveModel({
+    ...createModelProfile("deepseek", "flash"),
+    apiKey: "test-key",
+  });
+  store.getState().assignModel("text", "flash");
+  store.getState().assignModel("pdf", "flash");
+  assert.equal(getTaskModel(store.getState(), "text")?.model, "deepseek-flash");
+  assert.equal(getTaskModel(store.getState(), "pdf")?.model, "deepseek-flash");
+  assert.equal(modelSupportsPdf("deepseek", "deepseek-v4-pro"), false);
+  assert.equal(modelSupportsPdf("deepseek", "unknown-model"), false);
+});
+
+test("saved DeepSeek Flash aliases preserve credentials and task assignments", () => {
+  for (const alias of ["deepseek-v4-flash", "deepseek-v4-flash-vision-exp"]) {
+    const saved = {
+      models: [{
+        ...createModelProfile("deepseek", "saved-flash"),
+        model: alias,
+        name: "My Flash",
+        apiKey: "saved-key",
+        supportsPdf: false,
+      }],
+      textModelId: "saved-flash",
+      pdfModelId: "saved-flash",
+    };
+    const storage = memory({ version: 1, state: saved });
+    const store = createAIConfigStore(storage.storage);
+    const profile = getTaskModel(store.getState(), "pdf");
+    assert.equal(profile?.model, "deepseek-flash");
+    assert.equal(profile?.apiKey, "saved-key");
+    assert.equal(profile?.name, "My Flash");
+    assert.equal(profile?.supportsPdf, true);
+    assert.equal(getTaskModel(store.getState(), "text")?.id, profile?.id);
+    assert.equal(storage.read().version, 2);
+    assert.equal(storage.read().state.models[0].model, "deepseek-flash");
+    assert.deepEqual(createAIConfigStore(storage.storage).getState().models, store.getState().models);
+    assert.deepEqual(migrateAISettings(migrateAISettings(saved)), migrateAISettings(saved));
   }
 });
 
@@ -152,8 +197,73 @@ test("version-zero persistence is migrated once without dropping credentials", (
   });
   const store = createAIConfigStore(storage.storage);
   assert.equal(store.getState().models[0].apiKey, "legacy-key");
-  assert.equal(storage.read().version, 1);
+  assert.equal(storage.read().version, 2);
   assert.equal(storage.read().state.geminiApiKey, undefined);
+});
+
+test("old Flash and Vision presets merge and remap both assignments on upgrade", () => {
+  const base = { ...createModelProfile("deepseek", "old-text"), apiKey: "shared-key" };
+  const storage = memory({
+    version: 1,
+    state: {
+      models: [
+        { ...base, model: "deepseek-v4-flash", name: "DeepSeek V4 Flash", supportsPdf: false },
+        { ...base, id: "old-pdf", model: "deepseek-v4-flash-vision-exp", name: "DeepSeek V4 Vision" },
+        { ...base, id: "new-flash", model: "deepseek-flash", name: "DeepSeek V4.1 Flash" },
+        { ...base, id: "pro", model: "deepseek-v4-pro", name: "DeepSeek V4 Pro", supportsPdf: false },
+      ],
+      textModelId: "old-text",
+      pdfModelId: "old-pdf",
+    },
+  });
+  const state = createAIConfigStore(storage.storage).getState();
+  assert.equal(state.models.length, 2);
+  assert.equal(state.textModelId, state.pdfModelId);
+  assert.equal(getTaskModel(state, "pdf")?.name, "DeepSeek V4.1 Flash");
+  assert.equal(getTaskModel(state, "pdf")?.apiKey, "shared-key");
+  assert.equal(state.models.find((profile) => profile.id === "pro")?.model, "deepseek-v4-pro");
+  assert.deepEqual(migrateAISettings(state), storage.read().state);
+  assert.deepEqual(createAIConfigStore(storage.storage).getState().models, state.models);
+});
+
+test("Flash migration retains distinct keys and custom labels", () => {
+  const base = {
+    ...createModelProfile("deepseek", "first"),
+    model: "deepseek-v4-flash",
+    name: "DeepSeek V4 Flash",
+    apiKey: "first-key",
+  };
+  const state = migrateAISettings({
+    models: [base, { ...base, id: "second", apiKey: "second-key" }, { ...base, id: "named", name: "My model" }],
+    textModelId: "second",
+    pdfModelId: "named",
+  });
+  assert.equal(state.models.length, 3);
+  assert.ok(state.models.every((profile) => profile.model === "deepseek-flash"));
+  assert.equal(getTaskModel(state, "text")?.apiKey, "second-key");
+  assert.equal(getTaskModel(state, "pdf")?.name, "My model");
+});
+
+test("Flash migration leaves custom endpoints and unrelated providers unchanged", () => {
+  for (const baseUrl of [
+    "https://proxy.example.com/v1",
+    "https://api.deepseek.com.example.com/v1",
+    "https://api.deepseek.com/custom",
+    "http://api.deepseek.com/v1",
+  ]) {
+    const profile = {
+      ...createModelProfile("deepseek", "custom"),
+      model: "deepseek-v4-flash-vision-exp",
+      name: "DeepSeek V4 Vision",
+      apiKey: "custom-key",
+      baseUrl,
+    };
+    const saved = { models: [profile], textModelId: "custom", pdfModelId: "custom" };
+    assert.deepEqual(migrateAISettings(saved), saved);
+  }
+  const profile = { ...createModelProfile("openai", "other"), model: "deepseek-v4-flash", apiKey: "key" };
+  const saved = { models: [profile], textModelId: "other", pdfModelId: null };
+  assert.deepEqual(migrateAISettings(saved), saved);
 });
 
 test("invalid and dangling saved assignments cannot select a missing model", () => {

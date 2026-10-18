@@ -72,7 +72,7 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
       }),
       {
         name: "ai-config-storage",
-        version: 1,
+        version: 2,
         storage:
           storage ?? createJSONStorage<AISettingsData>(() => localStorage),
         partialize: ({ models, textModelId, pdfModelId }) => ({

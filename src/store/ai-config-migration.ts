@@ -1,6 +1,7 @@
 import {
   AI_PROVIDERS,
   AI_PROVIDER_DEFINITIONS,
+  BUILTIN_AI_MODELS,
   canModelParsePdf,
   createModelProfile,
   modelSupportsPdf,
@@ -16,6 +17,62 @@ const record = (value: unknown): Record<string, unknown> =>
 const string = (value: unknown) => (typeof value === "string" ? value : "");
 const isProvider = (value: unknown): value is AIProvider =>
   AI_PROVIDERS.some((provider) => provider === value);
+
+function isOfficialDeepSeekUrl(value: string): boolean {
+  try {
+    const url = new URL(value.trim());
+    return (
+      url.origin === "https://api.deepseek.com" &&
+      !url.username && !url.password && !url.search && !url.hash &&
+      ["", "/v1"].includes(url.pathname.replace(/\/+$/, ""))
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Upgrade official Flash aliases without rewriting third-party model IDs. */
+function migrateDeepSeekFlash(state: AISettingsData): AISettingsData {
+  const flash = BUILTIN_AI_MODELS.deepseek.find((model) => model.id === "deepseek-flash")!;
+  const oldNames: Record<string, string> = {
+    "deepseek-v4-flash": "DeepSeek V4 Flash",
+    "deepseek-v4-flash-vision-exp": "DeepSeek V4 Vision",
+  };
+  const models: AIModelProfile[] = [];
+  const ids = new Map<string, string>();
+  const equivalent = new Map<string, AIModelProfile>();
+  for (const original of state.models) {
+    let profile = original;
+    if (original.provider === "deepseek" && isOfficialDeepSeekUrl(original.baseUrl)) {
+      if (Object.hasOwn(oldNames, original.model)) {
+        profile = {
+          ...original,
+          model: flash.id,
+          name: original.name === oldNames[original.model] ? flash.name : original.name,
+          supportsPdf: flash.supportsPdf,
+        };
+      }
+      if (profile.model === flash.id) {
+        // Merge only identical connections and labels; distinct credentials and
+        // user-named profiles must remain independently selectable.
+        const key = JSON.stringify([profile.apiKey, profile.protocol, profile.name]);
+        const existing = equivalent.get(key);
+        if (existing) {
+          ids.set(original.id, existing.id);
+          continue;
+        }
+        equivalent.set(key, profile);
+      }
+    }
+    models.push(profile);
+    ids.set(original.id, profile.id);
+  }
+  return {
+    models,
+    textModelId: state.textModelId === null ? null : ids.get(state.textModelId) ?? null,
+    pdfModelId: state.pdfModelId === null ? null : ids.get(state.pdfModelId) ?? null,
+  };
+}
 
 export function migrateAISettings(value: unknown): AISettingsData {
   const old = record(value);
@@ -45,7 +102,7 @@ export function migrateAISettings(value: unknown): AISettingsData {
         supportsPdf: modelSupportsPdf(entry.provider, model),
       });
     }
-    return {
+    return migrateDeepSeekFlash({
       models,
       textModelId:
         models.find((model) => model.id === old.textModelId)?.id ?? null,
@@ -53,7 +110,7 @@ export function migrateAISettings(value: unknown): AISettingsData {
         models.find(
           (model) => model.id === old.pdfModelId && canModelParsePdf(model),
         )?.id ?? null,
-    };
+    });
   }
 
   const state: AISettingsData = {
@@ -126,5 +183,5 @@ export function migrateAISettings(value: unknown): AISettingsData {
     else state.models.push(profile);
     if (selected) state.pdfModelId = existing?.id ?? profile.id;
   }
-  return state;
+  return migrateDeepSeekFlash(state);
 }

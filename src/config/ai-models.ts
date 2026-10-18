@@ -85,8 +85,8 @@ export const AI_PROVIDER_DEFINITIONS: Record<AIProvider, ProviderDefinition> = {
     baseUrl: "https://api.deepseek.com/v1",
     protocol: "chat-completions",
     protocols: ["chat-completions"],
-    defaultModel: "deepseek-v4-flash",
-    pdfModel: "deepseek-v4-flash-vision-exp",
+    defaultModel: "deepseek-flash",
+    pdfModel: "deepseek-flash",
     keyUrl: "https://platform.deepseek.com",
   },
   gemini: {
@@ -179,23 +179,17 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
     ],
     deepseek: [
       {
+        id: "deepseek-flash",
+        name: "DeepSeek V4.1 Flash",
+        descriptionKey: "modelDescriptions.writingAndParsing",
+        supportsPdf: true,
+        recommended: true,
+      },
+      {
         id: "deepseek-v4-pro",
         name: "DeepSeek V4 Pro",
         descriptionKey: "modelDescriptions.writingAndReasoning",
         supportsPdf: false,
-      },
-      {
-        id: "deepseek-v4-flash",
-        name: "DeepSeek V4 Flash",
-        descriptionKey: "modelDescriptions.fastText",
-        supportsPdf: false,
-        recommended: true,
-      },
-      {
-        id: "deepseek-v4-flash-vision-exp",
-        name: "DeepSeek V4 Vision",
-        descriptionKey: "modelDescriptions.experimentalVision",
-        supportsPdf: true,
       },
     ],
     gemini: [
@@ -269,6 +263,13 @@ export function modelSupportsPdf(provider: AIProvider, model: string): boolean {
   if (!id) return false;
   const builtin = BUILTIN_AI_MODELS[provider].find((item) => item.id === id);
   if (builtin) return builtin.supportsPdf;
+  // DeepSeek routes these retired model names to the current multimodal Flash.
+  if (
+    provider === "deepseek" &&
+    ["deepseek-v4-flash", "deepseek-v4-flash-vision-exp"].includes(id)
+  ) {
+    return true;
+  }
   if (provider === "gemini") return !id.includes("embedding");
   if (provider === "anthropic") {
     return /claude-(?:3|4|sonnet-4|opus-4|haiku-4)/.test(id);

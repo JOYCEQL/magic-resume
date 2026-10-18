@@ -927,6 +927,60 @@
       "width": "Width (%)",
       "delete": "Delete",
       "empty": "No images yet. Please upload or paste images."
+    },
+    "logoUploader": {
+      "label": "Logo",
+      "uploadFile": "Upload image",
+      "applyUrl": "Use image URL",
+      "loading": "Loading image…",
+      "hide": "Hide logo",
+      "show": "Show logo",
+      "remove": "Remove logo",
+      "drawerTitle": "Logo Settings",
+      "dragHint": "Drag and drop image here to upload",
+      "sizeLimit": "Image size should not exceed 2MB",
+      "uploadTitle": "Image URL",
+      "urlPlaceholder": "Enter image URL",
+      "invalidUrl": "Invalid or inaccessible image URL",
+      "typeLimit": "Only image files are supported",
+      "uploadError": "Image upload failed",
+      "close": "Close",
+      "config": {
+        "size": "Size",
+        "widthPlaceholder": "Width",
+        "heightPlaceholder": "Height",
+        "aspectRatio": "Aspect Ratio",
+        "ratios": {
+          "custom": "Custom"
+        },
+        "borderRadius": "Border Radius",
+        "borderRadiusOptions": {
+          "none": "None",
+          "medium": "Medium",
+          "full": "Full",
+          "custom": "Custom",
+          "customPlaceholder": "Enter border radius"
+        }
+      },
+      "schoolSearch": {
+        "open": "Find a school logo",
+        "title": "Search schools",
+        "placeholder": "School name in Chinese or English",
+        "hint": "Logos from University Logos. Select a logo to use it, or upload your own.",
+        "results": "School logo results",
+        "select": "Use logo for {name}",
+        "source": "Source",
+        "sourceFor": "View logo source for {name}",
+        "empty": "No matching school. Try the full name or upload a logo.",
+        "loading": "Searching schools…",
+        "enterName": "Enter at least 2 characters to search.",
+        "error": "School search is unavailable. Retry or upload a logo.",
+        "retry": "Retry search",
+        "pagination": "School search pages",
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page {page}"
+      }
     }
   },
   "field": {

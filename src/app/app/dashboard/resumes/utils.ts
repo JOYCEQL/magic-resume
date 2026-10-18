@@ -123,6 +123,7 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
         gpa: toString(item?.gpa),
         description: toListHtml(item?.description),
         visible: true,
+        logo: "",
       }))
       .filter((item: any) => item.school || item.major || item.degree),
     experience: experience
@@ -133,6 +134,7 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
         date: toString(item?.date),
         details: toListHtml(item?.details || item?.description),
         visible: true,
+        logo: "",
       }))
       .filter((item: any) => item.company || item.position || item.date || item.details),
     projects: projects

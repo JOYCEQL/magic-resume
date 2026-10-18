@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { fetchPublicResource } from "@/lib/server/public-fetch";
 
 export const Route = createFileRoute("/api/proxy/image")({
   server: {
@@ -27,8 +28,15 @@ export const Route = createFileRoute("/api/proxy/image")({
           }
 
           let response: Response;
+          const isSchoolLogo = parsedUrl.protocol === "https:" && parsedUrl.host === "universitylogos.top" && parsedUrl.pathname.startsWith("/uni_logo/") && !parsedUrl.search;
           try {
-            response = await fetch(imageUrl, {
+            response = await (isSchoolLogo ? fetchPublicResource : fetch)(imageUrl, {
+              ...(isSchoolLogo ? {
+                signal: AbortSignal.timeout(10000),
+                ...("WebSocketPair" in globalThis ? {
+                  cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": 86400, "300-599": -1 } },
+                } : {}),
+              } : {}),
               headers: {
                 "User-Agent":
                   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -61,14 +69,22 @@ export const Route = createFileRoute("/api/proxy/image")({
           }
 
           const contentType = response.headers.get("content-type") || "image/jpeg";
+          if (isSchoolLogo && !contentType.startsWith("image/")) {
+            return Response.json({ error: "校徽响应不是图片" }, { status: 502, headers: { "Cache-Control": "no-store" } });
+          }
+          const cacheHeaders: Record<string, string> = isSchoolLogo ? {
+            "Cache-Control": "public, max-age=86400, s-maxage=86400",
+          } : {
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+            "Surrogate-Control": "no-store",
+          };
 
           return new Response(imageBuffer, {
             headers: {
               "Content-Type": contentType,
-              "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-              Pragma: "no-cache",
-              Expires: "0",
-              "Surrogate-Control": "no-store",
+              ...cacheHeaders,
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "GET, OPTIONS",
               "Access-Control-Allow-Headers": "Content-Type"

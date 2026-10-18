@@ -882,6 +882,60 @@
       "width": "宽度 (横向拼接占比)",
       "delete": "删除",
       "empty": "暂无图片，请上传或粘贴图片"
+    },
+    "logoUploader": {
+      "label": "Logo",
+      "uploadFile": "上传图片",
+      "applyUrl": "使用图片链接",
+      "loading": "正在加载图片…",
+      "hide": "隐藏 Logo",
+      "show": "显示 Logo",
+      "remove": "移除 Logo",
+      "drawerTitle": "Logo 设置",
+      "dragHint": "拖拽图片到此处上传",
+      "sizeLimit": "图片不超过 2MB",
+      "uploadTitle": "图片链接",
+      "urlPlaceholder": "输入图片 URL 地址",
+      "invalidUrl": "图片链接无效或无法访问",
+      "typeLimit": "仅支持图片文件",
+      "uploadError": "图片上传失败",
+      "close": "关闭",
+      "config": {
+        "size": "尺寸",
+        "widthPlaceholder": "宽度",
+        "heightPlaceholder": "高度",
+        "aspectRatio": "宽高比",
+        "ratios": {
+          "custom": "自定义"
+        },
+        "borderRadius": "圆角",
+        "borderRadiusOptions": {
+          "none": "无",
+          "medium": "中等",
+          "full": "圆形",
+          "custom": "自定义",
+          "customPlaceholder": "输入圆角值"
+        }
+      },
+      "schoolSearch": {
+        "open": "查找学校校徽",
+        "title": "搜索学校",
+        "placeholder": "输入学校中文名或英文名",
+        "hint": "校徽来源：University Logos。点击校徽使用，未找到可上传图片。",
+        "results": "学校校徽候选",
+        "select": "使用{name}校徽",
+        "source": "来源",
+        "sourceFor": "查看{name}校徽来源",
+        "empty": "未找到匹配学校，可改用全名搜索或上传校徽。",
+        "loading": "正在搜索学校…",
+        "enterName": "输入至少 2 个字符开始搜索。",
+        "error": "学校搜索暂时不可用，请重试或直接上传校徽。",
+        "retry": "重试搜索",
+        "pagination": "学校搜索分页",
+        "previous": "上一页",
+        "next": "下一页",
+        "page": "第 {page} 页"
+      }
     }
   },
   "field": {

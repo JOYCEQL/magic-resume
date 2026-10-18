@@ -5,6 +5,7 @@ import SectionWrapper from "../../shared/SectionWrapper";
 import { useLocale } from "@/i18n/compat/client";
 import { hasMeaningfulRichTextContent, normalizeRichTextContent } from "@/lib/richText";
 import { formatDateRange } from "@/lib/utils";
+import SectionLogo from "../../shared/SectionLogo";
 
 interface EducationSectionProps {
     education?: Education[];
@@ -25,6 +26,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                 {visibleEducation?.map((edu) => (
                     <motion.div key={edu.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                         <motion.div layout="position" className="flex items-center gap-2">
+                            <SectionLogo src={edu.logo} config={edu.logoConfig} size={globalSettings?.subheaderSize || 16} />
                             <div className={`font-bold ${flexLayout ? "" : "flex-[1.5]"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 {edu.school}
                             </div>

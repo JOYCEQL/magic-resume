@@ -21,25 +21,8 @@ import { LOCALE_CHANGE_EVENT } from "@/hooks/useLocaleSwitch";
 import type { Locale } from "@/i18n/config";
 import { ReactGrab } from "@/components/dev/ReactGrab";
 
-const defaultFontPreloadLinks = [
-  {
-    rel: "preload",
-    href: "/fonts/AlibabaPuHuiTi-3-55-Regular.ttf",
-    as: "font",
-    type: "font/ttf",
-    crossOrigin: "anonymous" as const,
-  },
-  {
-    rel: "preload",
-    href: "/fonts/AlibabaPuHuiTi-3-85-Bold.ttf",
-    as: "font",
-    type: "font/ttf",
-    crossOrigin: "anonymous" as const,
-  },
-];
-
 export const Route = createRootRoute({
-  head: ({ matches }) => ({
+  head: () => ({
     meta: [
       { charSet: "utf-8" },
       {
@@ -71,17 +54,6 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: sonnerCss,
       },
-      ...(matches.some(
-        (match) => getLocaleFromPathname(match.pathname) !== null,
-      )
-        ? []
-        : [
-            ...defaultFontPreloadLinks,
-            {
-              rel: "stylesheet",
-              href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap",
-            },
-          ]),
     ],
   }),
   component: RootComponent,

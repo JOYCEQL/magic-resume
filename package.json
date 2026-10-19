@@ -11,6 +11,7 @@
     "test:resume-import": "tsx --test tests/resume-import.test.ts",
     "test:preview": "node --test tests/preview.browser.mjs",
     "test:font-size": "tsx tests/font-size.browser.ts",
+    "test:fonts": "node --test tests/fonts.browser.mjs",
     "test:mobile": "tsx --test tests/mobile-workbench.browser.ts",
     "build": "vite build",
     "start": "node server.mjs",

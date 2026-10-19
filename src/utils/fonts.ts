@@ -1,3 +1,5 @@
+import fontManifest from "@/generated/resume-fonts.json";
+
 type FontSource = {
   family: string;
   url: string;
@@ -26,15 +28,15 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "Alibaba PuHuiTi",
-        url: "/fonts/AlibabaPuHuiTi-3-55-Regular.ttf",
-        format: "truetype",
+        url: fontManifest["AlibabaPuHuiTi-3-55-Regular.ttf"],
+        format: "woff2",
         weight: "400",
         style: "normal"
       },
       {
         family: "Alibaba PuHuiTi",
-        url: "/fonts/AlibabaPuHuiTi-3-85-Bold.ttf",
-        format: "truetype",
+        url: fontManifest["AlibabaPuHuiTi-3-85-Bold.ttf"],
+        format: "woff2",
         weight: "700",
         style: "normal"
       }
@@ -54,15 +56,15 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "MiSans",
-        url: "/fonts/MiSans-Normal.ttf",
-        format: "truetype",
+        url: fontManifest["MiSans-Normal.ttf"],
+        format: "woff2",
         weight: "400",
         style: "normal"
       },
       {
         family: "MiSans",
-        url: "/fonts/MiSans-Bold.ttf",
-        format: "truetype",
+        url: fontManifest["MiSans-Medium.ttf"],
+        format: "woff2",
         weight: "700",
         style: "normal"
       }
@@ -78,22 +80,22 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "Noto Sans SC",
-        url: "/fonts/NotoSansSC-Regular.otf",
-        format: "opentype",
+        url: fontManifest["NotoSansSC-Regular.otf"],
+        format: "woff2",
         weight: "400",
         style: "normal"
       },
       {
         family: "Noto Sans SC",
-        url: "/fonts/NotoSansSC-Medium.otf",
-        format: "opentype",
+        url: fontManifest["NotoSansSC-Medium.otf"],
+        format: "woff2",
         weight: "500",
         style: "normal"
       },
       {
         family: "Noto Sans SC",
-        url: "/fonts/NotoSansSC-Bold.otf",
-        format: "opentype",
+        url: fontManifest["NotoSansSC-Bold.otf"],
+        format: "woff2",
         weight: "700",
         style: "normal"
       }
@@ -111,22 +113,22 @@ const FONT_DEFINITIONS: FontDefinition[] = [
     sources: [
       {
         family: "Source Han Serif SC",
-        url: "/fonts/SourceHanSerifSC-Regular.otf",
-        format: "opentype",
+        url: fontManifest["SourceHanSerifSC-Regular.otf"],
+        format: "woff2",
         weight: "400",
         style: "normal"
       },
       {
         family: "Source Han Serif SC",
-        url: "/fonts/SourceHanSerifSC-Medium.otf",
-        format: "opentype",
+        url: fontManifest["SourceHanSerifSC-Medium.otf"],
+        format: "woff2",
         weight: "500",
         style: "normal"
       },
       {
         family: "Source Han Serif SC",
-        url: "/fonts/SourceHanSerifSC-Bold.otf",
-        format: "opentype",
+        url: fontManifest["SourceHanSerifSC-Bold.otf"],
+        format: "woff2",
         weight: "700",
         style: "normal"
       }
@@ -135,7 +137,7 @@ const FONT_DEFINITIONS: FontDefinition[] = [
 ];
 
 const fontDataUrlCache = new Map<string, Promise<string>>();
-const loadedFontFamilies = new Set<string>();
+const fontLoads = new Map<string, Promise<void>>();
 
 const toDataUrl = async (url: string) => {
   if (!fontDataUrlCache.has(url)) {
@@ -198,17 +200,19 @@ export const preloadFontFamily = async (fontFamily?: string) => {
   }
 
   const definition = findFontDefinition(fontFamily);
-  if (loadedFontFamilies.has(definition.value)) {
-    return;
+  let pending = fontLoads.get(definition.value);
+  if (!pending) {
+    pending = Promise.all(
+      definition.sources.map((source) =>
+        document.fonts.load(`${source.weight} 14px "${source.family}"`)
+      )
+    ).then(() => {}).catch(error => {
+      fontLoads.delete(definition.value);
+      throw error;
+    });
+    fontLoads.set(definition.value, pending);
   }
-
-  loadedFontFamilies.add(definition.value);
-
-  await Promise.allSettled(
-    definition.sources.map((source) =>
-      document.fonts.load(`${source.weight} 14px "${source.family}"`)
-    )
-  );
+  await pending;
 };
 
 export const getFontOptions = (t: (key: string) => string) =>

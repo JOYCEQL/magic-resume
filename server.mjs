@@ -64,7 +64,8 @@ function tryServeStatic(req, res, url) {
 
   res.statusCode = 200;
   res.setHeader("Content-Type", getContentType(filePath));
-  if (url.pathname.startsWith("/assets/")) {
+  if (url.pathname.startsWith("/assets/") ||
+      /^\/fonts\/(resume|ui)\/[^/]+\.[a-f0-9]{12}\.woff2$/.test(url.pathname)) {
     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
   } else {
     res.setHeader("Cache-Control", "public, max-age=3600");

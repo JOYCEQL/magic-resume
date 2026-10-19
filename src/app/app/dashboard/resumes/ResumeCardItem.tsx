@@ -21,7 +21,7 @@ import {
 import ResumeTemplateComponent from "@/components/templates";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
-import { normalizeFontFamily } from "@/utils/fonts";
+import { normalizeFontFamily, preloadFontFamily } from "@/utils/fonts";
 import { Edit2, Copy, Trash2 } from "lucide-react";
 
 interface ResumeCardItemProps {
@@ -48,6 +48,7 @@ export const ResumeCardItem = ({
     const containerRef = React.useRef<HTMLDivElement>(null);
     const [scale, setScale] = React.useState(0.24);
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+    const [previewReady, setPreviewReady] = React.useState(false);
     
     const activeTemplate =
         DEFAULT_TEMPLATES.find((template) => template.id === resume.templateId) ??
@@ -67,8 +68,39 @@ export const ResumeCardItem = ({
         return () => observer.disconnect();
     }, []);
 
+    React.useEffect(() => {
+        const element = containerRef.current;
+        if (!element) return;
+        if (typeof IntersectionObserver === "undefined") {
+            setPreviewReady(true);
+            return;
+        }
+        // Mount the real preview just before it scrolls into view. Its fonts then
+        // load through CSS, without warming every saved resume's font family.
+        const observer = new IntersectionObserver((entries) => {
+            if (entries.some(entry => entry.isIntersecting)) {
+                setPreviewReady(true);
+                observer.disconnect();
+            }
+        }, {
+            root: element.closest("[data-radix-scroll-area-viewport]"),
+            rootMargin: "200px",
+        });
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    const warmFont = () => {
+        void preloadFontFamily(resume.globalSettings?.fontFamily).catch(error => {
+            console.warn("Failed to preload resume font:", error);
+        });
+    };
+
     return (
         <motion.div
+            data-resume-id={id}
+            onPointerEnter={warmFont}
+            onFocusCapture={warmFont}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -106,7 +138,7 @@ export const ResumeCardItem = ({
                                     fontFamily: normalizeFontFamily(resume.globalSettings?.fontFamily),
                                 }}
                             >
-                                <ResumeTemplateComponent data={resume as any} template={activeTemplate} />
+                                {previewReady && <ResumeTemplateComponent data={resume as any} template={activeTemplate} />}
                             </div>
                         </div>
                     </div>

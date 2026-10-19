@@ -1,4 +1,4 @@
-import { FileText, PenLine, Cpu, Sparkles, CircleSlash } from "lucide-react";
+import { FileScan, PenLine, Cpu, Sparkles, CircleSlash } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import {
   Select,
@@ -44,7 +44,7 @@ export function ModelAssignment({
         );
         const selectedId = task === "text" ? textModelId : pdfModelId;
         const selectedModel = models.find((m) => m.id === selectedId);
-        const Icon = task === "text" ? PenLine : FileText;
+        const Icon = task === "text" ? PenLine : FileScan;
         const isAssigned = !!selectedId;
 
         return (

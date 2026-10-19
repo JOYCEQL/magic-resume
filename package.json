@@ -9,6 +9,8 @@
     "test:ai": "tsx --test tests/*.test.ts",
     "test:ai-models": "tsx --test tests/ai-models.browser.ts",
     "test:resume-import": "tsx --test tests/resume-import.test.ts",
+    "test:markdown-import": "tsx --test tests/markdown-import.test.ts",
+    "test:markdown-import-ui": "node --test tests/markdown-import.browser.mjs",
     "test:preview": "node --test tests/preview.browser.mjs",
     "test:font-size": "tsx tests/font-size.browser.ts",
     "test:fonts": "node --test tests/fonts.browser.mjs",

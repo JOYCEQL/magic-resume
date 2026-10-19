@@ -1,8 +1,8 @@
 import { generateUUID } from "@/utils/uuid";
-import { initialResumeState } from "@/config/initialResumeData";
+import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { PUBLICATION_STATUSES, hasPublicationContent } from "@/lib/publication";
-import type { Publication } from "@/types/resume";
+import type { CustomItem, Publication } from "@/types/resume";
 
 export const escapeHtml = (value: string) =>
   value
@@ -67,6 +67,7 @@ export const extractJsonContent = (content: string) => {
 };
 
 export const createResumeFromAIResult = (result: any, fileName: string, locale = "zh") => {
+  const defaults = locale === "en" ? initialResumeStateEn : initialResumeState;
   const now = new Date().toISOString();
   const id = generateUUID();
 
@@ -89,16 +90,26 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
 
   const skillSource = result?.skillContent ?? result?.skills;
   const skillContent = toListHtml(skillSource);
+  const selfEvaluationContent = toListHtml(result?.selfEvaluation);
+  const customData: Record<string, CustomItem[]> = {};
+  const customSections = (Array.isArray(result?.customSections) ? result.customSections : []).map((section: any) => {
+    const sectionId = `custom-${generateUUID()}`;
+    customData[sectionId] = (Array.isArray(section?.items) ? section.items : []).map((item: any) => ({
+      id: generateUUID(), title: toString(item?.title), subtitle: toString(item?.subtitle),
+      dateRange: toString(item?.dateRange), description: toListHtml(item?.description), visible: true,
+    }));
+    return { id: sectionId, title: toString(section?.title) || (locale === "en" ? "Additional information" : "其他信息"), icon: "FileText", enabled: true, order: 0 };
+  });
 
   return {
-    ...initialResumeState,
+    ...defaults,
     id,
     title: toString(result?.title) || fileName || `Imported Resume ${id.slice(0, 6)}`,
     createdAt: now,
     updatedAt: now,
     templateId: DEFAULT_TEMPLATES[0]?.id,
     basic: {
-      ...initialResumeState.basic,
+      ...defaults.basic,
       name: toString(result?.basic?.name),
       title: toString(result?.basic?.title),
       email: toString(result?.basic?.email),
@@ -106,7 +117,9 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
       location: toString(result?.basic?.location),
       employementStatus: toString(result?.basic?.employementStatus),
       birthDate: toString(result?.basic?.birthDate),
-      customFields: [],
+      customFields: (Array.isArray(result?.basic?.customFields) ? result.basic.customFields : []).map((field: any) => ({
+        id: generateUUID(), label: toString(field?.label), value: toString(field?.value), custom: true, visible: true,
+      })).filter((field: { value: string }) => field.value),
       photo: "",
       githubKey: "",
       githubUseName: "",
@@ -125,7 +138,7 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
         visible: true,
         logo: "",
       }))
-      .filter((item: any) => item.school || item.major || item.degree),
+      .filter((item: any) => item.school || item.major || item.degree || item.startDate || item.endDate || item.gpa || item.description),
     experience: experience
       .map((item: any) => ({
         id: generateUUID(),
@@ -155,11 +168,14 @@ export const createResumeFromAIResult = (result: any, fileName: string, locale =
       }))
       .filter((item: any) => item.name || item.role || item.date || item.description),
     skillContent,
+    selfEvaluationContent,
     publications,
     menuSections: [
-      ...initialResumeState.menuSections,
-      ...(publications.length ? [{ id: "publications", title: locale === "en" ? "Publications" : "论文发表", icon: "publications", enabled: true, order: initialResumeState.menuSections.length }] : []),
-    ],
-    customData: {},
+      ...defaults.menuSections,
+      ...(publications.length ? [{ id: "publications", title: locale === "en" ? "Publications" : "论文发表", icon: "publications", enabled: true, order: 0 }] : []),
+      ...(selfEvaluationContent ? [{ id: "selfEvaluation", title: locale === "en" ? "Self Evaluation" : "自我评价", icon: "User", enabled: true, order: 0 }] : []),
+      ...customSections,
+    ].map((section, order) => ({ ...section, order })),
+    customData,
   };
 };

@@ -1,0 +1,2 @@
+export const MAX_MARKDOWN_FILE_BYTES = 128 * 1024;
+export const MAX_MARKDOWN_CHARACTERS = 30_000;

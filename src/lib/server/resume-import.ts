@@ -4,11 +4,15 @@ import {
   MAX_PDF_IMPORT_PAGES, MAX_PDF_REQUEST_BYTES, PDF_IMPORT_PRESETS,
   PDF_IMPORT_PROVIDERS, PDF_IMPORT_TIMEOUT_MS, type PdfImportConnection,
 } from "../../config/pdf-import";
-import { parseJsonPayload, ResumeImportError, RESUME_IMPORT_PROMPT, validateResume, VISION_TEST_PROMPT } from "../resume-import-schema";
-import { asRecord, buildAIRequest, fetchAI, readAIOutput, validateAIConnection } from "./ai-provider";
+import { parseJsonPayload, ResumeImportError, RESUME_IMPORT_PROMPT, MARKDOWN_IMPORT_PROMPT, validateResume, VISION_TEST_PROMPT } from "../resume-import-schema";
+import { validateMarkdownInput } from "../markdown-import";
+import { asRecord, buildAIRequest, fetchAI, readAIOutput, validateAIConnection, type AIGenerationInput } from "./ai-provider";
 export { readAIOutput as readVisionOutput } from "./ai-provider";
 
-type ImportInput = PdfImportConnection & { images: string[]; test: boolean };
+type ImportInput = PdfImportConnection & (
+  { format: "pdf"; images: string[]; test: boolean } |
+  { format: "markdown"; markdown: string; test: false }
+);
 
 export function validateImportInput(value: unknown): ImportInput {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new ResumeImportError("invalidRequest");
@@ -18,6 +22,11 @@ export function validateImportInput(value: unknown): ImportInput {
   if (!PDF_IMPORT_PROVIDERS.includes(provider as PdfImportConnection["provider"])) throw new ResumeImportError("invalidProvider");
   const preset = PDF_IMPORT_PRESETS[provider as PdfImportConnection["provider"]];
   const connection = validateAIConnection({ ...body, provider, model: body.model ?? preset.model });
+  if (body.format === "markdown") {
+    if (body.test || body.images !== undefined) throw new ResumeImportError("invalidRequest");
+    return { ...connection, format: "markdown", markdown: validateMarkdownInput(body.markdown), test: false };
+  }
+  if (body.format !== undefined && body.format !== "pdf") throw new ResumeImportError("invalidRequest");
   if (!Array.isArray(body.images) || !body.images.length) throw new ResumeImportError("invalidImages");
   if (body.images.length > MAX_PDF_IMPORT_PAGES) throw new ResumeImportError("tooManyPages");
   let size = 0;
@@ -26,25 +35,30 @@ export function validateImportInput(value: unknown): ImportInput {
     size += image.length;
   }
   if (size > MAX_PDF_REQUEST_BYTES) throw new ResumeImportError("requestTooLarge", 413);
-  return { ...connection, images: body.images, test: body.test === true };
+  return { ...connection, format: "pdf", images: body.images, test: body.test === true };
 }
 
-export function buildVisionRequest(input: ImportInput) {
-  return buildAIRequest(input, {
+function generationInput(input: ImportInput): AIGenerationInput {
+  if (input.format === "markdown") return {
+    system: MARKDOWN_IMPORT_PROMPT,
+    text: JSON.stringify({ format: "markdown", document: input.markdown }),
+    json: true,
+  };
+  return {
     system: input.test ? VISION_TEST_PROMPT : RESUME_IMPORT_PROMPT,
     text: input.test ? "Read the image." : "Extract this resume. Images are supplied in page order.",
     images: input.images, json: true,
-  });
+  };
+}
+
+export function buildVisionRequest(input: ImportInput) {
+  return buildAIRequest(input, generationInput(input));
 }
 
 export async function handleResumeImport(request: Request, fetcher: typeof fetch = fetch) {
   try {
     const input = validateImportInput(await readLimitedJson(request));
-    const response = await fetchAI(input, {
-      system: input.test ? VISION_TEST_PROMPT : RESUME_IMPORT_PROMPT,
-      text: input.test ? "Read the image." : "Extract this resume. Images are supplied in page order.",
-      images: input.images, json: true,
-    }, combineAbortSignals([
+    const response = await fetchAI(input, generationInput(input), combineAbortSignals([
       request.signal,
       AbortSignal.timeout(PDF_IMPORT_TIMEOUT_MS),
     ]), fetcher);

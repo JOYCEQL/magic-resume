@@ -29,12 +29,14 @@ import {
 import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 
 import { MAX_PDF_IMPORT_PAGES, MAX_PDF_FILE_BYTES, MAX_PDF_REQUEST_BYTES, isPdfImportConfigured } from "@/config/pdf-import";
-import { getTaskModel, toAIConnection } from "@/config/ai-models";
+import { getTaskModel, isModelConfigured, modelDisplayName, toAIConnection } from "@/config/ai-models";
 import { requestPdfImport, pdfImportErrorMessage } from "@/lib/pdf-import-client";
-import { ResumeImportError } from "@/lib/resume-import-schema";
-import { PdfImportPreview } from "./PdfImportPreview";
+import { ResumeImportError, validateResume, type ImportedResumeContent } from "@/lib/resume-import-schema";
+import { ResumeImportPreview } from "./ResumeImportPreview";
+import { MarkdownImportDialog } from "./MarkdownImportDialog";
 const PDF_IMAGE_QUALITY = 0.82;
 const PDF_MAX_IMAGE_WIDTH = 1600;
+type PendingImport = { content: ImportedResumeContent; fileName: string; source: "pdf" | "markdown"; warnings: string[] };
 
 export const ResumeWorkbench = () => {
     const t = useTranslations();
@@ -48,7 +50,11 @@ export const ResumeWorkbench = () => {
     } = useResumeStore();
     const aiConfig = useAIConfigStore();
     const pdfConnection = getTaskModel(aiConfig, "pdf");
-    const [pendingPdfResume, setPendingPdfResume] = useState<ReturnType<typeof createResumeFromAIResult> | null>(null);
+    const textConnection = getTaskModel(aiConfig, "text");
+    const markdownConnection = isModelConfigured(textConnection) ? textConnection : pdfConnection;
+    const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+    const [isMarkdownDialogOpen, setIsMarkdownDialogOpen] = useState(false);
+    const [markdownDraftKey, setMarkdownDraftKey] = useState(0);
     const router = useRouter();
     const [hasConfiguredFolder, setHasConfiguredFolder] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -191,17 +197,18 @@ export const ResumeWorkbench = () => {
         const data = await requestPdfImport(toAIConnection(pdfConnection), images);
         if (!data.resume) throw new ResumeImportError("invalidOutput");
         const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
-        setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt, locale));
+        const parsed = validateResume(data.resume);
+        setPendingImport({ content: parsed.resume, fileName: nameWithoutExt, source: "pdf", warnings: parsed.warnings });
         setIsImportDialogOpen(false);
-        if (data.warnings?.includes("missingName")) toast.warning(t("dashboard.resumes.importDialog.missingName"));
     };
 
-    const confirmPdfImport = () => {
-        if (!pendingPdfResume) return;
-        const resumeId = addResume(pendingPdfResume);
+    const confirmImport = () => {
+        if (!pendingImport) return;
+        const resumeId = addResume(createResumeFromAIResult(pendingImport.content, pendingImport.fileName, locale));
         setActiveResume(resumeId);
-        setPendingPdfResume(null);
-        toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
+        setPendingImport(null);
+        if (pendingImport.source === "markdown") setMarkdownDraftKey(key => key + 1);
+        toast.success(t(pendingImport.source === "markdown" ? "dashboard.resumes.importDialog.markdownSuccess" : "dashboard.resumes.importDialog.pdfSuccess"));
         router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
@@ -397,9 +404,17 @@ export const ResumeWorkbench = () => {
                     onCreate={handleCreateFromModal}
                 />
 
-                <PdfImportPreview resume={pendingPdfResume} onCancel={() => setPendingPdfResume(null)} onConfirm={confirmPdfImport} />
+                <ResumeImportPreview content={pendingImport?.content ?? null} source={pendingImport?.source} warnings={pendingImport?.warnings} onCancel={() => {
+                    if (pendingImport?.source === "markdown") setIsMarkdownDialogOpen(true);
+                    setPendingImport(null);
+                }} onConfirm={confirmImport} />
+                <MarkdownImportDialog key={markdownDraftKey} open={isMarkdownDialogOpen} connection={markdownConnection} onOpenChange={setIsMarkdownDialogOpen} onConfigure={() => router.push("/app/dashboard/ai")} onParsed={(content, fileName, warnings) => setPendingImport({ content, fileName, warnings, source: "markdown" })} />
                 <ImportResumeDialog
-                    modelLabel={pdfConnection?.model || t("common.notConfigured")}
+                    modelLabel={isPdfImportConfigured(pdfConnection) && pdfConnection ? modelDisplayName(pdfConnection) : t("dashboard.resumes.importDialog.modelNotConfigured")}
+                    markdownModelLabel={isModelConfigured(markdownConnection) && markdownConnection ? modelDisplayName(markdownConnection) : t("dashboard.resumes.importDialog.modelNotConfigured")}
+                    pdfProvider={isPdfImportConfigured(pdfConnection) ? pdfConnection?.provider : undefined}
+                    markdownProvider={isModelConfigured(markdownConnection) ? markdownConnection?.provider : undefined}
+                    onMarkdown={() => { setIsImportDialogOpen(false); setIsMarkdownDialogOpen(true); }}
                     onConfigure={() => router.push("/app/dashboard/ai")}
                     open={isImportDialogOpen}
                     isImporting={isImporting}

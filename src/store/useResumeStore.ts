@@ -21,6 +21,7 @@ import {
   blankResumeStateEn,
 } from "@/config/initialResumeData";
 import { generateUUID } from "@/utils/uuid";
+import { removeDefaultResumeLogos } from "@/utils/logo";
 import {
   HISTORY_LIMIT,
   type UpdateResumeOptions,
@@ -995,7 +996,11 @@ export const useResumeStore = create(
       }),
       merge: (persistedState, currentState) => {
         const persisted = persistedState as Partial<PersistedResumeStore>;
-        const resumes = persisted.resumes ?? currentState.resumes;
+        const resumes = Object.fromEntries(
+          Object.entries(persisted.resumes ?? currentState.resumes).map(
+            ([id, resume]) => [id, removeDefaultResumeLogos(resume)]
+          )
+        );
         const activeResumeId =
           persisted.activeResumeId ?? currentState.activeResumeId;
 

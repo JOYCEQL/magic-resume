@@ -3,6 +3,9 @@
 Education → Logo settings → Find a school logo opens the lazily loaded search.
 It searches University Logos by Chinese or English school name through our
 `GET /api/school-logos?q=...&page=...` adapter. No school catalog is bundled.
+New Chinese and English resumes have no prefilled education or company logos.
+On local-storage hydration, only the old `/university.png` and `/company.png`
+defaults are cleared; uploaded and explicitly selected images are retained.
 
 The source website currently uses `POST https://universitylogos.top/superone/uni_logos`.
 Its request parameters and headers are isolated in `src/lib/server/school-logos.ts`;
@@ -41,7 +44,7 @@ the property of their institutions; see https://universitylogos.top/about.html.
 
 `public/university.png` is a small preview of the public-domain
 [Peking University seal](https://commons.wikimedia.org/wiki/File:Peking_University_seal.svg).
-It is used by the sample resume, independently of online search.
+It remains a legacy asset and browser-test fixture, independently of online search.
 
 ## Verification
 

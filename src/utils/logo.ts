@@ -1,4 +1,17 @@
-import { DEFAULT_LOGO_CONFIG, getRatioMultiplier, type LogoConfig } from "@/types/resume";
+import { DEFAULT_LOGO_CONFIG, getRatioMultiplier, type LogoConfig, type ResumeData } from "@/types/resume";
+
+/** Remove only the bundled images that were previously prefilled in new resumes. */
+export function removeDefaultResumeLogos(resume: ResumeData): ResumeData {
+  const isDefault = (logo?: string) => logo === "/university.png" || logo === "/company.png";
+  const clearDefaults = <T extends { logo?: string }>(items: T[]): T[] =>
+    items.some(item => isDefault(item.logo))
+      ? items.map(item => isDefault(item.logo) ? { ...item, logo: "" } : item)
+      : items;
+  const education = clearDefaults(resume.education ?? []);
+  const experience = clearDefaults(resume.experience ?? []);
+  return education === resume.education && experience === resume.experience
+    ? resume : { ...resume, education, experience };
+}
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
 const dimension = (value: unknown, fallback: number) =>

@@ -190,6 +190,10 @@
         "jsonDescription": "Import an exported resume config file (.json)",
         "pdfTitle": "Import PDF",
         "pdfDescription": "Extract content with your vision model. Up to 10 pages and 20 MB.",
+        "markdownTitle": "Import Markdown",
+        "markdownDescription": "Extract content from a Markdown resume file (.md, up to 2 MB) using the selected import model",
+        "markdownSuccess": "Markdown imported successfully",
+        "markdownError": "Markdown import failed. Check the file and import model settings.",
         "importing": "Importing, please wait...",
         "pdfSuccess": "PDF imported successfully",
         "pdfError": "PDF import failed. Check the file and PDF model settings.",
@@ -226,7 +230,8 @@
           "emptyOutput": "No valid resume content was recognized. Check the PDF or change vision models.",
           "truncatedOutput": "Model output was truncated. Reduce the page count and retry. No resume was created.",
           "refused": "The model declined this content. Check the file or use another model.",
-          "visionTestFailed": "The test image was not read correctly. Verify image input support for this model and endpoint."
+          "visionTestFailed": "The test image was not read correctly. Verify image input support for this model and endpoint.",
+          "markdownFileTooLarge": "The file exceeds 2 MB. Please trim it and try again."
         }
       },
       "notice": {

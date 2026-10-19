@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslations } from "@/i18n/compat/client";
-import { Braces, Loader2 } from "lucide-react";
+import { Braces, FileText, Loader2 } from "lucide-react";
 import { PdfIcon } from "@/components/shared/icons/PdfIcon";
 import { cn } from "@/lib/utils";
 import {
@@ -20,8 +20,10 @@ interface ImportResumeDialogProps {
   onOpenChange: (open: boolean) => void;
   jsonFileInputRef: React.RefObject<HTMLInputElement>;
   pdfFileInputRef: React.RefObject<HTMLInputElement>;
+  markdownFileInputRef: React.RefObject<HTMLInputElement>;
   onJsonFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPdfFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onMarkdownFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImportResumeDialog = ({
@@ -32,8 +34,10 @@ export const ImportResumeDialog = ({
   onOpenChange,
   jsonFileInputRef,
   pdfFileInputRef,
+  markdownFileInputRef,
   onJsonFileChange,
   onPdfFileChange,
+  onMarkdownFileChange,
 }: ImportResumeDialogProps) => {
   const t = useTranslations();
 
@@ -52,6 +56,13 @@ export const ImportResumeDialog = ({
         accept=".pdf,application/pdf"
         className="hidden"
         onChange={onPdfFileChange}
+      />
+      <input
+        ref={markdownFileInputRef}
+        type="file"
+        accept=".md,.markdown,text/markdown"
+        className="hidden"
+        onChange={onMarkdownFileChange}
       />
 
       <Dialog
@@ -114,6 +125,30 @@ export const ImportResumeDialog = ({
                 </p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {t("dashboard.resumes.importDialog.pdfDescription")}
+                </p>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              disabled={isImporting}
+              className={cn(
+                "group relative flex w-full items-start gap-4 rounded-xl border border-border/50 bg-card p-4 text-left transition-all duration-200",
+                "hover:border-primary/50 hover:bg-accent/50 hover:shadow-md",
+                "active:scale-[0.98]",
+                "disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
+              )}
+              onClick={() => markdownFileInputRef.current?.click()}
+            >
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 transition-colors group-hover:bg-purple-500/20 dark:bg-purple-500/20 dark:text-purple-400">
+                <FileText className="h-6 w-6" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold text-foreground leading-none">
+                  {t("dashboard.resumes.importDialog.markdownTitle")}
+                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t("dashboard.resumes.importDialog.markdownDescription")}
                 </p>
               </div>
             </button>

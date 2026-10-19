@@ -4,7 +4,10 @@ import {
   MAX_PDF_IMPORT_PAGES, MAX_PDF_REQUEST_BYTES, PDF_IMPORT_PRESETS,
   PDF_IMPORT_PROVIDERS, PDF_IMPORT_TIMEOUT_MS, type PdfImportConnection,
 } from "../../config/pdf-import";
-import { parseJsonPayload, ResumeImportError, RESUME_IMPORT_PROMPT, validateResume, VISION_TEST_PROMPT } from "../resume-import-schema";
+import {
+  MARKDOWN_IMPORT_PROMPT, MAX_MARKDOWN_IMPORT_BYTES, parseJsonPayload,
+  ResumeImportError, RESUME_IMPORT_PROMPT, validateResume, VISION_TEST_PROMPT,
+} from "../resume-import-schema";
 import { asRecord, buildAIRequest, fetchAI, readAIOutput, validateAIConnection } from "./ai-provider";
 export { readAIOutput as readVisionOutput } from "./ai-provider";
 
@@ -60,6 +63,47 @@ export async function handleResumeImport(request: Request, fetcher: typeof fetch
       const code = asRecord(parsed).code;
       if (typeof code !== "string") throw new ResumeImportError("visionTestFailed", 502);
       return Response.json({ code: code.trim() });
+    }
+    return Response.json(validateResume(parsed));
+  } catch (error) {
+    const known = error instanceof ResumeImportError;
+    const timedOut = error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name);
+    return Response.json({ code: known ? error.code : timedOut ? "timeout" : "networkError" }, {
+      status: known ? error.status : timedOut ? 504 : 502,
+    });
+  }
+}
+
+type MarkdownImportInput = PdfImportConnection & { text: string };
+
+export function validateMarkdownImportInput(value: unknown): MarkdownImportInput {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ResumeImportError("invalidRequest");
+  const body = value as Record<string, unknown>;
+  const connection = validateAIConnection(body);
+  const text = typeof body.text === "string" ? body.text.trim() : "";
+  if (!text) throw new ResumeImportError("invalidRequest");
+  if (text.length > MAX_MARKDOWN_IMPORT_BYTES) throw new ResumeImportError("markdownFileTooLarge", 413);
+  return { ...connection, text };
+}
+
+export async function handleMarkdownImport(request: Request, fetcher: typeof fetch = fetch) {
+  try {
+    const input = validateMarkdownImportInput(await readLimitedJson(request));
+    const response = await fetchAI(input, {
+      system: MARKDOWN_IMPORT_PROMPT,
+      text: "Extract this resume from the Markdown text below.\n\n" + input.text,
+      json: true,
+    }, combineAbortSignals([
+      request.signal,
+      AbortSignal.timeout(PDF_IMPORT_TIMEOUT_MS),
+    ]), fetcher);
+    let parsed: unknown;
+    try {
+      parsed = parseJsonPayload(readAIOutput(input.protocol, await response.json()));
+    } catch (error) {
+      if (error instanceof ResumeImportError) throw error;
+      if (error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name)) throw error;
+      throw new ResumeImportError("invalidOutput", 502);
     }
     return Response.json(validateResume(parsed));
   } catch (error) {

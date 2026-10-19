@@ -191,6 +191,10 @@
         "jsonDescription": "导入已导出的简历配置文件（.json）",
         "pdfTitle": "导入 PDF",
         "pdfDescription": "使用所选视觉模型提取内容，支持最多 10 页、20 MB 的 PDF",
+        "markdownTitle": "导入 Markdown",
+        "markdownDescription": "使用所选导入模型提取 Markdown 简历内容，支持最多 2 MB 的 .md 文件",
+        "markdownSuccess": "Markdown 导入成功",
+        "markdownError": "Markdown 导入失败，请检查文件及导入模型配置",
         "importing": "正在导入，请稍候...",
         "pdfSuccess": "PDF 导入成功",
         "pdfError": "PDF 导入失败，请检查文件及 PDF 模型配置",
@@ -227,7 +231,8 @@
           "emptyOutput": "模型未识别到有效简历内容，请检查 PDF 或更换视觉模型",
           "truncatedOutput": "模型输出未完成，请减少页数后重试；未创建简历",
           "refused": "模型拒绝处理该内容，请检查文件或更换模型",
-          "visionTestFailed": "未能正确识别测试图片，请确认模型和接口支持图片输入"
+          "visionTestFailed": "未能正确识别测试图片，请确认模型和接口支持图片输入",
+          "markdownFileTooLarge": "文件超过 2 MB，请精简后重试"
         }
       },
       "notice": {

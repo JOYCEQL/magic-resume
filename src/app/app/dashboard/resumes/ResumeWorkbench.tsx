@@ -32,6 +32,7 @@ import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import { MAX_PDF_IMPORT_PAGES, MAX_PDF_FILE_BYTES, MAX_PDF_REQUEST_BYTES, isPdfImportConfigured } from "@/config/pdf-import";
 import { getTaskModel, toAIConnection } from "@/config/ai-models";
 import { requestPdfImport, pdfImportErrorMessage } from "@/lib/pdf-import-client";
+import { requestMarkdownImport, markdownImportErrorMessage } from "@/lib/markdown-import-client";
 import { ResumeImportError } from "@/lib/resume-import-schema";
 import { PdfImportPreview } from "./PdfImportPreview";
 const PDF_IMAGE_QUALITY = 0.82;
@@ -50,6 +51,7 @@ export const ResumeWorkbench = () => {
     const aiConfig = useAIConfigStore();
     const pdfConnection = getTaskModel(aiConfig, "pdf");
     const [pendingPdfResume, setPendingPdfResume] = useState<ReturnType<typeof createResumeFromAIResult> | null>(null);
+    const [pendingImportSource, setPendingImportSource] = useState<"pdf" | "markdown">("pdf");
     const router = useRouter();
     const [hasConfiguredFolder, setHasConfiguredFolder] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -57,6 +59,7 @@ export const ResumeWorkbench = () => {
     const [isImporting, setIsImporting] = useState(false);
     const jsonFileInputRef = useRef<HTMLInputElement>(null);
     const pdfFileInputRef = useRef<HTMLInputElement>(null);
+    const markdownFileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const loadSavedConfig = async () => {
@@ -234,6 +237,7 @@ export const ResumeWorkbench = () => {
         const data = await requestPdfImport(toAIConnection(pdfConnection), images);
         if (!data.resume) throw new ResumeImportError("invalidOutput");
         const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
+        setPendingImportSource("pdf");
         setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt, locale));
         setIsImportDialogOpen(false);
         if (data.warnings?.includes("missingName")) toast.warning(t("dashboard.resumes.importDialog.missingName"));
@@ -244,7 +248,10 @@ export const ResumeWorkbench = () => {
         const resumeId = addResume(pendingPdfResume);
         setActiveResume(resumeId);
         setPendingPdfResume(null);
-        toast.success(t("dashboard.resumes.importDialog.pdfSuccess"));
+        toast.success(t(pendingImportSource === "markdown"
+            ? "dashboard.resumes.importDialog.markdownSuccess"
+            : "dashboard.resumes.importDialog.pdfSuccess"));
+        setPendingImportSource("pdf");
         router.push({ to: "/app/workbench/$id", params: { id: resumeId } });
     };
 
@@ -261,6 +268,38 @@ export const ResumeWorkbench = () => {
         } catch (error) {
             console.error("Import JSON error:", error);
             toast.error(t("dashboard.resumes.importError"));
+        } finally {
+            setIsImporting(false);
+        }
+    };
+
+    const importResumeFromMarkdown = async (file: File) => {
+        if (!isPdfImportConfigured(pdfConnection)) {
+            toast.error(t("dashboard.resumes.importDialog.configRequired"));
+            router.push("/app/dashboard/ai");
+            return;
+        }
+        const data = await requestMarkdownImport(toAIConnection(pdfConnection), await file.text());
+        if (!data.resume) throw new ResumeImportError("invalidOutput");
+        const nameWithoutExt = file.name.replace(/\.[^.]+$/, "").trim();
+        setPendingImportSource("markdown");
+        setPendingPdfResume(createResumeFromAIResult(data.resume, nameWithoutExt, locale));
+        setIsImportDialogOpen(false);
+        if (data.warnings?.includes("missingName")) toast.warning(t("dashboard.resumes.importDialog.missingName"));
+    };
+
+    const handleMarkdownFileChange = async (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file || isImporting) return;
+
+        try {
+            setIsImporting(true);
+            await importResumeFromMarkdown(file);
+        } catch (error) {
+            toast.error(markdownImportErrorMessage(error, t));
         } finally {
             setIsImporting(false);
         }
@@ -449,8 +488,10 @@ export const ResumeWorkbench = () => {
                     onOpenChange={setIsImportDialogOpen}
                     jsonFileInputRef={jsonFileInputRef}
                     pdfFileInputRef={pdfFileInputRef}
+                    markdownFileInputRef={markdownFileInputRef}
                     onJsonFileChange={handleJsonFileChange}
                     onPdfFileChange={handlePdfFileChange}
+                    onMarkdownFileChange={handleMarkdownFileChange}
                 />
             </motion.div>
         </ScrollArea>

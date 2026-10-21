@@ -48,18 +48,19 @@
       "storage": {
         "badge": "Lokal na Imbakan",
         "title": "Seguridad ng Data, Privacy Muna",
-        "description": "Lahat ng resume data ay ganap na naka-imbak nang lokal, hindi mo kailangang mag-alala sa privacy leak. May suporta sa data export backup, para laging available ang iyong resume data.",
+        "description": "Naka-save ang resume sa kasalukuyang browser, at maaari ka ring pumili ng lokal na folder para sa backup. Ikaw ang may kontrol sa iyong data — i-export ito at dalhin kahit saan.",
         "item1": "Lokal na file storage",
-        "item1_description": "Ligtas na naka-imbak ang resume data sa hard drive ng iyong computer",
+        "item1_description": "Naka-save nang lokal, may suporta sa pagpili ng folder para sa backup",
         "item2": "Maraming export format",
-        "item2_description": "May suporta sa PDF at JSON format export",
+        "item2_description": "May suporta sa PDF, PNG, JSON, at Markdown",
         "item3": "May suporta sa data export backup"
       },
       "preview": {
         "badge": "Real-time Preview",
         "title": "Ano ang Nakikita Mo, Iyon ang Makukuha Mo",
         "item1": "Real-time preview ng editing effects",
-        "item2": "Maraming export format na suportado"
+        "item2": "Maraming export format na suportado",
+        "description": "I-preview habang nag-e-edit at tingnan ang resulta ng iyong resume nang real-time. May suporta sa maraming propesyonal na template para maging maganda at maayos ang iyong resume. Mabilis na i-export sa PDF at ipasa ang iyong resume anumang oras."
       }
     },
     "news": {
@@ -84,11 +85,11 @@
         },
         {
           "question": "Ligtas ba ang aking resume data?",
-          "answer": "Oo, napakaligtas. Gumagamit ang Magic Resume ng lokal na imbakan, ibig sabihin lahat ng iyong data ay naka-imbak sa sarili mong device na walang cloud storage, na tinitiyak ang kumpletong proteksyon ng privacy."
+          "answer": "Gumagamit ang Magic Resume ng lokal na imbakan — naka-save ang resume data sa kasalukuyang browser, at maaari kang pumili ng lokal na folder para sa backup. Kapag gumagamit ng AI features, ang mga kaugnay na content ay ipapadala sa model service provider na iyong na-configure."
         },
         {
           "question": "Anong mga export format ang suportado?",
-          "answer": "Kasalukuyan naming sinusuportahan ang PDF export, na tinitiyak na pare-pareho ang format ng iyong resume sa anumang device. Plano naming suportahan ang mas maraming export format sa hinaharap."
+          "answer": "Kasalukuyang sinusuportahan ang pag-export sa PDF, PNG na mahabang larawan, JSON configuration, at Markdown, pati na rin ang pag-print mula sa browser. Ang PDF ay mainam para sa pormal na pagpapasa, at ang JSON ay magagamit para sa backup at pagpapatuloy ng pag-edit sa ibang device."
         },
         {
           "question": "Paano ako makakapag-sync sa iba't ibang device?",
@@ -99,6 +100,69 @@
           "answer": "Nag-aalok kami ng maraming customization option, kabilang ang mga kulay, layout, at iba pa, na nagpapahintulot sa iyo na i-adjust ang istilo ng iyong resume ayon sa personal na kagustuhan at pangangailangan ng industriya."
         }
       ]
+    },
+    "redesign": {
+      "start": "Magsimula",
+      "nav": {
+        "features": "Mga Feature",
+        "templates": "Mga Template",
+        "label": "Pangunahing nabigasyon",
+        "home": "Home ng Magic Resume",
+        "language": "Lumipat sa Chinese",
+        "theme": "Palitan ang tema",
+        "menu": "Buksan ang menu",
+        "close": "Isara ang menu",
+        "skip": "Lumaktaw sa nilalaman"
+      },
+      "hero": {
+        "editorAlt": "Magic Resume workspace na may content editing at live na resume preview",
+        "free": "Libre. Hindi kailangan ng account.",
+        "ai": "AI writing assistance",
+        "local": "Naka-save sa iyong device"
+      },
+      "templates": {
+        "title": "Isang istilong bagay sa iyo.",
+        "description": "Simple at malinis, o mas expressive. Pumili ng panimulang punto at gawin itong sa iyo.",
+        "browse": "Tumingin ng mga Template",
+        "all": "Tingnan Lahat ng Template",
+        "choose": "Pumili ng resume template",
+        "classic": "Klasiko",
+        "minimalist": "Minimal",
+        "editorial": "Editorial",
+        "swiss": "Swiss",
+        "preview": "I-preview ang {name} template",
+        "alt": "Halimbawang resume sa {name} template",
+        "previewDescription": "Ito ay sample content. Buksan ang template library para pumili ng template at magsimulang mag-edit."
+      },
+      "footer": {
+        "note": "Libre at open source. Para sa susunod mong hakbang.",
+        "source": "Tingnan ang Source"
+      },
+      "illustrations": {
+        "experience": "Karanasan",
+        "draft": "DRAFT",
+        "before": "Gumawa ng AI assistant at pinaganda ang mga sagot nito.",
+        "polished": "Medyo mas malinaw",
+        "after": "Binuo ang isang AI assistant at pinino ang mga sagot nito para sa mas mataas na katumpakan at kaugnayan.",
+        "clear": "Mas malinaw na pokus",
+        "concise": "Mas kaunting salita",
+        "yourVoice": "Ang iyong boses",
+        "review": "Bawat mungkahi ay ikaw ang mag-aapruba",
+        "grammar": "Mahalaga ang mga detalye",
+        "grammarStart": "Sa proyekto, ",
+        "grammarCorrect": "nanguna",
+        "grammarEnd": " sa pag-develop ng AI application kasama ang team.",
+        "grammarError": "nangunguna",
+        "corrected": "Nawasto ang salita",
+        "yourResume": "Ang iyong resume",
+        "apply": "Mga aplikasyon",
+        "backup": "Na-e-edit na backup",
+        "share": "Pag-share ng imahe",
+        "alsoMarkdown": "Markdown at printing, suportado rin",
+        "yourDevice": "Ang iyong device. Ang iyong espasyo.",
+        "localTitle": "Naka-save nang lokal",
+        "localCaption": "Ipagpatuloy ang pag-edit. Mag-backup anumang oras."
+      }
     }
   },
   "dashboard": {
@@ -128,9 +192,68 @@
         "pdfTitle": "Mag-import ng PDF",
         "pdfDescription": "Gamitin ang Gemini para gawing structured resume data",
         "importing": "Nag-i-import, maghintay...",
-        "geminiConfigRequired": "Paki-configure muna ang Gemini API Key at Model ID sa AI settings",
         "pdfSuccess": "Matagumpay na na-import ang PDF",
-        "pdfError": "Nabigo ang PDF import. Pakisuri ang PDF content o Gemini configuration"
+        "pdfError": "Nabigo ang PDF import. Pakisuri ang PDF content o Gemini configuration",
+        "description": "Pumili ng paraan ng pag-import. Ire-review mo ang AI-extracted content bago gumawa ng resume.",
+        "markdownTitle": "I-import ang Markdown",
+        "markdownDescription": "Mag-upload ng .md file o i-paste ang Markdown para ayusin ng AI bilang resume.",
+        "markdownInstructions": "Mag-upload o mag-paste ng buong dokumento. Imamapa ng AI ang nilalaman nito sa mga resume field para sa iyong review bago gumawa ng bagong resume.",
+        "markdownUpload": "Pumili ng Markdown file",
+        "markdownTextLabel": "Markdown na dokumento",
+        "markdownPlaceholder": "# Pangalan\n\n## Karanasan sa Trabaho\nKumpanya, posisyon, petsa, at mga nagawa…\n\nO i-paste dito ang dati mong Markdown resume.",
+        "markdownLimit": "UTF-8 na .md / .markdown file, hanggang 128 KB at 30,000 na character.",
+        "markdownImageNote": "Text lamang. Ang mga imahe sa dokumento ay hindi ida-download o kikilalanin.",
+        "markdownParsing": "Binabasa ng AI ang iyong resume. Maaari mong i-review ang resulta kapag handa na…",
+        "markdownParse": "I-import",
+        "cancelParsing": "Kanselahin ang pag-parse",
+        "markdownDefaultTitle": "Resume na na-import mula sa Markdown",
+        "markdownSuccess": "Matagumpay na na-import ang Markdown resume",
+        "markdownPreviewDescription": "I-review ang lahat ng extracted content sa ibaba. Kumpirmahin para gumawa ng bagong resume gamit ang default na template. Hindi mapapanatili ang mga imahe at orihinal na Markdown formatting.",
+        "backToMarkdown": "Bumalik sa dokumento",
+        "skills": "Mga Kasanayan",
+        "selfEvaluation": "Sariling Pagsusuri",
+        "additionalInformation": "Iba pang impormasyon",
+        "importFailed": "Nabigo ang pag-extract ng resume. Suriin ang dokumento at model settings at subukan muli.",
+        "aiSectionTitle": "AI Extraction",
+        "configRequired": "Magdagdag muna ng PDF-capable na model sa AI settings at italaga ito sa PDF import.",
+        "modelLabel": "Import model: {model}",
+        "modelNotConfigured": "Walang nakatalagang model",
+        "configure": "I-configure ang model",
+        "previewTitle": "I-review ang extracted resume",
+        "previewDescription": "Gagamitin ng content ang default na template. I-review at i-edit ang lahat ng detalye sa editor pagkatapos gumawa. Hindi mapapanatili ang orihinal na layout at mga larawan.",
+        "confirmImport": "Gumawa ng resume",
+        "cancelImport": "Kanselahin",
+        "education": "Edukasyon",
+        "experience": "Karanasan sa Trabaho",
+        "projects": "Karanasan sa Proyekto",
+        "publications": "Mga Publikasyon",
+        "missingName": "Walang nakilalang pangalan. I-review ang resume pagkatapos gumawa.",
+        "errors": {
+          "markdownTooLarge": "Lumampas ang Markdown sa 128 KB o 30,000 na character. Paikliin ito at subukan muli.",
+          "invalidMarkdown": "Hindi mabasa ang Markdown. Pumili ng UTF-8 na .md / .markdown text file.",
+          "emptyMarkdown": "Mag-upload muna ng file o i-paste ang iyong Markdown na dokumento.",
+          "configRequired": "I-configure at pumili muna ng AI model para sa pag-import.",
+          "invalidRequest": "Hindi wasto ang import request. I-refresh at subukan muli.",
+          "invalidProvider": "Hindi tugma ang provider at API protocol. Suriin ang model settings.",
+          "invalidEndpoint": "Dapat HTTP(S) URL ang Base URL na walang query parameters o credentials.",
+          "invalidImages": "Hindi wasto ang mga page image. Piliin muli ang PDF.",
+          "tooManyPages": "Lumampas ang PDF sa 10 pahina. Hatiin ito bago i-import. Walang na-import na pahina.",
+          "fileTooLarge": "Lumampas ang PDF sa 20 MB. I-compress ito at subukan muli.",
+          "requestTooLarge": "Lumampas ang mga page image sa request size limit. Hatiin ang PDF at subukan muli.",
+          "invalidPdf": "Hindi mabasa ang PDF. Suriin kung sira o naka-encrypt ang file.",
+          "authenticationFailed": "Tinanggihan ng endpoint na ito ang API key. Suriin ang compatible service URL kung relay key ito.",
+          "modelAccessDenied": "Wasto ang API key, pero hindi ma-access ng proyektong ito ang napiling model.",
+          "rateLimited": "Naabot ang provider rate limit o quota. Suriin ang iyong quota at subukan muli mamaya.",
+          "modelOrEndpointError": "Tinanggihan ng model o endpoint ang request na ito. Suriin ang model ID, Base URL, protocol, at image input support.",
+          "upstreamError": "Pansamantalang hindi available ang model service. Subukan muli mamaya.",
+          "networkError": "Hindi makakonekta sa model service. Suriin ang server network, proxy, at Base URL.",
+          "timeout": "Nag-timeout ang extraction. Paikliin ang dokumento o gumamit ng mas mabilis na model.",
+          "invalidOutput": "Hindi wasto ang istraktura ng resume na ibinalik ng model. Subukan muli o gumamit ng ibang model.",
+          "emptyOutput": "Walang na-extract na magagamit na resume content. Suriin ang dokumento o gumamit ng ibang model.",
+          "truncatedOutput": "Hindi kumpleto ang output ng model. Paikliin ang dokumento at subukan muli; walang nagawang resume.",
+          "refused": "Tinanggihan ng model ang content na ito. Suriin ang file o gumamit ng ibang model.",
+          "visionTestFailed": "Hindi nabasa nang tama ang test image. I-verify ang image input support para sa model at endpoint na ito."
+        }
       },
       "notice": {
         "title": "Pansin",
@@ -170,16 +293,19 @@
     "settings": {
       "title": "Mga Setting",
       "syncDirectory": {
-        "title": "Sync Directory",
-        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume.",
-        "currentSyncFolder": "Kasalukuyang Sync Folder",
-        "noFolderConfigured": "Walang naka-configure na folder",
+        "title": "Lokal na Backup Directory",
+        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume. Ang data ay naka-imbak at nai-sync nang lokal lamang.",
+        "currentSyncFolder": "Kasalukuyang Lokal na Backup Folder",
+        "noFolderConfigured": "Wala pang naka-configure na lokal na backup folder",
         "changeFolder": "Palitan ang Folder",
-        "selectFolder": "Pumili ng Folder"
+        "selectFolder": "Pumili ng Folder",
+        "statusConfigured": "Naka-configure",
+        "statusNotConfigured": "Hindi naka-configure",
+        "removeFolder": "Alisin ang lokal na backup directory"
       },
       "sync": {
-        "title": "Sync Directory",
-        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume.",
+        "title": "Lokal na Backup Directory",
+        "description": "Pumili ng folder para i-sync at i-backup ang iyong mga resume. Ang data ay naka-imbak at nai-sync nang lokal lamang.",
         "select": "Pumili ng Folder"
       },
       "ai": {
@@ -210,7 +336,198 @@
           "description": "May suporta sa polish, grammar check, at PDF image resume import. Inirerekomendang model: gemini-flash-latest",
           "apiKey": "Gemini API Key",
           "modelId": "Gemini Model ID"
+        },
+        "workspace": {
+          "apiKey": "API key",
+          "apiEndpoint": "API endpoint",
+          "active": "Aktibo",
+          "configuredProviders": "{count} / {total} na provider ang naka-configure",
+          "noConfiguredProviders": "Wala pang naka-configure na provider",
+          "modelDescriptions": {
+            "writingAndParsing": "Advanced na pagsusulat at de-kalidad na pag-parse",
+            "balancedQualitySpeedCost": "Balanseng kalidad, bilis, at gastos",
+            "fastEveryday": "Mabilis at abot-kayang pang-araw-araw na gawain",
+            "flagshipVision": "Flagship visual understanding at structured extraction",
+            "balancedQualityCost": "Balanseng kalidad at gastos",
+            "fastBatchParsing": "Mabilis at abot-kayang batch parsing",
+            "textAndReasoning": "Advanced na text generation at reasoning",
+            "fastText": "Mabilis at abot-kayang text processing",
+            "visionAndResume": "Image understanding at resume parsing",
+            "writingAndReasoning": "Advanced na pagsusulat at malalim na reasoning",
+            "experimentalVision": "Eksperimental na image understanding",
+            "multimodal": "De-kalidad na multimodal processing",
+            "reasoningAndExtraction": "Advanced na reasoning at de-kalidad na extraction",
+            "highThroughput": "Abot-kaya at high-throughput na parsing",
+            "balancedQualitySpeed": "Balanseng kalidad at bilis",
+            "complexUnderstanding": "Mga komplikadong gawain at de-kalidad na pag-unawa"
+          },
+          "eyebrow": "WORKSPACE / PREFERENCES",
+          "title": "Mga AI model",
+          "description": "Pamahalaan ang mga model sa isang lugar. Piliin ang tamang model para sa resume writing, Markdown import, at PDF recognition.",
+          "catalogDescription": "I-configure ang isang API key kada provider, gumamit ng built-in na mga model o kumuha pa mula sa provider, pagkatapos ay italaga ang mga ito sa pagsusulat (polish, grammar, at Markdown import) at PDF parsing.",
+          "addModel": "Magdagdag ng model",
+          "add": "Magdagdag",
+          "library": "Aking mga model",
+          "assignments": "Model assignments",
+          "providerConfig": "Model settings",
+          "providerConfigHint": "Pumili ng provider at ilagay ang mga detalye ng koneksyon nito",
+          "providersTitle": "Mga model provider",
+          "providersHint": "Pumili ng provider at i-configure ito nang isang beses",
+          "providerModelsHint": "Maglagay ng API key para magamit ang mga model sa ibaba",
+          "providerKeyPlaceholder": "Ilagay ang API key ng provider na ito",
+          "keySharedHint": "Lahat ng model mula sa provider na ito ay nagbabahagi ng key na ito. Naka-save ito sa browser na ito.",
+          "compatibleService": "Gumamit ng OpenAI-compatible service",
+          "customEndpointActive": "Gumagamit ng custom na compatible-service endpoint",
+          "compatibleServiceHint": "Panatilihin ang default URL para sa opisyal na OpenAI key. Para sa relay o compatible service, ilagay ang API base URL nito.",
+          "builtinModels": "Mga built-in na model",
+          "availableModels": "Mga available na model",
+          "builtinModelsHint": "Hindi kailangan ng model ID",
+          "modelCount": "{count} na model",
+          "recommended": "Inirerekomenda",
+          "usedByText": "Ginagamit para sa pagsusulat",
+          "usedByPdf": "Ginagamit para sa PDF parsing",
+          "formHint": "Awtomatikong naka-save sa browser na ito ang mga setting",
+          "configured": "Naka-configure",
+          "textTag": "Text",
+          "textChange": "Piliin ang writing model",
+          "pdfChange": "Piliin ang PDF model",
+          "textTitle": "Writing assistant",
+          "textDescription": "Polish · Grammar check · Markdown import",
+          "pdfTitle": "PDF parsing",
+          "pdfDescription": "PDF import · Magbasa ng mga pahina at mag-extract ng content",
+          "unassigned": "Pumili ng model",
+          "noModels": "Magdagdag muna ng model",
+          "noPdfModels": "Walang PDF-capable na model",
+          "textBadge": "Pagsusulat",
+          "pdfBadge": "PDF import",
+          "incomplete": "Hindi kumpleto",
+          "libraryEmpty": "Magdagdag ng iyong unang model para mapamahalaan ito rito.",
+          "emptyTitle": "Ikonekta ang iyong unang model",
+          "emptyDescription": "Ilagay ang iyong provider API key at model ID para mapakintab ang mga resume. Ang mga model na may image input ay maaari ring mag-import ng mga PDF.",
+          "localStorage": "Nananatili sa browser na ito ang mga setting. Ipinapadala ang mga request sa provider na iyong pinili.",
+          "newModel": "Magdagdag ng model connection",
+          "editModel": "Model settings",
+          "unsaved": "May hindi pa naka-save na pagbabago",
+          "saved": "Naka-save ang mga setting · Handa nang subukan",
+          "delete": "Tanggalin ang model",
+          "deleteModel": "Tanggalin ang model na {model}",
+          "provider": "Provider",
+          "name": "Pangalan na ipapakita",
+          "optional": "Opsyonal",
+          "namePlaceholder": "hal. Pang-araw-araw na pagsusulat, Resume reader",
+          "getKey": "Kumuha ng API key",
+          "keyPlaceholder": "Ilagay ang API key ng iyong provider",
+          "keyRequired": "Maglagay ng API key.",
+          "showKey": "Ipakita ang API key",
+          "hideKey": "Itago ang API key",
+          "modelId": "Model ID",
+          "modelPlaceholder": "Ilagay ang model ID mula sa iyong provider",
+          "modelRequired": "Maglagay ng model ID.",
+          "modelHint": "Gamitin ang eksaktong model ID mula sa iyong provider. Tumatanggap din ang Doubao ng inference endpoint ID.",
+          "supportsPdf": "Suportado ang PDF image recognition",
+          "pdfHint": "I-enable lamang para sa mga model na tumatanggap ng mga imahe. Pagkatapos, lalabas ang model sa PDF import selector sa itaas.",
+          "pdfSimpleHint": "I-enable kapag tumatanggap ng mga imahe ang model. Maaari na itong gamitin para sa PDF parsing.",
+          "advanced": "Koneksyon at advanced settings",
+          "endpointHint": "Paunang nakalagay ang opisyal na endpoint. Baguhin ito para sa mga proxy, compatible service, o ibang region.",
+          "endpointInvalid": "Maglagay ng HTTP(S) base URL na walang query parameters o credentials.",
+          "protocol": "API protocol",
+          "testText": "Subukan ang text connection",
+          "testPdf": "Subukan ang PDF recognition",
+          "detectConnection": "Subukan ang koneksyon",
+          "detecting": "Sinusubukan ang koneksyon…",
+          "connectionSuccess": "Matagumpay ang koneksyon",
+          "connectionFailed": "Nabigo ang koneksyon. Suriin ang mga setting.",
+          "connectionErrors": {
+            "configRequired": "Maglagay ng API key, model ID, at base URL.",
+            "invalidRequest": "Hindi wasto ang connection test request. I-refresh at subukan muli.",
+            "invalidProvider": "Hindi tugma ang provider at protocol. Suriin ang model settings.",
+            "invalidEndpoint": "Dapat wastong HTTP(S) URL ang Base URL na walang query parameters o credentials.",
+            "requestTooLarge": "Lumampas ang connection settings sa request size limit.",
+            "authenticationFailed": "Nabigo ang API key authentication. Suriin ang key at endpoint.",
+            "modelAccessDenied": "Walang access ang API key na ito sa model.",
+            "rateLimited": "Naabot ang provider rate o quota limit. Suriin ang iyong quota at subukan muli mamaya.",
+            "modelOrEndpointError": "Hindi sinusuportahan ng model o endpoint ang request na ito. Suriin ang model ID, base URL, at protocol.",
+            "upstreamError": "Pansamantalang hindi available ang model service. Subukan muli mamaya.",
+            "networkError": "Hindi makakonekta sa model service. Suriin ang server network, proxy, at base URL.",
+            "timeout": "Nag-timeout ang connection test. Subukan muli mamaya o suriin ang model service.",
+            "invalidOutput": "Hindi ibinalik ng model ang inaasahang test reply. Suriin ang model at endpoint settings.",
+            "emptyOutput": "Walang laman ang reply ng model. Suriin ang model at endpoint settings.",
+            "truncatedOutput": "Hindi kumpleto ang test reply ng model. Subukan muli.",
+            "refused": "Tinanggihan ng model ang connection test request. Suriin ang model settings."
+          },
+          "autoSaved": "Awtomatikong naka-save ang mga pagbabago",
+          "testHint": "Gumagamit ang mga test ng sample content at kaunting API quota. Hindi naka-save ang mga pagbabago sa pagte-test.",
+          "pdfTestSuccess": "Na-verify ang image recognition at JSON response.",
+          "textTestSuccess": "Na-verify ang text connection.",
+          "saveHint": "Sa pag-save, maa-update ang bawat feature na gumagamit ng model na ito.",
+          "cancel": "Kanselahin",
+          "save": "I-save ang model",
+          "saveSuccess": "Naka-save ang model",
+          "assignmentSaved": "Na-update ang model assignment",
+          "unsavedTitle": "Panatilihin ang mga pagbabagong ito?",
+          "unsavedDescription": "May hindi pa naka-save na pagbabago ang model na ito. I-save o i-discard bago lumipat.",
+          "keepEditing": "Ipagpatuloy ang pag-edit",
+          "discard": "I-discard ang mga pagbabago",
+          "saveAndContinue": "I-save at lumipat",
+          "deleteTitle": "Tanggalin ang “{name}”?",
+          "deleteDescription": "Aalisin nito ang lokal na configuration ng model. Kung may feature na gumagamit nito, kakailanganing pumili ng ibang model. Hindi maaapektuhan ang mga nagawa nang resume.",
+          "providers": {
+            "openai": "OpenAI / compatible",
+            "qwen": "Qwen",
+            "doubao": "Doubao",
+            "deepseek": "DeepSeek",
+            "gemini": "Gemini",
+            "anthropic": "Claude"
+          },
+          "protocols": {
+            "chat-completions": "Chat Completions",
+            "responses": "Responses",
+            "gemini": "Gemini API",
+            "anthropic": "Anthropic Messages"
+          },
+          "fetchModels": {
+            "button": "Kunin ang model list",
+            "noKey": "Ilagay muna ang API key",
+            "success": "Nakuha ang model list",
+            "empty": "Walang ibinalik na model ang provider",
+            "failed": "Nabigong kunin ang model list",
+            "listTitle": "Mga model mula sa provider",
+            "add": "Magdagdag",
+            "addModel": "Idagdag ang model na {model}",
+            "added": "Naidagdag",
+            "customModel": "Custom na model mula sa model list ng provider",
+            "errors": {
+              "configRequired": "Suriin ang API key",
+              "invalidProvider": "Hindi wasto ang provider configuration",
+              "invalidEndpoint": "Suriin ang API endpoint",
+              "requestTooLarge": "Masyadong malaki ang request",
+              "authenticationFailed": "Hindi wasto ang API key. Suriin ang key.",
+              "modelAccessDenied": "Hindi ma-access ng API key na ito ang model list",
+              "rateLimited": "Na-rate-limit ng provider ang request. Subukan muli mamaya.",
+              "modelOrEndpointError": "Tinanggihan ng provider ang request. Suriin ang API endpoint.",
+              "upstreamError": "Pansamantalang hindi available ang provider. Subukan muli mamaya.",
+              "networkError": "Hindi makakonekta sa provider. Suriin ang network at API endpoint.",
+              "timeout": "Nag-timeout ang pagkuha ng model list. Subukan muli mamaya.",
+              "invalidRequest": "Hindi wasto ang request. Subukan muli."
+            }
+          }
         }
+      },
+      "description": "Pamahalaan ang hitsura ng workspace at ang lokal na resume backup settings.",
+      "appearance": {
+        "title": "Hitsura",
+        "description": "Pumili ng light o dark na itsura para sa iyong workspace.",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "language": {
+        "title": "Wika",
+        "description": "Piliin ang iyong gustong wika sa interface.",
+        "zh": "简体中文",
+        "zhDesc": "Chinese (Simplified)",
+        "en": "English",
+        "enDesc": "English (US)"
       }
     },
     "templates": {
@@ -264,7 +581,9 @@
       "printDesc": "I-save sa pamamagitan ng system print dialog. Gamitin bilang fallback o para sa custom margins.",
       "jsonDesc": "I-export ang iyong resume data bilang JSON para sa backup o paglipat sa ibang device.",
       "markdownDesc": "I-convert sa plain Markdown text para madaling ibahagi sa AI models.",
-      "privacyNotice": "Ipinapangako ng Magic Resume na hindi kailanman kokolektahin, i-u-upload, o iiimbak ang anumang resume data mo. Ganap na protektado ang iyong privacy."
+      "privacyNotice": "Ipinapangako ng Magic Resume na hindi kailanman kokolektahin, i-u-upload, o iiimbak ang anumang resume data mo. Ganap na protektado ang iyong privacy.",
+      "longPagePdfDesc": "Ire-render ang buong resume bilang imahe sa isang custom-height na single-page PDF. Mainam para sa online preview at pag-share; hindi inirerekomenda para sa pag-print, pagpili ng text, o ATS parsing.",
+      "longPageImageDesc": "I-e-export ang buong resume bilang isang mahabang PNG. Mainam para sa mobile preview, portfolio, at image uploads; hindi inirerekomenda para sa pormal na aplikasyon o pag-print."
     },
     "button": {
       "export": "I-export",
@@ -274,7 +593,9 @@
       "exporting": "Nag-e-export...",
       "exportingJson": "Nag-e-export...",
       "exportingMarkdown": "Nag-e-export...",
-      "print": "Browser Print"
+      "print": "Browser Print",
+      "exportLongPagePdf": "PDF (Long Page)",
+      "exportLongPageImage": "PNG (Long Image)"
     },
     "toast": {
       "success": "Matagumpay na na-export ang PDF",
@@ -282,7 +603,9 @@
       "jsonSuccess": "Matagumpay na na-export ang configuration",
       "jsonError": "Nabigo ang configuration export",
       "markdownSuccess": "Matagumpay na na-export ang Markdown",
-      "markdownError": "Nabigo ang Markdown export"
+      "markdownError": "Nabigo ang Markdown export",
+      "imageSuccess": "Matagumpay na na-export ang PNG long image",
+      "imageError": "Nabigo ang PNG long image export"
     }
   },
   "previewDock": {
@@ -324,7 +647,7 @@
       "tooltip": "Auto Fit One Page",
       "enabled": "Naka-enable ang one page mode",
       "disabled": "Naka-disable ang one page mode",
-      "cannotFit": "Masyadong maraming content. Na-optimize hangga't maaari ngunit hindi magkasya sa isang pahina. Subukang gawing simple ang content o i-adjust ang margins at font size sa sidebar."
+      "cannotFit": "Nabawasan na sa 90% ngunit lampas pa rin sa isang pahina ang content — mananatiling maraming pahina ang PDF. Maaari mong gawing mas maikli ang content, o i-adjust ang font size, spacing, at margins."
     },
     "backup": {
       "configured": "Na-back up",
@@ -344,7 +667,8 @@
           "projects": "Mga Proyekto",
           "education": "Edukasyon",
           "selfEvaluation": "Sariling Pagsusuri",
-          "certificates": "Mga Sertipiko"
+          "certificates": "Mga Sertipiko",
+          "publications": "Mga Publikasyon"
         }
       },
       "theme": {
@@ -399,6 +723,10 @@
         },
         "flexibleHeaderLayout": {
           "title": "Mahabang Pamagat"
+        },
+        "dateFormat": {
+          "title": "Format ng Petsa",
+          "shortMonth": "Hun 2024 (MMM YYYY)"
         }
       }
     },
@@ -430,7 +758,10 @@
         "show": "Ipakita",
         "hide": "Itago"
       },
-      "githubContributions": "GitHub Contributions"
+      "githubContributions": "GitHub Contributions",
+      "layoutLeft": "Kaliwa",
+      "layoutCenter": "Gitna",
+      "layoutRight": "Kanan"
     },
     "experiencePanel": {
       "title": "Karanasan sa Trabaho",
@@ -479,14 +810,16 @@
         "name": "Personal na Proyekto",
         "description": "Paglalarawan ng Proyekto",
         "role": "Mga Responsibilidad",
-        "date": "2023.01 - 2023.06"
+        "date": "2023.01 - 2023.06",
+        "technologies": "Tech stack"
       },
       "placeholders": {
         "name": "Pangalan ng Proyekto",
         "description": "Maikling ilarawan ang background at layunin ng proyekto",
         "role": "Ang iyong role at responsibilidad sa proyekto",
         "date": "Saklaw ng oras ng proyekto",
-        "link": "Link ng proyekto "
+        "link": "Link ng proyekto ",
+        "technologies": "Mga teknolohiya at tool na ginamit"
       }
     },
     "projectItem": {
@@ -577,6 +910,108 @@
       "width": "Lapad (%)",
       "delete": "Tanggalin",
       "empty": "Wala pang larawan. Mag-upload o mag-paste ng mga larawan."
+    },
+    "publicationsPanel": {
+      "intro": "Itampok ang mga papel at pananaliksik na may kaugnayan sa iyong aplikasyon. Ang mga walang laman na field ay hindi lalabas sa iyong resume.",
+      "emptyTitle": "Bigyan ng puwang ang iyong pananaliksik",
+      "emptyDescription": "Magdagdag ng journal articles, conference papers, o preprints kasama ang mga awtor, detalye ng publikasyon, at mga link.",
+      "addFirst": "Idagdag ang iyong unang publikasyon",
+      "add": "Magdagdag ng publikasyon",
+      "untitled": "Walang pamagat na publikasyon",
+      "itemHint": "Maglagay ng pamagat at mga detalye ng publikasyon",
+      "hide": "Itago ang publikasyon",
+      "show": "Ipakita ang publikasyon",
+      "delete": "Tanggalin ang publikasyon",
+      "expand": "Palawakin ang publikasyon",
+      "collapse": "Itiklop ang publikasyon",
+      "reorder": "I-drag para ayusin ang pagkakasunod-sunod",
+      "moveUp": "Ilipat pataas",
+      "moveDown": "Ilipat pababa",
+      "authorsHint": "Ilista ang mga awtor sa pagkakasunod-sunod, na pinaghihiwalay ng semicolon, kuwit, o bagong linya. Maglagay ng * pagkatapos ng pangalan ng pantay na mga contributor.",
+      "selectSelf": "Piliin ang sarili",
+      "selectSelfHint": "I-click ang iyong pangalan sa ibaba para i-bold ito sa iyong resume",
+      "clearHighlight": "Alisin ang highlight",
+      "selfBadge": "Ikaw",
+      "invalidLink": "Maglagay ng wastong web address o DOI, gaya ng https://arxiv.org/abs/… o 10.1234/…",
+      "labels": {
+        "title": "Pamagat ng publikasyon",
+        "authors": "Mga awtor",
+        "highlightedAuthor": "Awtor na iha-highlight",
+        "venue": "Journal / conference",
+        "date": "Petsa ng publikasyon",
+        "status": "Estado ng publikasyon",
+        "link": "Link / DOI ng publikasyon",
+        "description": "Mga karagdagang detalye (opsyonal)"
+      },
+      "placeholders": {
+        "title": "hal. Multimodal Representation Learning in Low-Resource Settings",
+        "authors": "hal. Alex Lin*; Jamie Wang*; Ming Chen",
+        "highlightedAuthor": "hal. Alex Lin",
+        "venue": "hal. NeurIPS 2025 / IEEE TPAMI",
+        "link": "https://… o 10.xxxx/…",
+        "description": "hal. * Pantay na kontribusyon. Dinisenyo ang model at pinangunahan ang eksperimental na pagsusuri."
+      },
+      "statuses": {
+        "none": "Hindi ipinapakita",
+        "published": "Nailathala",
+        "accepted": "Tinanggap",
+        "preprint": "Preprint",
+        "submitted": "Isinumite"
+      }
+    },
+    "logoUploader": {
+      "label": "Logo",
+      "uploadFile": "Mag-upload ng imahe",
+      "applyUrl": "Gamitin ang image URL",
+      "loading": "Niloload ang imahe…",
+      "hide": "Itago ang logo",
+      "show": "Ipakita ang logo",
+      "remove": "Alisin ang logo",
+      "drawerTitle": "Logo Settings",
+      "dragHint": "I-drag at i-drop ang imahe dito para i-upload",
+      "sizeLimit": "Hindi dapat lumampas sa 2MB ang imahe",
+      "uploadTitle": "Image URL",
+      "urlPlaceholder": "Ilagay ang image URL",
+      "invalidUrl": "Hindi wasto o hindi ma-access ang image URL",
+      "typeLimit": "Mga image file lamang ang suportado",
+      "uploadError": "Nabigo ang pag-upload ng imahe",
+      "close": "Isara",
+      "config": {
+        "size": "Laki",
+        "widthPlaceholder": "Lapad",
+        "heightPlaceholder": "Taas",
+        "aspectRatio": "Aspect Ratio",
+        "ratios": {
+          "custom": "Custom"
+        },
+        "borderRadius": "Border Radius",
+        "borderRadiusOptions": {
+          "none": "Wala",
+          "medium": "Katamtaman",
+          "full": "Bilog",
+          "custom": "Custom",
+          "customPlaceholder": "Ilagay ang border radius"
+        }
+      },
+      "schoolSearch": {
+        "open": "Maghanap ng logo ng paaralan",
+        "title": "Maghanap ng paaralan",
+        "placeholder": "Pangalan ng paaralan sa Chinese o English",
+        "hint": "Ang mga logo ay mula sa University Logos. Pumili ng logo para gamitin ito, o mag-upload ng sarili mo.",
+        "results": "Mga resulta ng logo ng paaralan",
+        "select": "Gamitin ang logo ng {name}",
+        "source": "Source",
+        "sourceFor": "Tingnan ang logo source ng {name}",
+        "empty": "Walang tugmang paaralan. Subukan ang buong pangalan o mag-upload ng logo.",
+        "loading": "Naghahanap ng paaralan…",
+        "enterName": "Maglagay ng hindi bababa sa 2 character para maghanap.",
+        "error": "Pansamantalang hindi available ang paghahanap ng paaralan. Subukan muli o mag-upload ng logo.",
+        "retry": "Subukan muli ang paghahanap",
+        "pagination": "Mga pahina ng paghahanap ng paaralan",
+        "previous": "Nakaraan",
+        "next": "Susunod",
+        "page": "Pahina {page}"
+      }
     }
   },
   "field": {
@@ -624,7 +1059,12 @@
       "purple": "Purple",
       "magenta": "Magenta",
       "pink": "Pink"
-    }
+    },
+    "fontSize": "Laki ng font ng katawan",
+    "fontSizeDefault": "Default",
+    "fontSizeMixed": "Mixed",
+    "fontSizeReset": "I-reset sa default",
+    "fontSizeSelectText": "Pumili muna ng body text"
   },
   "iconSelector": {
     "all": "Lahat",

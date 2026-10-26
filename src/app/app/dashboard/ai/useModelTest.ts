@@ -1,3 +1,4 @@
+import { fetchAIClient } from "@/lib/ai-client";
 import { useEffect, useRef, useState } from "react";
 import { toAIConnection, type AIModelProfile } from "@/config/ai-models";
 import { combineAbortSignals } from "@/lib/abort-signal";
@@ -32,7 +33,7 @@ export function useModelTest(profile: AIModelProfile) {
     setState({ status: "running" });
     try {
       const connection = toAIConnection(profile);
-      const response = await fetch("/api/ai-test", {
+      const response = await fetchAIClient(profile, "/api/ai-test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ connection }),
@@ -43,7 +44,7 @@ export function useModelTest(profile: AIModelProfile) {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.ok)
-        throw new ResumeImportError(data?.code || "upstreamError");
+        throw new ResumeImportError(data?.code || "upstreamError", response.status, data?.upstream);
       if (revision.current === currentRevision)
         setState({ status: "success" });
     } catch (error) {

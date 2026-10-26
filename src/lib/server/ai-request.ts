@@ -1,7 +1,7 @@
 import { MAX_PDF_REQUEST_BYTES } from "../../config/pdf-import";
 import { ResumeImportError } from "../resume-import-schema";
 
-export async function readLimitedJson(request: Request) {
+export async function readLimitedJson(request: Request, maxBytes = MAX_PDF_REQUEST_BYTES) {
   if (!request.body) throw new ResumeImportError("invalidRequest");
   const reader = request.body.getReader();
   const decoder = new TextDecoder();
@@ -12,7 +12,7 @@ export async function readLimitedJson(request: Request) {
       const { value, done } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > MAX_PDF_REQUEST_BYTES) {
+      if (size > maxBytes) {
         await reader.cancel();
         throw new ResumeImportError("requestTooLarge", 413);
       }

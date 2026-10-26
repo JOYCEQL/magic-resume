@@ -129,9 +129,13 @@ test("PDF capability follows known model families without a manual setting", () 
   assert.equal(modelSupportsPdf("gemini", "gemini-2.5-flash"), true);
 });
 
-test("every provider exposes built-in models that share one provider key", () => {
+test("static providers expose built-in models while OrcaRouter requires live discovery", () => {
   for (const provider of AI_PROVIDERS) {
     const catalog = BUILTIN_AI_MODELS[provider];
+    if (provider === "orcarouter") {
+      assert.deepEqual(catalog, []);
+      continue;
+    }
     assert.ok(catalog.length > 0);
     assert.equal(new Set(catalog.map((item) => item.id)).size, catalog.length);
     assert.ok(catalog.some((item) => item.supportsPdf));

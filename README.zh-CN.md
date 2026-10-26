@@ -65,6 +65,16 @@ pnpm dev
 
 4. 打开浏览器访问 `http://localhost:3000`
 
+### OrcaRouter（可选 AI 服务商）
+
+在「AI 服务商」中选择 OrcaRouter，通过 [Magic Resume 专属推荐链接](https://www.orcarouter.ai/ref/ref_54dd337f5d343624a551) 注册，随后使用 OrcaRouter 登录授权或填写自己的 API Key。获取模型列表后，选择模型并检测连接。
+
+该链接属于合作推荐链接，通过它注册并产生符合合作规则的消费，Magic Resume 可能获得分成。你可以自由选择其他服务商。OAuth 登录也携带同一个推荐码，用于授权流程中的新用户注册归因。
+
+应用用量归因与注册推荐归因是两项配置。部署者需从合作后台 Integration 页取得真实 `app_id`，在构建时设置 `VITE_ORCA_APP_ID`，并登记与部署地址一致的回调 URL，例如 `https://magicv.art/auth/orcarouter/callback`。本地调试使用 `http://localhost:3000/auth/orcarouter/callback`。未配置 `app_id` 时不会声明已启用应用用量归因；不要将 API Key 填入此变量。详见 [OrcaRouter 合作应用文档](https://docs.orcarouter.ai/getting-started/sign-in-with-orcarouter#verified-apps-partners)。
+
+配置位置：本地开发在 `.env.local` 中设置 `VITE_ORCA_APP_ID` 后重启开发服务；GitHub Actions 在仓库 **Settings → Secrets and variables → Actions → Variables** 中设置同名变量，Cloudflare 和 Docker 发布流程都会在构建时读取。Docker Compose 会从 shell 或 `.env` 读取同名构建参数；直接构建可使用 `docker build --build-arg VITE_ORCA_APP_ID="$VITE_ORCA_APP_ID" -t magic-resume .`。该值需要写入前端产物，仅给运行中的容器增加环境变量不会生效。未拿到真实值时保持未配置。
+
 ## 📦 构建打包
 
 ```bash

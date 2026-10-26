@@ -10,6 +10,41 @@ function payload(protocol: AIProtocol, text: string) {
   if (protocol === "responses") return { status: "completed", output: [{ type: "message", content: [{ type: "output_text", text }] }] };
   return { choices: [{ finish_reason: "stop", message: { content: text } }] };
 }
+
+test("OrcaRouter connection tests expose the upstream error with credentials redacted", async () => {
+  const connection = { ...createModelProfile("orcarouter", "test"), apiKey: "private-test-key", model: "fixture/chat" };
+  let calls = 0;
+  const response = await handleTextRequest(new Request("http://localhost/api/ai-test", {
+    method: "POST", body: JSON.stringify({ connection }),
+  }), "test", async () => {
+    calls++;
+    return Response.json({ error: {
+      code: "insufficient_user_quota", message: `Insufficient credits for ${connection.apiKey}`,
+    } }, { status: 402, headers: { "x-request-id": "fixture-request" } });
+  });
+  assert.equal(response.status, 402);
+  assert.equal(calls, 1);
+  const body = await response.json();
+  assert.deepEqual(body.upstream, {
+    status: 402, code: "insufficient_user_quota",
+    message: "Insufficient credits for [REDACTED]", requestId: "fixture-request",
+  });
+  assert.equal(body.error.message, "HTTP 402 · insufficient_user_quota · Insufficient credits for [REDACTED] · Request ID: fixture-request");
+  assert.equal(JSON.stringify(body).includes(connection.apiKey), false);
+});
+
+test("upstream error disclosure is limited to OrcaRouter connection tests", async () => {
+  for (const [provider, task] of [["openai", "test"], ["orcarouter", "grammar"]] as const) {
+    const connection = { ...createModelProfile(provider, "test"), apiKey: "private-key", model: "fixture/chat" };
+    const response = await handleTextRequest(new Request("http://localhost/api", {
+      method: "POST", body: JSON.stringify({ connection, content: "resume content" }),
+    }), task, async () => Response.json({ error: { message: "private upstream body" } }, { status: 402 }));
+    assert.deepEqual(await response.json(), {
+      code: "upstreamError", error: { code: "upstreamError", message: "AI request failed (upstreamError)" },
+    });
+  }
+});
+
 for (const provider of AI_PROVIDERS) {
   test(`${provider}: same model configuration supports text testing and grammar`, async () => {
     const connection = { ...createModelProfile(provider, "test"), apiKey: "test-key", model: "test-model" };

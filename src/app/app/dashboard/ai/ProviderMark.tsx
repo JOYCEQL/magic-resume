@@ -6,6 +6,7 @@ import openaiIcon from "@lobehub/icons-static-svg/icons/openai.svg?url";
 import qwenIcon from "@lobehub/icons-static-svg/icons/qwen-color.svg?url";
 import { cn } from "@/lib/utils";
 import type { AIProvider } from "@/config/ai-models";
+import OrcaRouterLogo from "@/components/ai/icon/IconOrcaRouter";
 
 interface Props {
   provider: AIProvider;
@@ -17,8 +18,9 @@ interface Props {
 const PROVIDER_THEMES: Record<
   AIProvider,
   {
-    icon: string;
+    icon?: string;
     monochrome?: boolean;
+    vector?: boolean;
   }
 > = {
   openai: {
@@ -39,6 +41,10 @@ const PROVIDER_THEMES: Record<
   },
   anthropic: {
     icon: anthropicIcon,
+    monochrome: true,
+  },
+  orcarouter: {
+    vector: true,
     monochrome: true,
   },
 };
@@ -75,15 +81,25 @@ export function ProviderMark({
         className,
       )}
     >
-      <img
-        src={theme.icon}
-        alt=""
-        className={cn(
-          "object-contain",
-          iconSizeClass,
-          theme.monochrome && "dark:invert",
-        )}
-      />
+      {theme.vector ? (
+        <OrcaRouterLogo
+          size={{ xs: 12, sm: 14, md: 16, lg: 20 }[resolvedSize]}
+          className={cn(
+            "object-contain",
+            theme.monochrome && "text-foreground",
+          )}
+        />
+      ) : (
+        <img
+          src={theme.icon}
+          alt=""
+          className={cn(
+            "object-contain",
+            iconSizeClass,
+            theme.monochrome && "dark:invert",
+          )}
+        />
+      )}
     </span>
   );
 }

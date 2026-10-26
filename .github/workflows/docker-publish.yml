@@ -43,6 +43,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          build-args: |
+            VITE_ORCA_APP_ID=${{ vars.VITE_ORCA_APP_ID }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

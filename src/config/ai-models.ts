@@ -1,3 +1,5 @@
+import { ORCA_REFERRAL_URL } from "./orcarouter";
+
 export const AI_PROVIDERS = [
   "openai",
   "gemini",
@@ -5,6 +7,7 @@ export const AI_PROVIDERS = [
   "anthropic",
   "qwen",
   "doubao",
+  "orcarouter",
 ] as const;
 export type AIProvider = (typeof AI_PROVIDERS)[number];
 export type AIProtocol =
@@ -12,6 +15,14 @@ export type AIProtocol =
   | "responses"
   | "gemini"
   | "anthropic";
+
+/**
+ * Providers accepting more than a pasted API key carry the credential source
+ * on the model profile instead of inventing a second provider entry: the
+ * repository shares one credential per provider.
+ */
+export type AIAuthMethod = "api-key" | "oauth";
+export const AI_AUTH_METHODS = ["api-key", "oauth"] as const;
 
 export interface AIConnection {
   provider: AIProvider;
@@ -25,6 +36,12 @@ export interface AIModelProfile extends AIConnection {
   id: string;
   name: string;
   supportsPdf: boolean;
+  /** Only meaningful for providers listed in AUTH_METHOD_PROVIDERS. */
+  authMethod?: AIAuthMethod;
+  /** Monotonic credential generation; protects reauthentication from stale failures. */
+  generation?: number;
+  /** Set when OrcaRouter refused this exact credential generation. */
+  needsReauth?: boolean;
 }
 
 export interface AISettingsData {
@@ -50,6 +67,8 @@ interface ProviderDefinition {
   defaultModel: string;
   pdfModel: string;
   keyUrl: string;
+  /** Providers offering a sign-in flow next to the pasted API key. */
+  authMethods?: readonly AIAuthMethod[];
 }
 
 export const AI_PROVIDER_DEFINITIONS: Record<AIProvider, ProviderDefinition> = {
@@ -106,6 +125,16 @@ export const AI_PROVIDER_DEFINITIONS: Record<AIProvider, ProviderDefinition> = {
     defaultModel: "",
     pdfModel: "",
     keyUrl: "https://console.anthropic.com/settings/keys",
+  },
+  orcarouter: {
+    name: "OrcaRouter",
+    baseUrl: "https://api.orcarouter.ai/v1",
+    protocol: "chat-completions",
+    protocols: ["chat-completions"],
+    defaultModel: "",
+    pdfModel: "",
+    keyUrl: ORCA_REFERRAL_URL,
+    authMethods: ["api-key", "oauth"],
   },
 };
 
@@ -234,6 +263,7 @@ export const BUILTIN_AI_MODELS: Record<AIProvider, readonly BuiltinAIModel[]> =
         supportsPdf: true,
       },
     ],
+    orcarouter: [],
   };
 
 export const builtinModelId = (provider: AIProvider, model: string) =>
@@ -270,6 +300,8 @@ export function modelSupportsPdf(provider: AIProvider, model: string): boolean {
   ) {
     return true;
   }
+  // OrcaRouter capabilities come from its catalog metadata only.
+  if (provider === "orcarouter") return false;
   if (provider === "gemini") return !id.includes("embedding");
   if (provider === "anthropic") {
     return /claude-(?:3|4|sonnet-4|opus-4|haiku-4)/.test(id);
@@ -288,7 +320,9 @@ export function modelSupportsPdf(provider: AIProvider, model: string): boolean {
 }
 
 export function canModelParsePdf(model: AIModelProfile): boolean {
-  return modelSupportsPdf(model.provider, model.model);
+  return model.provider === "orcarouter"
+    ? model.supportsPdf === true
+    : modelSupportsPdf(model.provider, model.model);
 }
 
 export function createModelProfile(
@@ -343,9 +377,8 @@ export function getTaskModel(
 ): AIModelProfile | null {
   const id = task === "text" ? state.textModelId : state.pdfModelId;
   const profile = state.models.find((item) => item.id === id);
-  return profile && (task !== "pdf" || canModelParsePdf(profile))
-    ? profile
-    : null;
+  if (!profile || profile.needsReauth) return null;
+  return task !== "pdf" || canModelParsePdf(profile) ? profile : null;
 }
 
 export function toAIConnection(profile: AIConnection): AIConnection {
@@ -362,3 +395,27 @@ export const modelDisplayName = (model: AIModelProfile) =>
   model.name.trim() ||
   model.model ||
   AI_PROVIDER_DEFINITIONS[model.provider].name;
+
+export const providerAuthMethods = (
+  provider: AIProvider,
+): readonly AIAuthMethod[] =>
+  AI_PROVIDER_DEFINITIONS[provider].authMethods ?? ["api-key"];
+
+export const supportsAuthMethod = (
+  provider: AIProvider,
+  method: AIAuthMethod,
+) => providerAuthMethods(provider).includes(method);
+
+/** Both OrcaRouter entries share one credential and one inference adapter. */
+export const profileAuthMethod = (
+  profile: Pick<AIModelProfile, "provider" | "authMethod">,
+): AIAuthMethod => {
+  const method = profile.authMethod ?? "api-key";
+  return supportsAuthMethod(profile.provider, method) ? method : "api-key";
+};
+
+/** Any separately displayed entry of the same provider owns the same credential. */
+export const sharesCredential = (
+  a: Pick<AIModelProfile, "provider">,
+  b: Pick<AIModelProfile, "provider">,
+) => a.provider === b.provider;

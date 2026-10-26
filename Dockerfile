@@ -11,6 +11,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM deps AS builder
+ARG VITE_ORCA_APP_ID
+ENV VITE_ORCA_APP_ID=$VITE_ORCA_APP_ID
 COPY . .
 RUN pnpm run build && pnpm prune --prod
 

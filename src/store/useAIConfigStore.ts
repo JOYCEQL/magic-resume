@@ -6,9 +6,12 @@ import {
 } from "zustand/middleware";
 import {
   canModelParsePdf,
+  createModelProfile,
+  type AIAuthMethod,
   getTaskModel,
   isModelConfigured,
   modelSupportsPdf,
+  profileAuthMethod,
   type AIModelProfile,
   type AISettingsData,
 } from "@/config/ai-models";
@@ -16,8 +19,10 @@ import { migrateAISettings } from "./ai-config-migration";
 
 interface AIConfigState extends AISettingsData {
   saveModel: (profile: AIModelProfile) => void;
+  saveOrcaCredential: (apiKey: string, method: AIAuthMethod) => void;
   deleteModel: (id: string) => void;
   assignModel: (task: "text" | "pdf", id: string | null) => void;
+  markNeedsReauth: (provider: AIModelProfile["provider"], generation: number) => void;
   isConfigured: () => boolean;
 }
 
@@ -30,10 +35,25 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
         pdfModelId: null,
         saveModel: (profile) =>
           set((state) => {
-            const normalized = {
+            const previous = state.models.find(
+              (model) => model.id === profile.id,
+            );
+            const replacedCredential =
+              !!previous && previous.apiKey.trim() !== profile.apiKey.trim();
+            const normalized: AIModelProfile = {
               ...profile,
               name: profile.name.trim(),
-              supportsPdf: modelSupportsPdf(profile.provider, profile.model),
+              authMethod: profileAuthMethod(profile),
+              supportsPdf: profile.provider === "orcarouter"
+                ? profile.supportsPdf === true
+                : modelSupportsPdf(profile.provider, profile.model),
+              generation: replacedCredential
+                ? (previous?.generation ?? 0) + 1
+                : (profile.generation ?? previous?.generation ?? 0),
+              // A freshly stored credential is usable until it is rejected.
+              needsReauth: replacedCredential
+                ? false
+                : (profile.needsReauth ?? previous?.needsReauth ?? false),
             };
             const exists = state.models.some(
               (model) => model.id === profile.id,
@@ -50,6 +70,22 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
                   : state.pdfModelId,
             };
           }),
+        saveOrcaCredential: (apiKey, authMethod) =>
+          set((state) => {
+            const profiles = state.models.filter((model) => model.provider === "orcarouter");
+            const key = apiKey.trim();
+            const changed = profiles.some((model) => model.apiKey.trim() !== key);
+            const generation = Math.max(0, ...profiles.map((model) => model.generation ?? 0)) + (changed ? 1 : 0);
+            const update = (model: AIModelProfile): AIModelProfile => ({
+              ...model, apiKey: key, authMethod, generation,
+              needsReauth: changed ? false : model.needsReauth,
+            });
+            return {
+              models: profiles.length
+                ? state.models.map((model) => model.provider === "orcarouter" ? update(model) : model)
+                : [...state.models, update(createModelProfile("orcarouter", "credential:orcarouter"))],
+            };
+          }),
         deleteModel: (id) =>
           set((state) => ({
             models: state.models.filter((model) => model.id !== id),
@@ -63,12 +99,30 @@ export const createAIConfigStore = (storage?: PersistStorage<AISettingsData>) =>
               id !== null &&
               (!profile ||
                 !isModelConfigured(profile) ||
+                profile.needsReauth ||
                 (task === "pdf" && !canModelParsePdf(profile)))
             )
               return state;
             return task === "pdf" ? { pdfModelId: id } : { textModelId: id };
           }),
-        isConfigured: () => isModelConfigured(getTaskModel(get(), "text")),
+        /**
+         * Terminal reauthentication. Only the exact account generation that
+         * made the rejected request is marked, so a late failure can never
+         * poison a credential the user just replaced.
+         */
+        markNeedsReauth: (provider, generation) =>
+          set((state) => ({
+            models: state.models.map((model) =>
+              model.provider === provider &&
+              (model.generation ?? 0) === generation
+                ? { ...model, needsReauth: true }
+                : model,
+            ),
+          })),
+        isConfigured: () => {
+          const task = getTaskModel(get(), "text");
+          return !!task && !task.needsReauth && isModelConfigured(task);
+        },
       }),
       {
         name: "ai-config-storage",

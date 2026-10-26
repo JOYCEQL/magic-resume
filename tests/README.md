@@ -9,6 +9,48 @@ pnpm test:ai
 This includes the numeric-content import regression tests in
 `resume-import-content.test.ts` and the existing AI/import tests.
 
+## OrcaRouter provider
+
+`tests/orcarouter-auth.test.ts` and `tests/orcarouter-catalog.test.ts` are part of
+`pnpm test:ai` and run with fake credentials only: they cover the API-key and PKCE
+credential adapters, the authorize/exchange contract, catalog parsing and the
+per-capability model filters.
+
+`tests/ai-client.test.ts` verifies the shared 401 reauthentication boundary,
+including cancellation and late responses after a credential change. Credit,
+permission and service failures do not invalidate a credential.
+
+The sign-in flow follows the [official PKCE documentation](https://docs.orcarouter.ai/getting-started/sign-in-with-orcarouter).
+It navigates in the current tab and returns to `/auth/orcarouter/callback` on the
+same origin. The verifier and state live only in that tab's session storage and
+are consumed once, with a ten-minute limit. Hosted callbacks require HTTPS;
+HTTP is accepted only for loopback development. No out-of-band code entry is used.
+The browser exchanges through `/api/orcarouter/exchange`; only the server contacts
+the configured OrcaRouter auth origin. The upstream POST response lacks CORS
+headers, so a browser-direct exchange cannot read it even when preflight succeeds.
+The server accepts bounded JSON, rejects cross-site requests, disables caching and
+redirects, and never accepts an upstream URL from the request. Server deployments
+with a custom auth origin must set `ORCA_AUTH_BASE_URL` to match the browser's
+`VITE_ORCA_AUTH_BASE_URL`.
+`orcarouter-exchange.test.ts` covers this server boundary with fake credentials.
+
+`tests/orcarouter-live.test.ts` is part of the same command but skips itself unless
+`ORCAROUTER_API_KEY` is set, and then talks to `https://api.orcarouter.ai/v1`. It
+checks that the live catalog is namespaced, that the multimodal filter is a strict
+subset of the text list, that a request through the server's own OrcaRouter path
+succeeds, and that a rejected key is reported as an authentication error. Live
+counts are printed by the suite itself rather than asserted, so the catalog can
+grow without breaking the tests.
+
+With a local production server running, use `pnpm test:orca-browser` to check
+real callback URL/state/PKCE contracts, first-time OAuth credential storage, text-only discovery, model selection,
+PDF capability persistence, reloads, failed/empty catalogs, upstream error display,
+and reauthentication after connection or catalog rejection in Chromium and WebKit.
+Replacing the key restores task assignments. Missing or mismatched state, denied/expired grants and replayed callbacks
+are rejected before any exchange. Install the browsers with `pnpm exec playwright install chromium webkit`.
+Set `TEST_BASE_URL` to target another local port. The suite uses isolated browser
+storage and intercepted API responses; it does not authorize a real account.
+
 ## Mobile workbench regression
 
 With a production server running (`pnpm build && pnpm start`), install both

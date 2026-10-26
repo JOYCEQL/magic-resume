@@ -1,3 +1,4 @@
+import { fetchAIClient } from "@/lib/ai-client";
 import { create } from "zustand";
 import { toast } from "sonner";
 import Mark from "mark.js";
@@ -99,7 +100,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     set({ isChecking: true });
 
     try {
-      const response = await fetch("/api/grammar", {
+      const response = await fetchAIClient(model, "/api/grammar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

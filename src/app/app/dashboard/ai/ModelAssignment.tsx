@@ -40,12 +40,14 @@ export function ModelAssignment({
         const options = models.filter(
           (model) =>
             isModelConfigured(model) &&
+            !model.needsReauth &&
             (task === "text" || canModelParsePdf(model)),
         );
         const selectedId = task === "text" ? textModelId : pdfModelId;
         const selectedModel = models.find((m) => m.id === selectedId);
         const Icon = task === "text" ? PenLine : FileScan;
-        const isAssigned = !!selectedId;
+        const needsReauth = selectedModel?.needsReauth === true;
+        const isAssigned = !!selectedId && !needsReauth;
 
         return (
           <article
@@ -78,7 +80,11 @@ export function ModelAssignment({
               </div>
 
               {/* Right Header Status Badge */}
-              {isAssigned ? (
+              {needsReauth ? (
+                <span className="rounded-full border border-destructive/30 bg-destructive/5 px-2.5 py-1 text-[11px] text-destructive">
+                  {t("orca.reauthRequired")}
+                </span>
+              ) : isAssigned ? (
                 <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   {t("active")}

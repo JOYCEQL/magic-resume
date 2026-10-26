@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VITE_ORCA_APP_ID: ${VITE_ORCA_APP_ID}
     ports:
       - "3000:3000"
     environment:

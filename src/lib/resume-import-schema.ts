@@ -1,7 +1,9 @@
 import type { BasicInfo, Education, Experience, Project, Publication } from "@/types/resume";
 
+import type { UpstreamErrorDetails } from "./upstream-error";
+
 export class ResumeImportError extends Error {
-  constructor(public code: string, public status = 400) {
+  constructor(public code: string, public status = 400, public upstream?: UpstreamErrorDetails) {
     super(code);
   }
 }

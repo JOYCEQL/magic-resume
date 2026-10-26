@@ -1,3 +1,4 @@
+import { fetchAIClient } from "@/lib/ai-client";
 import { MAX_PDF_REQUEST_BYTES, PDF_IMPORT_TIMEOUT_MS, type PdfImportConnection } from "@/config/pdf-import";
 import { combineAbortSignals } from "@/lib/abort-signal";
 import { ResumeImportError } from "@/lib/resume-import-schema";
@@ -16,7 +17,7 @@ async function requestResumeImport(connection: PdfImportConnection, payload: obj
   const body = JSON.stringify({ ...connection, ...payload });
   if (new Blob([body]).size > MAX_PDF_REQUEST_BYTES) throw new ResumeImportError("requestTooLarge");
   try {
-    const response = await fetch("/api/resume-import", {
+    const response = await fetchAIClient(connection, "/api/resume-import", {
       method: "POST", headers: { "Content-Type": "application/json" }, body,
       signal: combineAbortSignals([
         AbortSignal.timeout(PDF_IMPORT_TIMEOUT_MS + 10_000),

@@ -65,6 +65,16 @@ pnpm dev
 
 4. Open browser and visit `http://localhost:3000`
 
+### OrcaRouter (optional AI provider)
+
+Select OrcaRouter in AI Providers, register through the [Magic Resume referral link](https://www.orcarouter.ai/ref/ref_54dd337f5d343624a551), then sign in with OrcaRouter or enter your own API key. Fetch the model list, select a model, and test the connection.
+
+This is a partner referral link. Magic Resume may earn a commission on eligible usage by referred sign-ups. Other providers remain available. OAuth sign-in also carries the same referral code for new sign-ups during authorization.
+
+App usage attribution is separate from sign-up referral attribution. Obtain the real `app_id` from the partner console's Integration page, set `VITE_ORCA_APP_ID` at build time, and register the exact deployment callback URL, such as `https://magicv.art/auth/orcarouter/callback`. Local development uses `http://localhost:3000/auth/orcarouter/callback`. Without an `app_id`, app usage attribution is not configured. This variable is a public application identifier, never an API key. See the [OrcaRouter partner app documentation](https://docs.orcarouter.ai/getting-started/sign-in-with-orcarouter#verified-apps-partners).
+
+For local development, set `VITE_ORCA_APP_ID` in `.env.local` and restart the dev server. For GitHub Actions, add the repository variable under **Settings → Secrets and variables → Actions → Variables**; both Cloudflare and Docker publishing pass it at build time. Docker Compose reads the build argument from the shell or `.env`. For a direct build, use `docker build --build-arg VITE_ORCA_APP_ID="$VITE_ORCA_APP_ID" -t magic-resume .`. This identifier is embedded in the frontend build; setting it only on a running container has no effect. Leave it unset until the real value is available.
+
 ## 📦 Build and Deploy
 
 ```bash

@@ -1,3 +1,4 @@
+import { useSearch } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   Check,
@@ -38,12 +39,24 @@ import {
   type AIProvider,
   type BuiltinAIModel,
 } from "@/config/ai-models";
+import { useOrcaModels } from "@/hooks/useOrcaModels";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import { ResumeImportError } from "@/lib/resume-import-schema";
+import { upstreamErrorMessage } from "@/lib/upstream-error";
 import { ModelAssignment } from "./ModelAssignment";
+import { OrcaAuthPanel } from "./OrcaAuthPanel";
+import { OrcaModelSelector } from "./OrcaModelSelector";
 import { ProviderMark } from "./ProviderMark";
 import { useModelTest } from "./useModelTest";
+
+interface FetchedModel {
+  id: string;
+  name?: string;
+  description?: string;
+  contextLength?: number;
+  supportsImages?: boolean;
+}
 
 interface ModelCardProps {
   model: BuiltinAIModel;
@@ -64,13 +77,16 @@ function ModelCard({
   const tError = useTranslations("dashboard.settings.ai.workspace.connectionErrors");
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const test = useModelTest(profile);
-  const assignedToText = profile.id === textModelId;
-  const assignedToPdf = profile.id === pdfModelId;
+  const assignedToText = profile.id === textModelId && !profile.needsReauth;
+  const assignedToPdf = profile.id === pdfModelId && !profile.needsReauth;
 
   const message = (() => {
     if (test.state.status === "idle") return null;
     if (test.state.status === "running") return t("detecting");
     if (test.state.status === "success") return t("connectionSuccess");
+    if (test.state.error instanceof ResumeImportError && test.state.error.upstream) {
+      return upstreamErrorMessage(test.state.error.upstream);
+    }
     return test.state.error instanceof ResumeImportError
       ? tError(test.state.error.code as never)
       : t("connectionFailed");
@@ -195,6 +211,7 @@ function ModelCard({
 }
 
 export default function AISettingsPage() {
+  const { provider: requestedProvider } = useSearch({ from: "/app/dashboard/ai" });
   const t = useTranslations("dashboard.settings.ai.workspace");
   const models = useAIConfigStore((state) => state.models);
   const textModelId = useAIConfigStore((state) => state.textModelId);
@@ -205,13 +222,14 @@ export default function AISettingsPage() {
 
   const [showKey, setShowKey] = useState(false);
   const [provider, setProvider] = useState<AIProvider>(() => {
+    if (requestedProvider) return requestedProvider;
     const selected = models.find((model) => model.id === textModelId);
     return selected?.provider ?? models[0]?.provider ?? "deepseek";
   });
-  const [fetchedModels, setFetchedModels] = useState<
-    { id: string; description?: string }[]
-  >([]);
-  const [fetchingModels, setFetchingModels] = useState(false);
+  const [fetchedModels, setFetchedModels] = useState<FetchedModel[]>([]);
+  const [fetchingOtherModels, setFetchingOtherModels] = useState(false);
+  const orca = useOrcaModels(provider === "orcarouter");
+  const fetchingModels = provider === "orcarouter" ? orca.loading : fetchingOtherModels;
   const [modelListOpen, setModelListOpen] = useState(false);
   const modelFetchRevision = useRef(0);
   const modelFetchController = useRef<AbortController | null>(null);
@@ -273,6 +291,7 @@ export default function AISettingsPage() {
 
   useEffect(() => {
     for (const item of AI_PROVIDERS) {
+      if (item === "orcarouter") continue;
       const apiKey = getProviderKey(item);
       const baseUrl = getProviderBaseUrl(item);
       if (
@@ -294,7 +313,8 @@ export default function AISettingsPage() {
 
   const providerKey = getProviderKey(provider);
   const providerDefinition = AI_PROVIDER_DEFINITIONS[provider];
-  const providerBaseUrl = getProviderBaseUrl(provider);
+  const providerBaseUrl = provider === "orcarouter"
+    ? providerDefinition.baseUrl : getProviderBaseUrl(provider);
 
   useEffect(() => {
     modelFetchRevision.current += 1;
@@ -302,7 +322,7 @@ export default function AISettingsPage() {
     modelFetchController.current = null;
     setFetchedModels([]);
     setModelListOpen(false);
-    setFetchingModels(false);
+    setFetchingOtherModels(false);
 
     return () => {
       modelFetchRevision.current += 1;
@@ -322,13 +342,16 @@ export default function AISettingsPage() {
       baseUrl: providerBaseUrl,
     },
   }));
+
   const customProfiles = models.filter(
     (profile) =>
       profile.provider === provider &&
-      !BUILTIN_AI_MODELS[provider].some((model) => model.id === profile.model),
+      !BUILTIN_AI_MODELS[provider].some((model) => model.id === profile.model) &&
+      !!profile.model.trim(),
   );
 
   const fetchProviderModels = async () => {
+    if (provider === "orcarouter") return orca.refresh();
     if (!providerKey.trim()) {
       toast.error(t("fetchModels.noKey"));
       return;
@@ -341,7 +364,7 @@ export default function AISettingsPage() {
     modelFetchController.current?.abort();
     const controller = new AbortController();
     modelFetchController.current = controller;
-    setFetchingModels(true);
+    setFetchingOtherModels(true);
     setFetchedModels([]);
     setModelListOpen(false);
 
@@ -357,7 +380,7 @@ export default function AISettingsPage() {
         signal: controller.signal,
       });
       const data = (await response.json().catch(() => null)) as {
-        models?: { id: string; description?: string }[];
+        models?: FetchedModel[];
         code?: string;
       } | null;
       if (requestRevision !== modelFetchRevision.current) return;
@@ -383,7 +406,7 @@ export default function AISettingsPage() {
     } finally {
       if (requestRevision === modelFetchRevision.current) {
         modelFetchController.current = null;
-        setFetchingModels(false);
+        setFetchingOtherModels(false);
       }
     }
   };
@@ -539,34 +562,45 @@ export default function AISettingsPage() {
 
             {/* API Key Input Section */}
             <div className="mt-6 space-y-3">
-              <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
-                {t("apiKey")}
-              </Label>
-              <div className="relative flex items-center">
-                <Input
-                  id="provider-key"
-                  type={showKey ? "text" : "password"}
-                  autoComplete="off"
-                  value={providerKey}
-                  onChange={(event) =>
-                    syncProviderModels(provider, event.target.value)
-                  }
-                  placeholder={t("providerKeyPlaceholder")}
-                  className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
+              {provider === "orcarouter" ? (
+                <OrcaAuthPanel
+                  profile={orca.credential}
+                  onKeyChange={orca.setApiKey}
+                  onSelectMethod={orca.selectMethod}
+                  onClearKey={orca.clearCredential}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowKey(!showKey)}
-                  className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  aria-label={t(showKey ? "hideKey" : "showKey")}
-                >
-                  {showKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
+              ) : (
+                <>
+                  <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
+                    {t("apiKey")}
+                  </Label>
+                  <div className="relative flex items-center">
+                    <Input
+                      id="provider-key"
+                      type={showKey ? "text" : "password"}
+                      autoComplete="off"
+                      value={providerKey}
+                      onChange={(event) =>
+                        syncProviderModels(provider, event.target.value)
+                      }
+                      placeholder={t("providerKeyPlaceholder")}
+                      className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowKey(!showKey)}
+                      className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      aria-label={t(showKey ? "hideKey" : "showKey")}
+                    >
+                      {showKey ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
 
               <p className="text-xs text-muted-foreground">
                 {t("keySharedHint")}
@@ -610,24 +644,36 @@ export default function AISettingsPage() {
             </div>
 
             {/* Built-in Models Grid */}
-            <div className="mt-8">
+            <div className="mt-8" data-testid="orca-model-grid">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <h3 className="font-sans text-sm font-semibold tracking-tight text-foreground">
                     {t("availableModels")}
                   </h3>
-                  <span className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground">
+                  <span
+                    data-testid="orca-model-count"
+                    className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground"
+                  >
                     {t("modelCount", {
                       count: providerProfiles.length + customProfiles.length,
                     })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
+                  {provider === "orcarouter" && (
+                    <span
+                      data-testid="orca-catalog-source"
+                      className="rounded-md bg-secondary/60 px-2 py-0.5 text-[10px] text-muted-foreground"
+                    >
+                      {t(`orca.catalogStatus.${orca.status}`)}
+                    </span>
+                  )}
                   <span className="text-xs text-muted-foreground">
                     {t("builtinModelsHint")}
                   </span>
                   <button
                     type="button"
+                    data-testid="orca-refresh-models"
                     onClick={fetchProviderModels}
                     disabled={fetchingModels}
                     className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-foreground/75 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
@@ -642,7 +688,7 @@ export default function AISettingsPage() {
                 </div>
               </div>
 
-              {fetchedModels.length > 0 && (
+              {provider !== "orcarouter" && fetchedModels.length > 0 && (
                 <div className="mb-4 overflow-hidden rounded-xl border border-border/70 bg-background/60">
                   <button
                     type="button"
@@ -712,6 +758,19 @@ export default function AISettingsPage() {
                     </div>
                   )}
                 </div>
+              )}
+
+              {provider === "orcarouter" && orca.credential.apiKey.trim() && (
+                <OrcaModelSelector
+                  models={orca.options}
+                  status={orca.status}
+                  selectedId={orca.selectedId}
+                  onSelect={orca.selectModel}
+                  query={orca.query}
+                  onQueryChange={orca.setQuery}
+                  loading={fetchingModels}
+                  onRefresh={orca.refresh}
+                />
               )}
 
               <div className="grid gap-4 xl:grid-cols-2">

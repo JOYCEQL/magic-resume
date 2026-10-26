@@ -1,3 +1,4 @@
+import { fetchAIClient } from "@/lib/ai-client";
 import { useEffect, useState, useRef } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -117,7 +118,7 @@ export default function AIPolishDialog({
 
       abortControllerRef.current = new AbortController();
 
-      const response = await fetch("/api/polish", {
+      const response = await fetchAIClient(model, "/api/polish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

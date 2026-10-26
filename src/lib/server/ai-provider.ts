@@ -5,7 +5,12 @@ import {
   type AIConnection,
   type AIProtocol,
 } from "../../config/ai-models";
+import {
+  orcaEnvironmentFromProcess,
+  resolveOrcaOrigins,
+} from "../../config/orcarouter";
 import { ResumeImportError } from "../resume-import-schema";
+import { readUpstreamError } from "./upstream-error";
 
 export const asRecord = (value: unknown): Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value)
@@ -19,6 +24,7 @@ const PROXY_ELIGIBLE_PROVIDERS = new Set<AIConnection["provider"]>([
   "openai",
   "gemini",
   "anthropic",
+  "orcarouter",
 ]);
 
 type ProxyTransport = {
@@ -112,9 +118,12 @@ export function validateAIConnection(value: unknown): AIConnection {
   if (!protocol) throw new ResumeImportError("invalidProvider");
   const apiKey = textValue(body.apiKey).trim();
   const model = textValue(body.model).trim();
-  const baseUrl = textValue(body.baseUrl ?? preset.baseUrl)
-    .trim()
-    .replace(/\/+$/, "");
+  // OrcaRouter inference always follows its own origin (self-hosted
+  // deployments override it on the server, never per browser request).
+  const baseUrl =
+    provider === "orcarouter"
+      ? resolveOrcaOrigins(orcaEnvironmentFromProcess()).apiBase
+      : textValue(body.baseUrl ?? preset.baseUrl).trim().replace(/\/+$/, "");
   if (
     !apiKey ||
     !model ||
@@ -339,6 +348,7 @@ export async function fetchAI(
   input: AIGenerationInput,
   signal: AbortSignal,
   fetcher: typeof fetch = fetch,
+  includeUpstreamError = false,
 ) {
   const request = buildAIRequest(connection, input);
   const body = JSON.stringify(request.body);
@@ -401,6 +411,10 @@ export async function fetchAI(
         response.headers.get("x-goog-request-id") ??
         undefined,
     });
+    if (includeUpstreamError) {
+      const upstream = await readUpstreamError(response, [connection.apiKey, input.system, input.text]);
+      throw new ResumeImportError(code, response.status >= 400 ? response.status : 502, upstream);
+    }
     await response.body?.cancel();
     throw new ResumeImportError(
       code,

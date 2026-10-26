@@ -5,6 +5,7 @@ import { ResumeImportError, parseJsonPayload } from "../resume-import-schema";
 import { asRecord, createTextStream, fetchAI, readAIOutput, validateAIConnection } from "./ai-provider";
 import { GRAMMAR_PROMPT, POLISH_PROMPT } from "./ai-prompts";
 import { readLimitedJson } from "./ai-request";
+import { upstreamErrorResponse } from "./upstream-error";
 
 function connectionFromRequest(body: Record<string, unknown>) {
   if (body.connection) return validateAIConnection(body.connection);
@@ -42,7 +43,7 @@ export async function handleTextRequest(request: Request, task: "polish" | "gram
       json: task === "grammar",
       stream: task === "polish",
       disableThinking: task === "grammar",
-    }, signal, fetcher);
+    }, signal, fetcher, task === "test" && connection.provider === "orcarouter");
     if (task === "polish") {
       if (!response.body) throw new ResumeImportError("emptyOutput", 502);
       return new Response(createTextStream(response.body, connection.protocol, abort), {
@@ -60,6 +61,7 @@ export async function handleTextRequest(request: Request, task: "polish" | "gram
     if (!Array.isArray(parsed.errors)) throw new ResumeImportError("invalidOutput", 502);
     return Response.json({ choices: [{ message: { content: JSON.stringify(parsed) } }] });
   } catch (error) {
+    if (error instanceof ResumeImportError && error.upstream) return upstreamErrorResponse(error);
     const known = error instanceof ResumeImportError;
     const timeout = error instanceof Error && ["TimeoutError", "AbortError"].includes(error.name);
     const code = known ? error.code : timeout ? "timeout" : "networkError";

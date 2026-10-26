@@ -25,6 +25,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        env:
+          VITE_ORCA_APP_ID: ${{ vars.VITE_ORCA_APP_ID }}
         run: pnpm run build
 
       - name: Deploy to Cloudflare

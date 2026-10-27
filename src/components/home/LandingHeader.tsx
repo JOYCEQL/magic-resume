@@ -5,6 +5,7 @@ import { useLocaleSwitch } from "@/hooks/useLocaleSwitch";
 import Link from "@/lib/link";
 import Logo from "@/components/shared/Logo";
 import { GitHubStars } from "@/components/shared/GitHubStars";
+import { ContactPopover } from "@/components/shared/ContactPopover";
 
 export default function LandingHeader() {
   const { locale, switchLocale } = useLocaleSwitch();
@@ -41,6 +42,11 @@ export default function LandingHeader() {
           >
             {locale === "zh" ? "EN" : "中"}
           </Link>
+          <ContactPopover
+            renderWrapper={(popover) => (
+              <div className="landing-header-github">{popover}</div>
+            )}
+          />
           <div className="landing-header-github">
             <GitHubStars appearance="landing" />
           </div>
@@ -68,6 +74,7 @@ export default function LandingHeader() {
           id="landing-menu"
           aria-label={t("nav.label")}
         >
+          <ContactPopover />
           <GitHubStars appearance="landing" />
           <Link href="/app/dashboard" className="landing-button">
             {t("start")}

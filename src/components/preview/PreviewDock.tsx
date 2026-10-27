@@ -11,7 +11,8 @@ import {
   FileJson,
   Loader2,
   Eye,
-  FileText
+  FileText,
+  Phone
 } from "lucide-react";
 import { RiMarkdownLine } from "@remixicon/react";
 import { toast } from "sonner";
@@ -35,6 +36,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 import { FAQDialog } from "./FAQDialog";
 import PdfExport from "@/components/shared/PdfExport";
+import { ContactPopover } from "@/components/shared/ContactPopover";
 
 export type IconProps = React.HTMLAttributes<SVGElement>;
 
@@ -386,6 +388,35 @@ const PreviewDock = ({
                   </TooltipContent>
                 </Tooltip>
               </DockIcon>
+              <ContactPopover
+                side="left"
+                align="end"
+                sideOffset={14}
+                renderWrapper={(popover) => (
+                  <DockIcon>
+                    <Tooltip>
+                      {popover}
+                      <TooltipContent side="left" sideOffset={10}>
+                        <p>{t("contact")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </DockIcon>
+                )}
+              >
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={t("contact")}
+                    className={cn(
+                      "flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg transition-all",
+                      "hover:bg-gray-100/50 dark:hover:bg-secondary/50",
+                      "active:scale-95"
+                    )}
+                  >
+                    <Phone className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+              </ContactPopover>
             </div>
           </Dock>
         </TooltipProvider>

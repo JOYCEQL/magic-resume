@@ -112,7 +112,9 @@
         "theme": "切换主题",
         "menu": "打开菜单",
         "close": "关闭菜单",
-        "skip": "跳转到主要内容"
+        "skip": "跳转到主要内容",
+        "contact": "联系我",
+        "xiaohongshuAlt": "四月清晨的小红书名片二维码"
       },
       "hero": {
         "editorAlt": "魔方简历真实工作台：内容编辑与实时简历预览",
@@ -1207,6 +1209,7 @@
       "collapse": "收起预览面板"
     },
     "github": "GitHub",
+    "contact": "联系我",
     "backToDashboard": "返回仪表盘",
     "copyResume": {
       "tooltip": "复制简历",

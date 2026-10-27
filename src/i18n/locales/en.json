@@ -111,7 +111,9 @@
         "theme": "Change theme",
         "menu": "Open menu",
         "close": "Close menu",
-        "skip": "Skip to content"
+        "skip": "Skip to content",
+        "contact": "Contact Me",
+        "xiaohongshuAlt": "Xiaohongshu QR code card"
       },
       "hero": {
         "editorAlt": "Magic Resume workspace with content editing and a live resume preview",
@@ -682,6 +684,7 @@
       "collapse": "Collapse Preview Panel"
     },
     "github": "GitHub",
+    "contact": "Contact Me",
     "backToDashboard": "Back to Dashboard",
     "copyResume": {
       "tooltip": "Copy Resume",

@@ -5,3 +5,4 @@ compatibility_flags = ["nodejs_compat"]
 
 [assets]
 directory = "dist/client"
+html_handling = "none"

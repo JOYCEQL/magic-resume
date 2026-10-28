@@ -8,8 +8,7 @@ import {
   RefreshCw,
   Trash2,
   Wifi,
-  Eye,
-  EyeOff,
+  Info,
   SlidersHorizontal,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -39,13 +38,15 @@ import {
   type AIProvider,
   type BuiltinAIModel,
 } from "@/config/ai-models";
+import { useOrcaConnectSession } from "@/hooks/useOrcaConnect";
+import { ProviderKeyInput } from "./ProviderKeyInput";
 import { useOrcaModels } from "@/hooks/useOrcaModels";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { cn } from "@/lib/utils";
 import { ResumeImportError } from "@/lib/resume-import-schema";
 import { upstreamErrorMessage } from "@/lib/upstream-error";
 import { ModelAssignment } from "./ModelAssignment";
-import { OrcaAuthPanel } from "./OrcaAuthPanel";
+import { OrcaAuthPanel, OrcaConnectButton } from "./OrcaAuthPanel";
 import { OrcaModelSelector } from "./OrcaModelSelector";
 import { ProviderMark } from "./ProviderMark";
 import { useModelTest } from "./useModelTest";
@@ -94,93 +95,111 @@ function ModelCard({
 
   return (
     <>
-      <article className="rounded-xl border border-border/70 bg-background/30 p-4">
+      <article
+        className={cn(
+          "flex flex-col justify-between rounded-xl border p-4 transition-colors",
+          assignedToText || assignedToPdf
+            ? "border-foreground/20 bg-white/75 shadow-[0_1px_2px_rgba(28,28,24,0.03)] dark:bg-secondary/40"
+            : "border-border/70 bg-background/35 hover:border-border",
+        )}
+      >
         <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="min-w-0 break-all font-sans text-sm font-semibold leading-5 text-foreground">{model.name}</h3>
-            {model.recommended && (
-              <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
-                {t("recommended")}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="min-w-0 break-all font-sans text-sm font-semibold leading-5 text-foreground">
+                {model.name}
+              </h3>
+              {model.recommended && (
+                <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
+                  {t("recommended")}
+                </Badge>
+              )}
+            </div>
+            {model.descriptionKey && (
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                {t(model.descriptionKey)}
+              </p>
+            )}
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
+              {t("textTag")}
+            </Badge>
+            {model.supportsPdf && (
+              <Badge
+                variant="outline"
+                className="px-2 py-0 text-[10px] font-medium text-primary"
+              >
+                PDF
               </Badge>
             )}
           </div>
-          <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            {t(model.descriptionKey)}
-          </p>
         </div>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <Badge variant="secondary" className="px-2 py-0 text-[10px] font-normal">
-            {t("textTag")}
-          </Badge>
-          {model.supportsPdf && (
-            <Badge
-              variant="outline"
-              className="px-2 py-0 text-[10px] font-medium text-primary"
-            >
-              PDF
-            </Badge>
-          )}
-        </div>
-      </div>
 
-      <div className="mt-4 flex min-h-9 flex-wrap items-center gap-2 border-t border-border/50 pt-3">
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          disabled={
-            !isModelConfigured(profile) || test.state.status === "running"
-          }
-          onClick={() => test.run()}
-          className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none"
-        >
-          {test.state.status === "running" ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          ) : (
-            <Wifi className="h-3.5 w-3.5" />
-          )}
-          <span>{t("detectConnection")}</span>
-        </Button>
-        {onDelete && (
-          <Button
-            type="button"
-            size="sm"
-            variant="ghost"
-            onClick={() => setShowDeleteDialog(true)}
-            aria-label={t("deleteModel", { model: model.name })}
-            className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none text-muted-foreground hover:text-destructive"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            <span>{t("delete")}</span>
-          </Button>
-        )}
-        {assignedToText && (
-          <span className="text-xs text-muted-foreground">
-            {t("usedByText")}
-          </span>
-        )}
-        {assignedToPdf && (
-          <span className="text-xs text-muted-foreground">
-            {t("usedByPdf")}
-          </span>
-        )}
-        {message && (
-          <span
-            role="status"
-            className={cn(
-              "text-xs font-medium",
-              test.state.status === "success"
-                ? "text-emerald-600 dark:text-emerald-400"
-                : test.state.status === "error"
-                  ? "text-destructive"
-                  : "text-muted-foreground",
+        <div className="mt-4 flex min-h-9 flex-wrap items-center justify-between gap-2 border-t border-border/50 pt-3">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={
+                !isModelConfigured(profile) || test.state.status === "running"
+              }
+              onClick={() => test.run()}
+              className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium shadow-none"
+            >
+              {test.state.status === "running" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Wifi className="h-3.5 w-3.5" />
+              )}
+              <span>{t("detectConnection")}</span>
+            </Button>
+            {onDelete && (
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowDeleteDialog(true)}
+                aria-label={t("deleteModel", { model: model.name })}
+                className="h-8 gap-1.5 rounded-lg px-2.5 text-xs font-medium text-muted-foreground shadow-none hover:text-destructive"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>{t("delete")}</span>
+              </Button>
             )}
-          >
-            {message}
-          </span>
-        )}
-      </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            {assignedToText && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                {t("usedByText")}
+              </span>
+            )}
+            {assignedToPdf && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                {t("usedByPdf")}
+              </span>
+            )}
+            {message && (
+              <span
+                role="status"
+                className={cn(
+                  "text-xs font-medium",
+                  test.state.status === "success"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : test.state.status === "error"
+                      ? "text-destructive"
+                      : "text-muted-foreground",
+                )}
+              >
+                {message}
+              </span>
+            )}
+          </div>
+        </div>
       </article>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
@@ -220,15 +239,18 @@ export default function AISettingsPage() {
   const assignModel = useAIConfigStore((state) => state.assignModel);
   const deleteModel = useAIConfigStore((state) => state.deleteModel);
 
-  const [showKey, setShowKey] = useState(false);
   const [provider, setProvider] = useState<AIProvider>(() => {
     if (requestedProvider) return requestedProvider;
     const selected = models.find((model) => model.id === textModelId);
-    return selected?.provider ?? models[0]?.provider ?? "deepseek";
+    return selected?.provider ?? models[0]?.provider ?? "orcarouter";
   });
   const [fetchedModels, setFetchedModels] = useState<FetchedModel[]>([]);
   const [fetchingOtherModels, setFetchingOtherModels] = useState(false);
   const orca = useOrcaModels(provider === "orcarouter");
+  const orcaConnect = useOrcaConnectSession();
+  useEffect(() => {
+    if (provider !== "orcarouter") orcaConnect.reset();
+  }, [provider, orcaConnect.reset]);
   const fetchingModels = provider === "orcarouter" ? orca.loading : fetchingOtherModels;
   const [modelListOpen, setModelListOpen] = useState(false);
   const modelFetchRevision = useRef(0);
@@ -448,9 +470,6 @@ export default function AISettingsPage() {
             </span>
           </div>
         </div>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t("catalogDescription")}
-        </p>
       </header>
 
       {/* Model Assignment Section */}
@@ -466,21 +485,11 @@ export default function AISettingsPage() {
 
       {/* Provider configuration */}
       <section className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-white/90 shadow-[0_1px_2px_rgba(28,28,24,0.025),0_8px_24px_rgba(28,28,24,0.025)] dark:bg-card">
-        <div className="grid min-h-[560px] grid-cols-[230px_minmax(0,1fr)] md:grid-cols-[270px_minmax(0,1fr)]">
+        <div className="grid min-h-[560px] grid-cols-1 md:grid-cols-[230px_minmax(0,1fr)] lg:grid-cols-[270px_minmax(0,1fr)]">
           {/* Left Sidebar: Providers Navigation */}
-          <aside className="border-r border-border/60 bg-background/80 p-4">
-            <div>
-              <div className="px-3 pb-4 pt-1">
-                <h2 className="font-sans text-xs font-medium tracking-wide text-muted-foreground">
-                  {t("providersTitle")}
-                </h2>
-                <p className="mt-1 text-[11px] text-muted-foreground">
-                  {t("providersHint")}
-                </p>
-              </div>
-
-              <div className="space-y-1">
-                {AI_PROVIDERS.map((item) => {
+          <aside className="min-w-0 border-b border-border/60 bg-background/80 p-3 md:border-b-0 md:border-r md:p-4">
+            <div className="flex gap-1 overflow-x-auto md:block md:space-y-1">
+              {AI_PROVIDERS.map((item) => {
                   const configured = !!getProviderKey(item).trim();
                   const active = item === provider;
 
@@ -491,12 +500,11 @@ export default function AISettingsPage() {
                       aria-pressed={active}
                       onClick={() => {
                         setProvider(item);
-                        setShowKey(false);
                         setFetchedModels([]);
                         setModelListOpen(false);
                       }}
                       className={cn(
-                        "group relative flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.985] motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2",
+                        "group relative flex w-48 shrink-0 items-center gap-3 rounded-xl px-3 py-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-150 active:scale-[0.985] motion-reduce:transform-none motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 md:w-full",
                         active
                           ? "border border-border/70 bg-white text-foreground shadow-[0_1px_2px_rgba(28,28,24,0.04),0_3px_8px_rgba(28,28,24,0.035)] dark:bg-secondary"
                           : "border border-transparent text-foreground/75 hover:bg-secondary/50 hover:text-foreground",
@@ -529,35 +537,34 @@ export default function AISettingsPage() {
                     </button>
                   );
                 })}
-              </div>
             </div>
           </aside>
 
           {/* Right Workspace */}
           <div className="min-w-0 p-6 sm:p-8">
             {/* Header of Active Provider */}
-            <div className="flex flex-col gap-4 border-b border-border/60 pb-6 sm:flex-row sm:items-center sm:justify-between">
+            <div data-testid="provider-header" className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-6">
               <div className="flex items-center gap-3.5">
                 <ProviderMark provider={provider} />
-                <div>
-                  <h2 className="font-sans text-xl font-semibold tracking-tight text-foreground">
-                    {t(`providers.${provider}`)}
-                  </h2>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {t("providerModelsHint")}
-                  </p>
-                </div>
+                <h2 className="font-sans text-xl font-semibold tracking-tight text-foreground">
+                  {t(`providers.${provider}`)}
+                </h2>
               </div>
 
-              <a
-                href={providerDefinition.keyUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-9 shrink-0 items-center gap-1.5 self-start rounded-lg border border-border bg-white/70 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/20 hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-secondary/50 sm:self-auto"
-              >
-                <span>{t("getKey")}</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={providerDefinition.keyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-white/70 px-3 text-xs font-medium text-foreground/80 transition-colors hover:border-foreground/20 hover:bg-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring dark:bg-secondary/50"
+                >
+                  <span>{t("getKey")}</span>
+                  <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                </a>
+                {provider === "orcarouter" && (
+                  <OrcaConnectButton profile={orca.credential} connect={orcaConnect} />
+                )}
+              </div>
             </div>
 
             {/* API Key Input Section */}
@@ -566,45 +573,17 @@ export default function AISettingsPage() {
                 <OrcaAuthPanel
                   profile={orca.credential}
                   onKeyChange={orca.setApiKey}
-                  onSelectMethod={orca.selectMethod}
+                  connect={orcaConnect}
                   onClearKey={orca.clearCredential}
                 />
               ) : (
-                <>
-                  <Label htmlFor="provider-key" className="text-xs font-medium text-foreground">
-                    {t("apiKey")}
-                  </Label>
-                  <div className="relative flex items-center">
-                    <Input
-                      id="provider-key"
-                      type={showKey ? "text" : "password"}
-                      autoComplete="off"
-                      value={providerKey}
-                      onChange={(event) =>
-                        syncProviderModels(provider, event.target.value)
-                      }
-                      placeholder={t("providerKeyPlaceholder")}
-                      className="h-11 rounded-lg border-border/80 bg-background/70 pr-11 text-sm shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-muted-foreground/80 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowKey(!showKey)}
-                      className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label={t(showKey ? "hideKey" : "showKey")}
-                    >
-                      {showKey ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </>
+                <ProviderKeyInput
+                  key={provider}
+                  id="provider-key"
+                  value={providerKey}
+                  onChange={(value) => syncProviderModels(provider, value)}
+                />
               )}
-
-              <p className="text-xs text-muted-foreground">
-                {t("keySharedHint")}
-              </p>
 
               {/* OpenAI Compatible Service Endpoint */}
               {provider === "openai" && (
@@ -635,9 +614,6 @@ export default function AISettingsPage() {
                       placeholder="https://api.openai.com/v1"
                       className="h-10 rounded-lg border-border/80 bg-background/70 font-mono text-xs shadow-[inset_0_1px_2px_rgba(28,28,24,0.03)] transition-[background-color,border-color,box-shadow] duration-150 hover:border-foreground/25 focus-visible:border-foreground/30 focus-visible:bg-background focus-visible:ring-2 focus-visible:ring-foreground/10 focus-visible:ring-offset-0 motion-reduce:transition-none"
                     />
-                    <p className="text-xs text-muted-foreground">
-                      {t("compatibleServiceHint")}
-                    </p>
                   </div>
                 </details>
               )}
@@ -654,39 +630,38 @@ export default function AISettingsPage() {
                     data-testid="orca-model-count"
                     className="rounded-md bg-secondary/60 px-2 py-0.5 text-[11px] font-medium tabular-nums text-muted-foreground"
                   >
-                    {t("modelCount", {
-                      count: providerProfiles.length + customProfiles.length,
-                    })}
+                    {provider === "orcarouter" && orca.status !== "ready"
+                      ? t(`orca.catalogStatus.${orca.status}`)
+                      : t("modelCount", {
+                          count: provider === "orcarouter"
+                            ? orca.catalogCount : providerProfiles.length + customProfiles.length,
+                        })}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  {provider === "orcarouter" && (
-                    <span
-                      data-testid="orca-catalog-source"
-                      className="rounded-md bg-secondary/60 px-2 py-0.5 text-[10px] text-muted-foreground"
-                    >
-                      {t(`orca.catalogStatus.${orca.status}`)}
-                    </span>
-                  )}
-                  <span className="text-xs text-muted-foreground">
-                    {t("builtinModelsHint")}
-                  </span>
                   <button
                     type="button"
                     data-testid="orca-refresh-models"
                     onClick={fetchProviderModels}
-                    disabled={fetchingModels}
-                    className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-foreground/75 transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                    disabled={fetchingModels || (provider === "orcarouter" && (!orca.credential.apiKey.trim() || orca.credential.needsReauth))}
+                    className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-xs font-medium text-foreground transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {fetchingModels ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     ) : (
                       <RefreshCw className="h-3.5 w-3.5" />
                     )}
-                    {t("fetchModels.button")}
+                    {t(fetchingModels ? "fetchModels.loading" : provider === "orcarouter" && orca.status === "error" ? "fetchModels.retry" : "fetchModels.button")}
                   </button>
                 </div>
               </div>
+
+              {provider === "orcarouter" && orca.status === "idle" && !orca.loading && (
+                <div className="mb-4 flex min-h-[72px] items-center gap-3 rounded-xl border border-border/70 bg-background/30 px-4 py-4 text-xs leading-5 text-muted-foreground">
+                  <Info aria-hidden="true" className="h-4 w-4 shrink-0" />
+                  <p>{t(orca.credential.apiKey.trim() ? "orca.catalogIdle" : "orca.catalogConnectHint")}</p>
+                </div>
+              )}
 
               {provider !== "orcarouter" && fetchedModels.length > 0 && (
                 <div className="mb-4 overflow-hidden rounded-xl border border-border/70 bg-background/60">
@@ -760,16 +735,16 @@ export default function AISettingsPage() {
                 </div>
               )}
 
-              {provider === "orcarouter" && orca.credential.apiKey.trim() && (
+              {provider === "orcarouter" && (orca.status !== "idle" || orca.loading) && (
                 <OrcaModelSelector
                   models={orca.options}
+                  totalCount={orca.catalogCount}
                   status={orca.status}
                   selectedId={orca.selectedId}
                   onSelect={orca.selectModel}
                   query={orca.query}
                   onQueryChange={orca.setQuery}
                   loading={fetchingModels}
-                  onRefresh={orca.refresh}
                 />
               )}
 
@@ -789,7 +764,7 @@ export default function AISettingsPage() {
                     model={{
                       id: profile.model,
                       name: profile.model,
-                      descriptionKey: "fetchModels.customModel",
+                      descriptionKey: "",
                       supportsPdf: profile.supportsPdf,
                     }}
                     profile={profile}

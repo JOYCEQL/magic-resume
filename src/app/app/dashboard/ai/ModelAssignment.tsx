@@ -57,11 +57,11 @@ export function ModelAssignment({
               isAssigned ? "border-border" : "border-border/80",
             )}
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3.5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <div
                   className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
                     isAssigned
                       ? "border-border/80 bg-secondary/75 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] dark:bg-secondary/60 dark:shadow-none"
                       : "border-border/60 bg-secondary/50 text-muted-foreground",
@@ -69,14 +69,9 @@ export function ModelAssignment({
                 >
                   <Icon className="h-4 w-4" />
                 </div>
-                <div className="min-w-0">
-                  <h2 className="font-sans text-base font-semibold tracking-tight text-foreground">
-                    {t(`${task}Title`)}
-                  </h2>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {t(`${task}Description`)}
-                  </p>
-                </div>
+                <h2 className="truncate font-sans text-base font-semibold tracking-tight text-foreground">
+                  {t(`${task}Title`)}
+                </h2>
               </div>
 
               {/* Right Header Status Badge */}

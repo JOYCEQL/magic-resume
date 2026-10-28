@@ -1,13 +1,13 @@
 import { ORCA_REFERRAL_URL } from "./orcarouter";
 
 export const AI_PROVIDERS = [
+  "orcarouter",
   "openai",
   "gemini",
   "deepseek",
   "anthropic",
   "qwen",
   "doubao",
-  "orcarouter",
 ] as const;
 export type AIProvider = (typeof AI_PROVIDERS)[number];
 export type AIProtocol =

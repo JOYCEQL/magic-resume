@@ -4,11 +4,60 @@ import { createHash } from "node:crypto";
 import { chromium, webkit } from "playwright";
 
 const origin = process.env.TEST_BASE_URL || "http://127.0.0.1:3000";
-const readState = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("ai-config-storage")).state);
+const readState = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("ai-config-storage"))?.state ?? { models: [], textModelId: null, pdfModelId: null });
 const catalog = [
   { id: "fixture/text-only", name: "Fixture Text", supportsImages: false },
   { id: "fixture/new-vision", name: "Fixture Vision", supportsImages: true },
 ];
+
+for (const engine of [chromium, webkit]) {
+  test(`${engine.name()}: manual discovery stays visible, searches names and retries`, { timeout: 60_000 }, async (t) => {
+    const browser = await engine.launch();
+    t.after(() => browser.close());
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.setDefaultTimeout(10000);
+    let requests = 0;
+    let mode = "success";
+    await page.route("**/api/models", async (route) => {
+      requests++;
+      assert.equal(route.request().postDataJSON().apiKey, "sk-orca-manual-fixture");
+      await route.fulfill({ status: mode === "failure" ? 502 : 200,
+        json: mode === "failure" ? { code: "upstreamError" } : { models: catalog } });
+    });
+    await page.goto(`${origin}/app/dashboard/ai?provider=orcarouter`);
+    const refresh = page.getByTestId("orca-refresh-models");
+    await refresh.waitFor();
+    assert.equal(await refresh.isEnabled(), false);
+    await page.getByText("授权连接或填写密钥后，获取可用模型。", { exact: true }).waitFor();
+    assert.equal(await page.getByTestId("orca-model-dropdown-trigger").count(), 0);
+    assert.equal(await page.getByTestId("provider-header").getByRole("button", { name: "授权连接", exact: true }).count(), 1);
+    assert.equal(await page.getByTestId("orca-auth-panel").getByTestId("orca-connect").count(), 0);
+    await page.getByTestId("orca-api-key-input").fill("sk-orca-manual-fixture");
+    assert.equal(requests, 0);
+    await refresh.click();
+    await page.getByTestId("orca-model-dropdown-trigger").click();
+    await page.getByTestId("orca-model-search").fill("Fixture Vision");
+    await page.getByTestId("orca-model-option").filter({ hasText: "fixture/new-vision" }).waitFor();
+    assert.equal(await page.getByTestId("orca-model-option").count(), 1);
+    assert.equal(await page.getByTestId("orca-model-count").innerText(), "2 个模型");
+    await page.getByTestId("orca-model-option").click();
+    await page.getByTestId("orca-model-dropdown-trigger").click();
+    assert.equal(await page.getByTestId("orca-model-option").count(), 2);
+    mode = "failure";
+    await refresh.click();
+    await page.locator('[data-testid="orca-model-selector"][data-source="error"]').waitFor();
+    assert.equal(await refresh.innerText(), "重新获取模型列表");
+    assert.equal(await page.getByTestId("orca-model-dropdown").count(), 0);
+    mode = "success";
+    await refresh.click();
+    await page.getByTestId("orca-model-dropdown-trigger").click();
+    assert.equal(await page.getByTestId("orca-model-option").count(), 2);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    await page.getByRole("button", { name: "清除密钥", exact: true }).click();
+    assert.equal(await refresh.isVisible(), true);
+    assert.equal(await refresh.isEnabled(), false);
+  });
+}
 
 for (const engine of [chromium, webkit]) {
   test(`${engine.name()}: mocked OAuth login, catalog, assignments and persistence`, { timeout: 60_000 }, async (t) => {
@@ -63,22 +112,35 @@ for (const engine of [chromium, webkit]) {
     await page.goto(`${origin}/app/dashboard/ai`);
     await page.getByRole("button", { name: /^OrcaRouter/ }).click();
     assert.equal(await page.getByRole("link", { name: "获取密钥", exact: true }).getAttribute("href"), "https://www.orcarouter.ai/ref/ref_54dd337f5d343624a551");
-    assert.equal(await page.getByRole("link", { name: "管理已授权应用", exact: true }).getAttribute("href"), "https://www.orcarouter.ai/console/authorized-apps");
     assert.equal(await page.getByTestId("orca-model-option").count(), 0);
+    // Keep discovery visible before connecting, and explain why it is disabled.
+    assert.equal(await page.getByTestId("orca-refresh-models").isVisible(), true);
+    assert.equal(await page.getByTestId("orca-refresh-models").isEnabled(), false);
     await page.getByTestId("orca-connect").click();
     await page.waitForURL("**/app/dashboard/ai?provider=orcarouter");
     assert.equal(exchanges, 1);
     assert.equal(await page.evaluate(() => sessionStorage.getItem("orcarouter-pkce-attempt")), null);
-    await page.waitForFunction(() => document.querySelector('[data-testid="orca-api-key-input"]').value === "sk-orca-browser-fixture");
+    await page.waitForFunction(() => document.querySelector('[data-testid="orca-api-key-input"]')?.value === "sk-orca-browser-fixture");
+    assert.equal(await page.getByTestId("orca-api-key-input").getAttribute("type"), "password");
+    assert.equal(await page.getByTestId("orca-api-key-input").isVisible(), true);
+    assert.equal(await page.getByTestId("provider-header").getByRole("button", { name: "重新授权", exact: true }).count(), 1);
+    await page.getByRole("button", { name: "显示密钥", exact: true }).click();
+    assert.equal(await page.getByTestId("orca-api-key-input").getAttribute("type"), "text");
+    assert.equal(await page.getByRole("link", { name: "管理已授权应用", exact: true }).getAttribute("href"), "https://www.orcarouter.ai/console/authorized-apps");
     let state = await readState(page);
     assert.equal(state.models[0].authMethod, "oauth");
     assert.equal(state.models[0].model, "");
     assert.equal(state.textModelId, null);
-    await page.getByTestId("orca-refresh-models").click();
+    // OAuth should discover automatically, including after leaving the provider.
+    await page.locator('[data-testid="orca-model-selector"][data-source="live"]').waitFor();
+    await page.getByRole("button", { name: /^DeepSeek/ }).click();
+    await page.getByRole("button", { name: /^OrcaRouter/ }).click();
+    assert.equal(await page.getByTestId("orca-api-key-input").getAttribute("type"), "password");
+    await page.locator('[data-testid="orca-model-selector"][data-source="live"]').waitFor();
     await page.getByTestId("orca-model-dropdown-trigger").click();
     assert.equal(await page.getByTestId("orca-model-option").count(), 2);
     await page.getByTestId("orca-model-option").filter({ hasText: "fixture/text-only" }).click();
-    assert.equal((await page.getByTestId("orca-model-dropdown-trigger").innerText()).trim(), "fixture/text-only");
+    assert.match(await page.getByTestId("orca-model-dropdown-trigger").innerText(), /fixture\/text-only/);
     state = await readState(page);
     assert.equal(state.models.find((m) => m.id === state.textModelId).model, "fixture/text-only");
     const textCard = page.locator("article").filter({ has: page.getByRole("heading", { name: "fixture/text-only", exact: true }) });
@@ -96,7 +158,7 @@ for (const engine of [chromium, webkit]) {
     await page.reload();
     await page.getByTestId("orca-auth-panel").waitFor();
     assert.equal(await page.getByTestId("orca-api-key-input").inputValue(), "sk-orca-browser-fixture");
-    assert.equal((await page.getByTestId("orca-model-dropdown-trigger").innerText()).trim(), "fixture/new-vision");
+    assert.match(await page.getByTestId("orca-model-dropdown-trigger").innerText(), /fixture\/new-vision/);
     assert.match(await page.getByRole("combobox", { name: "选择 PDF 解析模型" }).innerText(), /Fixture Vision/);
     state = await readState(page);
     assert.deepEqual({ text: state.textModelId, pdf: state.pdfModelId }, assignments);
@@ -196,13 +258,21 @@ for (const engine of [chromium, webkit]) {
       });
       await page.goto(`${origin}/app/dashboard/ai`);
       await page.getByRole("button", { name: /^OrcaRouter/ }).click();
+      if (mode === "denied") {
+        await page.getByTestId("orca-api-key-input").fill("sk-orca-preserved-manual-fixture");
+      }
       await page.getByTestId("orca-connect").click();
       await page.getByRole("heading", { name: "未能完成登录" }).waitFor();
       assert.equal(exchanges, 0);
       assert.equal(new URL(page.url()).search, "");
       assert.equal(await page.evaluate(() => sessionStorage.getItem("orcarouter-pkce-attempt")), null);
       const state = await readState(page);
-      assert.ok(state.models.every((model) => !model.apiKey));
+      if (mode === "denied") {
+        assert.equal(state.models[0].apiKey, "sk-orca-preserved-manual-fixture");
+        assert.equal(state.models[0].authMethod, "api-key");
+      } else {
+        assert.ok(state.models.every((model) => !model.apiKey));
+      }
       await page.getByRole("link", { name: "返回 AI 设置" }).click();
       await page.getByTestId("orca-connect").waitFor();
       assert.equal(await page.getByTestId("orca-connect").isEnabled(), true);

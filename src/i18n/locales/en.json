@@ -504,6 +504,8 @@
             "anthropic": "Anthropic Messages"
           },
           "fetchModels": {
+            "loading": "Fetching models…",
+            "retry": "Retry fetching models",
             "button": "Fetch model list",
             "noKey": "Enter the API key first",
             "success": "Model list fetched",
@@ -530,6 +532,13 @@
             }
           },
           "orca": {
+            "authorize": "Authorize",
+            "reauthorize": "Reauthorize",
+            "authorized": "Authorized",
+            "authorizationHint": "Authorize to fill in your key automatically, or enter it manually.",
+            "catalogConnectHint": "Authorize or enter an API key to fetch available models.",
+            "noCredential": "Sign in to OrcaRouter or enter an API key first",
+            "or": "or",
             "apiKeyTitle": "OrcaRouter - API",
             "apiKeyHint": "Paste an existing OrcaRouter API key. It is stored only in this browser.",
             "apiKeyLabel": "OrcaRouter API key",

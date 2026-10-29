@@ -12,10 +12,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ResumeTemplateComponent from "@/components/templates";
 import { initialResumeState, initialResumeStateEn } from "@/config/initialResumeData";
 import type { ResumeTemplate } from "@/types/template";
-import { normalizeFontFamily } from "@/utils/fonts";
 
 const A4_WIDTH_PX = 793.700787;
 const PREVIEW_MODAL_SCALE = 0.529166667;
+const PREVIEW_FONT_FAMILY = "system-ui, sans-serif";
 
 const PRESET_COLORS = [
   { name: "default", value: "" },
@@ -139,7 +139,7 @@ const TemplateCardItem = ({
                   transform: `scale(${scale})`,
                   transformOrigin: "top left",
                   padding: `${template.spacing.contentPadding}px`,
-                  fontFamily: normalizeFontFamily(previewData.globalSettings?.fontFamily),
+                  fontFamily: PREVIEW_FONT_FAMILY,
                 }}
               >
                 <ResumeTemplateComponent data={previewData} template={template} />
@@ -353,14 +353,7 @@ const TemplatesPage = () => {
                           transform: `scale(${PREVIEW_MODAL_SCALE})`,
                           transformOrigin: "top left",
                           padding: `${activePreviewTemplate.spacing.contentPadding}px`,
-                          fontFamily: normalizeFontFamily(
-                            buildTemplatePreviewData(
-                              baseData,
-                              activePreviewTemplate,
-                              selectedColor,
-                              "template-preview-modal"
-                            ).globalSettings?.fontFamily
-                          ),
+                          fontFamily: PREVIEW_FONT_FAMILY,
                         }}
                       >
                         <ResumeTemplateComponent

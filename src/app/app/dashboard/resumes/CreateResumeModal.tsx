@@ -16,7 +16,6 @@ import type { Translator } from "@/i18n/compat/utils";
 import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
 import { ChevronLeft, FilePlus, Sparkles, X } from "lucide-react";
-import { normalizeFontFamily } from "@/utils/fonts";
 
 interface CreateResumeModalProps {
     open: boolean;
@@ -26,6 +25,7 @@ interface CreateResumeModalProps {
 
 const A4_WIDTH_PX = 793.700787;
 const A4_HEIGHT_PX = 1122.519685;
+const PREVIEW_FONT_FAMILY = "system-ui, sans-serif";
 
 type BlankTemplate = {
     id: null;
@@ -169,13 +169,13 @@ const TemplateThumbnail = ({
                 className="flex-shrink-0"
             >
                 <div
-                    className="bg-white origin-top-left pointer-events-none"
+                    className="resume-preview bg-white origin-top-left pointer-events-none"
                     style={{
                         width: "210mm",
                         height: "297mm",
                         transform: `scale(${scale})`,
                         padding: `${template.spacing?.contentPadding || 32}px`,
-                        fontFamily: normalizeFontFamily(previewData.globalSettings?.fontFamily),
+                        fontFamily: PREVIEW_FONT_FAMILY,
                     }}
                 >
                     <ResumeTemplateComponent

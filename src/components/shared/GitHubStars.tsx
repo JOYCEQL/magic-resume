@@ -1,29 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useGitHubStars } from "@/hooks/useGitHubStars";
 
 const REPO_URL = "https://github.com/JOYCEQL/magic-resume";
-const API_URL = "https://api.github.com/repos/JOYCEQL/magic-resume";
 
 export function GitHubStars({
   appearance = "default",
 }: {
   appearance?: "default" | "landing";
 }) {
-  const [stars, setStars] = useState<number | null>(null);
+  const stars = useGitHubStars();
   const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        setStars(data.stargazers_count);
-      })
-      .catch((error) => {
-        console.error("Error fetching GitHub stars:", error);
-      });
-  }, []);
 
   if (appearance === "landing") {
     return (

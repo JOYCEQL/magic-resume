@@ -1,0 +1,8 @@
+# Serve only the public landing documents without running SSR. Keep literal
+# verification .html URLs intact instead of enabling global HTML redirects.
+/zh /zh.html 200
+/en /en.html 200
+/zh/ /zh 307
+/en/ /en 307
+/zh.html /zh 301
+/en.html /en 301

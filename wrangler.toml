@@ -2,6 +2,9 @@ name = "magic-resume"
 main = "dist/server/server.js"
 compatibility_date = "2025-12-01"
 compatibility_flags = ["nodejs_compat"]
+# next-themes serializes a function into an inline script. Name-preservation
+# helpers otherwise leak into that script without their runtime definition.
+keep_names = false
 
 [assets]
 directory = "dist/client"

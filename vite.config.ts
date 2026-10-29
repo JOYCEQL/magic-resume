@@ -19,7 +19,18 @@ export default defineConfig({
       srcDirectory: "src",
       router: {
         routesDirectory: "routes"
-      }
+      },
+      // Public pages have no request-specific data. Build them once instead of
+      // spending Worker CPU rendering the same document on every visit.
+      pages: [{ path: "/zh" }, { path: "/en" }],
+      prerender: {
+        enabled: true,
+        autoStaticPathsDiscovery: false,
+        crawlLinks: false,
+        autoSubfolderIndex: false,
+        failOnError: true,
+      },
+      sitemap: { enabled: false },
     }),
     viteReact()
   ]

@@ -6,16 +6,12 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import appCss from "../app/globals.css?url";
-import appFontCss from "../app/font.css?url";
-import tiptapCss from "../styles/tiptap.scss?url";
 import landingCss from "@/components/home/landing.css?url";
-import sonnerCss from "sonner/dist/styles.css?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect, useState } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
 import enMessages from "@/i18n/locales/en.json";
 import { Providers } from "@/app/providers";
-import { Toaster } from "@/components/ui/sonner";
 import { getLocaleFromPathname, getPreferredLocale } from "@/i18n/runtime";
 import { LOCALE_CHANGE_EVENT } from "@/hooks/useLocaleSwitch";
 import type { Locale } from "@/i18n/config";
@@ -40,23 +36,10 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: appCss,
       },
-      {
-        rel: "stylesheet",
-        href: appFontCss,
-      },
-      {
-        rel: "stylesheet",
-        href: tiptapCss,
-      },
       // Keep landing styles ready before client-side navigation renders the page.
       {
         rel: "stylesheet",
         href: landingCss,
-      },
-      // React owns this link, so toast styles survive a document remount.
-      {
-        rel: "stylesheet",
-        href: sonnerCss,
       },
     ],
   }),
@@ -117,7 +100,6 @@ function RootComponent() {
           <Providers forcedTheme={isLandingPage ? "light" : undefined}>
             <ReactGrab />
             <Outlet />
-            <Toaster position="top-center" richColors />
           </Providers>
         </NextIntlClientProvider>
         <Scripts />

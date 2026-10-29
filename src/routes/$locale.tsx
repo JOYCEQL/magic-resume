@@ -53,20 +53,6 @@ export const Route = createFileRoute("/$locale")({
         { name: "twitter:image", content: `${SEO_BASE_URL}/web-shot.png` },
       ],
       links: [
-        {
-          rel: "preload",
-          href: "/fonts/landing/source-han-serif-500.woff2",
-          as: "font",
-          type: "font/woff2",
-          crossOrigin: "anonymous" as const,
-        },
-        ...[400, 700].map((weight) => ({
-          rel: "preload",
-          href: `/fonts/landing/misans-${weight}.woff2`,
-          as: "font",
-          type: "font/woff2",
-          crossOrigin: "anonymous" as const,
-        })),
         { rel: "canonical", href: seo.canonical },
         { rel: "alternate", hrefLang: locale, href: seo.canonical },
         {

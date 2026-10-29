@@ -38,10 +38,13 @@ for (const locale of ["zh", "en"]) {
       const serverLayout = await readLayout(serverPage);
       assert.equal(serverLayout.stylesheet, true);
       assert.equal(serverLayout.display, "grid");
-      assert.equal(serverLayout.image, "/web-shot.png");
-      assert.equal(
+      assert.equal(await serverPage.locator('link[rel="preload"][as="font"]').count(), 0);
+      assert.equal(await serverPage.locator("h1").evaluate((element) =>
+        getComputedStyle(element).fontFamily), "system-ui, sans-serif");
+      assert.match(serverLayout.image, /\/(?:src\/)?assets\/(?:landing\/)?editor-1280(?:-[\w-]+)?\.webp$/);
+      assert.match(
         await serverPage.locator(".landing-hero-art img").getAttribute("src"),
-        "/landing/unfold.webp",
+        /\/(?:src\/)?assets\/(?:landing\/)?unfold-1536(?:-[\w-]+)?\.webp$/,
       );
       assert.equal(await serverPage.locator("#features img").count(), 0);
       const heroBox = await serverPage
@@ -69,7 +72,10 @@ for (const locale of ["zh", "en"]) {
         const dialog = page.getByRole("dialog");
         await dialog.waitFor({ state: "visible" });
         assert.equal(await dialog.locator("img").getAttribute("src"), source);
+        // Let the opening animation and modal listeners settle before Escape.
+        await dialog.getByRole("button", { name: "Close" }).click({ trial: true });
         await page.keyboard.press("Escape");
+        await dialog.waitFor({ state: "hidden" });
       }
       assert.deepEqual(await readLayout(page), serverLayout);
       await page.reload();

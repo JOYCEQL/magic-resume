@@ -47,3 +47,5 @@ src/routeTree.gen.ts
 # standalone promotional video projects
 /videos/
 /promo-video/
+# Local Cloudflare runtime state
+.wrangler/

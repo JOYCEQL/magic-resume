@@ -1,24 +1,3 @@
-@font-face {
-  font-family: "MiSans Landing";
-  src: url("/fonts/landing/misans-400.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MiSans Landing";
-  src: url("/fonts/landing/misans-700.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Source Han Serif Landing";
-  src: url("/fonts/landing/source-han-serif-500.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
 .landing-page {
   --lp-bg: #fff;
   --lp-ink: #171717;
@@ -27,12 +6,12 @@
   --lp-surface: #f7f7f7;
   background: var(--lp-bg);
   color: var(--lp-ink);
-  font-family: "MiSans Landing", system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow: clip;
 }
 .landing-page :is(h1, h2, h3) {
-  font-family: "Source Han Serif Landing", serif;
+  font-family: inherit;
   font-weight: 500;
   letter-spacing: -0.035em;
   text-wrap: balance;
@@ -555,7 +534,7 @@
   border-color: var(--lp-line);
 }
 .landing-faq h3 {
-  font-family: "MiSans Landing", system-ui, sans-serif;
+  font-family: inherit;
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -925,7 +904,7 @@
   border: 1px solid #e6e6e6;
   border-radius: 18px;
   background: linear-gradient(160deg, #fcfcfc 0%, #f4f4f4 55%, #efefef 100%);
-  font-family: "MiSans Landing", system-ui, sans-serif;
+  font-family: inherit;
 }
 .feature-demo-grid {
   position: absolute;

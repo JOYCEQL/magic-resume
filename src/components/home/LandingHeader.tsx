@@ -4,7 +4,7 @@ import { useTranslations } from "@/i18n/compat/client";
 import { useLocaleSwitch } from "@/hooks/useLocaleSwitch";
 import Link from "@/lib/link";
 import Logo from "@/components/shared/Logo";
-import { GitHubStars } from "@/components/shared/GitHubStars";
+import { LandingGitHubStars } from "./LandingGitHubStars";
 import { ContactPopover } from "@/components/shared/ContactPopover";
 
 export default function LandingHeader() {
@@ -48,7 +48,7 @@ export default function LandingHeader() {
             )}
           />
           <div className="landing-header-github">
-            <GitHubStars appearance="landing" />
+            <LandingGitHubStars />
           </div>
           <Link
             href="/app/dashboard"
@@ -75,7 +75,7 @@ export default function LandingHeader() {
           aria-label={t("nav.label")}
         >
           <ContactPopover />
-          <GitHubStars appearance="landing" />
+          <LandingGitHubStars />
           <Link href="/app/dashboard" className="landing-button">
             {t("start")}
             <ArrowUpRight size={16} />

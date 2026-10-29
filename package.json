@@ -20,6 +20,7 @@
     "preview": "vite preview",
     "release": "bumpp",
     "generate:template-snapshots": "tsx scripts/generate-template-snapshots.ts",
+    "generate:landing-images": "node scripts/generate-landing-images.mjs",
     "test:orca-browser": "node --test tests/orcarouter.browser.mjs",
     "install:playwright": "playwright install chromium"
   },

@@ -58,13 +58,25 @@ function resolveStaticFile(pathname) {
 }
 
 function tryServeStatic(req, res, url) {
+  if (req.method !== "GET" && req.method !== "HEAD") return false;
+  const landing = /^\/(zh|en)(\/|\.html)?$/.exec(url.pathname);
+  const landingFile = landing ? resolveStaticFile(`/${landing[1]}.html`) : null;
+  if (landingFile && landing[2]) {
+    res.statusCode = landing[2] === ".html" ? 301 : 307;
+    res.setHeader("Location", `/${landing[1]}${url.search}`);
+    res.end();
+    return true;
+  }
   if (!url.pathname || url.pathname.endsWith("/")) return false;
-  const filePath = resolveStaticFile(url.pathname);
+  const filePath = landingFile || resolveStaticFile(url.pathname);
   if (!filePath) return false;
 
   res.statusCode = 200;
   res.setHeader("Content-Type", getContentType(filePath));
-  if (url.pathname.startsWith("/assets/") ||
+  if (landingFile) {
+    // Always revalidate entry HTML so deployments can replace hashed assets.
+    res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
+  } else if (url.pathname.startsWith("/assets/") ||
       /^\/fonts\/(resume|ui)\/[^/]+\.[a-f0-9]{12}\.woff2$/.test(url.pathname)) {
     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
   } else {

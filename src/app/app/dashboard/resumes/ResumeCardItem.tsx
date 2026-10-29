@@ -23,6 +23,7 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import { cn } from "@/lib/utils";
 import { normalizeFontFamily, preloadFontFamily } from "@/utils/fonts";
 import { Edit2, Copy, Trash2 } from "lucide-react";
+import { ResumePaperSkeleton } from "@/components/skeletons/ResumePaperSkeleton";
 
 interface ResumeCardItemProps {
     id: string;
@@ -127,6 +128,7 @@ export const ResumeCardItem = ({
                 >
                     <div className="absolute inset-0 pb-6 flex items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-[1.02] overflow-hidden" ref={containerRef}>
                         <div className="w-full h-full relative origin-top bg-white">
+                            {!previewReady && <ResumePaperSkeleton className="absolute inset-0 p-[7%]" />}
                             <div
                                 className="resume-preview absolute top-0 left-0 bg-white"
                                 style={{

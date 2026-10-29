@@ -13,7 +13,8 @@
     "deleteSuccess": "Deleted successfully",
     "deleteModuleConfirm": "Are you sure you want to delete this module? This action cannot be undone.",
     "configured": "Configured",
-    "notConfigured": "Not configured"
+    "notConfigured": "Not configured",
+    "loading": "Loading…"
   },
   "home": {
     "header": {

@@ -3,12 +3,15 @@ import { useEffect } from "react";
 import WorkbenchPage from "@/app/app/workbench/[id]/page";
 import { useResumeStore } from "@/store/useResumeStore";
 import { preloadFontFamily } from "@/utils/fonts";
+import { WorkbenchSkeleton } from "@/components/skeletons/PageSkeletons";
 
 export const Route = createFileRoute("/app/workbench/$id")({
   head: () => ({
     meta: [{ name: "robots", content: "noindex,nofollow" }]
   }),
   ssr: false,
+  // Server-rendered in place of the client-only page until it mounts.
+  pendingComponent: WorkbenchSkeleton,
   component: WorkbenchRoutePage
 });
 

@@ -17,6 +17,7 @@ import type { ResumeData } from "@/types/resume";
 import type { ResumeTemplate } from "@/types/template";
 import { ChevronLeft, FilePlus, Sparkles, X } from "lucide-react";
 import { normalizeFontFamily } from "@/utils/fonts";
+import { ResumePaperSkeleton } from "@/components/skeletons/ResumePaperSkeleton";
 
 interface CreateResumeModalProps {
     open: boolean;
@@ -75,13 +76,16 @@ const TemplateCardThumbnail = ({
 
     if (snapshotSrc) {
         return (
-            <img
-                src={snapshotSrc}
-                alt={t(`dashboard.templates.${template.nameKey}.name`)}
-                className="h-full w-full object-cover object-top"
-                loading="eager"
-                draggable={false}
-            />
+            <div className="relative h-full w-full">
+                <ResumePaperSkeleton className="absolute inset-0 bg-white p-[7%]" />
+                <img
+                    src={snapshotSrc}
+                    alt={t(`dashboard.templates.${template.nameKey}.name`)}
+                    className="relative h-full w-full object-cover object-top"
+                    loading="eager"
+                    draggable={false}
+                />
+            </div>
         );
     }
 

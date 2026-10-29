@@ -68,8 +68,8 @@
       "content": " 全新的 AI 简历优化功能已上线"
     },
     "cta": {
-      "title": "开启你的新职业篇章",
-      "description": "立即使用魔方简历，创建一份令人印象深刻的简历",
+      "title": "从一份好简历，走向下一程",
+      "description": "无需注册登录，现在就开始整理你的经历，做出一份干净、专业的简历。",
       "button": "免费开始使用"
     },
     "footer": {
@@ -123,21 +123,21 @@
         "local": "简历本地保存"
       },
       "templates": {
-        "title": "你的风格，不止一种。",
-        "description": "干净利落，或鲜明大胆。挑一个喜欢的起点，写下只属于你的经历。",
+        "title": "不同风格，同样专业",
+        "description": "或沉稳干练，或舒展鲜明。选一款顺眼的版式，认真梳理属于你的职业经历。",
         "browse": "浏览模板",
         "all": "查看全部模板",
         "choose": "选择简历模板",
         "classic": "经典",
         "minimalist": "极简",
         "editorial": "画报",
-        "swiss": "瑞士风格",
+        "swiss": "瑞士",
         "preview": "放大预览{name}模板",
         "alt": "{name}模板的示例简历",
-        "previewDescription": "当前为示例内容。进入模板库，即可选择模板并开始编辑。"
+        "previewDescription": "以上为模板示例，进入模板库即可选用并开始编辑。"
       },
       "footer": {
-        "note": "免费、开源。为你的下一步而做。",
+        "note": "免费、开源。愿你走好职业路上的每一步。",
         "source": "查看源码"
       },
       "illustrations": {

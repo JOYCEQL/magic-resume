@@ -71,9 +71,9 @@
     },
     "changelog": "Changelog",
     "cta": {
-      "title": "Start Your New Career Chapter",
-      "description": "Start using Magic Resume now to create an impressive resume",
-      "button": "Start Using for Free"
+      "title": "Take your next step with a great resume",
+      "description": "No sign-up required. Organize your experience and craft a clean, professional resume today.",
+      "button": "Get Started for Free"
     },
     "faq": {
       "title": "Frequently Asked Questions",
@@ -122,8 +122,8 @@
         "local": "Stored on your device"
       },
       "templates": {
-        "title": "A style that feels like you.",
-        "description": "Quietly confident or a little more expressive. Pick a starting point and make it your own.",
+        "title": "Different styles, equally professional",
+        "description": "Clean and composed, or bold and expressive. Choose a layout that fits and shape your career story with care.",
         "browse": "Browse Templates",
         "all": "View All Templates",
         "choose": "Choose a resume template",
@@ -133,10 +133,10 @@
         "swiss": "Swiss",
         "preview": "Preview {name} template",
         "alt": "Example resume in the {name} template",
-        "previewDescription": "This is sample content. Open the template library to choose a template and start editing."
+        "previewDescription": "Sample preview shown above. Open the template library to pick a layout and start editing."
       },
       "footer": {
-        "note": "Free and open source. For your next step.",
+        "note": "Free and open source. Built for every step of your career.",
         "source": "View Source"
       },
       "illustrations": {

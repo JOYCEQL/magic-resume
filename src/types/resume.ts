@@ -85,6 +85,7 @@ export interface BasicInfo {
   name: string;
   title: string;
   email: string;
+  emailUnderline?: boolean;
   phone: string;
   location: string;
   icons: Record<string, string>;

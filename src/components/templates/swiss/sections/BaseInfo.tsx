@@ -174,7 +174,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                     ) : item.key === "email" ? (
                                         <a 
                                             href={`mailto:${item.value}`} 
-                                            className="font-medium text-slate-600 hover:text-slate-900 underline truncate break-all [overflow-wrap:anywhere]"
+                                            className={cn("font-medium text-slate-600 hover:text-slate-900 truncate break-all [overflow-wrap:anywhere]", basic.emailUnderline ? "underline" : "no-underline")}
                                         >
                                             {item.value}
                                         </a>

@@ -795,6 +795,7 @@
       }
     },
     "basicPanel": {
+      "emailUnderline": "Show underline",
       "title": "Profile",
       "avatar": "Avatar",
       "basicField": "Basic",

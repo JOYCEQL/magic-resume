@@ -748,6 +748,7 @@
       }
     },
     "basicPanel": {
+      "emailUnderline": "显示下划线",
       "title": "资料",
       "basicField": "基础字段",
       "customField": "自定义字段",

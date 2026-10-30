@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { PlusCircle, GripVertical, Trash2, Eye, EyeOff } from "lucide-react";
+import { PlusCircle, GripVertical, Trash2, Eye, EyeOff, Underline } from "lucide-react";
 import { Reorder, AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import PhotoUpload from "@/components/shared/PhotoSelector";
 import IconSelector from "../IconSelector";
 import AlignSelector from "./AlignSelector";
@@ -286,7 +287,7 @@ const BasicPanel: React.FC = () => {
         <motion.div
           {...itemAnimations}
           className={cn(
-            "flex items-center gap-4 p-4 pr-3",
+            "flex items-center gap-2 px-3 py-4",
             "bg-card",
             "rounded-lg ",
             "transition-all duration-200",
@@ -321,10 +322,10 @@ const BasicPanel: React.FC = () => {
                 }}
               />
             )}
-            <div className=" w-[80px] ml-[4px] text-sm font-medium text-foreground">
+            <div className="w-14 shrink-0 ml-1 text-sm font-medium text-foreground">
               {t(`basicFields.${field.key}`)}
             </div>
-            <div className="flex-1">
+            <div className="relative flex-1 min-w-0">
               <Field
                 label=""
                 value={(basic?.[field.key] as string) ?? ""}
@@ -336,7 +337,37 @@ const BasicPanel: React.FC = () => {
                 }
                 placeholder={`请输入${field.label}`}
                 type={field.type}
+                className={field.key === "email" ? "pr-12" : undefined}
               />
+              {field.key === "email" && (
+                <div
+                  className="absolute right-1 top-1/2 flex h-5 -translate-y-1/2 items-center border-l border-border pl-1"
+                  onPointerDown={(event) => event.stopPropagation()}
+                >
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("emailUnderline")}
+                          aria-pressed={basic?.emailUnderline ?? false}
+                          className="h-7 w-7 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:hover:bg-primary/90"
+                          onClick={() =>
+                            updateBasicInfo({ emailUnderline: !basic?.emailUnderline })
+                          }
+                        >
+                          <Underline className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="border-0 bg-foreground px-2 py-1 text-xs text-background">
+                        {t("emailUnderline")}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              )}
             </div>
           </div>
 

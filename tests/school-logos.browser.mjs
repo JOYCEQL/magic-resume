@@ -1,3 +1,4 @@
+import { readSavedResumeStorage } from "./helpers/resume-storage.mjs";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile, mkdir } from "node:fs/promises";
@@ -142,7 +143,7 @@ test("live school search selects a remote logo and persists compressed pixels", 
   await result.waitFor();
   await eventually(async () => assert.ok(await result.locator("img").evaluate(image => image.complete && image.naturalWidth > 0)));
   await result.click();
-  const saved = () => page.evaluate(id => JSON.parse(localStorage.getItem("resume-storage")).state.resumes[id].education[0].logo, id);
+  const saved = async () => (await page.evaluate(readSavedResumeStorage)).state.resumes[id].education[0].logo;
   await eventually(async () => assert.match(await saved(), /^data:image\/png;base64,/));
   const logo = await saved();
   const size = await page.evaluate(src => new Promise(resolve => {

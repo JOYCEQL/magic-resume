@@ -9,6 +9,39 @@ pnpm test:ai
 This includes the numeric-content import regression tests in
 `resume-import-content.test.ts` and the existing AI/import tests.
 
+## Resume persistence and font generation
+
+`resume-persistence.test.ts` covers migration under storage quota pressure,
+partial document/index failures, retry after freeing space, debounce, and clearing
+pending writes. It runs as part of `pnpm test:ai`.
+
+Use a fresh Vite dev server for browser tests that import the store directly;
+HMR can otherwise leave the app and the test importing different module URLs.
+Each test uses isolated browser storage:
+
+```sh
+pnpm dev
+node --test tests/resume-persistence.browser.mjs
+node scripts/benchmark-resume-persistence.mjs
+```
+
+Set `PREVIEW_TEST_URL` to override the server address. The benchmark compares the
+previous full-store JSON write with incremental writes in real Chromium
+localStorage: 24 default resumes, 100 title edits, five alternating trials. It
+flushes every edit to measure serialization/storage cost without counting the
+additional benefit of debounce. It does not measure page-load or rendering time.
+
+Font generation regression tests build tiny real fonts, change their character
+sets and glyph widths, and verify the regenerated WOFF2 files:
+
+```sh
+python -m pip install fonttools brotli
+python -m unittest discover -s tests -p 'resume_fonts_test.py'
+```
+
+The font generator deliberately regenerates slices from their inputs. A hash of
+an old output file is not sufficient to validate an updated font or character set.
+
 ## OrcaRouter provider
 
 `tests/orcarouter-auth.test.ts` and `tests/orcarouter-catalog.test.ts` are part of

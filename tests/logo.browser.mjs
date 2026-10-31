@@ -1,3 +1,4 @@
+import { readSavedResumeStorage } from "./helpers/resume-storage.mjs";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createServer } from "node:http";
@@ -58,8 +59,7 @@ test("old resumes support logo uploads, ratios, remote images, all templates and
   assert.deepEqual(schoolRequests, [], "the workbench does not load the school catalog or logos");
   await page.locator("h3").filter({ hasText: "北京大学", visible: true }).first().click();
 
-  const savedEducation = () => page.evaluate((resumeId) =>
-    JSON.parse(localStorage.getItem("resume-storage")).state.resumes[resumeId].education[0], id);
+  const savedEducation = async () => (await page.evaluate(readSavedResumeStorage)).state.resumes[id].education[0];
   await page.getByRole("button", { name: "隐藏 Logo", exact: true }).click();
   let saved = await savedEducation();
   assert.equal(saved.logoConfig.width, 20);
@@ -176,7 +176,7 @@ test("old resumes support logo uploads, ratios, remote images, all templates and
   await mobile.goto(`${origin}/app/dashboard`);
   await mobile.evaluate(({ resumeId, stored }) => localStorage.setItem("resume-storage", stored), {
     resumeId: id,
-    stored: await page.evaluate(() => localStorage.getItem("resume-storage")),
+    stored: JSON.stringify(await page.evaluate(readSavedResumeStorage)),
   });
   await mobile.goto(`${origin}/app/workbench/${id}`);
   await mobile.getByRole("button", { name: "内容", exact: true }).click();

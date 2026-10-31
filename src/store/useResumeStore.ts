@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import type { StateStorage } from "zustand/middleware";
+import { persist } from "zustand/middleware";
+import { createResumePersistence } from "./resumePersistence";
 import { getFileHandle, verifyPermission } from "@/utils/fileSystem";
 import {
   BasicInfo,
@@ -126,17 +126,25 @@ const warnPersistFailure = (name: string, error: unknown) => {
   );
 };
 
-const createSafeLocalStorage = (): StateStorage => ({
-  getItem: (name) => localStorage.getItem(name),
-  setItem: (name, value) => {
-    try {
-      localStorage.setItem(name, value);
-    } catch (error) {
-      warnPersistFailure(name, error);
-    }
-  },
-  removeItem: (name) => localStorage.removeItem(name),
+const resumePersistence = createResumePersistence<ResumeData>({
+  getStorage: () => typeof window === "undefined" ? undefined : window.localStorage,
+  onError: warnPersistFailure,
 });
+
+export const flushResumePersistence = resumePersistence.flush;
+
+if (typeof window !== "undefined") {
+  const flushWhenHidden = () => {
+    if (document.visibilityState === "hidden") flushResumePersistence();
+  };
+  window.addEventListener("pagehide", flushResumePersistence);
+  document.addEventListener("visibilitychange", flushWhenHidden);
+  import.meta.hot?.dispose(() => {
+    flushResumePersistence();
+    window.removeEventListener("pagehide", flushResumePersistence);
+    document.removeEventListener("visibilitychange", flushWhenHidden);
+  });
+}
 
 const parseTimestamp = (value?: string): number | null => {
   if (!value) {
@@ -987,9 +995,7 @@ export const useResumeStore = create(
     }),
     {
       name: "resume-storage",
-      storage: createJSONStorage<PersistedResumeStore>(() =>
-        createSafeLocalStorage()
-      ),
+      storage: resumePersistence.storage,
       partialize: (state): PersistedResumeStore => ({
         resumes: state.resumes,
         activeResumeId: state.activeResumeId,

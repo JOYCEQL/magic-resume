@@ -1,3 +1,4 @@
+import { readSavedResumeStorage } from "./helpers/resume-storage.mjs";
 import assert from "node:assert/strict";
 import { mkdir, readFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -46,15 +47,15 @@ async function size(value: string) {
 }
 
 async function storedHtml() {
-  return page.evaluate(() => JSON.parse(localStorage.getItem("resume-storage") || "{}").state.resumes["font-size-test"].skillContent as string);
+  return (await page.evaluate(readSavedResumeStorage)).state.resumes["font-size-test"].skillContent as string;
 }
 
 async function updateFixture(changes: Record<string, unknown>) {
-  await page.evaluate((patch) => {
-    const saved = JSON.parse(localStorage.getItem("resume-storage") || "{}");
+  const saved = await page.evaluate(readSavedResumeStorage);
+  await page.evaluate(({ patch, saved }) => {
     Object.assign(saved.state.resumes["font-size-test"], patch);
     localStorage.setItem("resume-storage", JSON.stringify(saved));
-  }, changes);
+  }, { patch: changes, saved });
   await page.reload();
 }
 
@@ -171,12 +172,12 @@ try {
   await updateFixture({ activeSection: "skills" });
   await editor.waitFor();
   const jsonDownload = page.waitForEvent("download");
-  await page.evaluate(async () => {
+  const savedForExport = await page.evaluate(readSavedResumeStorage);
+  await page.evaluate(async (saved) => {
     const modulePath = "/src/utils/export.ts";
     const { exportResumeAsJson } = await import(modulePath);
-    const saved = JSON.parse(localStorage.getItem("resume-storage") || "{}");
     exportResumeAsJson({ resume: saved.state.resumes["font-size-test"] });
-  });
+  }, savedForExport);
   const jsonFile = await (await jsonDownload).path();
   assert.ok(jsonFile);
   const imported = JSON.parse(await readFile(jsonFile, "utf8"));

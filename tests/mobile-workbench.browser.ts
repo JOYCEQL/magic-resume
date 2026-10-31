@@ -1,3 +1,4 @@
+import { readSavedResumeStorage } from "./helpers/resume-storage.mjs";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdir } from "node:fs/promises";
@@ -94,7 +95,7 @@ for (const engine of [chromium, webkit]) {
     await editor.click();
     await page.keyboard.press("End");
     await page.keyboard.type(" Mobile edit retained");
-    assert.match(await page.evaluate(() => JSON.parse(localStorage.getItem("resume-storage")!).state.resumes["mobile-workbench-test"].skillContent), /Mobile edit retained/);
+    assert.match((await page.evaluate(readSavedResumeStorage)).state.resumes["mobile-workbench-test"].skillContent, /Mobile edit retained/);
 
     await page.setViewportSize({ width: 1024, height: 768 });
     assert.equal(await contentButton.isVisible(), false);

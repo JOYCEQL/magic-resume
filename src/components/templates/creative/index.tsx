@@ -85,4 +85,4 @@ const CreativeTemplate: React.FC<CreativeTemplateProps> = ({ data, template }) =
     );
 };
 
-export default CreativeTemplate;
+export default React.memo(CreativeTemplate);

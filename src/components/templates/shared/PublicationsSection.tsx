@@ -1,11 +1,11 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import type { GlobalSettings, Publication } from "@/types/resume";
 import { useLocale } from "@/i18n/compat/client";
 import { getAuthorDelimiter, getPublicationAuthors, getPublicationLink, getPublicationStatusLabel, hasPublicationContent } from "@/lib/publication";
 import { formatDateString, normalizeDateFormat } from "@/lib/utils";
 import SectionWrapper from "./SectionWrapper";
 
-export default function PublicationsSection({ publications = [], globalSettings, children }: {
+function PublicationsSection({ publications = [], globalSettings, children }: {
   publications?: Publication[];
   globalSettings?: GlobalSettings;
   children: ReactNode;
@@ -53,3 +53,10 @@ export default function PublicationsSection({ publications = [], globalSettings,
     </SectionWrapper>
   );
 }
+
+export default memo(
+  PublicationsSection,
+  (prev, next) =>
+    prev.publications === next.publications &&
+    prev.globalSettings === next.globalSettings
+);

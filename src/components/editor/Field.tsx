@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
@@ -169,6 +169,12 @@ const Field = ({
     );
   }
 
+  const handlePolish = useCallback(() => {
+    if (checkConfiguration()) {
+      setShowPolishDialog(true);
+    }
+  }, [checkConfiguration]);
+
   if (type === "editor") {
     return (
       <motion.div className="block">
@@ -178,22 +184,20 @@ const Field = ({
             content={value || ""}
             onChange={onChange}
             placeholder={placeholder}
-            onPolish={() => {
-              if (checkConfiguration()) {
-                setShowPolishDialog(true);
-              }
-            }}
+            onPolish={handlePolish}
           />
         </div>
 
-        <AIPolishDialog
-          open={showPolishDialog}
-          onOpenChange={setShowPolishDialog}
-          content={value || ""}
-          onApply={(content) => {
-            onChange(content);
-          }}
-        />
+        {showPolishDialog && (
+          <AIPolishDialog
+            open={showPolishDialog}
+            onOpenChange={setShowPolishDialog}
+            content={value || ""}
+            onApply={(content) => {
+              onChange(content);
+            }}
+          />
+        )}
       </motion.div>
     );
   }
@@ -215,4 +219,4 @@ const Field = ({
   );
 };
 
-export default Field;
+export default React.memo(Field);

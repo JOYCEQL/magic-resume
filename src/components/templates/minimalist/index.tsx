@@ -69,4 +69,4 @@ const MinimalistTemplate: React.FC<MinimalistTemplateProps> = ({ data, template 
     );
 };
 
-export default MinimalistTemplate;
+export default React.memo(MinimalistTemplate);

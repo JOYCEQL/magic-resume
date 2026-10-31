@@ -196,4 +196,4 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     );
 };
 
-export default BaseInfo;
+export default React.memo(BaseInfo);

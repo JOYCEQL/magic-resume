@@ -46,7 +46,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   ...props
 }) => {
   const t = useTranslations("photoConfig");
-  const { updateBasicInfo } = useResumeStore();
+  const updateBasicInfo = useResumeStore((state) => state.updateBasicInfo);
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
   const [isDragging, setIsDragging] = useState(false);

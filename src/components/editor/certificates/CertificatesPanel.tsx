@@ -13,8 +13,16 @@ import { toast } from "sonner";
 
 const CertificatesPanel = () => {
     const t = useTranslations("workbench.certificatesPanel");
-    const { activeResume, updateCertificatesBatch, addCertificate } = useResumeStore();
-    const { certificates = [], activeSection } = activeResume || {};
+    const certificates = useResumeStore(
+        (state) => state.activeResume?.certificates || []
+    );
+    const activeSection = useResumeStore(
+        (state) => state.activeResume?.activeSection
+    );
+    const updateCertificatesBatch = useResumeStore(
+        (state) => state.updateCertificatesBatch
+    );
+    const addCertificate = useResumeStore((state) => state.addCertificate);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleCreateCertificate = (url: string) => {

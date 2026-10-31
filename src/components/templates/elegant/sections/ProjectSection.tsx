@@ -72,4 +72,4 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
     );
 };
 
-export default ProjectSection;
+export default React.memo(ProjectSection);

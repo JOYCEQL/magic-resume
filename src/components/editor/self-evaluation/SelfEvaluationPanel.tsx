@@ -3,8 +3,12 @@ import { cn } from "@/lib/utils";
 import Field from "../Field";
 
 const SelfEvaluationPanel = () => {
-    const { activeResume, updateSelfEvaluationContent } = useResumeStore();
-    const selfEvaluationContent = activeResume?.selfEvaluationContent ?? "";
+    const selfEvaluationContent = useResumeStore(
+        (state) => state.activeResume?.selfEvaluationContent ?? ""
+    );
+    const updateSelfEvaluationContent = useResumeStore(
+        (state) => state.updateSelfEvaluationContent
+    );
     const handleChange = (value: string) => {
         updateSelfEvaluationContent(value);
     };

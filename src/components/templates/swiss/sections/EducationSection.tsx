@@ -91,4 +91,4 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
     );
 };
 
-export default EducationSection;
+export default React.memo(EducationSection);

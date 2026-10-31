@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
 import SectionTitle from "./SectionTitle";
@@ -76,4 +77,4 @@ const EducationSection = ({ education, globalSettings, showTitle = true, variant
     );
 };
 
-export default EducationSection;
+export default memo(EducationSection);

@@ -21,9 +21,17 @@ import {
 } from "../ui/tooltip";
 
 export function EditPanel() {
-  const { activeResume, updateMenuSections } = useResumeStore();
-  if (!activeResume) return;
-  const { activeSection = "", menuSections = [] } = activeResume || {};
+  const resumeId = useResumeStore((state) => state.activeResume?.id);
+  const activeSection = useResumeStore(
+    (state) => state.activeResume?.activeSection || ""
+  );
+  const menuSections = useResumeStore(
+    (state) => state.activeResume?.menuSections || []
+  );
+  const updateMenuSections = useResumeStore(
+    (state) => state.updateMenuSections
+  );
+  if (!resumeId) return;
 
   const renderFields = () => {
     switch (activeSection) {
@@ -41,7 +49,7 @@ export function EditPanel() {
       case "selfEvaluation":
         return <SelfEvaluationPanel />;
       case "publications":
-        return <PublicationsPanel key={activeResume.id} />;
+        return <PublicationsPanel key={resumeId} />;
       case "certificates":
         return <CertificatesPanel />;
       default:

@@ -29,4 +29,4 @@ const SectionLogo: React.FC<SectionLogoProps> = ({ src, config, size = 20 }) => 
   );
 };
 
-export default SectionLogo;
+export default React.memo(SectionLogo);

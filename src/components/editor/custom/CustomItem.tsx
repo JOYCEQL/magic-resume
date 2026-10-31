@@ -69,7 +69,8 @@ const CustomItem = ({
   item: CustomItemType;
   sectionId: string;
 }) => {
-  const { updateCustomItem, removeCustomItem } = useResumeStore();
+  const updateCustomItem = useResumeStore((state) => state.updateCustomItem);
+  const removeCustomItem = useResumeStore((state) => state.removeCustomItem);
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);

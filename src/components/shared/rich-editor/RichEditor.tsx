@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { useEditor, EditorContent, type Editor } from "@tiptap/react";
+import {
+  useEditor,
+  useEditorState,
+  EditorContent,
+  type Editor,
+} from "@tiptap/react";
 import { useTranslations } from "@/i18n/compat/client";
 import StarterKit from "@tiptap/starter-kit";
 import { ListKit } from "@tiptap/extension-list";
@@ -338,6 +343,10 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
   const [open, setOpen] = React.useState(false);
   const [linkUrl, setLinkUrl] = React.useState("");
   const t = useTranslations("richEditor");
+  const isLinkActive = useEditorState({
+    editor,
+    selector: ({ editor: currentEditor }) => currentEditor.isActive("link"),
+  });
 
   React.useEffect(() => {
     if (!open) return;
@@ -377,11 +386,11 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant={editor.isActive("link") ? "secondary" : "ghost"}
+          variant={isLinkActive ? "secondary" : "ghost"}
           size="sm"
           className={cn(
             "h-9 w-9 p-0 rounded-md transition-all duration-200 hover:scale-105",
-            editor.isActive("link")
+            isLinkActive
               ? "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-secondary dark:text-foreground dark:hover:bg-accent"
               : "hover:bg-primary/5 dark:hover:bg-secondary"
           )}
@@ -409,7 +418,7 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
             }}
           />
           <div className="flex items-center justify-end gap-2">
-            {editor.isActive("link") && (
+            {isLinkActive && (
               <Button
                 type="button"
                 variant="outline"
@@ -429,6 +438,152 @@ const LinkButton = ({ editor }: { editor: Editor }) => {
     </Popover>
   );
 };
+
+const RichEditorToolbar = React.memo(
+  ({ editor, onPolish }: { editor: Editor; onPolish?: () => void }) => {
+    const t = useTranslations("richEditor");
+    const toolbarState = useEditorState({
+      editor,
+      selector: ({ editor: currentEditor }) => ({
+        isBold: currentEditor.isActive("bold"),
+        isItalic: currentEditor.isActive("italic"),
+        isUnderline: currentEditor.isActive("underline"),
+        alignLeft: currentEditor.isActive({ textAlign: "left" }),
+        alignCenter: currentEditor.isActive({ textAlign: "center" }),
+        alignRight: currentEditor.isActive({ textAlign: "right" }),
+        alignJustify: currentEditor.isActive({ textAlign: "justify" }),
+        isBulletList: currentEditor.isActive("bulletList"),
+        isOrderedList: currentEditor.isActive("orderedList"),
+        canUndo: currentEditor.can().undo(),
+        canRedo: currentEditor.can().redo(),
+      }),
+    });
+
+    return (
+      <div
+        className={cn(
+          "border-b px-2 py-1.5 flex flex-wrap items-center gap-3",
+          "bg-background dark:bg-secondary/50 dark:border-border"
+        )}
+      >
+        <div className="flex flex-wrap items-center gap-0.5">
+          <MenuButton
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            isActive={toolbarState.isBold}
+            tooltip={t("bold")}
+          >
+            <Bold className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            isActive={toolbarState.isItalic}
+            tooltip={t("italic")}
+          >
+            <Italic className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            isActive={toolbarState.isUnderline}
+            tooltip={t("underline")}
+          >
+            <UnderlineIcon className="h-5 w-5" />
+          </MenuButton>
+          <LinkButton editor={editor} />
+          <TextColorButton editor={editor} />
+          <BackgroundColorButton editor={editor} />
+          <FontSizeSelect editor={editor} />
+        </div>
+
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
+
+        <div className="flex items-center gap-0.5">
+          <MenuButton
+            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            isActive={toolbarState.alignLeft}
+            tooltip={t("alignLeft")}
+          >
+            <AlignLeft className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            isActive={toolbarState.alignCenter}
+            tooltip={t("alignCenter")}
+          >
+            <AlignCenter className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            isActive={toolbarState.alignRight}
+            tooltip={t("alignRight")}
+          >
+            <AlignRight className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+            isActive={toolbarState.alignJustify}
+            tooltip={t("alignJustify")}
+          >
+            <AlignJustify className="h-5 w-5" />
+          </MenuButton>
+        </div>
+
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
+
+        <div className="flex items-center gap-0.5">
+          <MenuButton
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            isActive={toolbarState.isBulletList}
+            tooltip={t("bulletList")}
+          >
+            <List className="h-5 w-5" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            isActive={toolbarState.isOrderedList}
+            tooltip={t("orderedList")}
+          >
+            <ListOrdered className="h-5 w-5" />
+          </MenuButton>
+        </div>
+
+        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
+
+        <div className="flex items-center space-x-1">
+          <MenuButton
+            onClick={() => editor.chain().focus().undo().run()}
+            disabled={!toolbarState.canUndo}
+            tooltip={t("undo")}
+          >
+            <Undo className="h-4 w-4" />
+          </MenuButton>
+          <MenuButton
+            onClick={() => editor.chain().focus().redo().run()}
+            disabled={!toolbarState.canRedo}
+            tooltip={t("redo")}
+          >
+            <Redo className="h-4 w-4" />
+          </MenuButton>
+          {onPolish && (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onPolish();
+              }}
+              className="h-8 px-3 text-xs gap-1.5 ml-1 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/5 transition-all duration-300 group"
+            >
+              <Wand2 className="h-3 w-3 group-hover:rotate-12 transition-transform" />
+              {t("aiPolish")}
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
 
 const RichTextEditor = ({
   content = "",
@@ -506,43 +661,55 @@ const RichTextEditor = ({
     []
   );
 
+  const onChangeRef = React.useRef(onChange);
+  onChangeRef.current = onChange;
+
   const editor = useEditor({
     extensions,
     content: initialContent,
     onUpdate: ({ editor }) => {
       const normalizedHtml = normalizeEditorHtml(editor.getHTML());
-      setIsEditorEmpty(editor.isEmpty);
+      setIsEditorEmpty((prev) => {
+        const next = editor.isEmpty;
+        return prev === next ? prev : next;
+      });
 
       if (normalizedHtml === lastSyncedContentRef.current) {
         return;
       }
 
       lastSyncedContentRef.current = normalizedHtml;
-      onChange(normalizedHtml);
+      onChangeRef.current(normalizedHtml);
     },
     editorProps,
     immediatelyRender: false,
-    shouldRerenderOnTransaction: true,
+    shouldRerenderOnTransaction: false,
   });
 
   useEffect(() => {
     if (!editor) return;
 
     const normalizedContent = normalizeEditorHtml(content);
-    const normalizedEditorContent = normalizeEditorHtml(editor.getHTML());
+    if (normalizedContent === lastSyncedContentRef.current) {
+      return;
+    }
 
-    if (
-      normalizedContent === lastSyncedContentRef.current ||
-      normalizedContent === normalizedEditorContent
-    ) {
+    const normalizedEditorContent = normalizeEditorHtml(editor.getHTML());
+    if (normalizedContent === normalizedEditorContent) {
       lastSyncedContentRef.current = normalizedContent;
-      setIsEditorEmpty(editor.isEmpty);
+      setIsEditorEmpty((prev) => {
+        const next = editor.isEmpty;
+        return prev === next ? prev : next;
+      });
       return;
     }
 
     editor.commands.setContent(normalizedContent, { emitUpdate: false });
     lastSyncedContentRef.current = normalizedContent;
-    setIsEditorEmpty(editor.isEmpty);
+    setIsEditorEmpty((prev) => {
+      const next = editor.isEmpty;
+      return prev === next ? prev : next;
+    });
   }, [content, editor]);
 
   if (!editor) {
@@ -557,127 +724,7 @@ const RichTextEditor = ({
       )}
       onClick={(e) => e.stopPropagation()}
     >
-      <div
-        className={cn(
-          "border-b px-2 py-1.5 flex flex-wrap items-center gap-3",
-          "bg-background dark:bg-secondary/50 dark:border-border"
-        )}
-      >
-        <div className="flex flex-wrap items-center gap-0.5">
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            isActive={editor.isActive("bold")}
-            tooltip={t("bold")}
-          >
-            <Bold className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            isActive={editor.isActive("italic")}
-            tooltip={t("italic")}
-          >
-            <Italic className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            isActive={editor.isActive("underline")}
-            tooltip={t("underline")}
-          >
-            <UnderlineIcon className="h-5 w-5" />
-          </MenuButton>
-          <LinkButton editor={editor} />
-          <TextColorButton editor={editor} />
-          <BackgroundColorButton editor={editor} />
-          <FontSizeSelect editor={editor} />
-        </div>
-
-        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
-
-        <div className="flex items-center gap-0.5">
-          <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
-            isActive={editor.isActive({ textAlign: "left" })}
-            tooltip={t("alignLeft")}
-          >
-            <AlignLeft className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
-            isActive={editor.isActive({ textAlign: "center" })}
-            tooltip={t("alignCenter")}
-          >
-            <AlignCenter className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
-            isActive={editor.isActive({ textAlign: "right" })}
-            tooltip={t("alignRight")}
-          >
-            <AlignRight className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-            isActive={editor.isActive({ textAlign: "justify" })}
-            tooltip={t("alignJustify")}
-          >
-            <AlignJustify className="h-5 w-5" />
-          </MenuButton>
-        </div>
-
-        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
-
-        <div className="flex items-center gap-0.5">
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            isActive={editor.isActive("bulletList")}
-            tooltip={t("bulletList")}
-          >
-            <List className="h-5 w-5" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            isActive={editor.isActive("orderedList")}
-            tooltip={t("orderedList")}
-          >
-            <ListOrdered className="h-5 w-5" />
-          </MenuButton>
-        </div>
-
-        <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />
-
-        <div className="flex items-center space-x-1">
-          <MenuButton
-            onClick={() => editor.chain().focus().undo().run()}
-            disabled={!editor.can().undo()}
-            tooltip={t("undo")}
-          >
-            <Undo className="h-4 w-4" />
-          </MenuButton>
-          <MenuButton
-            onClick={() => editor.chain().focus().redo().run()}
-            disabled={!editor.can().redo()}
-            tooltip={t("redo")}
-          >
-            <Redo className="h-4 w-4" />
-          </MenuButton>
-          {onPolish && (
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onPolish();
-              }}
-              className="h-8 px-3 text-xs gap-1.5 ml-1 border-primary/20 hover:border-primary/40 text-primary hover:bg-primary/5 transition-all duration-300 group"
-            >
-              <Wand2 className="h-3 w-3 group-hover:rotate-12 transition-transform" />
-              {t("aiPolish")}
-            </Button>
-          )}
-        </div>
-      </div>
+      <RichEditorToolbar editor={editor} onPolish={onPolish} />
 
       {/* Editor Content */}
       <div className="relative">
@@ -727,4 +774,4 @@ const RichTextEditor = ({
   );
 };
 
-export default RichTextEditor;
+export default React.memo(RichTextEditor);

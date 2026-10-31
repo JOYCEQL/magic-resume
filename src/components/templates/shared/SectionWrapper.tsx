@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,7 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
     className = "",
     style,
 }) => {
-    const { setActiveSection } = useResumeStore();
+    const setActiveSection = useResumeStore((state) => state.setActiveSection);
 
     return (
         <motion.div
@@ -37,4 +38,4 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
     );
 };
 
-export default SectionWrapper;
+export default React.memo(SectionWrapper);

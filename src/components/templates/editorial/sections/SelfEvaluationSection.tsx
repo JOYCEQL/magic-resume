@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
@@ -26,4 +27,4 @@ const SelfEvaluationSection = ({ content, globalSettings, showTitle = true }: Se
   );
 };
 
-export default SelfEvaluationSection;
+export default memo(SelfEvaluationSection);

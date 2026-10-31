@@ -184,11 +184,16 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
 
 export default function PublicationsPanel() {
   const t = useTranslations("workbench.publicationsPanel");
-  const { activeResume, updateResume } = useResumeStore();
+  const resumeId = useResumeStore((state) => state.activeResume?.id);
+  const publications = useResumeStore(
+    (state) => state.activeResume?.publications
+  );
+  const updateResume = useResumeStore((state) => state.updateResume);
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  if (!activeResume) return null;
-  const items = activeResume.publications ?? [];
-  const save = (publications: Publication[]) => updateResume(activeResume.id, { publications });
+  if (!resumeId) return null;
+  const items = publications ?? [];
+  const save = (nextPublications: Publication[]) =>
+    updateResume(resumeId, { publications: nextPublications });
   const add = () => {
     const id = generateUUID();
     save([...items, { id, title: "", authors: "", highlightedAuthor: "", venue: "", date: "", status: "", link: "", description: "", visible: true }]);

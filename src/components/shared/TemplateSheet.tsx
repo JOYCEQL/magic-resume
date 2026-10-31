@@ -73,11 +73,12 @@ const TemplatePreview = ({
 const TemplateSheet = () => {
   const t = useTranslations("templates");
   const locale = useLocale();
-  const { activeResume, setTemplate } = useResumeStore();
+  const templateId = useResumeStore((state) => state.activeResume?.templateId);
+  const setTemplate = useResumeStore((state) => state.setTemplate);
   const { snapshotMap } = useTemplateSnapshots(locale);
 
   const currentTemplate =
-    DEFAULT_TEMPLATES.find((template) => template.id === activeResume?.templateId) ||
+    DEFAULT_TEMPLATES.find((template) => template.id === templateId) ||
     DEFAULT_TEMPLATES[0];
 
   return (

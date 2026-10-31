@@ -29,7 +29,7 @@ const itemAnimations = {
   transition: { type: "spring", stiffness: 500, damping: 50, mass: 1 },
 };
 
-const CustomField: React.FC<CustomFieldProps> = ({
+const CustomField: React.FC<CustomFieldProps> = React.memo(({
   field,
   onUpdate,
   onDelete,
@@ -153,136 +153,45 @@ const CustomField: React.FC<CustomFieldProps> = ({
       </motion.div>
     </Reorder.Item>
   );
-};
+});
 
-const BasicPanel: React.FC = () => {
-  const { activeResume, updateBasicInfo } = useResumeStore();
-  const { basic } = activeResume || {};
-  const [customFields, setCustomFields] = useState<CustomFieldType[]>(
-    basic?.customFields?.map((field) => ({
-      ...field,
-      visible: field.visible ?? true,
-    })) || []
-  );
-  const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
-    if (!basic?.fieldOrder) {
-      return DEFAULT_FIELD_ORDER;
-    }
-    return basic.fieldOrder.map((field) => ({
-      ...field,
-      visible: field.visible ?? true,
-    }));
-  });
-  const basicFieldsRef = useRef(basicFields);
-  const customFieldsRef = useRef(customFields);
-  const t = useTranslations("workbench.basicPanel");
+interface BasicFieldRowProps {
+  field: BasicFieldType;
+  value: string;
+  selectedIcon: string;
+  labelText: string;
+  emailUnderline?: boolean;
+  emailUnderlineLabel?: string;
+  onValueChange: (key: BasicFieldType["key"], value: string) => void;
+  onIconChange: (key: BasicFieldType["key"], icon: string) => void;
+  onToggleEmailUnderline?: () => void;
+  onToggleVisibility: (fieldId: string, isVisible: boolean) => void;
+  onDelete: (fieldId: string) => void;
+  onReorderEnd: () => void;
+}
 
-  useEffect(() => {
-    basicFieldsRef.current = basicFields;
-  }, [basicFields]);
-
-  useEffect(() => {
-    customFieldsRef.current = customFields;
-  }, [customFields]);
-
-  const handleBasicReorder = (newOrder: BasicFieldType[]) => {
-    basicFieldsRef.current = newOrder;
-    setBasicFields(newOrder);
-  };
-
-  const commitBasicReorder = useCallback(() => {
-    updateBasicInfo({
-      fieldOrder: basicFieldsRef.current,
-    });
-  }, [updateBasicInfo]);
-
-  const toggleFieldVisibility = (fieldId: string, isVisible: boolean) => {
-    const newFields = basicFields.map((field) =>
-      field.id === fieldId ? { ...field, visible: isVisible } : field
-    );
-    setBasicFields(newFields);
-    updateBasicInfo({
-      ...basic,
-      fieldOrder: newFields,
-    });
-  };
-
-  const deleteBasicField = (fieldId: string) => {
-    const fieldToDelete = basicFields.find((field) => field.id === fieldId);
-    if (
-      fieldToDelete &&
-      (fieldToDelete.key === "name" || fieldToDelete.key === "title")
-    ) {
-      return;
-    }
-
-    const updatedFields = basicFields.filter((field) => field.id !== fieldId);
-    setBasicFields(updatedFields);
-    updateBasicInfo({
-      ...basic,
-      fieldOrder: updatedFields,
-    });
-  };
-
-  const addCustomField = () => {
-    const fieldToAdd: CustomFieldType = {
-      id: generateUUID(),
-      label: "",
-      value: "",
-      icon: "User",
-      visible: true,
-      displayLabel: false,
-    };
-    const updatedFields = [...customFields, fieldToAdd];
-    setCustomFields(updatedFields);
-    updateBasicInfo({
-      ...basic,
-      customFields: updatedFields,
-    });
-  };
-
-  const updateCustomField = (updatedField: CustomFieldType) => {
-    const updatedFields = customFields.map((field) =>
-      field.id === updatedField.id ? updatedField : field
-    );
-    setCustomFields(updatedFields);
-    updateBasicInfo({
-      ...basic,
-      customFields: updatedFields,
-    });
-  };
-
-  const deleteCustomField = (id: string) => {
-    const updatedFields = customFields.filter((field) => field.id !== id);
-    setCustomFields(updatedFields);
-    updateBasicInfo({
-      ...basic,
-      customFields: updatedFields,
-    });
-  };
-
-  const handleCustomFieldsReorder = (newOrder: CustomFieldType[]) => {
-    customFieldsRef.current = newOrder;
-    setCustomFields(newOrder);
-  };
-
-  const commitCustomFieldsReorder = useCallback(() => {
-    updateBasicInfo({
-      customFields: customFieldsRef.current,
-    });
-  }, [updateBasicInfo]);
-
-  const renderBasicField = (field: BasicFieldType) => {
-    const selectedIcon = basic?.icons?.[field.key] || "User";
-
+const BasicFieldRow: React.FC<BasicFieldRowProps> = React.memo(
+  ({
+    field,
+    value,
+    selectedIcon,
+    labelText,
+    emailUnderline,
+    emailUnderlineLabel,
+    onValueChange,
+    onIconChange,
+    onToggleEmailUnderline,
+    onToggleVisibility,
+    onDelete,
+    onReorderEnd,
+  }) => {
     return (
       <Reorder.Item
         value={field}
         id={field.id}
-        key={field.id}
         className="group touch-none list-none"
         dragListener={field.key !== "name" && field.key !== "title"}
-        onDragEnd={commitBasicReorder}
+        onDragEnd={onReorderEnd}
       >
         <motion.div
           {...itemAnimations}
@@ -311,30 +220,17 @@ const BasicPanel: React.FC = () => {
             {field.key !== "name" && field.key !== "title" && (
               <IconSelector
                 value={selectedIcon}
-                onChange={(value) => {
-                  updateBasicInfo({
-                    ...basic,
-                    icons: {
-                      ...(basic?.icons || {}),
-                      [field.key]: value,
-                    },
-                  });
-                }}
+                onChange={(icon) => onIconChange(field.key, icon)}
               />
             )}
             <div className="w-14 shrink-0 ml-1 text-sm font-medium text-foreground">
-              {t(`basicFields.${field.key}`)}
+              {labelText}
             </div>
             <div className="relative flex-1 min-w-0">
               <Field
                 label=""
-                value={(basic?.[field.key] as string) ?? ""}
-                onChange={(value) =>
-                  updateBasicInfo({
-                    ...basic,
-                    [field.key]: value,
-                  })
-                }
+                value={value}
+                onChange={(nextValue) => onValueChange(field.key, nextValue)}
                 placeholder={`请输入${field.label}`}
                 type={field.type}
                 className={field.key === "email" ? "pr-12" : undefined}
@@ -351,18 +247,19 @@ const BasicPanel: React.FC = () => {
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label={t("emailUnderline")}
-                          aria-pressed={basic?.emailUnderline ?? false}
+                          aria-label={emailUnderlineLabel}
+                          aria-pressed={emailUnderline ?? false}
                           className="h-7 w-7 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground aria-pressed:hover:bg-primary/90"
-                          onClick={() =>
-                            updateBasicInfo({ emailUnderline: !basic?.emailUnderline })
-                          }
+                          onClick={onToggleEmailUnderline}
                         >
                           <Underline className="h-4 w-4" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent side="top" className="border-0 bg-foreground px-2 py-1 text-xs text-background">
-                        {t("emailUnderline")}
+                      <TooltipContent
+                        side="top"
+                        className="border-0 bg-foreground px-2 py-1 text-xs text-background"
+                      >
+                        {emailUnderlineLabel}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -380,7 +277,7 @@ const BasicPanel: React.FC = () => {
                 "text-neutral-500 dark:text-muted-foreground",
                 "hover:text-neutral-700 dark:hover:text-foreground"
               )}
-              onClick={() => toggleFieldVisibility(field.id, !field.visible)}
+              onClick={() => onToggleVisibility(field.id, !field.visible)}
             >
               {field.visible ? (
                 <Eye className="w-4 h-4 text-primary" />
@@ -398,7 +295,7 @@ const BasicPanel: React.FC = () => {
                   "text-neutral-500 dark:text-muted-foreground",
                   "hover:text-red-600 dark:hover:text-red-400"
                 )}
-                onClick={() => deleteBasicField(field.id)}
+                onClick={() => onDelete(field.id)}
               >
                 <Trash2 className="w-4 h-4 text-red-400" />
               </Button>
@@ -407,7 +304,175 @@ const BasicPanel: React.FC = () => {
         </motion.div>
       </Reorder.Item>
     );
-  };
+  }
+);
+
+const BasicPanel: React.FC = () => {
+  const basic = useResumeStore((state) => state.activeResume?.basic);
+  const updateBasicInfo = useResumeStore((state) => state.updateBasicInfo);
+  const [customFields, setCustomFields] = useState<CustomFieldType[]>(
+    basic?.customFields?.map((field) => ({
+      ...field,
+      visible: field.visible ?? true,
+    })) || []
+  );
+  const [basicFields, setBasicFields] = useState<BasicFieldType[]>(() => {
+    if (!basic?.fieldOrder) {
+      return DEFAULT_FIELD_ORDER;
+    }
+    return basic.fieldOrder.map((field) => ({
+      ...field,
+      visible: field.visible ?? true,
+    }));
+  });
+  const basicFieldsRef = useRef(basicFields);
+  const customFieldsRef = useRef(customFields);
+  const t = useTranslations("workbench.basicPanel");
+
+  useEffect(() => {
+    basicFieldsRef.current = basicFields;
+  }, [basicFields]);
+
+  useEffect(() => {
+    customFieldsRef.current = customFields;
+  }, [customFields]);
+
+  const handleBasicReorder = useCallback((newOrder: BasicFieldType[]) => {
+    basicFieldsRef.current = newOrder;
+    setBasicFields(newOrder);
+  }, []);
+
+  const commitBasicReorder = useCallback(() => {
+    updateBasicInfo({
+      fieldOrder: basicFieldsRef.current,
+    });
+  }, [updateBasicInfo]);
+
+  const handleFieldValueChange = useCallback(
+    (key: BasicFieldType["key"], value: string) => {
+      updateBasicInfo({
+        [key]: value,
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const handleFieldIconChange = useCallback(
+    (key: BasicFieldType["key"], icon: string) => {
+      const currentIcons =
+        useResumeStore.getState().activeResume?.basic?.icons || {};
+      updateBasicInfo({
+        icons: {
+          ...currentIcons,
+          [key]: icon,
+        },
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const handleToggleEmailUnderline = useCallback(() => {
+    const currentUnderline =
+      useResumeStore.getState().activeResume?.basic?.emailUnderline ?? false;
+    updateBasicInfo({ emailUnderline: !currentUnderline });
+  }, [updateBasicInfo]);
+
+  const toggleFieldVisibility = useCallback(
+    (fieldId: string, isVisible: boolean) => {
+      const newFields = basicFieldsRef.current.map((field) =>
+        field.id === fieldId ? { ...field, visible: isVisible } : field
+      );
+      basicFieldsRef.current = newFields;
+      setBasicFields(newFields);
+      updateBasicInfo({
+        fieldOrder: newFields,
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const deleteBasicField = useCallback(
+    (fieldId: string) => {
+      const fieldToDelete = basicFieldsRef.current.find(
+        (field) => field.id === fieldId
+      );
+      if (
+        fieldToDelete &&
+        (fieldToDelete.key === "name" || fieldToDelete.key === "title")
+      ) {
+        return;
+      }
+
+      const updatedFields = basicFieldsRef.current.filter(
+        (field) => field.id !== fieldId
+      );
+      basicFieldsRef.current = updatedFields;
+      setBasicFields(updatedFields);
+      updateBasicInfo({
+        fieldOrder: updatedFields,
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const addCustomField = useCallback(() => {
+    const fieldToAdd: CustomFieldType = {
+      id: generateUUID(),
+      label: "",
+      value: "",
+      icon: "User",
+      visible: true,
+      displayLabel: false,
+    };
+    const updatedFields = [...customFieldsRef.current, fieldToAdd];
+    customFieldsRef.current = updatedFields;
+    setCustomFields(updatedFields);
+    updateBasicInfo({
+      customFields: updatedFields,
+    });
+  }, [updateBasicInfo]);
+
+  const updateCustomField = useCallback(
+    (updatedField: CustomFieldType) => {
+      const updatedFields = customFieldsRef.current.map((field) =>
+        field.id === updatedField.id ? updatedField : field
+      );
+      customFieldsRef.current = updatedFields;
+      setCustomFields(updatedFields);
+      updateBasicInfo({
+        customFields: updatedFields,
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const deleteCustomField = useCallback(
+    (id: string) => {
+      const updatedFields = customFieldsRef.current.filter(
+        (field) => field.id !== id
+      );
+      customFieldsRef.current = updatedFields;
+      setCustomFields(updatedFields);
+      updateBasicInfo({
+        customFields: updatedFields,
+      });
+    },
+    [updateBasicInfo]
+  );
+
+  const handleCustomFieldsReorder = useCallback(
+    (newOrder: CustomFieldType[]) => {
+      customFieldsRef.current = newOrder;
+      setCustomFields(newOrder);
+    },
+    []
+  );
+
+  const commitCustomFieldsReorder = useCallback(() => {
+    updateBasicInfo({
+      customFields: customFieldsRef.current,
+    });
+  }, [updateBasicInfo]);
 
   return (
     <div className="space-y-6 p-6">
@@ -455,7 +520,35 @@ const BasicPanel: React.FC = () => {
                       onReorder={handleBasicReorder}
                       className="space-y-3"
                     >
-                      {basicFields.map((field) => renderBasicField(field))}
+                      {basicFields.map((field) => (
+                        <BasicFieldRow
+                          key={field.id}
+                          field={field}
+                          value={(basic?.[field.key] as string) ?? ""}
+                          selectedIcon={basic?.icons?.[field.key] || "User"}
+                          labelText={t(`basicFields.${field.key}`)}
+                          emailUnderline={
+                            field.key === "email"
+                              ? (basic?.emailUnderline ?? false)
+                              : undefined
+                          }
+                          emailUnderlineLabel={
+                            field.key === "email"
+                              ? t("emailUnderline")
+                              : undefined
+                          }
+                          onValueChange={handleFieldValueChange}
+                          onIconChange={handleFieldIconChange}
+                          onToggleEmailUnderline={
+                            field.key === "email"
+                              ? handleToggleEmailUnderline
+                              : undefined
+                          }
+                          onToggleVisibility={toggleFieldVisibility}
+                          onDelete={deleteBasicField}
+                          onReorderEnd={commitBasicReorder}
+                        />
+                      ))}
                     </Reorder.Group>
                   </AnimatePresence>
                 </motion.div>

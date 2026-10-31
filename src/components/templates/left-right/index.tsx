@@ -69,4 +69,4 @@ const LeftRightTemplate: React.FC<LeftRightTemplateProps> = ({ data, template })
     );
 };
 
-export default LeftRightTemplate;
+export default React.memo(LeftRightTemplate);

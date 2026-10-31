@@ -1,6 +1,6 @@
 import SectionIcon from "@/components/shared/SectionIcon";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Palette, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,8 +14,31 @@ type TabType = "content" | "style" | "preview";
 
 export function MobileWorkbench() {
   const [activeTab, setActiveTab] = useState<TabType>("content");
-  const { activeResume, setActiveSection } = useResumeStore();
-  const { activeSection, menuSections } = activeResume || {};
+  const [exportPreviewNeeded, setExportPreviewNeeded] = useState(false);
+  const activeSection = useResumeStore(
+    (state) => state.activeResume?.activeSection
+  );
+  const menuSections = useResumeStore(
+    (state) => state.activeResume?.menuSections
+  );
+  const setActiveSection = useResumeStore((state) => state.setActiveSection);
+
+  useEffect(() => {
+    const handleExportDialogChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ open?: boolean }>;
+      setExportPreviewNeeded(Boolean(customEvent.detail?.open));
+    };
+    window.addEventListener(
+      "resume-export-dialog-change",
+      handleExportDialogChange
+    );
+    return () => {
+      window.removeEventListener(
+        "resume-export-dialog-change",
+        handleExportDialogChange
+      );
+    };
+  }, []);
 
   // 渲染底部导航项
   const renderNavItem = (tab: TabType, icon: React.ReactNode, label: string) => (
@@ -132,10 +155,23 @@ export function MobileWorkbench() {
                 previewPanelCollapsed={false}
                 toggleSidePanel={() => {}}
                 toggleEditPanel={() => {}}
+                togglePreviewPanel={() => {}}
               />
             </motion.div>
           )}
         </AnimatePresence>
+        {activeTab !== "preview" && exportPreviewNeeded && (
+          <div className="hidden" aria-hidden="true">
+            <PreviewPanel
+              sidePanelCollapsed={true}
+              editPanelCollapsed={true}
+              previewPanelCollapsed={false}
+              toggleSidePanel={() => {}}
+              toggleEditPanel={() => {}}
+              togglePreviewPanel={() => {}}
+            />
+          </div>
+        )}
       </div>
 
       {/* 底部导航栏 */}

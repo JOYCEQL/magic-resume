@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useTemplateContext } from "../../TemplateContext";
 
@@ -39,4 +39,4 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
     );
 };
 
-export default SectionTitle;
+export default memo(SectionTitle);

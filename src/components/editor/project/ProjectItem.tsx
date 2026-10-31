@@ -103,8 +103,11 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
 };
 
 const ProjectItem = ({ project }: { project: Project }) => {
-  const { updateProjects, deleteProject, setDraggingProjectId } =
-    useResumeStore();
+  const updateProjects = useResumeStore((state) => state.updateProjects);
+  const deleteProject = useResumeStore((state) => state.deleteProject);
+  const setDraggingProjectId = useResumeStore(
+    (state) => state.setDraggingProjectId
+  );
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);

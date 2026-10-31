@@ -35,7 +35,7 @@ interface ResumeCardItemProps {
     index: number;
 }
 
-export const ResumeCardItem = ({
+export const ResumeCardItem = React.memo(({
     id,
     resume,
     t,
@@ -75,16 +75,15 @@ export const ResumeCardItem = ({
             setPreviewReady(true);
             return;
         }
-        // Mount the real preview just before it scrolls into view. Its fonts then
-        // load through CSS, without warming every saved resume's font family.
+        // Mount the real preview when near the viewport and recycle it once
+        // scrolled far off-screen so DOM size stays bounded on large lists.
         const observer = new IntersectionObserver((entries) => {
-            if (entries.some(entry => entry.isIntersecting)) {
-                setPreviewReady(true);
-                observer.disconnect();
-            }
+            const entry = entries[0];
+            if (!entry) return;
+            setPreviewReady(entry.isIntersecting);
         }, {
             root: element.closest("[data-radix-scroll-area-viewport]"),
-            rootMargin: "200px",
+            rootMargin: "300px 0px",
         });
         observer.observe(element);
         return () => observer.disconnect();
@@ -96,17 +95,20 @@ export const ResumeCardItem = ({
         });
     };
 
+    const shouldAnimateEntry = index < 8;
+    const entryDelay = shouldAnimateEntry ? Math.min(index * 0.03, 0.21) : 0;
+
     return (
         <motion.div
             data-resume-id={id}
             onPointerEnter={warmFont}
             onFocusCapture={warmFont}
-            initial={{ opacity: 0, y: 20 }}
+            initial={shouldAnimateEntry ? { opacity: 0, y: 16 } : false}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -16 }}
             transition={{
-                duration: 0.3,
-                delay: index * 0.1,
+                duration: 0.22,
+                delay: entryDelay,
             }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -200,32 +202,34 @@ export const ResumeCardItem = ({
                 </CardFooter>
             </Card>
 
-            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>{t("dashboard.resumes.deleteConfirmTitle")}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {t("dashboard.resumes.deleteConfirmDescription")}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel onClick={(e) => { e.stopPropagation(); setShowDeleteDialog(false); }}>
-                            {t("common.cancel")}
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600 border-none"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                deleteResume(resume);
-                                setShowDeleteDialog(false);
-                                toast.success(t("common.deleteSuccess"));
-                            }}
-                        >
-                            {t("common.confirm")}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+            {showDeleteDialog && (
+                <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                    <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>{t("dashboard.resumes.deleteConfirmTitle")}</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {t("dashboard.resumes.deleteConfirmDescription")}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={(e) => { e.stopPropagation(); setShowDeleteDialog(false); }}>
+                                {t("common.cancel")}
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-red-600 hover:bg-red-700 text-white focus:ring-red-600 border-none"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteResume(resume);
+                                    setShowDeleteDialog(false);
+                                    toast.success(t("common.deleteSuccess"));
+                                }}
+                            >
+                                {t("common.confirm")}
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </motion.div>
     );
-};
+});

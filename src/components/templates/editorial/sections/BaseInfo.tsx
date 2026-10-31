@@ -161,4 +161,4 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
   );
 };
 
-export default BaseInfo;
+export default React.memo(BaseInfo);

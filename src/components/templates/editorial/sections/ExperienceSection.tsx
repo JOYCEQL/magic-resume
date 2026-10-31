@@ -58,4 +58,4 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
   );
 };
 
-export default ExperienceSection;
+export default React.memo(ExperienceSection);

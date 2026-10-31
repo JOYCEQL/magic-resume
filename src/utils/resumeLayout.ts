@@ -37,6 +37,24 @@ export function createResumeMeasurement(element: HTMLElement): HTMLElement {
   return measurement;
 }
 
+export function syncResumeMeasurement(
+  element: HTMLElement,
+  measurement: HTMLElement,
+): HTMLElement {
+  measurement.style.width = getComputedStyle(element).width;
+  measurement.style.padding = element.style.padding;
+  measurement.style.fontFamily = element.style.fontFamily;
+  const displayedContent = element.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR);
+  const currentMeasured = measurement.querySelector<HTMLElement>(RESUME_CONTENT_SELECTOR);
+  if (!displayedContent || !currentMeasured) {
+    throw new Error("Resume layout content not found");
+  }
+  const nextMeasured = displayedContent.cloneNode(true) as HTMLElement;
+  nextMeasured.style.zoom = "1";
+  currentMeasured.replaceWith(nextMeasured);
+  return nextMeasured;
+}
+
 /** Measure actual layout after zoom; CSS zoom can change wrapping and rounding. */
 export function measureResumeLayout(
   content: HTMLElement,

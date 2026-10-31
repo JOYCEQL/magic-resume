@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { getConfig, getFileHandle } from "@/utils/fileSystem";
+import { useShallow } from "zustand/react/shallow";
 import { useResumeStore } from "@/store/useResumeStore";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { DEFAULT_TEMPLATES } from "@/config";
@@ -47,7 +48,15 @@ export const ResumeWorkbench = () => {
         addResume,
         deleteResume,
         createResume,
-    } = useResumeStore();
+    } = useResumeStore(
+        useShallow((state) => ({
+            resumes: state.resumes,
+            setActiveResume: state.setActiveResume,
+            addResume: state.addResume,
+            deleteResume: state.deleteResume,
+            createResume: state.createResume,
+        }))
+    );
     const aiConfig = useAIConfigStore();
     const pdfConnection = getTaskModel(aiConfig, "pdf");
     const textConnection = getTaskModel(aiConfig, "text");

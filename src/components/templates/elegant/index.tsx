@@ -71,4 +71,4 @@ const ElegantTemplate: React.FC<ElegantTemplateProps> = ({ data, template }) => 
     );
 };
 
-export default ElegantTemplate;
+export default React.memo(ElegantTemplate);

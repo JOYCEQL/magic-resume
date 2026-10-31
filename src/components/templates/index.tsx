@@ -22,4 +22,4 @@ const ResumeTemplateComponent: React.FC<TemplateProps> = ({
   );
 };
 
-export default ResumeTemplateComponent;
+export default React.memo(ResumeTemplateComponent);

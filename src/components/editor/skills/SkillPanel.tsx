@@ -3,8 +3,12 @@ import { cn } from "@/lib/utils";
 import Field from "../Field";
 
 const SkillPanel = () => {
-  const { activeResume, updateSkillContent } = useResumeStore();
-  const { skillContent } = activeResume || {};
+  const skillContent = useResumeStore(
+    (state) => state.activeResume?.skillContent
+  );
+  const updateSkillContent = useResumeStore(
+    (state) => state.updateSkillContent
+  );
   const handleChange = (value: string) => {
     updateSkillContent(value);
   };

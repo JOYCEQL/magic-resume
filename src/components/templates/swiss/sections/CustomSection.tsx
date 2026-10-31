@@ -88,4 +88,4 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
     );
 };
 
-export default CustomSection;
+export default React.memo(CustomSection);

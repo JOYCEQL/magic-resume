@@ -55,4 +55,4 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education, globalSe
   );
 };
 
-export default EducationSection;
+export default React.memo(EducationSection);

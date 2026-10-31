@@ -108,4 +108,4 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ data, template }) => {
     );
 };
 
-export default ModernTemplate;
+export default React.memo(ModernTemplate);

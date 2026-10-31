@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { MenuSection } from "@/types/resume";
 
 interface TemplateContextProps {
@@ -13,8 +13,13 @@ export const TemplateProvider: React.FC<{
   menuSections: MenuSection[];
   children: React.ReactNode;
 }> = ({ templateId, menuSections, children }) => {
+  const value = useMemo(
+    () => ({ templateId, menuSections }),
+    [templateId, menuSections]
+  );
+
   return (
-    <TemplateContext.Provider value={{ templateId, menuSections }}>
+    <TemplateContext.Provider value={value}>
       {children}
     </TemplateContext.Provider>
   );

@@ -14,22 +14,23 @@ interface Props {
 const PhotoSelector: React.FC<Props> = ({ className }) => {
   const t = useTranslations("workbench");
   const [showConfig, setShowConfig] = useState(false);
-  const { updateBasicInfo, activeResume } = useResumeStore();
-  const { basic = {} as BasicInfo } = activeResume || {};
+  const updateBasicInfo = useResumeStore((state) => state.updateBasicInfo);
+  const photo = useResumeStore((state) => state.activeResume?.basic?.photo);
+  const photoConfig = useResumeStore(
+    (state) => state.activeResume?.basic?.photoConfig
+  );
   const handlePhotoChange = (
-    photo: string | undefined,
+    nextPhoto: string | undefined,
     config?: PhotoConfig
   ) => {
     updateBasicInfo({
-      ...basic,
-      photo,
+      photo: nextPhoto,
       photoConfig: config,
     });
   };
 
   const handleConfigChange = (config: PhotoConfig) => {
     updateBasicInfo({
-      ...basic,
       photoConfig: config,
     });
   };
@@ -56,15 +57,14 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
             className="h-6 px-2"
             onClick={() => {
               updateBasicInfo({
-                ...basic,
                 photoConfig: {
-                  ...basic.photoConfig,
-                  visible: !(basic.photoConfig?.visible ?? true),
+                  ...photoConfig,
+                  visible: !(photoConfig?.visible ?? true),
                 },
               });
             }}
           >
-            {basic.photoConfig?.visible !== false ? (
+            {photoConfig?.visible !== false ? (
               <Eye className="w-4 h-4 text-primary" />
             ) : (
               <EyeOff className="w-4 h-4" />
@@ -74,9 +74,9 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
       </div>
 
       <div className="mt-2 relative overflow-hidden">
-        {basic.photo && (
+        {photo && (
           <img
-            src={basic.photo}
+            src={photo}
             alt="Selected"
             className="w-[48px] h-[48px] object-cover rounded"
           />
@@ -86,8 +86,8 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
       <PhotoConfigDrawer
         isOpen={showConfig}
         onClose={() => setShowConfig(false)}
-        photo={basic.photo}
-        config={basic.photoConfig}
+        photo={photo}
+        config={photoConfig}
         onPhotoChange={handlePhotoChange}
         onConfigChange={handleConfigChange}
       />
@@ -95,4 +95,4 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
   );
 };
 
-export default PhotoSelector;
+export default React.memo(PhotoSelector);

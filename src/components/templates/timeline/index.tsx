@@ -90,4 +90,4 @@ const TimelineTemplate: React.FC<TimelineTemplateProps> = ({ data, template }) =
     );
 };
 
-export default TimelineTemplate;
+export default React.memo(TimelineTemplate);

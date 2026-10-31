@@ -77,4 +77,4 @@ const SwissTemplate: React.FC<SwissTemplateProps> = ({ data, template }) => {
     );
 };
 
-export default SwissTemplate;
+export default React.memo(SwissTemplate);

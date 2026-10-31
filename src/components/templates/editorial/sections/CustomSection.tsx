@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
@@ -52,4 +53,4 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
   );
 };
 
-export default CustomSection;
+export default memo(CustomSection);

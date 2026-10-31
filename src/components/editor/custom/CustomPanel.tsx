@@ -8,9 +8,11 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { CustomItem as CustomItemType } from "@/types/resume";
 
 const CustomPanel = memo(({ sectionId }: { sectionId: string }) => {
-  const { addCustomItem, updateCustomData, activeResume } = useResumeStore();
-  const { customData } = activeResume || {};
-  const items = customData?.[sectionId] || [];
+  const addCustomItem = useResumeStore((state) => state.addCustomItem);
+  const updateCustomData = useResumeStore((state) => state.updateCustomData);
+  const items = useResumeStore(
+    (state) => state.activeResume?.customData?.[sectionId] || []
+  );
   const handleCreateItem = () => {
     addCustomItem(sectionId);
   };

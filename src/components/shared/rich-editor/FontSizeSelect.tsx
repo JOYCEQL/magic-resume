@@ -34,7 +34,12 @@ export default function FontSizeSelect({ editor }: { editor: Editor }) {
   const savedState = useRef(editor.state);
 
   useEffect(() => {
-    const sync = () => setSelection(readSelection(editor));
+    const sync = () => {
+      const next = readSelection(editor);
+      setSelection((prev) =>
+        prev.enabled === next.enabled && prev.value === next.value ? prev : next
+      );
+    };
     sync();
     editor.on("transaction", sync);
     return () => {

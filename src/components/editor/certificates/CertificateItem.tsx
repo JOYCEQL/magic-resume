@@ -10,7 +10,11 @@ import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 
 const CertificateItem = ({ certificate }: { certificate: Certificate }) => {
-    const { updateCertificate, removeCertificate, setDraggingProjectId } = useResumeStore();
+    const updateCertificate = useResumeStore((state) => state.updateCertificate);
+    const removeCertificate = useResumeStore((state) => state.removeCertificate);
+    const setDraggingProjectId = useResumeStore(
+        (state) => state.setDraggingProjectId
+    );
     const dragControls = useDragControls();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const t = useTranslations("workbench.certificatesPanel");

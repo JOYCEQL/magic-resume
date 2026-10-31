@@ -10,9 +10,13 @@ import { generateUUID } from "@/utils/uuid";
 
 const EducationPanel = () => {
   const t = useTranslations('workbench.educationPanel');
-  const { activeResume, updateEducation, updateEducationBatch } =
-    useResumeStore();
-  const { education = [] } = activeResume || {};
+  const education = useResumeStore(
+    (state) => state.activeResume?.education || []
+  );
+  const updateEducation = useResumeStore((state) => state.updateEducation);
+  const updateEducationBatch = useResumeStore(
+    (state) => state.updateEducationBatch
+  );
   const handleCreateProject = () => {
     const newEducation: Education = {
       id: generateUUID(),

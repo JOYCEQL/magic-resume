@@ -64,7 +64,8 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
     },
     ref
   ) => {
-    const { activeResume, setActiveSection } = useResumeStore();
+    const activeResume = useResumeStore((state) => state.activeResume);
+    const setActiveSection = useResumeStore((state) => state.setActiveSection);
     const selectedFontFamily = normalizeFontFamily(
       activeResume?.globalSettings?.fontFamily
     );
@@ -85,7 +86,6 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
 
     const { contentHeight, scaleFactor, pageCount, cannotFit } = useAutoOnePage({
       contentRef: resumeContentRef,
-      content: activeResume,
       pagePadding,
       enabled: autoOnePageEnabled,
     });
@@ -237,4 +237,4 @@ const PreviewPanel = React.forwardRef<HTMLDivElement, PreviewPanelProps>(
 
 PreviewPanel.displayName = "PreviewPanel";
 
-export default PreviewPanel;
+export default React.memo(PreviewPanel);

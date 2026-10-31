@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Edit2, Menu, PanelLeft, Minimize2 } from "lucide-react";
 import { EditorHeader } from "@/components/editor/EditorHeader";
@@ -166,28 +166,135 @@ export default function Home() {
   const [editPanelCollapsed, setEditPanelCollapsed] = useState(false);
   const [previewPanelCollapsed, setPreviewPanelCollapsed] = useState(false);
   const [panelSizes, setPanelSizes] = useState<number[]>(LAYOUT_CONFIG.DEFAULT);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 768px)").matches
+      : true
+  );
+  const mainRef = useRef<HTMLElement>(null);
+  const pendingFocusRef = useRef<{
+    kind: "input" | "tiptap";
+    index: number;
+    selectionStart: number | null;
+    selectionEnd: number | null;
+  } | null>(null);
 
-  // Create a ref for the resume content that PreviewDock can access
-  // Currently we can't get the inner ref easily across component boundaries
-  // But we need to pass a mock or implement forwardRef in PreviewPanel later
-  // For now we pass null to satisfy the prop requirement
   const resumeContentRef = React.useRef<HTMLDivElement>(null);
 
-  const toggleSidePanel = () => {
-    setSidePanelCollapsed(!sidePanelCollapsed);
-  };
+  const toggleSidePanel = useCallback(() => {
+    setSidePanelCollapsed((prev) => !prev);
+  }, []);
 
-  const toggleEditPanel = () => {
-    setEditPanelCollapsed(!editPanelCollapsed);
-  };
+  const toggleEditPanel = useCallback(() => {
+    setEditPanelCollapsed((prev) => !prev);
+  }, []);
 
-  const togglePreviewPanel = () => {
-    setPreviewPanelCollapsed(!previewPanelCollapsed);
-  };
+  const togglePreviewPanel = useCallback(() => {
+    setPreviewPanelCollapsed((prev) => !prev);
+  }, []);
 
-  const updateLayout = (sizes: number[]) => {
+  const updateLayout = useCallback((sizes: number[]) => {
     setPanelSizes(sizes);
-  };
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const syncViewportLayout = () => {
+      const nextIsDesktop = mediaQuery.matches;
+      setIsDesktop((prevIsDesktop) => {
+        if (prevIsDesktop === nextIsDesktop) {
+          return prevIsDesktop;
+        }
+        const mainEl = mainRef.current;
+        const activeEl = document.activeElement as HTMLElement | null;
+        if (mainEl && activeEl && mainEl.contains(activeEl)) {
+          if (
+            activeEl instanceof HTMLInputElement ||
+            activeEl instanceof HTMLTextAreaElement
+          ) {
+            const inputs = Array.from(
+              mainEl.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+                "input, textarea"
+              )
+            );
+            const idx = inputs.indexOf(activeEl);
+            if (idx >= 0) {
+              pendingFocusRef.current = {
+                kind: "input",
+                index: idx,
+                selectionStart: activeEl.selectionStart,
+                selectionEnd: activeEl.selectionEnd,
+              };
+            }
+          } else if (activeEl.matches('.tiptap[contenteditable="true"]')) {
+            const editors = Array.from(
+              mainEl.querySelectorAll<HTMLElement>(
+                '.tiptap[contenteditable="true"]'
+              )
+            );
+            const idx = editors.indexOf(activeEl);
+            if (idx >= 0) {
+              pendingFocusRef.current = {
+                kind: "tiptap",
+                index: idx,
+                selectionStart: null,
+                selectionEnd: null,
+              };
+            }
+          }
+        }
+        return nextIsDesktop;
+      });
+    };
+
+    syncViewportLayout();
+    mediaQuery.addEventListener("change", syncViewportLayout);
+    window.addEventListener("resize", syncViewportLayout);
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewportLayout);
+      window.removeEventListener("resize", syncViewportLayout);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const pending = pendingFocusRef.current;
+    if (!pending || !mainRef.current) return;
+    pendingFocusRef.current = null;
+
+    if (pending.kind === "input") {
+      const inputs = Array.from(
+        mainRef.current.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+          "input, textarea"
+        )
+      );
+      const target = inputs[pending.index];
+      if (target) {
+        target.focus({ preventScroll: true });
+        if (
+          pending.selectionStart !== null &&
+          pending.selectionEnd !== null &&
+          typeof target.setSelectionRange === "function"
+        ) {
+          try {
+            target.setSelectionRange(
+              pending.selectionStart,
+              pending.selectionEnd
+            );
+          } catch {
+            // Some input types do not support selection ranges
+          }
+        }
+      }
+    } else if (pending.kind === "tiptap") {
+      const editors = Array.from(
+        mainRef.current.querySelectorAll<HTMLElement>(
+          '.tiptap[contenteditable="true"]'
+        )
+      );
+      const target = editors[pending.index] || editors[0];
+      target?.focus({ preventScroll: true });
+    }
+  }, [isDesktop]);
 
   useEffect(() => {
     // 如果预览面板已经收起，则不需要自动收起侧边栏，因为空间足够
@@ -279,100 +386,107 @@ export default function Home() {
 
   return (
     <main
+      ref={mainRef}
       className={cn(
         "flex h-screen h-[100dvh] w-full flex-col overflow-hidden",
         "bg-background text-foreground"
       )}
     >
       <EditorHeader />
-      {/* 桌面端布局 */}
-      <div className="relative hidden min-h-0 flex-1 w-full md:block">
-        <div className={cn(
-          "h-full transition-all duration-300",
-          previewPanelCollapsed ? "w-[calc(100%-4rem)]" : "w-full"
-        )}>
-          <ResizablePanelGroup
-            key={panelSizes?.join("-")}
-            direction="horizontal"
+      {isDesktop ? (
+        /* 桌面端布局 */
+        <div className="relative hidden min-h-0 flex-1 w-full md:block">
+          <div
             className={cn(
-              "h-full",
-              "h-full",
-              "border border-border bg-background"
+              "h-full transition-all duration-300",
+              previewPanelCollapsed ? "w-[calc(100%-4rem)]" : "w-full"
             )}
           >
-            {/* 侧边栏面板 */}
-            {!sidePanelCollapsed && (
-              <>
-                <ResizablePanel
-                  id="side-panel"
-                  order={1}
-                  defaultSize={panelSizes?.[0]}
-                  className="bg-background"
-                >
-                  <div className="h-full overflow-y-auto">
-                    <SidePanel />
-                  </div>
-                </ResizablePanel>
-                <DragHandle />
-              </>
-            )}
-
-            {/* 编辑面板 */}
-            {!editPanelCollapsed && (
-              <>
-                <ResizablePanel
-                  id="edit-panel"
-                  order={2}
-                  defaultSize={panelSizes?.[1]}
-                  className="bg-background"
-                >
-                  <div className="h-full">
-                    <EditPanel />
-                  </div>
-                </ResizablePanel>
-                <DragHandle />
-              </>
-            )}
-            {/* 预览面板 - 使用 CSS 隐藏而非条件渲染，确保导出时 #resume-preview 始终在 DOM 中 */}
-            <ResizablePanel
-              id="preview-panel"
-              order={3}
-              collapsible={false}
-              defaultSize={panelSizes?.[2]}
-              className={cn("bg-gray-100 dark:bg-background", previewPanelCollapsed && "hidden")}
+            <ResizablePanelGroup
+              key={panelSizes?.join("-")}
+              direction="horizontal"
+              className={cn(
+                "h-full",
+                "border border-border bg-background"
+              )}
             >
-              <div
-                className="h-full overflow-y-auto"
-                data-preview-scroll-container="true"
+              {/* 侧边栏面板 */}
+              {!sidePanelCollapsed && (
+                <>
+                  <ResizablePanel
+                    id="side-panel"
+                    order={1}
+                    defaultSize={panelSizes?.[0]}
+                    className="bg-background"
+                  >
+                    <div className="h-full overflow-y-auto">
+                      <SidePanel />
+                    </div>
+                  </ResizablePanel>
+                  <DragHandle />
+                </>
+              )}
+
+              {/* 编辑面板 */}
+              {!editPanelCollapsed && (
+                <>
+                  <ResizablePanel
+                    id="edit-panel"
+                    order={2}
+                    defaultSize={panelSizes?.[1]}
+                    className="bg-background"
+                  >
+                    <div className="h-full">
+                      <EditPanel />
+                    </div>
+                  </ResizablePanel>
+                  <DragHandle />
+                </>
+              )}
+              {/* 预览面板 - 使用 CSS 隐藏而非条件渲染，确保导出时 #resume-preview 始终在 DOM 中 */}
+              <ResizablePanel
+                id="preview-panel"
+                order={3}
+                collapsible={false}
+                defaultSize={panelSizes?.[2]}
+                className={cn(
+                  "bg-gray-100 dark:bg-background",
+                  previewPanelCollapsed && "hidden"
+                )}
               >
-                <PreviewPanel
-                  sidePanelCollapsed={sidePanelCollapsed}
-                  editPanelCollapsed={editPanelCollapsed}
-                  previewPanelCollapsed={previewPanelCollapsed}
-                  toggleSidePanel={toggleSidePanel}
-                  toggleEditPanel={toggleEditPanel}
-                  togglePreviewPanel={togglePreviewPanel}
-                />
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
+                <div
+                  className="h-full overflow-y-auto"
+                  data-preview-scroll-container="true"
+                >
+                  <PreviewPanel
+                    sidePanelCollapsed={sidePanelCollapsed}
+                    editPanelCollapsed={editPanelCollapsed}
+                    previewPanelCollapsed={previewPanelCollapsed}
+                    toggleSidePanel={toggleSidePanel}
+                    toggleEditPanel={toggleEditPanel}
+                    togglePreviewPanel={togglePreviewPanel}
+                  />
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+
+          <PreviewDock
+            sidePanelCollapsed={sidePanelCollapsed}
+            editPanelCollapsed={editPanelCollapsed}
+            previewPanelCollapsed={previewPanelCollapsed}
+            toggleSidePanel={toggleSidePanel}
+            toggleEditPanel={toggleEditPanel}
+            togglePreviewPanel={togglePreviewPanel}
+            resumeContentRef={resumeContentRef}
+          />
         </div>
-
-        <PreviewDock
-          sidePanelCollapsed={sidePanelCollapsed}
-          editPanelCollapsed={editPanelCollapsed}
-          previewPanelCollapsed={previewPanelCollapsed}
-          toggleSidePanel={toggleSidePanel}
-          toggleEditPanel={toggleEditPanel}
-          togglePreviewPanel={togglePreviewPanel}
-          resumeContentRef={resumeContentRef}
-        />
-      </div>
-
-      {/* 移动端布局 */}
-      <div className="min-h-0 flex-1 md:hidden">
-        <MobileWorkbench />
-      </div>
+      ) : (
+        /* 移动端布局 */
+        <div className="min-h-0 flex-1 md:hidden">
+          <MobileWorkbench />
+        </div>
+      )}
     </main>
   );
 }

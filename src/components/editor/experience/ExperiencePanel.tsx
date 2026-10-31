@@ -10,9 +10,13 @@ import { generateUUID } from "@/utils/uuid";
 
 const ExperiencePanel = () => {
   const t = useTranslations("workbench.experiencePanel");
-  const { activeResume, updateExperience, updateExperienceBatch } =
-    useResumeStore();
-  const { experience = [] } = activeResume || {};
+  const experience = useResumeStore(
+    (state) => state.activeResume?.experience || []
+  );
+  const updateExperience = useResumeStore((state) => state.updateExperience);
+  const updateExperienceBatch = useResumeStore(
+    (state) => state.updateExperienceBatch
+  );
   const handleCreateProject = () => {
     const newProject: Experience = {
       id: generateUUID(),

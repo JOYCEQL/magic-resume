@@ -32,7 +32,7 @@ export function GrammarCheckDrawer() {
     dismissError,
   } = useGrammarCheck();
 
-  const { activeResume, updateResume } = useResumeStore();
+  const updateResume = useResumeStore((state) => state.updateResume);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,6 +56,7 @@ export function GrammarCheckDrawer() {
 
   const handleAccept = (index: number) => {
     const error = errors[index];
+    const activeResume = useResumeStore.getState().activeResume;
     if (!error || !activeResume) return;
 
     // 递归查找并替换简历数据中的文本

@@ -10,9 +10,13 @@ import { generateUUID } from "@/utils/uuid";
 
 const ProjectPanel = () => {
   const t = useTranslations("workbench.projectPanel");
-  const { activeResume, updateProjects, updateProjectsBatch } =
-    useResumeStore();
-  const { projects = [] } = activeResume || {};
+  const projects = useResumeStore(
+    (state) => state.activeResume?.projects || []
+  );
+  const updateProjects = useResumeStore((state) => state.updateProjects);
+  const updateProjectsBatch = useResumeStore(
+    (state) => state.updateProjectsBatch
+  );
   const handleCreateProject = () => {
     const newProject: Project = {
       id: generateUUID(),

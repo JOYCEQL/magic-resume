@@ -120,7 +120,8 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 };
 
 const EducationItem = ({ education }: { education: Education }) => {
-  const { updateEducation, deleteEducation } = useResumeStore();
+  const updateEducation = useResumeStore((state) => state.updateEducation);
+  const deleteEducation = useResumeStore((state) => state.deleteEducation);
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);

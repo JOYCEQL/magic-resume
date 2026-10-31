@@ -94,8 +94,15 @@ const PreviewDock = ({
   const t = useTranslations("previewDock");
   const { checkGrammar, isChecking } = useGrammarCheck();
 
-  const { duplicateResume, setActiveResume, activeResumeId, activeResume, updateGlobalSettings } = useResumeStore();
-  const { globalSettings = {} } = activeResume || {};
+  const duplicateResume = useResumeStore((state) => state.duplicateResume);
+  const setActiveResume = useResumeStore((state) => state.setActiveResume);
+  const activeResumeId = useResumeStore((state) => state.activeResumeId);
+  const autoOnePage = useResumeStore((state) =>
+    Boolean(state.activeResume?.globalSettings?.autoOnePage)
+  );
+  const updateGlobalSettings = useResumeStore(
+    (state) => state.updateGlobalSettings
+  );
 
   const { checkConfiguration } = useAIConfiguration();
 
@@ -206,16 +213,16 @@ const PreviewDock = ({
                         "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
                         "hover:bg-gray-100/50 dark:hover:bg-secondary/50",
                         "transition-all duration-200",
-                        globalSettings?.autoOnePage && [
+                        autoOnePage && [
                           "bg-primary text-primary-foreground",
                           "hover:bg-primary/90 dark:hover:bg-primary/90",
                           "shadow-sm"
                         ]
                       )}
                       onClick={() => {
-                        updateGlobalSettings({ autoOnePage: !globalSettings?.autoOnePage });
+                        updateGlobalSettings({ autoOnePage: !autoOnePage });
                         toast.success(
-                          globalSettings?.autoOnePage
+                          autoOnePage
                             ? t("autoOnePage.disabled")
                             : t("autoOnePage.enabled")
                         );
@@ -431,4 +438,4 @@ const PreviewDock = ({
   );
 };
 
-export default PreviewDock;
+export default React.memo(PreviewDock);

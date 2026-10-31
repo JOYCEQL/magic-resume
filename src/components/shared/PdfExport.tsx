@@ -98,8 +98,13 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [isExportingJson, setIsExportingJson] = useState(false);
   const [isExportingMarkdown, setIsExportingMarkdown] = useState(false);
-  const { activeResume } = useResumeStore();
-  const { globalSettings = {}, title } = activeResume || {};
+  const title = useResumeStore((state) => state.activeResume?.title);
+  const pagePadding = useResumeStore(
+    (state) => state.activeResume?.globalSettings?.pagePadding || 0
+  );
+  const fontFamily = useResumeStore(
+    (state) => state.activeResume?.globalSettings?.fontFamily
+  );
   const t = useTranslations("pdfExport");
   const locale = useLocale();
   const tBasicField = useTranslations("workbench.basicPanel.basicFields");
@@ -108,8 +113,8 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
     await exportToPdf({
       elementId: "resume-preview",
       title: title || "resume",
-      pagePadding: globalSettings?.pagePadding || 0,
-      fontFamily: globalSettings?.fontFamily,
+      pagePadding,
+      fontFamily,
       onStart: () => setIsExporting(true),
       onEnd: () => setIsExporting(false),
       successMessage: t("toast.success"),
@@ -121,8 +126,8 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
     await exportToLongPagePdf({
       elementId: "resume-preview",
       title: title || "resume",
-      pagePadding: globalSettings?.pagePadding || 0,
-      fontFamily: globalSettings?.fontFamily,
+      pagePadding,
+      fontFamily,
       onStart: () => setIsExportingLongPage(true),
       onEnd: () => setIsExportingLongPage(false),
       successMessage: t("toast.success"),
@@ -134,8 +139,8 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
     await exportToLongPageImage({
       elementId: "resume-preview",
       title: title || "resume",
-      pagePadding: globalSettings?.pagePadding || 0,
-      fontFamily: globalSettings?.fontFamily,
+      pagePadding,
+      fontFamily,
       onStart: () => setIsExportingImage(true),
       onEnd: () => setIsExportingImage(false),
       successMessage: t("toast.imageSuccess"),
@@ -144,6 +149,7 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
   };
 
   const handleJsonExport = () => {
+    const activeResume = useResumeStore.getState().activeResume;
     exportResumeAsJson({
       resume: activeResume,
       title,
@@ -155,6 +161,7 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
   };
 
   const handleMarkdownExport = () => {
+    const activeResume = useResumeStore.getState().activeResume;
     exportResumeAsMarkdown({
       resume: activeResume,
       title,
@@ -186,11 +193,10 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
 
     try {
       setIsPrinting(true);
-      const pagePadding = globalSettings?.pagePadding || 0;
       await exportResumeToBrowserPrint(
         resumeContent,
         pagePadding,
-        globalSettings?.fontFamily
+        fontFamily
       );
     } finally {
       setIsPrinting(false);
@@ -217,6 +223,13 @@ const PdfExport = ({ children }: { children?: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={(val) => {
       if (isLoading) return; // 导出中不允许关闭，以防止打断流程或丢失提示
       setIsOpen(val);
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("resume-export-dialog-change", {
+            detail: { open: val },
+          })
+        );
+      }
     }}>
       <DialogTrigger asChild>
         {children ? children : (

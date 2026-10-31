@@ -29,14 +29,23 @@ interface EditorHeaderProps {
 }
 
 export function EditorHeader({ isMobile }: EditorHeaderProps) {
-  const {
-    activeResume,
-    updateResumeTitle,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-  } = useResumeStore();
+  const resumeId = useResumeStore((state) => state.activeResume?.id);
+  const resumeTitle = useResumeStore((state) => state.activeResume?.title);
+  const updateResumeTitle = useResumeStore((state) => state.updateResumeTitle);
+  const undo = useResumeStore((state) => state.undo);
+  const redo = useResumeStore((state) => state.redo);
+  const hasUndo = useResumeStore((state) =>
+    Boolean(
+      state.activeResumeId &&
+        (state.history[state.activeResumeId]?.length ?? 0) > 0
+    )
+  );
+  const hasRedo = useResumeStore((state) =>
+    Boolean(
+      state.activeResumeId &&
+        (state.future[state.activeResumeId]?.length ?? 0) > 0
+    )
+  );
   const { errors } = useGrammarCheck();
   const router = useRouter();
   const t = useTranslations();
@@ -121,8 +130,8 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
 
           <div className="relative hidden md:flex items-center group">
             <Input
-              key={activeResume?.id || "resume-title"}
-              defaultValue={activeResume?.title || ""}
+              key={resumeId || "resume-title"}
+              defaultValue={resumeTitle || ""}
               onBlur={(e) => {
                 updateResumeTitle(e.target.value || "未命名简历");
               }}
@@ -199,7 +208,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
                     size="icon"
                     className="h-8 w-8"
                     onClick={undo}
-                    disabled={!canUndo()}
+                    disabled={!hasUndo}
                     aria-label={undoLabel}
                   >
                     <Undo2 className="h-4 w-4" />
@@ -216,7 +225,7 @@ export function EditorHeader({ isMobile }: EditorHeaderProps) {
                     size="icon"
                     className="h-8 w-8"
                     onClick={redo}
-                    disabled={!canRedo()}
+                    disabled={!hasRedo}
                     aria-label={redoLabel}
                   >
                     <Redo2 className="h-4 w-4" />

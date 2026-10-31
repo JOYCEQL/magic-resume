@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import LayoutSetting from "./layout/LayoutSetting";
+import { useShallow } from "zustand/react/shallow";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn, normalizeDateFormat } from "@/lib/utils";
 import { THEME_COLORS, MenuSection, ResumeDateFormat } from "@/types/resume";
@@ -77,7 +78,11 @@ export function SidePanel({
   onSectionCreated?: () => void;
 } = {}) {
   const {
-    activeResume,
+    menuSections = [],
+    globalSettings = {},
+    activeSection,
+    customData = {},
+    templateId,
     setActiveSection,
     toggleSectionVisibility,
     updateGlobalSettings,
@@ -86,13 +91,23 @@ export function SidePanel({
     reorderSections,
     createCustomSection,
     removeCustomData,
-  } = useResumeStore();
-  const {
-    menuSections = [],
-    globalSettings = {},
-    activeSection,
-    customData = {},
-  } = activeResume || {};
+  } = useResumeStore(
+    useShallow((state) => ({
+      menuSections: state.activeResume?.menuSections,
+      globalSettings: state.activeResume?.globalSettings,
+      activeSection: state.activeResume?.activeSection,
+      customData: state.activeResume?.customData,
+      templateId: state.activeResume?.templateId,
+      setActiveSection: state.setActiveSection,
+      toggleSectionVisibility: state.toggleSectionVisibility,
+      updateGlobalSettings: state.updateGlobalSettings,
+      updateMenuSections: state.updateMenuSections,
+      setThemeColor: state.setThemeColor,
+      reorderSections: state.reorderSections,
+      createCustomSection: state.createCustomSection,
+      removeCustomData: state.removeCustomData,
+    }))
+  );
 
   const { themeColor = THEME_COLORS[0] } = globalSettings;
   const t = useTranslations("workbench.sidePanel");
@@ -107,7 +122,7 @@ export function SidePanel({
   ];
 
   const currentTemplate = DEFAULT_TEMPLATES.find(
-    (t) => t.id === activeResume?.templateId
+    (t) => t.id === templateId
   ) ?? DEFAULT_TEMPLATES[0];
 
   const availableModules = useMemo(() => {

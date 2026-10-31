@@ -69,4 +69,4 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ data, template }) => 
     );
 };
 
-export default ClassicTemplate;
+export default React.memo(ClassicTemplate);

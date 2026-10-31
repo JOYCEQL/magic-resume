@@ -78,4 +78,4 @@ const EditorialTemplate: React.FC<EditorialTemplateProps> = ({ data, template })
   );
 };
 
-export default EditorialTemplate;
+export default React.memo(EditorialTemplate);

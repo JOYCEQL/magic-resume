@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
@@ -29,4 +30,4 @@ const SkillSection = ({ skill, globalSettings, showTitle = true }: SkillSectionP
     );
 };
 
-export default SkillSection;
+export default memo(SkillSection);

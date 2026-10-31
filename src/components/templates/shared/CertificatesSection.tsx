@@ -27,4 +27,4 @@ const CertificatesSection: React.FC<CertificatesSectionProps> = ({ certificates 
     );
 };
 
-export default CertificatesSection;
+export default React.memo(CertificatesSection);

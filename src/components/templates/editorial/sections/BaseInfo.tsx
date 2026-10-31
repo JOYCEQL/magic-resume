@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import * as Icons from "lucide-react";
+import { getResumeIcon } from "../../shared/resumeIcons";
 import { BasicInfo, GlobalSettings, getBorderRadiusValue } from "@/types/resume";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { cn, formatDateString } from "@/lib/utils";
@@ -57,7 +57,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
   const titleField = basic.fieldOrder?.find((f) => f.key === "title") || { visible: true };
 
   const getIcon = (iconName: string | undefined) => {
-    const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
+    const IconComponent = getResumeIcon(iconName);
     return IconComponent ? <IconComponent className="h-3.5 w-3.5 shrink-0" /> : null;
   };
 

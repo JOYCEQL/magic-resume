@@ -6,7 +6,10 @@ import {
   isTemplatePreviewLocale,
 } from "@/lib/templatePreview";
 
-export const useTemplateSnapshots = (locale: string | null | undefined) => {
+export const useTemplateSnapshots = (
+  locale: string | null | undefined,
+  preload = false
+) => {
   const resolvedLocale = isTemplatePreviewLocale(locale) ? locale : "zh";
 
   const snapshotMap = useMemo(
@@ -25,6 +28,7 @@ export const useTemplateSnapshots = (locale: string | null | undefined) => {
   );
 
   useEffect(() => {
+    if (!preload) return;
     const preloaders = Object.values(snapshotMap)
       .filter((src): src is string => Boolean(src))
       .map((src) => {
@@ -39,7 +43,7 @@ export const useTemplateSnapshots = (locale: string | null | undefined) => {
         image.src = "";
       });
     };
-  }, [snapshotMap]);
+  }, [preload, snapshotMap]);
 
   return {
     resolvedLocale,

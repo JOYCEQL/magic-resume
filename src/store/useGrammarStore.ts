@@ -1,10 +1,15 @@
 import { fetchAIClient } from "@/lib/ai-client";
 import { create } from "zustand";
 import { toast } from "sonner";
-import Mark from "mark.js";
+import type Mark from "mark.js";
 import { useAIConfigStore } from "@/store/useAIConfigStore";
 import { getTaskModel, isModelConfigured, toAIConnection } from "@/config/ai-models";
 import { cn } from "@/lib/utils";
+
+const createMarker = async (element: HTMLElement) => {
+  const { default: MarkCtor } = await import("mark.js");
+  return new MarkCtor(element);
+};
 
 export interface GrammarError {
   context: string;
@@ -140,7 +145,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
 
         const preview = document.getElementById("resume-preview");
         if (preview) {
-          const marker = new Mark(preview);
+          const marker = await createMarker(preview);
           marker.unmark();
           grammarErrors.errors.forEach((error: GrammarError) => {
             // 仅标注错误片段，避免整句/全局模糊匹配造成误高亮
@@ -161,8 +166,7 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
   clearErrors: () => {
     const preview = document.getElementById("resume-preview");
     if (preview) {
-      const marker = new Mark(preview);
-      marker.unmark();
+      void createMarker(preview).then((marker) => marker.unmark());
     }
     set({ errors: [], selectedErrorIndex: null });
   },
@@ -177,41 +181,42 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
     const preview = document.getElementById("resume-preview");
     if (!preview) return;
 
-    const marker = new Mark(preview);
-    marker.unmark();
+    void createMarker(preview).then((marker) => {
+      marker.unmark();
 
-    errors.forEach((err, i) => {
-      markSingleError(marker, err, {
-        selected: i === index,
-        activeIndex: index
-      });
-    });
-
-    const marks = preview.querySelectorAll("mark");
-    const selectedMark = marks[index];
-    if (selectedMark) {
-      const scrollContainer = getPreviewScrollContainer(selectedMark as HTMLElement);
-
-      if (scrollContainer) {
-        const containerRect = scrollContainer.getBoundingClientRect();
-        const markRect = selectedMark.getBoundingClientRect();
-        const currentTop = scrollContainer.scrollTop;
-        const nextTop =
-          currentTop +
-          (markRect.top - containerRect.top) -
-          scrollContainer.clientHeight / 2 +
-          markRect.height / 2;
-        const maxTop = Math.max(
-          0,
-          scrollContainer.scrollHeight - scrollContainer.clientHeight
-        );
-
-        scrollContainer.scrollTo({
-          top: Math.max(0, Math.min(nextTop, maxTop)),
-          behavior: "smooth"
+      errors.forEach((err, i) => {
+        markSingleError(marker, err, {
+          selected: i === index,
+          activeIndex: index
         });
+      });
+
+      const marks = preview.querySelectorAll("mark");
+      const selectedMark = marks[index];
+      if (selectedMark) {
+        const scrollContainer = getPreviewScrollContainer(selectedMark as HTMLElement);
+
+        if (scrollContainer) {
+          const containerRect = scrollContainer.getBoundingClientRect();
+          const markRect = selectedMark.getBoundingClientRect();
+          const currentTop = scrollContainer.scrollTop;
+          const nextTop =
+            currentTop +
+            (markRect.top - containerRect.top) -
+            scrollContainer.clientHeight / 2 +
+            markRect.height / 2;
+          const maxTop = Math.max(
+            0,
+            scrollContainer.scrollHeight - scrollContainer.clientHeight
+          );
+
+          scrollContainer.scrollTo({
+            top: Math.max(0, Math.min(nextTop, maxTop)),
+            behavior: "smooth"
+          });
+        }
       }
-    }
+    });
   },
   dismissError: (index: number) => {
     set((state) => {
@@ -220,13 +225,14 @@ export const useGrammarStore = create<GrammarStore>((set, get) => ({
       
       const preview = document.getElementById("resume-preview");
       if (preview) {
-        // 重新标记剩余错误
-        const marker = new Mark(preview);
-        marker.unmark();
-        newErrors.forEach((error, i) => {
-          markSingleError(marker, error, {
-            selected: state.selectedErrorIndex === i,
-            activeIndex: state.selectedErrorIndex ?? undefined
+        const selectedIdx = state.selectedErrorIndex;
+        void createMarker(preview).then((marker) => {
+          marker.unmark();
+          newErrors.forEach((error, i) => {
+            markSingleError(marker, error, {
+              selected: selectedIdx === i,
+              activeIndex: selectedIdx ?? undefined
+            });
           });
         });
       }

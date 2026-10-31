@@ -1,4 +1,5 @@
 import SectionIcon from "@/components/shared/SectionIcon";
+import { preloadEditorPanel } from "../EditPanel";
 
 import { motion, Reorder, useDragControls } from "framer-motion";
 import { Eye, EyeOff, GripVertical, Trash2 } from "lucide-react";
@@ -107,6 +108,8 @@ const LayoutItem = ({
 
       <div
         className="flex select-none items-center p-3 space-x-3 flex-1  cursor-pointer"
+        onPointerEnter={() => preloadEditorPanel(item.id)}
+        onFocus={() => preloadEditorPanel(item.id)}
         onClick={() => setActiveSection(item.id)}
       >
         <div className="flex flex-1 items-center">

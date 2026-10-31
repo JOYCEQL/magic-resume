@@ -1,18 +1,19 @@
 import React from "react";
 import { ResumeTemplate } from "@/types/template";
+import {
+  DEFAULT_TEMPLATES,
+  classicConfig,
+  modernConfig,
+  leftRightConfig,
+  timelineConfig,
+  minimalistConfig,
+  elegantConfig,
+  creativeConfig,
+  editorialConfig,
+  swissConfig,
+} from "./configs";
+import { registerTemplateComponent } from "./loader";
 
-// Import configs
-import { classicConfig } from "./classic/config";
-import { modernConfig } from "./modern/config";
-import { leftRightConfig } from "./left-right/config";
-import { timelineConfig } from "./timeline/config";
-import { minimalistConfig } from "./minimalist/config";
-import { elegantConfig } from "./elegant/config";
-import { creativeConfig } from "./creative/config";
-import { editorialConfig } from "./editorial/config";
-import { swissConfig } from "./swiss/config";
-
-// Import components
 import ClassicTemplate from "./classic";
 import ModernTemplate from "./modern";
 import LeftRightTemplate from "./left-right";
@@ -25,14 +26,9 @@ import SwissTemplate from "./swiss";
 
 export interface TemplateRegistryEntry {
   config: ResumeTemplate;
-  Component: React.FC<{ data: any; template: ResumeTemplate }>;
+  Component: React.ComponentType<{ data: any; template: ResumeTemplate }>;
 }
 
-/**
- * Unified template registry.
- * To add a new template, create a directory under `templates/` with config.ts + index.tsx,
- * then add one line here. No other files need to change.
- */
 export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
   { config: classicConfig, Component: ClassicTemplate },
   { config: modernConfig, Component: ModernTemplate },
@@ -45,15 +41,15 @@ export const TEMPLATE_REGISTRY: TemplateRegistryEntry[] = [
   { config: swissConfig, Component: SwissTemplate },
 ];
 
-/** All template configs — drop-in replacement for the old DEFAULT_TEMPLATES */
-export const DEFAULT_TEMPLATES: ResumeTemplate[] = TEMPLATE_REGISTRY.map(
-  (entry) => entry.config
-);
+for (const entry of TEMPLATE_REGISTRY) {
+  registerTemplateComponent(entry.config.layout, entry.Component);
+}
 
-/** Look up a template component by layout id */
+export { DEFAULT_TEMPLATES };
+
 export function getTemplateComponent(
   layout: string
-): React.FC<{ data: any; template: ResumeTemplate }> {
+): React.ComponentType<{ data: any; template: ResumeTemplate }> {
   return (
     TEMPLATE_REGISTRY.find((entry) => entry.config.layout === layout)
       ?.Component ?? ClassicTemplate

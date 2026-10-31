@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Settings2, Image, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import PhotoConfigDrawer from "./PhotoConfigDrawer";
 import { useResumeStore } from "@/store/useResumeStore";
 import { BasicInfo, PhotoConfig } from "@/types/resume";
 import { useTranslations } from "@/i18n/compat/client";
+
+const PhotoConfigDrawer = React.lazy(() => import("./PhotoConfigDrawer"));
 
 interface Props {
   className?: string;
@@ -83,14 +84,18 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
         )}
       </div>
 
-      <PhotoConfigDrawer
-        isOpen={showConfig}
-        onClose={() => setShowConfig(false)}
-        photo={photo}
-        config={photoConfig}
-        onPhotoChange={handlePhotoChange}
-        onConfigChange={handleConfigChange}
-      />
+      {showConfig && (
+        <React.Suspense fallback={null}>
+          <PhotoConfigDrawer
+            isOpen={showConfig}
+            onClose={() => setShowConfig(false)}
+            photo={photo}
+            config={photoConfig}
+            onPhotoChange={handlePhotoChange}
+            onConfigChange={handleConfigChange}
+          />
+        </React.Suspense>
+      )}
     </div>
   );
 };

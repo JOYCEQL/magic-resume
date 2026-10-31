@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import * as Icons from "lucide-react";
+import { getResumeIcon } from "../../shared/resumeIcons";
 import { cn, formatDateString } from "@/lib/utils";
 import { BasicInfo, getBorderRadiusValue, GlobalSettings } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
@@ -23,7 +23,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const themeColor = globalSettings?.themeColor || "#E31C24";
 
     const getIcon = (iconName: string | undefined) => {
-        const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
+        const IconComponent = getResumeIcon(iconName);
         return IconComponent ? <IconComponent className="h-3.5 w-3.5 shrink-0" style={{ color: themeColor }} /> : null;
     };
 

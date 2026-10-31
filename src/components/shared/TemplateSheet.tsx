@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ImageIcon, Layout, PanelsLeftBottom } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "@/i18n/compat/client";
@@ -14,6 +15,7 @@ import { DEFAULT_TEMPLATES } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTemplateSnapshots } from "@/hooks/useTemplateSnapshots";
+import { preloadTemplateComponent } from "@/components/templates/loader";
 
 type TemplateItem = (typeof DEFAULT_TEMPLATES)[number];
 
@@ -32,6 +34,8 @@ const TemplatePreview = ({
 }: TemplatePreviewProps) => {
   return (
     <button
+      onPointerEnter={() => void preloadTemplateComponent(template.layout)}
+      onFocus={() => void preloadTemplateComponent(template.layout)}
       onClick={() => onSelect(template.id)}
       className={cn(
         "relative group rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-[1.02] text-left",
@@ -46,7 +50,7 @@ const TemplatePreview = ({
             src={snapshotSrc}
             alt={template.name}
             className="h-full w-full object-cover object-top"
-            loading="eager"
+            loading="lazy"
             draggable={false}
           />
         ) : (
@@ -73,20 +77,25 @@ const TemplatePreview = ({
 const TemplateSheet = () => {
   const t = useTranslations("templates");
   const locale = useLocale();
+  const [open, setOpen] = useState(false);
+  const [warmSnapshots, setWarmSnapshots] = useState(false);
   const templateId = useResumeStore((state) => state.activeResume?.templateId);
   const setTemplate = useResumeStore((state) => state.setTemplate);
-  const { snapshotMap } = useTemplateSnapshots(locale);
+  const { snapshotMap } = useTemplateSnapshots(locale, open || warmSnapshots);
 
   const currentTemplate =
     DEFAULT_TEMPLATES.find((template) => template.id === templateId) ||
     DEFAULT_TEMPLATES[0];
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <PanelsLeftBottom size={20} />
+        <PanelsLeftBottom
+          size={20}
+          onPointerEnter={() => setWarmSnapshots(true)}
+        />
       </SheetTrigger>
-      <SheetContent side="left" forceMount className="w-1/2 sm:max-w-1/2">
+      <SheetContent side="left" className="w-1/2 sm:max-w-1/2">
         <SheetHeader>
           <SheetTitle>{t("switchTemplate")}</SheetTitle>
         </SheetHeader>

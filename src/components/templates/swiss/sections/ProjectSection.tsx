@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import * as Icons from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { Project, GlobalSettings } from "@/types/resume";
@@ -60,7 +60,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                                 className="flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-colors text-slate-500 font-medium"
                                                 title={projectLink.title}
                                             >
-                                                <Icons.ExternalLink className="w-3 h-3 shrink-0" style={{ color: themeColor }} />
+                                                <ExternalLink className="w-3 h-3 shrink-0" style={{ color: themeColor }} />
                                                 <span>{projectLink.label}</span>
                                             </a>
                                         )}

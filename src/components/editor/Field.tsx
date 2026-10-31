@@ -1,23 +1,22 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import RichTextEditor from "../shared/rich-editor/RichEditor";
-import AIPolishDialog from "../shared/ai/AIPolishDialog";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 import { UnifiedDateInput } from "../ui/unified-date-input";
 import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
+
+const RichTextEditor = React.lazy(
+  () => import("../shared/rich-editor/RichEditor")
+);
+const AIPolishDialog = React.lazy(
+  () => import("../shared/ai/AIPolishDialog")
+);
+
+export const preloadRichTextEditor = () =>
+  import("../shared/rich-editor/RichEditor");
 
 interface FieldProps {
   label?: string;
@@ -40,41 +39,15 @@ const Field = ({
   className,
   showPresentSwitch,
 }: FieldProps) => {
-  const [yearInput, setYearInput] = useState("");
-  const [displayMonth, setDisplayMonth] = useState<Date>(new Date());
-  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [showPolishDialog, setShowPolishDialog] = useState(false);
   const { checkConfiguration } = useAIConfiguration();
   const t = useTranslations();
 
-  const currentDate = useMemo(
-    () => (value ? new Date(value) : undefined),
-    [value]
-  );
-
-  useEffect(() => {
-    if (type === "date" && value) {
-      const date = new Date(value);
-      setYearInput(date.getFullYear().toString());
-      setDisplayMonth(date);
-    }
-  }, [type, value]);
-
-  useEffect(() => {
-    if (type === "date") {
-      if (!currentDate && fromDate) {
-        setFromDate(undefined);
-      } else if (
-        currentDate &&
-        (!fromDate || currentDate.getTime() !== fromDate.getTime())
-      ) {
-        setFromDate(currentDate);
-      }
-    }
-  }, [type, currentDate, fromDate]);
-
   const isPresentValue = useMemo(() => {
-    return value === t("field.toPresent") || value.endsWith(` - ${t("field.toPresent")}`);
+    return (
+      value === t("field.toPresent") ||
+      value.endsWith(` - ${t("field.toPresent")}`)
+    );
   }, [value, t]);
 
   const handlePresentToggle = (checked: boolean) => {
@@ -94,9 +67,7 @@ const Field = ({
     if (!label) return null;
     return (
       <div className="flex items-center justify-between mb-1.5 font-medium">
-        <span className="text-sm text-foreground">
-          {label}
-        </span>
+        <span className="text-sm text-foreground">{label}</span>
         {showPresentSwitch && (
           <div className="flex items-center gap-2">
             <Switch
@@ -180,23 +151,31 @@ const Field = ({
       <motion.div className="block">
         {renderLabel()}
         <div className="mt-1.5">
-          <RichTextEditor
-            content={value || ""}
-            onChange={onChange}
-            placeholder={placeholder}
-            onPolish={handlePolish}
-          />
+          <React.Suspense
+            fallback={
+              <div className="min-h-[160px] rounded-lg border border-border bg-card/50" />
+            }
+          >
+            <RichTextEditor
+              content={value || ""}
+              onChange={onChange}
+              placeholder={placeholder}
+              onPolish={handlePolish}
+            />
+          </React.Suspense>
         </div>
 
         {showPolishDialog && (
-          <AIPolishDialog
-            open={showPolishDialog}
-            onOpenChange={setShowPolishDialog}
-            content={value || ""}
-            onApply={(content) => {
-              onChange(content);
-            }}
-          />
+          <React.Suspense fallback={null}>
+            <AIPolishDialog
+              open={showPolishDialog}
+              onOpenChange={setShowPolishDialog}
+              content={value || ""}
+              onApply={(content) => {
+                onChange(content);
+              }}
+            />
+          </React.Suspense>
         )}
       </motion.div>
     );

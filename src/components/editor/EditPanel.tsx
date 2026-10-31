@@ -1,4 +1,3 @@
-import PublicationsPanel from "./publications/PublicationsPanel";
 import SectionIcon from "@/components/shared/SectionIcon";
 import React from "react";
 import { Pencil } from "lucide-react";
@@ -6,19 +5,69 @@ import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 import BasicPanel from "./basic/BasicPanel";
-import EducationPanel from "./education/EducationPanel";
-import ProjectPanel from "./project/ProjectPanel";
-import ExperiencePanel from "./experience/ExperiencePanel";
-import CustomPanel from "./custom/CustomPanel";
-import SkillPanel from "./skills/SkillPanel";
-import SelfEvaluationPanel from "./self-evaluation/SelfEvaluationPanel";
-import CertificatesPanel from "./certificates/CertificatesPanel";
+import { preloadRichTextEditor } from "./Field";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+
+const EducationPanel = React.lazy(() => import("./education/EducationPanel"));
+const ProjectPanel = React.lazy(() => import("./project/ProjectPanel"));
+const ExperiencePanel = React.lazy(
+  () => import("./experience/ExperiencePanel")
+);
+const CustomPanel = React.lazy(() => import("./custom/CustomPanel"));
+const SkillPanel = React.lazy(() => import("./skills/SkillPanel"));
+const SelfEvaluationPanel = React.lazy(
+  () => import("./self-evaluation/SelfEvaluationPanel")
+);
+const CertificatesPanel = React.lazy(
+  () => import("./certificates/CertificatesPanel")
+);
+const PublicationsPanel = React.lazy(
+  () => import("./publications/PublicationsPanel")
+);
+
+export function preloadEditorPanel(sectionId?: string | null) {
+  if (!sectionId || sectionId === "basic") return;
+  switch (sectionId) {
+    case "projects":
+      void import("./project/ProjectPanel");
+      void preloadRichTextEditor();
+      break;
+    case "education":
+      void import("./education/EducationPanel");
+      void preloadRichTextEditor();
+      break;
+    case "experience":
+      void import("./experience/ExperiencePanel");
+      void preloadRichTextEditor();
+      break;
+    case "skills":
+      void import("./skills/SkillPanel");
+      void preloadRichTextEditor();
+      break;
+    case "selfEvaluation":
+      void import("./self-evaluation/SelfEvaluationPanel");
+      void preloadRichTextEditor();
+      break;
+    case "publications":
+      void import("./publications/PublicationsPanel");
+      void preloadRichTextEditor();
+      break;
+    case "certificates":
+      void import("./certificates/CertificatesPanel");
+      break;
+    default:
+      if (sectionId.startsWith("custom")) {
+        void import("./custom/CustomPanel");
+        void preloadRichTextEditor();
+      }
+      break;
+  }
+}
 
 export function EditPanel() {
   const resumeId = useResumeStore((state) => state.activeResume?.id);
@@ -39,22 +88,54 @@ export function EditPanel() {
         return <BasicPanel />;
 
       case "projects":
-        return <ProjectPanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <ProjectPanel />
+          </React.Suspense>
+        );
       case "education":
-        return <EducationPanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <EducationPanel />
+          </React.Suspense>
+        );
       case "experience":
-        return <ExperiencePanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <ExperiencePanel />
+          </React.Suspense>
+        );
       case "skills":
-        return <SkillPanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <SkillPanel />
+          </React.Suspense>
+        );
       case "selfEvaluation":
-        return <SelfEvaluationPanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <SelfEvaluationPanel />
+          </React.Suspense>
+        );
       case "publications":
-        return <PublicationsPanel key={resumeId} />;
+        return (
+          <React.Suspense fallback={null}>
+            <PublicationsPanel key={resumeId} />
+          </React.Suspense>
+        );
       case "certificates":
-        return <CertificatesPanel />;
+        return (
+          <React.Suspense fallback={null}>
+            <CertificatesPanel />
+          </React.Suspense>
+        );
       default:
         if (activeSection?.startsWith("custom")) {
-          return <CustomPanel sectionId={activeSection} />;
+          return (
+            <React.Suspense fallback={null}>
+              <CustomPanel sectionId={activeSection} />
+            </React.Suspense>
+          );
         } else {
           return <BasicPanel />;
         }
@@ -77,7 +158,9 @@ export function EditPanel() {
         >
           <div className="flex items-center gap-2">
             <span className="text-lg">
-              <SectionIcon icon={menuSections?.find((s) => s.id === activeSection)?.icon} />
+              <SectionIcon
+                icon={menuSections?.find((s) => s.id === activeSection)?.icon}
+              />
             </span>
 
             {/* 如果是基本信息的展示话展示div */}
@@ -125,12 +208,7 @@ export function EditPanel() {
           </div>
         </motion.div>
 
-        <motion.div
-          className={cn(
-            "rounded-lg",
-            "bg-card border-border"
-          )}
-        >
+        <motion.div className={cn("rounded-lg", "bg-card border-border")}>
           {renderFields()}
         </motion.div>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import * as Icons from "lucide-react";
+import { getResumeIcon } from "../../shared/resumeIcons";
 import { cn, formatDateString } from "@/lib/utils";
 import { BasicInfo, getBorderRadiusValue, GlobalSettings } from "@/types/resume";
 import { ResumeTemplate } from "@/types/template";
@@ -24,7 +24,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const layout = basic?.layout || "left";
 
     const getIcon = (iconName: string | undefined) => {
-        const IconComponent = Icons[iconName as keyof typeof Icons] as React.ElementType;
+        const IconComponent = getResumeIcon(iconName);
         return IconComponent ? (
             <span className="inline-flex h-[1.5em] shrink-0 items-center">
                 <IconComponent className="h-4 w-4 shrink-0" />

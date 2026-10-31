@@ -195,7 +195,7 @@ export const CreateResumeModal = ({
 }: CreateResumeModalProps) => {
     const t = useTranslations();
     const locale = useLocale();
-    const { snapshotMap } = useTemplateSnapshots(locale);
+    const { snapshotMap } = useTemplateSnapshots(locale, open);
     const [previewTarget, setPreviewTarget] = useState<TemplateOption | null>(null);
 
     const handleCreate = (template: TemplateOption) => {

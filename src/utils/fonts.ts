@@ -6,6 +6,7 @@ type FontSource = {
   format: "truetype" | "opentype" | "woff" | "woff2";
   weight: string;
   style: "normal" | "italic";
+  unicodeRange?: string;
 };
 
 type FontDefinition = {
@@ -17,6 +18,52 @@ type FontDefinition = {
 
 export const DEFAULT_FONT_FAMILY = "\"Alibaba PuHuiTi\", sans-serif";
 
+type ManifestFontSlice = {
+  url: string;
+  range: string;
+};
+
+type FontManifestData = {
+  ranges?: Record<string, string>;
+  fonts?: Record<string, ManifestFontSlice[]>;
+} & Record<string, unknown>;
+
+const manifestData = fontManifest as FontManifestData;
+
+const expandFontSources = (
+  family: string,
+  fileKey: string,
+  weight: string,
+  style: "normal" | "italic" = "normal"
+): FontSource[] => {
+  const slices = manifestData.fonts?.[fileKey];
+  const ranges = manifestData.ranges ?? {};
+  if (Array.isArray(slices) && slices.length > 0) {
+    return slices.map((slice) => ({
+      family,
+      url: slice.url,
+      format: "woff2",
+      weight,
+      style,
+      unicodeRange: ranges[slice.range] || slice.range,
+    }));
+  }
+
+  const fallbackUrl =
+    typeof manifestData[fileKey] === "string"
+      ? (manifestData[fileKey] as string)
+      : "";
+  return [
+    {
+      family,
+      url: fallbackUrl,
+      format: "woff2",
+      weight,
+      style,
+    },
+  ];
+};
+
 const FONT_DEFINITIONS: FontDefinition[] = [
   {
     labelKey: "alibaba",
@@ -26,20 +73,8 @@ const FONT_DEFINITIONS: FontDefinition[] = [
       "\"Alibaba PuHuiTi\", sans-serif"
     ],
     sources: [
-      {
-        family: "Alibaba PuHuiTi",
-        url: fontManifest["AlibabaPuHuiTi-3-55-Regular.ttf"],
-        format: "woff2",
-        weight: "400",
-        style: "normal"
-      },
-      {
-        family: "Alibaba PuHuiTi",
-        url: fontManifest["AlibabaPuHuiTi-3-85-Bold.ttf"],
-        format: "woff2",
-        weight: "700",
-        style: "normal"
-      }
+      ...expandFontSources("Alibaba PuHuiTi", "AlibabaPuHuiTi-3-55-Regular.ttf", "400"),
+      ...expandFontSources("Alibaba PuHuiTi", "AlibabaPuHuiTi-3-85-Bold.ttf", "700")
     ]
   },
   {
@@ -54,20 +89,8 @@ const FONT_DEFINITIONS: FontDefinition[] = [
       "Microsoft YaHei, sans-serif"
     ],
     sources: [
-      {
-        family: "MiSans",
-        url: fontManifest["MiSans-Normal.ttf"],
-        format: "woff2",
-        weight: "400",
-        style: "normal"
-      },
-      {
-        family: "MiSans",
-        url: fontManifest["MiSans-Medium.ttf"],
-        format: "woff2",
-        weight: "700",
-        style: "normal"
-      }
+      ...expandFontSources("MiSans", "MiSans-Normal.ttf", "400"),
+      ...expandFontSources("MiSans", "MiSans-Medium.ttf", "700")
     ]
   },
   {
@@ -78,27 +101,9 @@ const FONT_DEFINITIONS: FontDefinition[] = [
       "Noto Sans SC, sans-serif"
     ],
     sources: [
-      {
-        family: "Noto Sans SC",
-        url: fontManifest["NotoSansSC-Regular.otf"],
-        format: "woff2",
-        weight: "400",
-        style: "normal"
-      },
-      {
-        family: "Noto Sans SC",
-        url: fontManifest["NotoSansSC-Medium.otf"],
-        format: "woff2",
-        weight: "500",
-        style: "normal"
-      },
-      {
-        family: "Noto Sans SC",
-        url: fontManifest["NotoSansSC-Bold.otf"],
-        format: "woff2",
-        weight: "700",
-        style: "normal"
-      }
+      ...expandFontSources("Noto Sans SC", "NotoSansSC-Regular.otf", "400"),
+      ...expandFontSources("Noto Sans SC", "NotoSansSC-Medium.otf", "500"),
+      ...expandFontSources("Noto Sans SC", "NotoSansSC-Bold.otf", "700")
     ]
   },
   {
@@ -111,27 +116,9 @@ const FONT_DEFINITIONS: FontDefinition[] = [
       "Noto Serif SC, serif"
     ],
     sources: [
-      {
-        family: "Source Han Serif SC",
-        url: fontManifest["SourceHanSerifSC-Regular.otf"],
-        format: "woff2",
-        weight: "400",
-        style: "normal"
-      },
-      {
-        family: "Source Han Serif SC",
-        url: fontManifest["SourceHanSerifSC-Medium.otf"],
-        format: "woff2",
-        weight: "500",
-        style: "normal"
-      },
-      {
-        family: "Source Han Serif SC",
-        url: fontManifest["SourceHanSerifSC-Bold.otf"],
-        format: "woff2",
-        weight: "700",
-        style: "normal"
-      }
+      ...expandFontSources("Source Han Serif SC", "SourceHanSerifSC-Regular.otf", "400"),
+      ...expandFontSources("Source Han Serif SC", "SourceHanSerifSC-Medium.otf", "500"),
+      ...expandFontSources("Source Han Serif SC", "SourceHanSerifSC-Bold.otf", "700")
     ]
   }
 ];
@@ -188,7 +175,7 @@ const buildFontFaceRule = (source: FontSource, resolvedUrl: string) => `@font-fa
   src: url("${resolvedUrl}") format("${source.format}");
   font-weight: ${source.weight};
   font-style: ${source.style};
-  font-display: swap;
+  font-display: swap;${source.unicodeRange ? `\n  unicode-range: ${source.unicodeRange};` : ""}
 }`;
 
 export const normalizeFontFamily = (fontFamily?: string) =>
@@ -202,14 +189,22 @@ export const preloadFontFamily = async (fontFamily?: string) => {
   const definition = findFontDefinition(fontFamily);
   let pending = fontLoads.get(definition.value);
   if (!pending) {
-    pending = Promise.all(
-      definition.sources.map((source) =>
-        document.fonts.load(`${source.weight} 14px "${source.family}"`)
-      )
-    ).then(() => {}).catch(error => {
-      fontLoads.delete(definition.value);
-      throw error;
-    });
+    const primarySource =
+      definition.sources.find((source) => source.weight === "400") ||
+      definition.sources[0];
+    pending = (
+      primarySource
+        ? document.fonts.load(
+            `${primarySource.weight} 14px "${primarySource.family}"`,
+            " "
+          )
+        : Promise.resolve([])
+    )
+      .then(() => {})
+      .catch((error) => {
+        fontLoads.delete(definition.value);
+        throw error;
+      });
     fontLoads.set(definition.value, pending);
   }
   await pending;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import {
   IconResumes,
   IconTemplates,
@@ -35,6 +36,7 @@ interface MenuItem {
   href?: string;
   icon: typeof IconResumes;
   badge?: string;
+  external?: boolean;
   items?: { title: string; href: string }[];
 }
 
@@ -65,10 +67,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     ...(locale === "zh"
       ? [
           {
-            title: "AI 面试助手",
+            title: "OfferIN 面试助手",
             url: "/zh/offerin",
             icon: IconInterview,
-            badge: "推荐",
+            badge: "第三方",
+            external: true,
           },
         ]
       : []),
@@ -84,6 +87,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const handleItemClick = (item: MenuItem) => {
     if (item.items) {
 
+    } else if (item.external) {
+      window.open(item.url || item.href || "/", "_blank", "noopener,noreferrer");
     } else {
       router.push(item.url || item.href || "/");
     }
@@ -142,14 +147,17 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                 >
                                   <item.icon />
                                   {open && (
-                                    <span className="flex-1 text-sm">
+                                    <span className="flex-1 text-sm truncate">
                                       {item.title}
                                     </span>
                                   )}
                                   {item.badge && open && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 font-normal shrink-0">
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground border border-border/60 font-normal shrink-0">
                                       {item.badge}
                                     </span>
+                                  )}
+                                  {item.external && open && (
+                                    <ArrowUpRight className="size-3.5 text-muted-foreground/60 shrink-0" />
                                   )}
                                 </div>
                               </SidebarMenuButton>
@@ -173,7 +181,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                           </TooltipTrigger>
                           {!open && (
                             <TooltipContent side="right" className="font-medium">
-                              {item.title}
+                              {item.title} {item.badge ? `(${item.badge})` : ""}
                             </TooltipContent>
                           )}
                         </Tooltip>

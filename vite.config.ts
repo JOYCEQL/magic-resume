@@ -22,7 +22,7 @@ export default defineConfig({
       },
       // Public pages have no request-specific data. Build them once instead of
       // spending Worker CPU rendering the same document on every visit.
-      pages: [{ path: "/zh" }, { path: "/en" }],
+      pages: [{ path: "/zh" }, { path: "/en" }, { path: "/zh/offerin" }],
       prerender: {
         enabled: true,
         autoStaticPathsDiscovery: false,

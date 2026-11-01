@@ -57,6 +57,8 @@ function RootComponent() {
   const isLandingPage =
     landingLocale !== null &&
     pathname.replace(/\/$/, "") === `/${landingLocale}`;
+  const isOfferInPage = pathname.includes("/offerin");
+  const forceLight = isLandingPage || isOfferInPage;
 
   const [locale, setLocale] = useState<Locale>(() => getPreferredLocale(pathname));
 
@@ -99,7 +101,7 @@ function RootComponent() {
           messages={messages}
           timeZone="Asia/Shanghai"
         >
-          <Providers forcedTheme={isLandingPage ? "light" : undefined}>
+          <Providers forcedTheme={forceLight ? "light" : undefined}>
             <ReactGrab />
             <Outlet />
           </Providers>

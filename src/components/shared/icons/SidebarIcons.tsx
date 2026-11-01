@@ -64,3 +64,12 @@ export const IconAI = (props: IconProps) => (
     <circle cx="19" cy="19" r="1.8" />
   </SidebarIcon>
 );
+
+export const IconInterview = (props: IconProps) => (
+  <SidebarIcon {...props}>
+    <rect x="2" y="3" width="20" height="14" rx="2" />
+    <path d="M8 21h8" />
+    <path d="M12 17v4" />
+    <path d="m9 10 2 2 4-4" />
+  </SidebarIcon>
+);

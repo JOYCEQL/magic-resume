@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { IconResumes, IconTemplates, IconSettings, IconAI } from "@/components/shared/icons/SidebarIcons";
+import {
+  IconResumes,
+  IconTemplates,
+  IconSettings,
+  IconAI,
+  IconInterview,
+} from "@/components/shared/icons/SidebarIcons";
 import { usePathname, useRouter } from "@/lib/navigation";
 import {
   Sidebar,
@@ -28,11 +34,13 @@ interface MenuItem {
   url?: string;
   href?: string;
   icon: typeof IconResumes;
+  badge?: string;
   items?: { title: string; href: string }[];
 }
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const t = useTranslations("dashboard");
+  const locale = useLocale();
   const sidebarItems: MenuItem[] = [
     {
       title: t("sidebar.resumes"),
@@ -54,12 +62,20 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       url: "/app/dashboard/settings",
       icon: IconSettings,
     },
-
+    ...(locale === "zh"
+      ? [
+          {
+            title: "AI 面试助手",
+            url: "/zh/offerin",
+            icon: IconInterview,
+            badge: "推荐",
+          },
+        ]
+      : []),
   ];
 
   const router = useRouter();
   const pathname = usePathname();
-  const locale = useLocale();
   const [open, setOpen] = useState(true);
   const [collapsible, setCollapsible] = useState<"offcanvas" | "icon" | "none">(
     "icon"
@@ -121,13 +137,18 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                   }`}
                               >
                                 <div
-                                  className="flex items-center gap-3 px-2 cursor-pointer"
+                                  className="flex items-center gap-3 px-2 cursor-pointer w-full"
                                   onClick={() => handleItemClick(item)}
                                 >
                                   <item.icon />
                                   {open && (
                                     <span className="flex-1 text-sm">
                                       {item.title}
+                                    </span>
+                                  )}
+                                  {item.badge && open && (
+                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 font-normal shrink-0">
+                                      {item.badge}
                                     </span>
                                   )}
                                 </div>

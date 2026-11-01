@@ -15,6 +15,12 @@
 
 Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历变得简单有趣。基于 TanStack Start 和 Motion 构建，支持实时预览和自定义主题。
 
+<p align="center">
+  <a href="https://app.offerin.cn/r/aff_Wsk_9WRpwPmN">
+    <img src="./images/offerin-banner.png" alt="首席赞助商 Offerin AI - AI 时代面试笔试助手" width="100%" />
+  </a>
+</p>
+
 ## 📸 项目截图
 
 <img width="1920" height="1440" alt="85_1x_shots_so" src="https://github.com/user-attachments/assets/4667e49a-7bf2-4379-9390-725e42799dc7" />

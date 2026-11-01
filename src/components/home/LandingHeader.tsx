@@ -49,7 +49,7 @@ export default function LandingHeader() {
                 target="_blank"
                 rel="noopener"
                 className="landing-github-button cursor-pointer px-3 gap-1"
-                title="合作推荐 · AI 面试助手"
+                title="AI 面试助手"
               >
                 <span>AI 面试助手</span>
                 <ArrowUpRight size={13} className="text-muted-foreground/60 -mr-0.5" />

@@ -17,7 +17,6 @@ import {
   trackOfferInEvent,
   type TrackPlacement,
 } from "./config";
-import "./offerin.scss";
 
 export default function OfferInPage() {
   useEffect(() => {

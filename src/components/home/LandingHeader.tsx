@@ -42,6 +42,16 @@ export default function LandingHeader() {
           >
             {locale === "zh" ? "EN" : "中"}
           </Link>
+          {locale === "zh" && (
+            <div className="landing-header-github">
+              <Link
+                href="/zh/offerin"
+                className="landing-github-button cursor-pointer px-3"
+              >
+                <span>AI 面试助手</span>
+              </Link>
+            </div>
+          )}
           <ContactPopover
             renderWrapper={(popover) => (
               <div className="landing-header-github">{popover}</div>
@@ -74,6 +84,15 @@ export default function LandingHeader() {
           id="landing-menu"
           aria-label={t("nav.label")}
         >
+          {locale === "zh" && (
+            <Link
+              href="/zh/offerin"
+              className="landing-github-button cursor-pointer w-full justify-center"
+              onClick={() => setOpen(false)}
+            >
+              <span>AI 面试助手</span>
+            </Link>
+          )}
           <ContactPopover />
           <LandingGitHubStars />
           <Link href="/app/dashboard/resumes" className="landing-button">

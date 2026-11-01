@@ -8,7 +8,7 @@ import {
   Download,
 } from "lucide-react";
 import Link from "@/lib/link";
-import magicvLogo from "@/assets/offerin/magicv-logo.svg";
+import Logo from "@/components/shared/Logo";
 import offerinIcon from "@/assets/offerin/offerin-icon.png";
 import dualConnectImg from "@/assets/offerin/offerin-dual-connect.webp";
 import examOverviewImg from "@/assets/offerin/offerin-exam-overview.webp";
@@ -38,12 +38,7 @@ export default function OfferInPage() {
       <header className="header">
         <div className="shell header-inner flex items-center justify-between gap-6">
           <Link href="/zh" className="brand" aria-label="返回魔方简历首页">
-            <img
-              src={magicvLogo}
-              alt="魔方简历"
-              width={30}
-              height={30}
-            />
+            <Logo size={32} />
             <span>魔方简历</span>
           </Link>
           <nav className="header-nav" aria-label="主导航">
@@ -280,12 +275,7 @@ export default function OfferInPage() {
       <footer className="footer">
         <div className="shell footer-inner flex items-center justify-between">
           <div className="footer-brands">
-            <img
-              src={magicvLogo}
-              width={25}
-              height={25}
-              alt="魔方简历"
-            />
+            <Logo size={24} />
             魔方简历
             <span className="font-normal text-slate-400" aria-hidden="true">
               ×

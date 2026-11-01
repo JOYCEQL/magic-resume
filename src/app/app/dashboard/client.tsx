@@ -70,7 +70,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             title: "AI 面试助手",
             url: "/zh/offerin",
             icon: IconInterview,
-            badge: "合作",
             external: true,
           },
         ]
@@ -151,13 +150,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                                       {item.title}
                                     </span>
                                   )}
-                                  {item.badge && open && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground/80 font-normal shrink-0">
-                                      {item.badge}
-                                    </span>
-                                  )}
                                   {item.external && open && (
-                                    <ArrowUpRight className="size-3.5 text-muted-foreground/50 shrink-0" />
+                                    <ArrowUpRight className="size-3.5 text-muted-foreground/60 shrink-0" />
                                   )}
                                 </div>
                               </SidebarMenuButton>
@@ -181,7 +175,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                           </TooltipTrigger>
                           {!open && (
                             <TooltipContent side="right" className="font-medium">
-                              {item.title} {item.badge ? `(${item.badge})` : ""}
+                              {item.title}
                             </TooltipContent>
                           )}
                         </Tooltip>

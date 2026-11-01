@@ -46,9 +46,16 @@ export default function LandingHeader() {
             <div className="landing-header-github">
               <Link
                 href="/zh/offerin"
-                className="landing-github-button cursor-pointer px-3"
+                target="_blank"
+                rel="noopener"
+                className="landing-github-button cursor-pointer px-2.5 gap-1.5"
+                title="第三方合作伙伴 · OfferIN AI 面试助手"
               >
-                <span>AI 面试助手</span>
+                <span>OfferIN 面试</span>
+                <span className="text-[10px] px-1 py-0.5 rounded bg-muted text-muted-foreground border border-border/60 font-normal leading-none">
+                  第三方
+                </span>
+                <ArrowUpRight size={13} className="text-muted-foreground/70 -mr-0.5" />
               </Link>
             </div>
           )}
@@ -87,10 +94,16 @@ export default function LandingHeader() {
           {locale === "zh" && (
             <Link
               href="/zh/offerin"
-              className="landing-github-button cursor-pointer w-full justify-center"
+              target="_blank"
+              rel="noopener"
+              className="landing-github-button cursor-pointer w-full justify-center gap-1.5"
               onClick={() => setOpen(false)}
             >
-              <span>AI 面试助手</span>
+              <span>OfferIN 面试助手</span>
+              <span className="text-[10px] px-1 py-0.5 rounded bg-muted text-muted-foreground border border-border/60 font-normal leading-none">
+                第三方
+              </span>
+              <ArrowUpRight size={14} className="text-muted-foreground/70" />
             </Link>
           )}
           <ContactPopover />

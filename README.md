@@ -14,6 +14,12 @@
 
 Magic Resume is a modern online resume editor that makes creating professional resumes simple and enjoyable. Built with TanStack Start and Framer Motion, it supports real-time preview and custom themes.
 
+<p align="center">
+  <a href="https://app.offerin.cn/r/aff_Wsk_9WRpwPmN">
+    <img src="./images/offerin-banner.png" alt="Sponsored by Offerin AI - AI interview and assessment assistant" width="100%" />
+  </a>
+</p>
+
 ## 📸 Screenshots
 
 <img width="1920" height="1440" alt="336_1x_shots_so" src="https://github.com/user-attachments/assets/18969a17-06f8-4a4b-94eb-284ba8442620" />

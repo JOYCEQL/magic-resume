@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import appCss from "../app/globals.css?url";
 import landingCss from "@/components/home/landing.css?url";
+import offerinCss from "@/components/offerin/offerin.scss?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect, useState } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -40,6 +41,11 @@ export const Route = createRootRoute({
       {
         rel: "stylesheet",
         href: landingCss,
+      },
+      // Load before route navigation, and keep one stylesheet through hydration.
+      {
+        rel: "stylesheet",
+        href: offerinCss,
       },
     ],
   }),

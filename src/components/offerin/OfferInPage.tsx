@@ -82,7 +82,7 @@ export default function OfferInPage() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="shell hero-grid grid items-center pb-20">
             <div className="hero-copy">
-              {/* 强化的双品牌联合 Badge */}
+              {/* 强化的双品牌战略合作 Badge */}
               <div className="hero-cobrand-badge">
                 <div className="cobrand-pill">
                   <span className="cobrand-brand">
@@ -100,7 +100,7 @@ export default function OfferInPage() {
                     />
                     <span>OfferIN AI</span>
                   </span>
-                  <span className="cobrand-tag">联合特献</span>
+                  <span className="cobrand-tag">战略合作</span>
                 </div>
               </div>
 
@@ -129,7 +129,7 @@ export default function OfferInPage() {
               </div>
               <p className="hero-note">
                 <ExternalLink className="icon" aria-hidden="true" />
-                魔方简历 × OfferIN AI · 官方联合推荐通道
+                魔方简历 × OfferIN AI · 官方战略合作通道
               </p>
             </div>
           </div>
@@ -249,7 +249,7 @@ export default function OfferInPage() {
               <h3 className="question">OfferIN AI 和魔方简历分别做什么？</h3>
               <p>
                 魔方简历帮助你制作与优化简历；OfferIN AI
-                提供面试辅助、笔试辅助等辅助工具。本页为官方联合推荐入口，点击体验按钮后将进入
+                提供面试辅助、笔试辅助等辅助工具。本页为官方战略合作通道，点击体验按钮后将进入
                 OfferIN AI，由其独立提供产品与服务。
               </p>
             </article>
@@ -291,7 +291,7 @@ export default function OfferInPage() {
               <img src={offerinIcon} width={15} height={15} className="rounded" alt="" />
               <span>OfferIN AI</span>
               <span className="text-[10px] text-blue-500 bg-white/80 px-1.5 py-0.5 rounded-full border border-blue-100/80 ml-1">
-                双剑合璧
+                战略合作
               </span>
             </div>
             <h2 id="closing-title" class="display-title">
@@ -313,7 +313,7 @@ export default function OfferInPage() {
               开启面试笔试特训
               <ArrowUpRight className="icon" aria-hidden="true" />
             </a>
-            <span>魔方简历 × OfferIN AI · 联合推荐</span>
+            <span>魔方简历 × OfferIN AI · 战略合作</span>
           </div>
         </section>
       </main>
@@ -337,7 +337,7 @@ export default function OfferInPage() {
             <span>OfferIN AI</span>
           </div>
           <p className="footer-note">
-            本页为魔方简历与 OfferIN AI 联合合作推荐。OfferIN AI 产品与服务由其合作伙伴独立运营，价格与条款以其实际页面为准。
+            本页为魔方简历与 OfferIN AI 战略合作专区。OfferIN AI 产品与服务由其合作伙伴独立运营，价格与条款以其实际页面为准。
           </p>
         </div>
       </footer>
@@ -346,7 +346,7 @@ export default function OfferInPage() {
       <div className="mobile-cta" aria-label="快捷体验入口">
         <div>
           <strong>魔方简历 × OfferIN AI</strong>
-          <small>求职全流程 · 联合护航</small>
+          <small>求职全流程 · 战略合作</small>
         </div>
         <a
           className="btn"

@@ -280,16 +280,6 @@ export default function OfferInPage() {
           aria-labelledby="closing-title"
         >
           <div>
-            <div className="inline-flex items-center gap-2 mb-3.5 px-3 py-1 rounded-full bg-blue-50/80 border border-blue-100 text-blue-700 text-xs font-medium">
-              <Logo size={16} />
-              <span>魔方简历</span>
-              <span className="text-blue-300">×</span>
-              <img src={offerinIcon} width={15} height={15} className="rounded" alt="" />
-              <span>OfferIN AI</span>
-              <span className="text-[10px] text-blue-500 bg-white/80 px-1.5 py-0.5 rounded-full border border-blue-100/80 ml-1">
-                战略合作
-              </span>
-            </div>
             <h2 id="closing-title" className="display-title">
               准备好了吗
               <br />

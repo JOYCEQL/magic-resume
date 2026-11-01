@@ -51,7 +51,7 @@ export default function LandingHeader() {
             <LandingGitHubStars />
           </div>
           <Link
-            href="/app/dashboard"
+            href="/app/dashboard/resumes"
             className="landing-button landing-nav-cta"
           >
             {t("start")}
@@ -76,7 +76,7 @@ export default function LandingHeader() {
         >
           <ContactPopover />
           <LandingGitHubStars />
-          <Link href="/app/dashboard" className="landing-button">
+          <Link href="/app/dashboard/resumes" className="landing-button">
             {t("start")}
             <ArrowUpRight size={16} />
           </Link>

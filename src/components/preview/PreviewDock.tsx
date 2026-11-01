@@ -366,7 +366,7 @@ const PreviewDock = ({
                         "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
                         "hover:bg-gray-100/50 dark:hover:bg-secondary/50"
                       )}
-                      onClick={() => router.push("/app/dashboard")}
+                      onClick={() => router.push("/app/dashboard/resumes")}
                     >
                       <Home className="h-4 w-4" />
                     </div>

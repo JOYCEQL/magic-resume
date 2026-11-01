@@ -19,9 +19,15 @@ export function Providers({
       disableTransitionOnChange
       storageKey="magic-resume-theme"
     >
-      {forcedTheme === "light" ? children : (
+      {/*
+        Keep `children` in a stable fiber slot. Wrapping it conditionally would
+        remount the whole route tree (and suspend it to a blank fallback) when
+        leaving the landing page.
+      */}
+      {children}
+      {forcedTheme === "light" ? null : (
         <Suspense fallback={null}>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders />
         </Suspense>
       )}
     </ThemeProvider>

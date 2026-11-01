@@ -31,7 +31,7 @@ export default function HeroSection() {
           <h1 id="hero-title">{hero("title")}</h1>
           <p>{hero("subtitle")}</p>
           <div className="landing-actions">
-            <Link href="/app/dashboard" className="landing-button">
+            <Link href="/app/dashboard/resumes" className="landing-button">
               {hero("cta")}
             </Link>
             <GoDashboard type="templates">
@@ -46,7 +46,7 @@ export default function HeroSection() {
         </div>
       </div>
       <a
-        href="/app/dashboard"
+        href="/app/dashboard/resumes"
         className="landing-hero-screenshot landing-shell"
         aria-label={hero("cta")}
       >
@@ -57,8 +57,9 @@ export default function HeroSection() {
           alt={t("hero.editorAlt")}
           width={3976}
           height={2028}
-          loading="lazy"
-          decoding="async"
+          // Above the fold on desktop: lazy loading + async decoding painted an
+          // empty frame first, which showed up as a flash on every refresh.
+          loading="eager"
         />
       </a>
     </section>

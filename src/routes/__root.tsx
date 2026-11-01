@@ -3,7 +3,7 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  useLocation,
+  useRouterState,
 } from "@tanstack/react-router";
 import appCss from "../app/globals.css?url";
 import landingCss from "@/components/home/landing.css?url";
@@ -48,8 +48,10 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
-  const pathname = useLocation({
-    select: (location) => location.pathname,
+  // Follow the resolved location so the landing theme only changes after the
+  // outlet has actually left the landing page, not while the next route loads.
+  const pathname = useRouterState({
+    select: (state) => (state.resolvedLocation ?? state.location).pathname,
   });
   const landingLocale = getLocaleFromPathname(pathname);
   const isLandingPage =

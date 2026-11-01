@@ -11,7 +11,7 @@ export default function GoDashboard({
   const navigate = useNavigate();
 
   const routeMap = {
-    dashboard: "/app/dashboard",
+    dashboard: "/app/dashboard/resumes",
     resumes: "/app/dashboard/resumes",
     templates: "/app/dashboard/templates"
   };

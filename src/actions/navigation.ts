@@ -3,7 +3,7 @@
 import { redirect } from "@/lib/navigation";
 
 export async function GoDashboardAction() {
-  redirect("/app/dashboard");
+  redirect("/app/dashboard/resumes");
 }
 export async function GoResumesAction() {
   redirect("/app/dashboard/resumes");

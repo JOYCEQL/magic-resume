@@ -10,7 +10,7 @@ export default function CTASection() {
           <h2>{t("title")}</h2>
           <p>{t("description")}</p>
         </div>
-        <Link href="/app/dashboard" className="landing-button">
+        <Link href="/app/dashboard/resumes" className="landing-button">
           {t("button")}
         </Link>
       </div>

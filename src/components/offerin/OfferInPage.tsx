@@ -37,10 +37,25 @@ export default function OfferInPage() {
       {/* Header */}
       <header className="header">
         <div className="shell header-inner flex items-center justify-between gap-6">
-          <Link href="/zh" className="brand" aria-label="返回魔方简历首页">
-            <Logo size={32} />
-            <span>魔方简历</span>
-          </Link>
+          <div className="brand-combo flex items-center gap-3">
+            <Link href="/zh" className="brand" aria-label="返回魔方简历首页">
+              <Logo size={28} />
+              <span>魔方简历</span>
+            </Link>
+            <span className="brand-combo-x" aria-hidden="true">
+              ×
+            </span>
+            <div className="brand partner-brand">
+              <img
+                src={offerinIcon}
+                alt="OfferIN AI"
+                width={24}
+                height={24}
+                className="offer-icon"
+              />
+              <span>OfferIN AI</span>
+            </div>
+          </div>
           <nav className="header-nav" aria-label="主导航">
             <Link href="/zh">简历制作</Link>
             <a href="#main" aria-current="page">
@@ -67,19 +82,37 @@ export default function OfferInPage() {
         <section className="hero" aria-labelledby="hero-title">
           <div className="shell hero-grid grid items-center pb-20">
             <div className="hero-copy">
-              <div className="partner flex items-center gap-2.5">
-                <span className="line" />
-                <span>魔方简历 × OfferIN AI</span>
+              {/* 强化的双品牌联合 Badge */}
+              <div className="hero-cobrand-badge">
+                <div className="cobrand-pill">
+                  <span className="cobrand-brand">
+                    <Logo size={18} />
+                    <span>魔方简历</span>
+                  </span>
+                  <span className="cobrand-times">×</span>
+                  <span className="cobrand-brand">
+                    <img
+                      src={offerinIcon}
+                      alt="OfferIN AI"
+                      width={18}
+                      height={18}
+                      className="rounded"
+                    />
+                    <span>OfferIN AI</span>
+                  </span>
+                  <span className="cobrand-tag">联合特献</span>
+                </div>
               </div>
-              <h1 id="hero-title" className="display-title">
+
+              <h1 id="hero-title" class="display-title">
                 写完简历
                 <br />
-                即刻拿下<span className="accent">面试笔试</span>
+                即刻拿下<span class="accent">面试笔试</span>
               </h1>
               <p className="hero-description">
-                先用 AI，<strong>先拿 Offer</strong>，干掉八股，干掉测评
+                <strong>简历写好了，面试更有底气。</strong>
                 <br />
-                面试笔试都能用，各行各业都在用
+                魔方简历携手 OfferIN AI，用全自动面试练习与笔试真题解析，干掉八股，干掉测评，为你的求职之路全程护航。
               </p>
               <div className="hero-actions flex flex-wrap items-center">
                 <a
@@ -90,13 +123,13 @@ export default function OfferInPage() {
                   onClick={() => handleAffiliateClick("hero")}
                   aria-label="开始使用（在新标签页打开 OfferIN AI）"
                 >
-                  开始使用
+                  开启面试笔试特训
                   <ChevronRight className="icon" aria-hidden="true" />
                 </a>
               </div>
               <p className="hero-note">
                 <ExternalLink className="icon" aria-hidden="true" />
-                合作伙伴 OfferIN AI 独立提供服务
+                魔方简历 × OfferIN AI · 官方联合推荐通道
               </p>
             </div>
           </div>
@@ -108,22 +141,26 @@ export default function OfferInPage() {
             <div className="chapter flex items-start">
               <span className="chapter-num">01</span>
               <div>
-                <h2>准备简历</h2>
-                <p>魔方简历，写出精彩</p>
+                <h2>第一阶段 · 制作简历</h2>
+                <p>
+                  <strong>魔方简历</strong>｜精心打磨，专业出彩
+                </p>
               </div>
             </div>
             <div className="chapter active flex items-start">
               <span className="chapter-num">02</span>
               <div>
-                <h2>从容面试笔试</h2>
-                <p>OfferIN AI 一站式辅助</p>
+                <h2>第二阶段 · 冲刺面试笔试</h2>
+                <p>
+                  <strong>OfferIN AI</strong>｜实时答疑，沉着应战
+                </p>
               </div>
             </div>
             <div className="chapter flex items-start">
               <span className="chapter-num">03</span>
               <div>
-                <h2>顺利上岸</h2>
-                <p>拿到下一个 Offer</p>
+                <h2>第三阶段 · 顺利上岸</h2>
+                <p>双剑合璧｜轻松拿下心仪 Offer</p>
               </div>
             </div>
           </div>
@@ -200,7 +237,7 @@ export default function OfferInPage() {
         >
           <div>
             <p className="eyebrow">FAQ</p>
-            <h2 id="faq-title" className="display-title section-title">
+            <h2 id="faq-title" class="display-title section-title">
               常见问题
             </h2>
             <p className="muted mt-4 text-[13px] leading-7">
@@ -212,7 +249,7 @@ export default function OfferInPage() {
               <h3 className="question">OfferIN AI 和魔方简历分别做什么？</h3>
               <p>
                 魔方简历帮助你制作与优化简历；OfferIN AI
-                提供面试辅助、笔试辅助等辅助工具。本页为合作推荐入口，点击体验按钮后将进入
+                提供面试辅助、笔试辅助等辅助工具。本页为官方联合推荐入口，点击体验按钮后将进入
                 OfferIN AI，由其独立提供产品与服务。
               </p>
             </article>
@@ -247,12 +284,22 @@ export default function OfferInPage() {
           aria-labelledby="closing-title"
         >
           <div>
-            <h2 id="closing-title" className="display-title">
+            <div className="inline-flex items-center gap-2 mb-3.5 px-3 py-1 rounded-full bg-blue-50/80 border border-blue-100 text-blue-700 text-xs font-medium">
+              <Logo size={16} />
+              <span>魔方简历</span>
+              <span className="text-blue-300">×</span>
+              <img src={offerinIcon} width={15} height={15} className="rounded" alt="" />
+              <span>OfferIN AI</span>
+              <span className="text-[10px] text-blue-500 bg-white/80 px-1.5 py-0.5 rounded-full border border-blue-100/80 ml-1">
+                双剑合璧
+              </span>
+            </div>
+            <h2 id="closing-title" class="display-title">
               准备好了吗
               <br />
-              即刻开启面试新体验
+              即刻开启求职全流程新体验
             </h2>
-            <p>AI 时代面试笔试助手，祝您轻松上岸</p>
+            <p>魔方简历写出精彩，OfferIN AI 保驾护航，祝您轻松拿下下一个 Offer</p>
           </div>
           <div className="closing-action">
             <a
@@ -263,10 +310,10 @@ export default function OfferInPage() {
               onClick={() => handleAffiliateClick("closing")}
               aria-label="开始使用（在新标签页打开 OfferIN AI）"
             >
-              开始使用
+              开启面试笔试特训
               <ArrowUpRight className="icon" aria-hidden="true" />
             </a>
-            <span>魔方简历 × OfferIN AI · 合作推荐</span>
+            <span>魔方简历 × OfferIN AI · 联合推荐</span>
           </div>
         </section>
       </main>
@@ -276,8 +323,8 @@ export default function OfferInPage() {
         <div className="shell footer-inner flex items-center justify-between">
           <div className="footer-brands">
             <Logo size={24} />
-            魔方简历
-            <span className="font-normal text-slate-400" aria-hidden="true">
+            <span>魔方简历</span>
+            <span className="font-normal text-slate-400 mx-0.5" aria-hidden="true">
               ×
             </span>
             <img
@@ -287,10 +334,10 @@ export default function OfferInPage() {
               height={22}
               alt="OfferIN AI"
             />
-            OfferIN AI
+            <span>OfferIN AI</span>
           </div>
           <p className="footer-note">
-            本页为联盟合作推荐，OfferIN AI 由合作伙伴独立运营。产品功能、价格与服务条款以其实际页面为准。
+            本页为魔方简历与 OfferIN AI 联合合作推荐。OfferIN AI 产品与服务由其合作伙伴独立运营，价格与条款以其实际页面为准。
           </p>
         </div>
       </footer>
@@ -298,8 +345,8 @@ export default function OfferInPage() {
       {/* Mobile Sticky CTA */}
       <div className="mobile-cta" aria-label="快捷体验入口">
         <div>
-          <strong>AI 时代面试笔试助手</strong>
-          <small>OfferIN AI 倾力打造</small>
+          <strong>魔方简历 × OfferIN AI</strong>
+          <small>求职全流程 · 联合护航</small>
         </div>
         <a
           className="btn"

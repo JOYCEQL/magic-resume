@@ -200,6 +200,41 @@
       width: min(1000px, calc(100% - 96px));
     }
 
+    .brand-combo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 650;
+        white-space: nowrap;
+        color: var(--ink);
+      }
+
+      .brand-combo-x {
+        color: #9cb0c3;
+        font-size: 14px;
+        font-weight: 400;
+        user-select: none;
+      }
+
+      .partner-brand {
+        color: #1a334d;
+        cursor: default;
+
+        .offer-icon {
+          width: 22px;
+          height: 22px;
+          border-radius: 6px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+      }
+    }
+
     .brand {
       display: flex;
       align-items: center;
@@ -276,6 +311,60 @@
       text-align: center;
       position: relative;
       z-index: 3;
+    }
+
+    .hero-cobrand-badge {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+
+      .cobrand-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 18px 6px 14px;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #d5e5f5;
+        border-radius: 9999px;
+        box-shadow: 0 4px 18px rgba(52, 124, 244, 0.08);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink);
+        backdrop-filter: blur(10px);
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: #bad8f5;
+          box-shadow: 0 6px 22px rgba(52, 124, 244, 0.12);
+          transform: translateY(-1px);
+        }
+      }
+
+      .cobrand-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 650;
+      }
+
+      .cobrand-times {
+        color: #9ab1c7;
+        font-weight: 400;
+        font-size: 14px;
+        margin-inline: 2px;
+        user-select: none;
+      }
+
+      .cobrand-tag {
+        font-size: 11px;
+        font-weight: 500;
+        color: #2563eb;
+        background: #eef5ff;
+        border: 1px solid #dbeafe;
+        padding: 2px 9px;
+        border-radius: 9999px;
+        margin-left: 2px;
+      }
     }
 
     .partner {
@@ -1047,6 +1136,31 @@
 
       .header-inner {
         width: calc(100% - 40px);
+      }
+
+      .brand-combo {
+        gap: 8px;
+        .brand {
+          font-size: 14px;
+          gap: 6px;
+        }
+        .partner-brand .offer-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .hero-cobrand-badge {
+        margin-bottom: 18px;
+        .cobrand-pill {
+          padding: 5px 12px;
+          gap: 7px;
+          font-size: 11px;
+        }
+        .cobrand-tag {
+          font-size: 10px;
+          padding: 1px 6px;
+        }
       }
 
       .brand {

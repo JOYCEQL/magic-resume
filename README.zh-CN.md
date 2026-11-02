@@ -21,6 +21,16 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
   </a>
 </p>
 
+## ❤️ 赞助名单
+
+如果您赞助了本项目，但没展示在这里，请联系我。
+
+| 赞助者 | 金额（人民币） |
+| --- | ---: |
+| <a href="https://github.com/fbitalk"><img src="https://github.com/fbitalk.png?size=40" width="40" height="40" alt="@fbitalk" /></a> [@fbitalk](https://github.com/fbitalk) | ¥20 |
+| <a href="https://github.com/yj147"><img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" /></a> [@yj147](https://github.com/yj147) | ¥10 |
+| <a href="https://github.com/someone1128"><img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" /></a> [@someone1128](https://github.com/someone1128) | ¥10 |
+
 ## 📸 项目截图
 
 <img width="1920" height="1440" alt="85_1x_shots_so" src="https://github.com/user-attachments/assets/4667e49a-7bf2-4379-9390-725e42799dc7" />
@@ -161,23 +171,3 @@ docker compose up -d
 ## 🌟 支持项目
 
 <img src="https://github.com/JOYCEQL/picx-images-hosting/raw/master/pintu-fulicat.com-1741081632544.26lmg2uc2m.webp" width="320"  alt="图片描述">
-
-## ❤️ 赞助名单
-
-<div align="center">
-  <h3>Sponsors</h3>
-  <p>如果您赞助了本项目，但没展示在这里，请联系我。</p>
-  <p>
-    <a href="https://github.com/yj147">
-      <img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" />
-    </a>
-    <a href="https://github.com/someone1128">
-      <img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" />
-    </a>
-    <!-- 在这里继续添加赞助者：
-    <a href="https://github.com/<username>">
-      <img src="https://github.com/<username>.png?size=40" width="40" height="40" alt="@<username>" />
-    </a>
-    -->
-  </p>
-</div>

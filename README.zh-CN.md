@@ -22,15 +22,33 @@ Magic Resume 是一个现代化的在线简历编辑器，让创建专业简历�
   </a>
 </p>
 
-## ❤️ 赞助名单
+## ❤️ 其他赞助者
 
 如果您赞助了本项目，但没展示在这里，请联系我。
 
-| 赞助者 | 金额（人民币） |
-| --- | ---: |
-| <a href="https://github.com/fbitalk"><img src="https://github.com/fbitalk.png?size=40" width="40" height="40" alt="@fbitalk" /></a> [@fbitalk](https://github.com/fbitalk) | ¥20 |
-| <a href="https://github.com/yj147"><img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" /></a> [@yj147](https://github.com/yj147) | ¥10 |
-| <a href="https://github.com/someone1128"><img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" /></a> [@someone1128](https://github.com/someone1128) | ¥10 |
+<!-- GitHub sizes tables to their content; a wide first column fills the available width. -->
+<table>
+  <thead>
+    <tr>
+      <th width="10000" align="left">赞助者</th>
+      <th align="right">金额（人民币）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://github.com/fbitalk"><img src="https://github.com/fbitalk.png?size=40" width="40" height="40" alt="@fbitalk" /> @fbitalk</a></td>
+      <td align="right">¥20</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/yj147"><img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" /> @yj147</a></td>
+      <td align="right">¥10</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/someone1128"><img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" /> @someone1128</a></td>
+      <td align="right">¥10</td>
+    </tr>
+  </tbody>
+</table>
 
 ## 📸 项目截图
 

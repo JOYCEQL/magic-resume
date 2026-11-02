@@ -7,6 +7,7 @@
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-10.0-purple)
 
 <a href="https://trendshift.io/repositories/13077" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13077" alt="Magic Resume | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://hellogithub.com/repository/51a0f545d0964a47a173794478119ec7" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=51a0f545d0964a47a173794478119ec7" alt="Magic Resume | HelloGitHub" width="250" height="54"/></a>
 
 [简体中文](./README.zh-CN.md) | English
 

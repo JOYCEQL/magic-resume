@@ -2,6 +2,7 @@ import { memo, type ReactNode } from "react";
 import type { GlobalSettings, Publication } from "@/types/resume";
 import { useLocale } from "@/i18n/compat/client";
 import { getAuthorDelimiter, getPublicationAuthors, getPublicationLink, getPublicationStatusLabel, hasPublicationContent } from "@/lib/publication";
+import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString, normalizeDateFormat } from "@/lib/utils";
 import SectionWrapper from "./SectionWrapper";
 
@@ -45,7 +46,13 @@ function PublicationsSection({ publications = [], globalSettings, children }: {
                   </a>}
                 </div>
               )}
-              {item.description && <p className="mt-1 whitespace-pre-wrap">{item.description}</p>}
+              {item.description && (
+                <div
+                  className="mt-1"
+                  style={{ fontSize: globalSettings?.baseFontSize ?? 14, lineHeight: globalSettings?.lineHeight ?? 1.6 }}
+                  dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(item.description) }}
+                />
+              )}
             </article>
           );
         })}

@@ -309,7 +309,7 @@ const renderPublicationsSection = (title: string, resume: ResumeData, dateContex
       const date = dateContext.dateFormat ? applyDateFormat(normalizeText(item.date), dateContext) : item.date;
       const meta = [item.venue, date, getPublicationStatusLabel(item.status, locale)].filter(Boolean).map(escapeMarkdownText).join(" | ");
       const link = getPublicationLink(item.link);
-      return [item.title && `### ${escapeMarkdownText(item.title)}`, authors, meta, link && `[${locale === "en" ? "Paper" : "论文链接"}](<${link.replace(/</g, "%3C").replace(/>/g, "%3E")}>)`, escapeMarkdownText(item.description)]
+      return [item.title && `### ${escapeMarkdownText(item.title)}`, authors, meta, link && `[${locale === "en" ? "Paper" : "论文链接"}](<${link.replace(/</g, "%3C").replace(/>/g, "%3E")}>)`, markdownFromText(item.description)]
         .filter(Boolean).join("\n\n");
     });
   return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";

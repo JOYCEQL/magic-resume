@@ -947,7 +947,7 @@
         "date": "发表日期",
         "status": "发表状态",
         "link": "论文链接 / DOI",
-        "description": "补充说明（可选）"
+        "description": "论文描述"
       },
       "placeholders": {
         "title": "例如：面向低资源场景的多模态表示学习",
@@ -955,7 +955,7 @@
         "highlightedAuthor": "例如：林知远",
         "venue": "例如：NeurIPS 2025 / IEEE TPAMI",
         "link": "https://… 或 10.xxxx/…",
-        "description": "例如：* 共同第一作者。负责模型设计与实验验证。"
+        "description": "补充研究亮点、本人贡献或共同一作说明，支持加粗与列表"
       },
       "statuses": {
         "none": "不显示",

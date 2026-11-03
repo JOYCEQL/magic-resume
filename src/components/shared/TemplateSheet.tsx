@@ -16,6 +16,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTemplateSnapshots } from "@/hooks/useTemplateSnapshots";
 import { preloadTemplateComponent } from "@/components/templates/loader";
+import { ResumePaperSkeleton } from "@/components/skeletons/ResumePaperSkeleton";
 
 type TemplateItem = (typeof DEFAULT_TEMPLATES)[number];
 
@@ -46,13 +47,16 @@ const TemplatePreview = ({
     >
       <div className="relative aspect-[210/297] w-full overflow-hidden bg-gray-50 dark:bg-card">
         {snapshotSrc ? (
-          <img
-            src={snapshotSrc}
-            alt={template.name}
-            className="h-full w-full object-cover object-top"
-            loading="lazy"
-            draggable={false}
-          />
+          <>
+            <ResumePaperSkeleton className="absolute inset-0 bg-white p-[7%]" />
+            <img
+              src={snapshotSrc}
+              alt={template.name}
+              className="relative h-full w-full object-cover object-top"
+              loading="lazy"
+              draggable={false}
+            />
+          </>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-gray-50 to-gray-100 text-gray-500 dark:from-card dark:to-background dark:text-muted-foreground">
             <ImageIcon className="h-8 w-8" />

@@ -14,6 +14,7 @@ import ThemeModal from "@/components/shared/ThemeModal";
 import { useTranslations } from "@/i18n/compat/client";
 import { Project } from "@/types/resume";
 import { Input } from "@/components/ui/input";
+import LogoSelector from "@/components/shared/LogoSelector";
 
 interface ProjectEditorProps {
   project: Project;
@@ -46,6 +47,25 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
             value={project.role}
             onChange={(value) => handleChange("role", value)}
             placeholder={t("placeholders.role")}
+          />
+        </div>
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={project.logo}
+            config={project.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...project,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...project,
+                logoConfig: config,
+              });
+            }}
           />
         </div>
         <div className="space-y-2">

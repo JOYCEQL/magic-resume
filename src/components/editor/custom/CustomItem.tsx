@@ -13,6 +13,7 @@ import Field from "../Field";
 
 import { CustomItem as CustomItemType } from "@/types/resume";
 import ThemeModal from "@/components/shared/ThemeModal";
+import LogoSelector from "@/components/shared/LogoSelector";
 const CustomItemEditor = ({
   item,
   onSave,
@@ -39,6 +40,26 @@ const CustomItemEditor = ({
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
             placeholder="副标题"
+          />
+        </div>
+
+        <div className="bg-card rounded-xl p-3 border border-border">
+          <LogoSelector
+            logo={item.logo}
+            config={item.logoConfig}
+            onLogoChange={(logo, config) => {
+              onSave({
+                ...item,
+                logo: logo || "",
+                logoConfig: config,
+              });
+            }}
+            onConfigChange={(config) => {
+              onSave({
+                ...item,
+                logoConfig: config,
+              });
+            }}
           />
         </div>
 

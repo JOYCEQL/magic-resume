@@ -198,3 +198,97 @@ test("old resumes support logo uploads, ratios, remote images, all templates and
   await mobile.screenshot({ path: `${artifacts}/mobile.png` });
   assert.deepEqual(errors, []);
 });
+
+test("projects and custom sections accept logo uploads and render them in every template", {
+  timeout: 180_000,
+}, async (t) => {
+  await mkdir(artifacts, { recursive: true });
+  const companyPng = await readFile(new URL("../public/company.png", import.meta.url));
+  const schoolPng = await readFile(new URL("../public/university.png", import.meta.url));
+  const browser = await chromium.launch();
+  t.after(() => browser.close());
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, colorScheme: "light" });
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+
+  await page.goto(`${origin}/app/dashboard`);
+  const { id, projectName, customTitle } = await page.evaluate(async () => {
+    const { useResumeStore } = await import("/src/store/useResumeStore.ts");
+    const store = useResumeStore.getState();
+    const id = store.createResume(null);
+    const resume = useResumeStore.getState().resumes[id];
+    // Resumes saved before this feature carry no logo fields on these collections.
+    const projects = resume.projects.map(({ logo, logoConfig, ...old }) => old);
+    useResumeStore.getState().updateResume(id, { projects });
+    useResumeStore.getState().createCustomSection({
+      id: "custom-1",
+      title: "开源经历",
+      icon: "github",
+      enabled: true,
+      order: 90,
+    });
+    const [item] = useResumeStore.getState().resumes[id].customData["custom-1"];
+    useResumeStore.getState().updateCustomItem("custom-1", item.id, {
+      title: "OpenGemini",
+      subtitle: "Contributor",
+    });
+    // createCustomSection focuses the new section; go back to projects first.
+    useResumeStore.getState().updateResume(id, { activeSection: "projects" });
+    return { id, projectName: resume.projects[0].name, customTitle: "OpenGemini" };
+  });
+
+  await page.goto(`${origin}/app/workbench/${id}`);
+  await page.waitForSelector("#resume-preview");
+  const saved = async () => (await page.evaluate(readSavedResumeStorage)).state.resumes[id];
+  const drawer = page.getByRole("dialog", { name: "Logo 设置" });
+
+  // Project items expose the same logo editor as work experience.
+  await page.locator("div.cursor-pointer.select-none").filter({ hasText: projectName }).first().click();
+  await page.getByRole("button", { name: "Logo 设置", exact: true }).click();
+  await drawer.waitFor({ state: "visible" });
+  await drawer.locator('input[type="file"]').setInputFiles({ name: "company.png", mimeType: "image/png", buffer: companyPng });
+  await eventually(async () => assert.match((await saved()).projects[0].logo || "", /^data:image\/png;base64,/));
+  await drawer.getByRole("button", { name: "关闭", exact: true }).click();
+  await drawer.waitFor({ state: "hidden" });
+
+  // Custom sections (e.g. open-source experience) do too.
+  await page.evaluate(async () => {
+    const { useResumeStore } = await import("/src/store/useResumeStore.ts");
+    useResumeStore.getState().setActiveSection("custom-1");
+  });
+  await page.locator("div.cursor-pointer.select-none").filter({ hasText: customTitle }).first().click();
+  await page.getByRole("button", { name: "Logo 设置", exact: true }).click();
+  await drawer.waitFor({ state: "visible" });
+  await drawer.locator('input[type="file"]').setInputFiles({ name: "university.png", mimeType: "image/png", buffer: schoolPng });
+  await eventually(async () => {
+    assert.match((await saved()).customData["custom-1"][0].logo || "", /^data:image\/png;base64,/);
+  });
+  await drawer.getByRole("button", { name: "关闭", exact: true }).click();
+  await drawer.waitFor({ state: "hidden" });
+
+  const resume = await saved();
+  const targets = [
+    { src: resume.projects[0].logo, label: projectName.slice(0, 2) },
+    { src: resume.customData["custom-1"][0].logo, label: customTitle.slice(0, 2) },
+  ];
+  assert.notEqual(targets[0].src, targets[1].src, "fixtures must stay distinguishable");
+
+  const templates = await page.evaluate(async () => {
+    const { DEFAULT_TEMPLATES } = await import("/src/components/templates/registry.ts");
+    return DEFAULT_TEMPLATES.map(template => template.id);
+  });
+  assert.equal(templates.length, 9);
+  for (const templateId of templates) {
+    await page.evaluate(async ({ resumeId, templateId }) => {
+      const { useResumeStore } = await import("/src/store/useResumeStore.ts");
+      useResumeStore.getState().updateResume(resumeId, { templateId });
+    }, { resumeId: id, templateId });
+    await eventually(async () => assert.equal(await page.locator("#resume-preview img").evaluateAll((images, expected) =>
+      expected.every(target => images.some(image => image.getAttribute("src") === target.src &&
+        image.complete && image.naturalWidth > 0 &&
+        (image.parentElement?.textContent || "").includes(target.label))), targets), true,
+    `${templateId}: project and custom logos`));
+  }
+  await page.screenshot({ path: `${artifacts}/project-custom-logo.png` });
+  assert.deepEqual(errors, []);
+});

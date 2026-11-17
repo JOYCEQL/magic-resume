@@ -523,6 +523,37 @@ export const exportToLongPageImage = async ({
   }
 };
 
+const getExportFontBaseUrl = (): string | undefined => {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const { origin, protocol, hostname } = window.location;
+  if (protocol !== "http:" && protocol !== "https:") {
+    return undefined;
+  }
+
+  // Avoid passing non-routable LAN/private origins to a remote PDF service.
+  const isPrivateHost =
+    hostname.endsWith(".local") ||
+    /^10\./.test(hostname) ||
+    /^192\.168\./.test(hostname) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(hostname);
+
+  if (isPrivateHost) {
+    try {
+      const serverHostname = new URL(PDF_EXPORT_CONFIG.SERVER_URL).hostname;
+      if (serverHostname !== hostname) {
+        return undefined;
+      }
+    } catch {
+      return undefined;
+    }
+  }
+
+  return origin;
+};
+
 export const exportToPdf = async ({
   elementId,
   title,
@@ -551,13 +582,18 @@ export const exportToPdf = async ({
 
     hidePageBreakLines(clonedElement);
 
-    const [capturedStyles] = await Promise.all([
+    const fontBaseUrl = getExportFontBaseUrl();
+    const [capturedStyles, fontFaceCss] = await Promise.all([
       getOptimizedStyles(),
+      fontBaseUrl
+        ? getFontFaceCss(selectedFontFamily, { baseUrl: fontBaseUrl })
+        : Promise.resolve(""),
       optimizeImages(clonedElement)
     ]);
 
     // 注入 PdfExport.tsx 中的样式增强
     const styles = `
+      ${fontFaceCss}
       ${capturedStyles}
       html, body { background: white !important; background-color: white !important; }
       html, body, #${elementId} {

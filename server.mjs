@@ -82,6 +82,9 @@ function tryServeStatic(req, res, url) {
   } else {
     res.setHeader("Cache-Control", "public, max-age=3600");
   }
+  if (url.pathname.startsWith("/fonts/resume/")) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
 
   if (req.method === "HEAD") {
     res.end();

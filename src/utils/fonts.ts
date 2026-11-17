@@ -216,15 +216,37 @@ export const getFontOptions = (t: (key: string) => string) =>
     label: t(definition.labelKey)
   }));
 
+export interface GetFontFaceCssOptions {
+  inline?: boolean;
+  baseUrl?: string;
+}
+
+const resolveFontSourceUrl = (
+  url: string,
+  options: GetFontFaceCssOptions
+): Promise<string> | string => {
+  if (options.inline) {
+    return toDataUrl(url);
+  }
+  if (options.baseUrl) {
+    return new URL(url, options.baseUrl).href;
+  }
+  return url;
+};
+
 export const getFontFaceCss = async (
   fontFamily?: string,
-  inline = false
+  inlineOrOptions: boolean | GetFontFaceCssOptions = false
 ) => {
+  const options: GetFontFaceCssOptions =
+    typeof inlineOrOptions === "boolean"
+      ? { inline: inlineOrOptions }
+      : inlineOrOptions;
   const definition = findFontDefinition(fontFamily);
 
   const rules = await Promise.all(
     definition.sources.map(async (source) => {
-      const resolvedUrl = inline ? await toDataUrl(source.url) : source.url;
+      const resolvedUrl = await resolveFontSourceUrl(source.url, options);
       return buildFontFaceRule(source, resolvedUrl);
     })
   );

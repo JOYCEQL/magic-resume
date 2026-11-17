@@ -231,23 +231,13 @@ test("one-page preview settles and responds to subsequent layout changes", {
       assert.ok(Math.abs(actual.height - expected.height) <= 1);
     };
     const exportPage = await browser.newPage();
-    // Font requests must have the app's origin; about:blank would fail CORS and
-    // silently render the fixture with a different font.
-    await exportPage.route("**/__pdf-regression__", (route) => route.fulfill({
-      contentType: "text/html", body: "<!doctype html><html><head></head><body></body></html>",
-    }));
-    await exportPage.goto(`${baseURL}/__pdf-regression__`);
-    const fontCss = await page.evaluate(async () => {
-      const { getFontFaceCss } = await import("/src/utils/fonts.ts");
-      return getFontFaceCss();
-    });
     let payload;
-    // Render the actual export request locally so this regression test does not
-    // depend on the external PDF service's availability.
+    // Render the actual export request on about:blank just like the external PDF
+    // service does, verifying exported @font-face rules and CORS headers directly.
     await page.route("**/generate-pdf", async (route) => {
       payload = route.request().postDataJSON();
-      await exportPage.setContent(`<!doctype html><html><head><base href="${baseURL}/">
-        <style>${fontCss}\n${payload.styles}
+      await exportPage.setContent(`<!doctype html><html><head>
+        <style>${payload.styles}
         html, body { margin: 0; padding: 0; }
         body { width: calc(210mm - ${2 * payload.margin}px); }
         </style></head><body>${payload.content}</body></html>`);
@@ -266,10 +256,19 @@ test("one-page preview settles and responds to subsequent layout changes", {
       });
       await downloaded;
       assert.equal(payload.margin, 40);
+      assert.match(payload.styles, /@font-face/);
+      assert.ok(
+        await exportPage.evaluate(() => [...document.fonts].some((font) => font.status === "loaded")),
+        "exported PDF document must load the resume font without service-side font injection",
+      );
       const exported = await exportPage.locator("#resume-preview").evaluate(readContent);
       assertMatchingLayout(exported);
       assert.equal(await exportPage.locator(".page-break-line").count(), 0);
 
+      await exportPage.route("**/__pdf-regression__", (route) => route.fulfill({
+        contentType: "text/html", body: "<!doctype html><html><head></head><body></body></html>",
+      }));
+      await exportPage.goto(`${baseURL}/__pdf-regression__`);
       const printHtml = await page.evaluate(async () => {
         const { exportResumeToBrowserPrint } = await import("/src/utils/print.ts");
         await exportResumeToBrowserPrint(document.getElementById("resume-preview"), 40);
@@ -375,21 +374,19 @@ test("list layout, page indicators and exported PDF agree", { timeout: 120_000 }
   });
 
   const pdfPage = await browser.newPage();
-  await pdfPage.route("**/__pdf-regression__", route => route.fulfill({
-    contentType: "text/html", body: "<!doctype html><html><head></head><body></body></html>",
-  }));
-  await pdfPage.goto(`${baseURL}/__pdf-regression__`);
-  // The service provides these fonts. The local renderer loads the same assets.
-  const fonts = await page.evaluate(async () => (await import("/src/utils/fonts.ts")).getFontFaceCss());
   let pdfBytes;
   await page.route("**/generate-pdf", async route => {
     const payload = route.request().postDataJSON();
-    await pdfPage.setContent(`<!doctype html><html><head><base href="${baseURL}/"><style>
-      ${fonts}\n${payload.styles}
+    await pdfPage.setContent(`<!doctype html><html><head><style>
+      ${payload.styles}
       html,body { margin:0; padding:0; }
       body { width:calc(210mm - ${2 * payload.margin}px); }
       </style></head><body>${payload.content}</body></html>`);
     await pdfPage.evaluate(() => document.fonts.ready);
+    assert.ok(
+      await pdfPage.evaluate(() => [...document.fonts].some(font => font.status === "loaded")),
+      "exported PDF document must load the resume font",
+    );
     pdfBytes = await pdfPage.pdf({ format: "A4", printBackground: true,
       margin: Object.fromEntries(["top","bottom","left","right"].map(k => [k, `${payload.margin}px`])) });
     await route.fulfill({ status: 200, contentType: "application/pdf", body: pdfBytes });

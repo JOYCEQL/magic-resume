@@ -1,5 +1,6 @@
 /fonts/resume/*
   Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
 
 /fonts/ui/*.woff2
   Cache-Control: public, max-age=31536000, immutable

@@ -14,6 +14,17 @@ export default defineConfig({
     noExternal: ["pdfjs-dist"]
   },
   plugins: [
+    {
+      name: "resume-font-cors",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith("/fonts/resume/")) {
+            res.setHeader("Access-Control-Allow-Origin", "*");
+          }
+          next();
+        });
+      },
+    },
     tsconfigPaths(),
     tanstackStart({
       srcDirectory: "src",

@@ -5,6 +5,73 @@ import { chromium } from "playwright";
 // Start `pnpm dev` first. All fixture data stays in an isolated browser context.
 // Override PREVIEW_TEST_URL when the Vite development server uses another port.
 const baseURL = process.env.PREVIEW_TEST_URL || "http://127.0.0.1:3000";
+// Playwright's named A4 is 8.27 x 11.7in; Puppeteer uses these dimensions.
+// The extra height in Playwright used to hide a trailing blank-page regression.
+const PDF_A4_SIZE = { width: "8.2677in", height: "11.6929in" };
+
+test("high-DPI one-page preview does not export a blank second page", { timeout: 45_000 }, async t => {
+  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  // A native scale factor is required: deviceScaleFactor emulation alone does
+  // not reproduce Chromium's half-pixel border rounding under CSS zoom.
+  const browser = await chromium.launch({ args: ["--force-device-scale-factor=2"] });
+  t.after(() => browser.close());
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await page.goto(`${baseURL}/app/dashboard`);
+  const id = await page.evaluate(async () => {
+    const { useResumeStore } = await import("/src/store/useResumeStore.ts");
+    const id = useResumeStore.getState().createResume("classic");
+    const store = useResumeStore.getState();
+    const resume = store.activeResume;
+    store.updateResume(id, {
+      menuSections: resume.menuSections.filter(section => section.id !== "skills"),
+      projects: [resume.projects[0], resume.projects[2], resume.projects[1]],
+      globalSettings: {
+        ...resume.globalSettings, autoOnePage: true, baseFontSize: 16,
+        pagePadding: 32, paragraphSpacing: 12, sectionSpacing: 16,
+        headerSize: 18, subheaderSize: 16, lineHeight: 1.5,
+      },
+    });
+    return id;
+  });
+  await page.goto(`${baseURL}/app/workbench/${id}`);
+  await page.waitForSelector("#resume-preview");
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForFunction(() => {
+    const root = document.querySelector("#resume-preview");
+    const scale = Number(root.querySelector("[data-resume-content]").style.zoom);
+    return root.dataset.pageCount === "1" && scale > 0.9 && scale < 1;
+  });
+
+  const pdfPage = await browser.newPage();
+  let pdfBytes;
+  await page.route("**/generate-pdf", async route => {
+    const payload = route.request().postDataJSON();
+    // Replay the actual payload, with the same paper dimensions as Puppeteer.
+    await pdfPage.setContent(`<html><head><style>${payload.styles}</style></head>
+      <body>${payload.content}</body></html>`);
+    await pdfPage.evaluate(() => document.fonts.ready);
+    pdfBytes = await pdfPage.pdf({
+      ...PDF_A4_SIZE, printBackground: true,
+      margin: Object.fromEntries(["top", "bottom", "left", "right"].map(key => [key, "32px"])),
+    });
+    await route.fulfill({ contentType: "application/pdf", body: pdfBytes });
+  });
+  const download = page.waitForEvent("download");
+  await page.evaluate(async () => {
+    await (await import("/src/utils/export.ts")).exportToPdf({
+      elementId: "resume-preview", title: "high-dpi-print", pagePadding: 32,
+    });
+  });
+  await download;
+  const pdf = await getDocument({ data: new Uint8Array(pdfBytes) }).promise;
+  try {
+    assert.equal(pdf.numPages, 1, "a fitting preview must not create a blank trailing page");
+    const text = (await (await pdf.getPage(1)).getTextContent()).items.map(item => item.str).join("").replace(/\s/g, "");
+    assert.ok(text.includes("GitHubCampusExpert认证"), "the final education item must not be cropped");
+  } finally {
+    await pdf.destroy();
+  }
+});
 
 test("toast styling survives document hydration recovery and real toggle clicks", {
   timeout: 30_000,
@@ -243,7 +310,7 @@ test("one-page preview settles and responds to subsequent layout changes", {
         </style></head><body>${payload.content}</body></html>`);
       await exportPage.evaluate(() => document.fonts.ready);
       const pdf = await exportPage.pdf({
-        format: "A4", printBackground: true,
+        ...PDF_A4_SIZE, printBackground: true,
         margin: { top: "40px", bottom: "40px", left: "40px", right: "40px" },
       });
       await route.fulfill({ status: 200, contentType: "application/pdf", body: pdf });
@@ -387,7 +454,7 @@ test("list layout, page indicators and exported PDF agree", { timeout: 120_000 }
       await pdfPage.evaluate(() => [...document.fonts].some(font => font.status === "loaded")),
       "exported PDF document must load the resume font",
     );
-    pdfBytes = await pdfPage.pdf({ format: "A4", printBackground: true,
+    pdfBytes = await pdfPage.pdf({ ...PDF_A4_SIZE, printBackground: true,
       margin: Object.fromEntries(["top","bottom","left","right"].map(k => [k, `${payload.margin}px`])) });
     await route.fulfill({ status: 200, contentType: "application/pdf", body: pdfBytes });
   });

@@ -1,6 +1,9 @@
 export const A4_HEIGHT_PX = 297 * 96 / 25.4;
 export const RESUME_CONTENT_SELECTOR = "[data-resume-content]";
 export const MIN_RESUME_SCALE = 0.9;
+// Leave room for subpixel border/font rounding when a different Chromium
+// instance lays out the exported document. Keep physical page guides unchanged.
+export const AUTO_ONE_PAGE_SAFETY_PX = 2;
 
 // Chromium lays out in 1/64 CSS-pixel units. Round the usable page inward;
 // never hide an overflow by granting the content extra page height.
@@ -62,6 +65,7 @@ export function measureResumeLayout(
   enabled: boolean,
 ): ResumeLayout {
   const availableHeight = getPageContentHeight(pagePadding);
+  const fitHeight = availableHeight - AUTO_ONE_PAGE_SAFETY_PX;
   if (availableHeight <= 0) throw new Error("Resume page margins exceed the paper height");
   const heightAt = (scale: number) => {
     content.style.zoom = String(scale);
@@ -72,10 +76,10 @@ export function measureResumeLayout(
     const naturalHeight = heightAt(1);
     let scaleFactor = 1;
     let height = naturalHeight;
-    if (enabled && naturalHeight > availableHeight) {
+    if (enabled && naturalHeight > fitHeight) {
       scaleFactor = MIN_RESUME_SCALE;
       height = heightAt(scaleFactor);
-      if (height <= availableHeight) {
+      if (height <= fitHeight) {
         // Search only in this independent copy; never feed display measurements
         // back into React. Keep the largest verified fitting scale.
         let low = MIN_RESUME_SCALE;
@@ -83,7 +87,7 @@ export function measureResumeLayout(
         for (let i = 0; i < 12; i++) {
           const candidate = (low + high) / 2;
           const candidateHeight = heightAt(candidate);
-          if (candidateHeight <= availableHeight) {
+          if (candidateHeight <= fitHeight) {
             low = candidate;
             height = candidateHeight;
           } else {

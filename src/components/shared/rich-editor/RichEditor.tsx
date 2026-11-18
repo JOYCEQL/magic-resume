@@ -17,6 +17,13 @@ import Link from "@tiptap/extension-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getOrderedListNumbering, setOrderedListNumbering } from "./orderedList";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -38,6 +45,7 @@ import {
   Wand2,
   Link2,
   Unlink,
+  ChevronDown,
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
@@ -454,6 +462,7 @@ const RichEditorToolbar = React.memo(
         alignJustify: currentEditor.isActive({ textAlign: "justify" }),
         isBulletList: currentEditor.isActive("bulletList"),
         isOrderedList: currentEditor.isActive("orderedList"),
+        numbering: getOrderedListNumbering(currentEditor),
         canUndo: currentEditor.can().undo(),
         canRedo: currentEditor.can().redo(),
       }),
@@ -544,6 +553,32 @@ const RichEditorToolbar = React.memo(
           >
             <ListOrdered className="h-5 w-5" />
           </MenuButton>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-9 w-6 p-0"
+                aria-label={t("listNumbering")}
+                disabled={!toolbarState.numbering}
+                onMouseDown={(event) => event.preventDefault()}
+              >
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" onCloseAutoFocus={(event) => event.preventDefault()}>
+              <DropdownMenuItem
+                disabled={toolbarState.numbering?.nextStart == null}
+                onSelect={() => setOrderedListNumbering(editor, "continue")}
+              >
+                {t("continueNumbering")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setOrderedListNumbering(editor, "restart")}>
+                {t("restartNumbering")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className={cn("h-5 w-px", "bg-border/60 dark:bg-border")} />

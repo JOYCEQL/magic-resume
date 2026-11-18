@@ -12,6 +12,7 @@
     "test:markdown-import": "tsx --test tests/markdown-import.test.ts",
     "test:markdown-import-ui": "node --test tests/markdown-import.browser.mjs",
     "test:preview": "node --test tests/preview.browser.mjs",
+    "test:list-numbering": "node --test tests/list-numbering.browser.mjs",
     "test:font-size": "tsx tests/font-size.browser.ts",
     "test:fonts": "node --test tests/fonts.browser.mjs",
     "test:mobile": "tsx --test tests/mobile-workbench.browser.ts",

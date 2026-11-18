@@ -183,43 +183,37 @@
 [data-resume-document] ol,
 .resume-preview ol {
   list-style: none;
-  counter-reset: resume-preview-ol;
   padding-left: 1.5rem;
 }
 
 [data-resume-document] ol > li,
 .resume-preview ol > li {
-  counter-increment: resume-preview-ol;
   position: relative;
 }
 
 [data-resume-document] ol > li::before,
 .resume-preview ol > li::before {
-  content: counter(resume-preview-ol, decimal) ".";
+  // The built-in counter respects <ol start> and nested list boundaries.
+  content: counter(list-item, decimal) ".";
   position: absolute;
   left: -1.4rem;
   width: 1.1rem;
   text-align: left;
 }
 
-[data-resume-document] ol ol,
-.resume-preview ol ol {
-  counter-reset: resume-preview-ol;
-}
-
 [data-resume-document] ol ol > li::before,
 .resume-preview ol ol > li::before {
-  content: counter(resume-preview-ol, lower-alpha) ".";
+  content: counter(list-item, lower-alpha) ".";
 }
 
 [data-resume-document] ol ol ol > li::before,
 .resume-preview ol ol ol > li::before {
-  content: counter(resume-preview-ol, lower-roman) ".";
+  content: counter(list-item, lower-roman) ".";
 }
 
 [data-resume-document] ol ol ol ol > li::before,
 .resume-preview ol ol ol ol > li::before {
-  content: counter(resume-preview-ol, upper-alpha) ".";
+  content: counter(list-item, upper-alpha) ".";
 }
 
 [data-resume-document] li,

@@ -1,5 +1,12 @@
 # Tests
 
+## Ordered list numbering
+
+With `pnpm dev` running, use `pnpm test:list-numbering` (or set
+`PREVIEW_TEST_URL` for another local address). This uses isolated browser storage
+to verify continuation across plain paragraphs, restarting, undo/redo, reload,
+PDF markers, nested/custom-start lists, soft line breaks, and the mobile menu.
+
 ## Existing Node tests
 
 ```sh

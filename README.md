@@ -25,29 +25,13 @@ Magic Resume is a modern online resume editor that makes creating professional r
 
 If you sponsored this project but are not listed here, please contact me.
 
-<!-- GitHub sizes tables to their content; a wide first column fills the available width. -->
-<table>
-  <thead>
-    <tr>
-      <th width="10000" align="left">Sponsor</th>
-      <th align="right">Amount (CNY)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://github.com/fbitalk"><img src="https://github.com/fbitalk.png?size=40" width="40" height="40" alt="@fbitalk" /> @fbitalk</a></td>
-      <td align="right">¥20</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/yj147"><img src="https://github.com/yj147.png?size=40" width="40" height="40" alt="@yj147" /> @yj147</a></td>
-      <td align="right">¥10</td>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/someone1128"><img src="https://github.com/someone1128.png?size=40" width="40" height="40" alt="@someone1128" /> @someone1128</a></td>
-      <td align="right">¥10</td>
-    </tr>
-  </tbody>
-</table>
+<p align="center">
+  <a href="https://github.com/fbitalk"><img src="./images/sponsors/fbitalk.svg" width="64" height="64" alt="@fbitalk" title="@fbitalk" /></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/yj147"><img src="./images/sponsors/yj147.svg" width="64" height="64" alt="@yj147" title="@yj147" /></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/someone1128"><img src="./images/sponsors/someone1128.svg" width="64" height="64" alt="@someone1128" title="@someone1128" /></a>
+</p>
 
 ## 📸 Screenshots
 

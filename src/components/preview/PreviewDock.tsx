@@ -210,7 +210,7 @@ const PreviewDock = ({
                   <TooltipTrigger asChild>
                     <div
                       className={cn(
-                        "flex cursor-pointer h-7 w-7 items-center justify-center rounded-lg",
+                        "flex cursor-pointer h-[30px] w-[30px] items-center justify-center rounded-sm",
                         "hover:bg-gray-100/50 dark:hover:bg-secondary/50",
                         "transition-all duration-200",
                         autoOnePage && [

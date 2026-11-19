@@ -993,7 +993,7 @@
         "date": "Publication date",
         "status": "Publication status",
         "link": "Paper link / DOI",
-        "description": "Additional details (optional)"
+        "description": "Description"
       },
       "placeholders": {
         "title": "e.g. Multimodal Representation Learning in Low-Resource Settings",
@@ -1001,7 +1001,7 @@
         "highlightedAuthor": "e.g. Alex Lin",
         "venue": "e.g. NeurIPS 2025 / IEEE TPAMI",
         "link": "https://… or 10.xxxx/…",
-        "description": "e.g. * Equal contribution. Designed the model and led experimental evaluation."
+        "description": "Add highlights, your contribution, or an equal-contribution note. Bold and lists are supported."
       },
       "statuses": {
         "none": "Not shown",

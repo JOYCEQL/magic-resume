@@ -48,6 +48,13 @@ test("empty publications are detected", () => {
   assert.equal(hasPublicationContent(publication({ venue: " NeurIPS " })), true);
 });
 
+test("rich text descriptions count as content only when they hold text", () => {
+  assert.equal(hasPublicationContent(publication({ description: "<p></p>" })), false);
+  assert.equal(hasPublicationContent(publication({ description: "<p> </p><p><br /></p>" })), false);
+  assert.equal(hasPublicationContent(publication({ description: "<p>Equal contribution</p>" })), true);
+  assert.equal(hasPublicationContent(publication({ description: "<ul><li>Led experiments</li></ul>" })), true);
+});
+
 test("PDF import keeps publications and adds the section only when present", () => {
   const { resume } = validateResume({
     basic: { name: "Alex Lin" },
@@ -91,4 +98,31 @@ test("markdown export renders visible publications with escaped text and safe li
   } as unknown as ResumeData;
   const markdownZh = generateResumeMarkdown(resumeZh, { locale: "zh" });
   assert.match(markdownZh, /张三，\*\*李四\*\*，王五/);
+});
+
+test("markdown export turns rich text descriptions into markdown and keeps plain text as is", () => {
+  const build = (description: string) => ({
+    ...initialResumeStateEn,
+    id: "r1",
+    title: "CV",
+    createdAt: "",
+    updatedAt: "",
+    templateId: "classic",
+    menuSections: [{ id: "publications", title: "Publications", icon: "publications", enabled: true, order: 0 }],
+    publications: [publication({ title: "Paper", description })],
+  }) as unknown as ResumeData;
+
+  const rich = generateResumeMarkdown(
+    build("<p>Highlights: <strong>fast inference</strong></p><ul><li>First point</li><li>Second point</li></ul>"),
+    { locale: "en" }
+  );
+  assert.match(rich, /Highlights: \*\*fast inference\*\*/);
+  assert.match(rich, /- +First point/);
+  assert.match(rich, /- +Second point/);
+  assert.doesNotMatch(rich, /<p>|<ul>|<li>/);
+
+  // 历史数据是纯文本，不能因为富文本改造而丢换行
+  const legacy = generateResumeMarkdown(build("Equal contribution.\nLed experiments."), { locale: "en" });
+  assert.match(legacy, /Equal contribution\./);
+  assert.match(legacy, /Led experiments\./);
 });

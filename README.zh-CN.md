@@ -10,7 +10,7 @@
 <a href="https://hellogithub.com/repository/JOYCEQL/magic-resume" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=51a0f545d0964a47a173794478119ec7&claim_uid=qMBAYh4ZFCgViJI" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 
-简体中文 | [English](./README.md)
+简体中文 | [English](./README.md) | [日本語](./README.ja.md)
 
 </div>
 

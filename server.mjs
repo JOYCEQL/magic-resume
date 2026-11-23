@@ -77,7 +77,8 @@ function tryServeStatic(req, res, url) {
     // Always revalidate entry HTML so deployments can replace hashed assets.
     res.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
   } else if (url.pathname.startsWith("/assets/") ||
-      /^\/fonts\/(resume|ui)\/[^/]+\.[a-f0-9]{12}\.woff2$/.test(url.pathname)) {
+      /^\/fonts\/(resume|ui)\/[^/]+\.[a-f0-9]{12}\.woff2$/.test(url.pathname) ||
+      /^\/(images|template-snapshots\/(zh|en))\/[^/]+\.[a-f0-9]{12}\.webp$/.test(url.pathname)) {
     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
   } else {
     res.setHeader("Cache-Control", "public, max-age=3600");

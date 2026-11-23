@@ -7,3 +7,9 @@
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+/images/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/template-snapshots/*.webp
+  Cache-Control: public, max-age=31536000, immutable

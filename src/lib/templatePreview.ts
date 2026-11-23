@@ -70,11 +70,6 @@ export const createTemplatePreviewData = (
   } as ResumeData;
 };
 
-export const getTemplateSnapshotPath = (
-  locale: TemplatePreviewLocale,
-  templateId: string
-) => `/${TEMPLATE_SNAPSHOT_PUBLIC_DIR}/${locale}/${templateId}.png`;
-
 export const getTemplateSnapshotSrc = (
   manifest: TemplateSnapshotManifest,
   locale: TemplatePreviewLocale,

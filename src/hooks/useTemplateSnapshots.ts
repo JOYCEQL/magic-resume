@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { DEFAULT_TEMPLATES } from "@/config";
 import { TEMPLATE_SNAPSHOT_MANIFEST } from "@/generated/templateSnapshotManifest";
 import {
@@ -6,10 +6,7 @@ import {
   isTemplatePreviewLocale,
 } from "@/lib/templatePreview";
 
-export const useTemplateSnapshots = (
-  locale: string | null | undefined,
-  preload = false
-) => {
+export const useTemplateSnapshots = (locale: string | null | undefined) => {
   const resolvedLocale = isTemplatePreviewLocale(locale) ? locale : "zh";
 
   const snapshotMap = useMemo(
@@ -26,24 +23,6 @@ export const useTemplateSnapshots = (
       ) as Record<string, string | null>,
     [resolvedLocale]
   );
-
-  useEffect(() => {
-    if (!preload) return;
-    const preloaders = Object.values(snapshotMap)
-      .filter((src): src is string => Boolean(src))
-      .map((src) => {
-        const image = new window.Image();
-        image.decoding = "async";
-        image.src = src;
-        return image;
-      });
-
-    return () => {
-      preloaders.forEach((image) => {
-        image.src = "";
-      });
-    };
-  }, [preload, snapshotMap]);
 
   return {
     resolvedLocale,

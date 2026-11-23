@@ -51,6 +51,7 @@ const TemplatePreview = ({
             alt={template.name}
             className="h-full w-full object-cover object-top"
             loading="lazy"
+            decoding="async"
             draggable={false}
           />
         ) : (
@@ -78,10 +79,9 @@ const TemplateSheet = () => {
   const t = useTranslations("templates");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
-  const [warmSnapshots, setWarmSnapshots] = useState(false);
   const templateId = useResumeStore((state) => state.activeResume?.templateId);
   const setTemplate = useResumeStore((state) => state.setTemplate);
-  const { snapshotMap } = useTemplateSnapshots(locale, open || warmSnapshots);
+  const { snapshotMap } = useTemplateSnapshots(locale);
 
   const currentTemplate =
     DEFAULT_TEMPLATES.find((template) => template.id === templateId) ||
@@ -90,10 +90,7 @@ const TemplateSheet = () => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <PanelsLeftBottom
-          size={20}
-          onPointerEnter={() => setWarmSnapshots(true)}
-        />
+        <PanelsLeftBottom size={20} />
       </SheetTrigger>
       <SheetContent side="left" className="w-1/2 sm:max-w-1/2">
         <SheetHeader>

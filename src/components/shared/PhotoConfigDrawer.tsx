@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_AVATAR = "/avatar.png";
+import { DEFAULT_AVATAR, getResumePhotoSrc } from "@/lib/resumePhoto";
 
 interface Props {
   isOpen: boolean;
@@ -48,7 +48,7 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   const t = useTranslations("photoConfig");
   const updateBasicInfo = useResumeStore((state) => state.updateBasicInfo);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | undefined>(photo);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(getResumePhotoSrc(photo));
   const [isDragging, setIsDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(photo || "");
   const drawerContentRef = useRef<HTMLInputElement>(null);
@@ -72,8 +72,9 @@ const PhotoConfigDrawer: React.FC<Props> = ({
   useEffect(() => {
     if (isOpen) {
       setConfig(initialConfig || DEFAULT_CONFIG);
-      setPreviewUrl(photo === "" ? "" : photo || DEFAULT_AVATAR);
-      setImageUrl(photo === DEFAULT_AVATAR ? "" : photo || "");
+      const resolvedPhoto = getResumePhotoSrc(photo);
+      setPreviewUrl(resolvedPhoto === "" ? "" : resolvedPhoto || DEFAULT_AVATAR);
+      setImageUrl(resolvedPhoto === DEFAULT_AVATAR ? "" : photo || "");
     }
 
     const handleClick = (e: MouseEvent) => {

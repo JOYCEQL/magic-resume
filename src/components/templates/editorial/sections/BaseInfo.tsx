@@ -1,3 +1,4 @@
+import { getResumePhotoSrc } from "@/lib/resumePhoto";
 import React from "react";
 import { motion } from "framer-motion";
 import { getResumeIcon } from "../../shared/resumeIcons";
@@ -88,7 +89,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                   overflow: "hidden",
                 }}
               >
-                <img src={basic.photo} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
+                <img src={getResumePhotoSrc(basic.photo)} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
               </div>
             </motion.div>
           )}

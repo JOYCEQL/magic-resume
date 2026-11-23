@@ -1,5 +1,5 @@
 import { ThemeProvider } from "next-themes";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 
 const AppProviders = lazy(() => import("./app-providers"));
 
@@ -10,6 +10,9 @@ export function Providers({
   children: React.ReactNode;
   forcedTheme?: "light";
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <ThemeProvider
       attribute="class"
@@ -25,11 +28,13 @@ export function Providers({
         leaving the landing page.
       */}
       {children}
-      {forcedTheme === "light" ? null : (
+      {/* Browser-only services must not create a server Suspense boundary:
+          theme updates can reach it before its lazy chunk hydrates on slow links. */}
+      {mounted && forcedTheme !== "light" ? (
         <Suspense fallback={null}>
           <AppProviders />
         </Suspense>
-      )}
+      ) : null}
     </ThemeProvider>
   );
 }

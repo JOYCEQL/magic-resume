@@ -1,5 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { chromium } from "playwright";
@@ -11,9 +11,9 @@ import {
   TEMPLATE_SNAPSHOT_ROOT_SELECTOR,
   TEMPLATE_SNAPSHOT_VERSION,
   createEmptyTemplateSnapshotManifest,
-  getTemplateSnapshotPath,
   type TemplatePreviewLocale,
 } from "../src/lib/templatePreview";
+import { writeWebpAsset } from "./preview-image-assets.mjs";
 
 const SNAPSHOT_SERVER_HOST = "127.0.0.1";
 const SNAPSHOT_SERVER_PORT = 4173;
@@ -136,7 +136,7 @@ const main = async () => {
   assertSupportedNodeVersion();
   await ensurePlaywrightBrowser();
 
-  await rm(SNAPSHOT_PUBLIC_DIR, { recursive: true, force: true });
+  // Retain existing hashed assets for tabs still running a previous release.
   await mkdir(SNAPSHOT_PUBLIC_DIR, { recursive: true });
 
   const manifest = createEmptyTemplateSnapshotManifest();
@@ -167,7 +167,6 @@ const main = async () => {
       for (const template of DEFAULT_TEMPLATES) {
         console.log(`Capturing ${locale}/${template.id}...`);
         const screenshotUrl = buildTemplateSnapshotUrl(locale, template.id);
-        const outputFilePath = path.join(localeOutputDir, `${template.id}.png`);
 
         await page.goto(screenshotUrl, {
           waitUntil: "networkidle",
@@ -179,15 +178,15 @@ const main = async () => {
           }
         });
 
-        await page.locator(TEMPLATE_SNAPSHOT_ROOT_SELECTOR).screenshot({
-          path: outputFilePath,
+        const png = await page.locator(TEMPLATE_SNAPSHOT_ROOT_SELECTOR).screenshot({
           type: "png",
         });
-
-        manifest.locales[locale][template.id] = `${getTemplateSnapshotPath(
-          locale,
-          template.id
-        )}?v=${encodeURIComponent(manifest.generatedAt)}`;
+        // Retain the current lossless source for optimize:preview-images reruns.
+        await writeFile(path.join(localeOutputDir, `${template.id}.png`), png);
+        const asset = await writeWebpAsset(png,
+          `/template-snapshots/${locale}/${template.id}`,
+          TEMPLATE_PREVIEW_WIDTH_PX, 82);
+        manifest.locales[locale][template.id] = asset.url;
       }
     }
 

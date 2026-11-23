@@ -1,5 +1,8 @@
 {
   "common": {
+    "editorLoading": "Preparing the editor. The first visit may take a moment…",
+    "editorLoadFailed": "The editor could not load. Check your connection and try again.",
+    "reloadEditor": "Reload editor",
     "title": "Magic Resume",
     "subtitle": "AI Driven Resume Editor",
     "description": "Magic Resume is an open source resume editor, free, privacy-first. No registration required, all data stored locally, support data backup and export, ensuring your resume data is always available.",

@@ -1,3 +1,4 @@
+import { getResumePhotoSrc } from "@/lib/resumePhoto";
 import React from "react";
 import { motion } from "framer-motion";
 import { getResumeIcon } from "../../shared/resumeIcons";
@@ -57,7 +58,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
     const PhotoComponent = basic.photo && basic.photoConfig?.visible && (
         <motion.div layout="position">
             <div style={{ width: `${basic.photoConfig?.width || 100}px`, height: `${basic.photoConfig?.height || 100}px`, borderRadius: getBorderRadiusValue(basic.photoConfig || { borderRadius: "none", customBorderRadius: 0 }), overflow: "hidden" }}>
-                <img src={basic.photo} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
+                <img src={getResumePhotoSrc(basic.photo)} alt={`${basic.name}'s photo`} className="w-full h-full object-cover" />
             </div>
         </motion.div>
     );

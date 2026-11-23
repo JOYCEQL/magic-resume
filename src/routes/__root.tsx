@@ -8,6 +8,9 @@ import {
 import appCss from "../app/globals.css?url";
 import landingCss from "@/components/home/landing.css?url";
 import offerinCss from "@/components/offerin/offerin.scss?url";
+import appFontCss from "@/app/font.css?url";
+import tiptapCss from "@/styles/tiptap.scss?url";
+import sonnerCss from "sonner/dist/styles.css?url";
 import { NextIntlClientProvider } from "@/i18n/compat/client";
 import { useEffect, useState } from "react";
 import zhMessages from "@/i18n/locales/zh.json";
@@ -98,6 +101,12 @@ function RootComponent() {
     <html lang={locale} suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* Discover editor styles before the browser-only service chunk loads. */}
+        {!forceLight && <>
+          <link rel="stylesheet" href={appFontCss} />
+          <link rel="stylesheet" href={tiptapCss} />
+          <link rel="stylesheet" href={sonnerCss} />
+        </>}
         <link rel="icon" href="/favicon.ico?v=2" />
         <link rel="icon" href="/icon.png" />
       </head>

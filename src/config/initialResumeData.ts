@@ -1,4 +1,5 @@
 import { DEFAULT_FIELD_ORDER } from "./constants";
+import { DEFAULT_AVATAR } from "@/lib/resumePhoto";
 import { GlobalSettings, DEFAULT_CONFIG, ResumeData } from "../types/resume";
 const initialGlobalSettings: GlobalSettings = {
   baseFontSize: 16,
@@ -40,7 +41,7 @@ export const initialResumeState = {
         icon: "Globe",
       },
     ],
-    photo: "/avatar.png",
+    photo: DEFAULT_AVATAR,
     githubKey: "",
     githubUseName: "",
     githubContributionsVisible: false,
@@ -193,7 +194,7 @@ export const initialResumeStateEn = {
     },
     photoConfig: DEFAULT_CONFIG,
     customFields: [],
-    photo: "/avatar.png",
+    photo: DEFAULT_AVATAR,
     githubKey: "",
     githubUseName: "",
     githubContributionsVisible: false,

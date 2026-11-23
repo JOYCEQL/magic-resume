@@ -79,7 +79,8 @@ const TemplateCardThumbnail = ({
                 src={snapshotSrc}
                 alt={t(`dashboard.templates.${template.nameKey}.name`)}
                 className="h-full w-full object-cover object-top"
-                loading="eager"
+                loading="lazy"
+                decoding="async"
                 draggable={false}
             />
         );
@@ -195,7 +196,7 @@ export const CreateResumeModal = ({
 }: CreateResumeModalProps) => {
     const t = useTranslations();
     const locale = useLocale();
-    const { snapshotMap } = useTemplateSnapshots(locale, open);
+    const { snapshotMap } = useTemplateSnapshots(locale);
     const [previewTarget, setPreviewTarget] = useState<TemplateOption | null>(null);
 
     const handleCreate = (template: TemplateOption) => {

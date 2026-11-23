@@ -1,3 +1,4 @@
+import { getResumePhotoSrc } from "@/lib/resumePhoto";
 import React, { useState } from "react";
 import { Settings2, Image, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,7 +78,7 @@ const PhotoSelector: React.FC<Props> = ({ className }) => {
       <div className="mt-2 relative overflow-hidden">
         {photo && (
           <img
-            src={photo}
+            src={getResumePhotoSrc(photo)}
             alt="Selected"
             className="w-[48px] h-[48px] object-cover rounded"
           />

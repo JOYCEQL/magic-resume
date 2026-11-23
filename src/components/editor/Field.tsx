@@ -7,16 +7,14 @@ import { Switch } from "@/components/ui/switch";
 import { useAIConfiguration } from "@/hooks/useAIConfiguration";
 import { UnifiedDateInput } from "../ui/unified-date-input";
 import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
+import { loadRichTextEditor } from "@/lib/loadRichTextEditor";
 
-const RichTextEditor = React.lazy(
-  () => import("../shared/rich-editor/RichEditor")
-);
+const RichTextEditor = React.lazy(loadRichTextEditor);
 const AIPolishDialog = React.lazy(
   () => import("../shared/ai/AIPolishDialog")
 );
 
-export const preloadRichTextEditor = () =>
-  import("../shared/rich-editor/RichEditor");
+export { preloadRichTextEditor } from "@/lib/loadRichTextEditor";
 
 interface FieldProps {
   label?: string;
@@ -153,7 +151,9 @@ const Field = ({
         <div className="mt-1.5">
           <React.Suspense
             fallback={
-              <div className="min-h-[160px] rounded-lg border border-border bg-card/50" />
+              <div role="status" className="min-h-[160px] rounded-lg border border-border bg-card/50 flex items-center justify-center text-sm text-muted-foreground">
+                {t("common.editorLoading")}
+              </div>
             }
           >
             <RichTextEditor

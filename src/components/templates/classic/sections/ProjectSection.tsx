@@ -2,6 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
+import SectionLogo from "../../shared/SectionLogo";
 import { Project, GlobalSettings } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
@@ -34,6 +35,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                         <motion.div key={project.id} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                             <motion.div className="flex items-center gap-2">
                                 <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>
+                                    <SectionLogo src={project.logo} config={project.logoConfig} size={globalSettings?.subheaderSize || 16} />
                                     <h3 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{project.name}</h3>
                                 </div>
                                 {projectLink && !centerSubtitle && (

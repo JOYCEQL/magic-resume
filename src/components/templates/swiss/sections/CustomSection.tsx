@@ -2,6 +2,7 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
+import SectionLogo from "../../shared/SectionLogo";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
@@ -31,6 +32,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                             {/* 不对称网格对齐头部 */}
                             <div className="flex items-baseline justify-between gap-3">
                                 <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
+                                    <SectionLogo src={item.logo} config={item.logoConfig} size={globalSettings?.subheaderSize || 16} />
                                     <h4 
                                         className="font-extrabold text-slate-800 tracking-tight"
                                         style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}

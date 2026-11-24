@@ -2,6 +2,7 @@ import { memo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
+import SectionLogo from "../../shared/SectionLogo";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString, cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                     <motion.div key={item.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                         <motion.div layout="position" className="flex items-center justify-between gap-4">
                             <div className={cn("flex items-center gap-2 truncate", flexLayout ? "" : "flex-1")}>
+                                <SectionLogo src={item.logo} config={item.logoConfig} size={globalSettings?.subheaderSize || 16} />
                                 <h4 className="font-bold truncate" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{item.title}</h4>
                             </div>
                             {centerSubtitle && (

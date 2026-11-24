@@ -140,6 +140,8 @@ export interface Project {
   visible: boolean;
   link?: string;
   linkLabel?: string;
+  logo?: string;
+  logoConfig?: LogoConfig;
 }
 
 export interface Certificate {
@@ -203,6 +205,8 @@ export interface CustomItem {
   dateRange: string;
   description: string;
   visible: boolean;
+  logo?: string;
+  logoConfig?: LogoConfig;
 }
 
 export const THEME_COLORS = [

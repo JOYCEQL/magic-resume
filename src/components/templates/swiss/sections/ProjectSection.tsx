@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
+import SectionLogo from "../../shared/SectionLogo";
 import { Project, GlobalSettings } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
 import { formatDateString } from "@/lib/utils";
@@ -36,6 +37,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                                 {/* 项目排版头部 */}
                                 <div className="flex items-baseline justify-between gap-3">
                                     <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+                                        <SectionLogo src={project.logo} config={project.logoConfig} size={globalSettings?.subheaderSize || 16} />
                                         <h4 
                                             className="font-extrabold text-slate-800 tracking-tight"
                                             style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}

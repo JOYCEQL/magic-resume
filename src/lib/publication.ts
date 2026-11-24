@@ -1,4 +1,5 @@
 import type { Publication, PublicationStatus } from "@/types/resume";
+import { hasMeaningfulRichTextContent } from "@/lib/richText";
 
 export const PUBLICATION_STATUSES = ["published", "accepted", "preprint", "submitted"] as const;
 
@@ -64,6 +65,8 @@ export function getPublicationAuthors(authors: string, highlightedAuthor: string
 }
 
 export function hasPublicationContent(publication: Publication) {
-  return [publication.title, publication.authors, publication.venue, publication.date, publication.link, publication.description]
+  const hasMetadata = [publication.title, publication.authors, publication.venue, publication.date, publication.link]
     .some((value) => value?.trim());
+  // 描述是富文本，空的 <p></p> 不算内容
+  return !!hasMetadata || hasMeaningfulRichTextContent(publication.description);
 }

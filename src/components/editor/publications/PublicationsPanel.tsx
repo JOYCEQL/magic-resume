@@ -163,12 +163,13 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
             </div>
           </div>
           {inputField("link")}
-          <details className="group" open={item.description ? true : undefined}>
-            <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">{t("labels.description")}</summary>
-            <label htmlFor={`${id}-description`} className="sr-only">{t("labels.description")}</label>
-            <Textarea id={`${id}-description`} value={item.description} onChange={(event) => onChange({ description: event.target.value })}
-              placeholder={t("placeholders.description")} rows={3} className="mt-3 min-h-[80px] resize-y" />
-          </details>
+          <Field
+            label={t("labels.description")}
+            value={item.description}
+            onChange={(description) => onChange({ description })}
+            type="editor"
+            placeholder={t("placeholders.description")}
+          />
           {count > 1 && <div className="flex gap-2 border-t border-border pt-3">
             <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" disabled={index === 0} onClick={() => onMove(-1)}><ArrowUp className="mr-1 h-3.5 w-3.5" />{t("moveUp")}</Button>
             <Button variant="ghost" size="sm" className="text-xs text-muted-foreground" disabled={index === count - 1} onClick={() => onMove(1)}><ArrowDown className="mr-1 h-3.5 w-3.5" />{t("moveDown")}</Button>
